@@ -1,0 +1,44 @@
+﻿{
+  "items": [
+    {
+      "TemplateID": 1001,
+      "ItemType": 1,
+      "NameTextID": "ITEM_SWORD_NAME",
+      "DescriptionTextID": "ITEM_SWORD_DESC",
+      "IconImageID": "icon_sword",
+      "PrefabNameID": "Sword"
+    },
+    {
+      "TemplateID": 1002,
+      "ItemType": 2,
+      "NameTextID": "ITEM_SHIELD_NAME",
+      "DescriptionTextID": "ITEM_SHIELD_DESC",
+      "IconImageID": "icon_shield",
+      "PrefabNameID": "Shield"
+    },
+    {
+      "TemplateID": 1003,
+      "ItemType": 3,
+      "NameTextID": "ITEM_POTION_NAME",
+      "DescriptionTextID": "ITEM_POTION_DESC",
+      "IconImageID": "icon_potion",
+      "PrefabNameID": "Potion"
+    },
+    {
+      "TemplateID": 1004,
+      "ItemType": 2,
+      "NameTextID": "ITEM_HELMET_NAME",
+      "DescriptionTextID": "ITEM_HELMET_DESC",
+      "IconImageID": "icon_helmet",
+      "PrefabNameID": "Helmet"
+    },
+    {
+      "TemplateID": 1005,
+      "ItemType": 1,
+      "NameTextID": "ITEM_BOW_NAME",
+      "DescriptionTextID": "ITEM_BOW_DESC",
+      "IconImageID": "icon_bow",
+      "PrefabNameID": "Bow"
+    }
+  ]
+}

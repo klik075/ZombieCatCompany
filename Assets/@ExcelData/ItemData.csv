@@ -1,0 +1,6 @@
+﻿TemplateID,NameTextID,DescriptionTextID,IconImageID,PrefabNameID,ItemType
+1001,ITEM_SWORD_NAME,ITEM_SWORD_DESC,icon_sword,Sword,1
+1002,ITEM_SHIELD_NAME,ITEM_SHIELD_DESC,icon_shield,Shield,2
+1003,ITEM_POTION_NAME,ITEM_POTION_DESC,icon_potion,Potion,3
+1004,ITEM_HELMET_NAME,ITEM_HELMET_DESC,icon_helmet,Helmet,2
+1005,ITEM_BOW_NAME,ITEM_BOW_DESC,icon_bow,Bow,1

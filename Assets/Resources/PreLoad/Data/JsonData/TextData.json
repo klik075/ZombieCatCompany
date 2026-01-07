@@ -1,0 +1,54 @@
+﻿{
+  "texts": [
+    {
+      "TemplateID": "HELLO",
+      "KOR": "안녕하세요",
+      "ENG": "Hello"
+    },
+    {
+      "TemplateID": "GOODBYE",
+      "KOR": "안녕히가세요",
+      "ENG": "Goodbye"
+    },
+    {
+      "TemplateID": "WELCOME",
+      "KOR": "환영합니다",
+      "ENG": "Welcome"
+    },
+    {
+      "TemplateID": "GAME_START",
+      "KOR": "게임 시작",
+      "ENG": "Game Start"
+    },
+    {
+      "TemplateID": "GAME_OVER",
+      "KOR": "게임 오버",
+      "ENG": "Game Over"
+    },
+    {
+      "TemplateID": "VICTORY",
+      "KOR": "승리",
+      "ENG": "Victory"
+    },
+    {
+      "TemplateID": "DEFEAT",
+      "KOR": "패배",
+      "ENG": "Defeat"
+    },
+    {
+      "TemplateID": "LOADING",
+      "KOR": "로딩 중...",
+      "ENG": "Loading…"
+    },
+    {
+      "TemplateID": "SAVE",
+      "KOR": "저장",
+      "ENG": "Save"
+    },
+    {
+      "TemplateID": "LOAD",
+      "KOR": "불러오기",
+      "ENG": "Load"
+    }
+  ]
+}
