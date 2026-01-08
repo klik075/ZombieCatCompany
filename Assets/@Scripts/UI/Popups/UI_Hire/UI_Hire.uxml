@@ -1,0 +1,13 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/@Scripts/UI/Popups/UI_Hire/Hire.uss?fileID=7433441132597879392&amp;guid=5a1f4859ce4d82544ac10c76f5b6d957&amp;type=3#Hire" />
+    <ui:VisualElement name="HirePanel" class="popup-panel" style="top: 946px; left: 348px;">
+        <ui:Image name="EmployeeImage" class="popup-image" />
+        <ui:Label name="EmployeeName" text="샘플 직원" class="popup-label" />
+        <ui:Label name="Stat1" text="능력치1: 15" class="popup-label" />
+        <ui:Label name="Stat2" text="능력치2: 20" class="popup-label" />
+        <ui:VisualElement style="flex-direction: row; justify-content: space-between; margin-top: 20px;">
+            <ui:Button name="HireButton" text="고용" class="popup-button" />
+            <ui:Button name="CancelButton" text="취소" class="popup-cancel-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,10 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/@Scripts/UI/Toolkit/GameHUD.uss?fileID=7433441132597879392&amp;guid=bcd0117b00fa553469bfa0e3ae41f8f2&amp;type=3#GameHUD" />
+    <ui:VisualElement name="GameHUDPanel" class="gamehud-panel">
+        <ui:VisualElement class="button-row" style="flex-direction: row; align-items: center; width: 100%; height: 15%; flex-wrap: nowrap;">
+            <ui:Button name="Button1" text="한국어1" class="gamehud-button" style="flex-grow: 1; min-width: 0; height: 200px;" />
+            <ui:Button name="Button2" text="한국어2" class="gamehud-button" style="flex-grow: 1; min-width: 0; margin-left: 8px; margin-right: 8px; height: 200px;" />
+            <ui:Button name="Button3" text="한국어3" class="gamehud-button" style="flex-grow: 1; min-width: 0; height: 200px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

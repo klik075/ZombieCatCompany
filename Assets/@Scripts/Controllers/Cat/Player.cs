@@ -1,0 +1,141 @@
+using UnityEngine;
+using System.Collections.Generic;
+
+public class Player : Cat
+{
+    private bool _isMoving = false;
+    public bool CanMove => !_isMoving;
+
+    // 이동 관련 변수
+    private Vector3 _moveStart;
+    private Vector3 _moveEnd;
+    private Vector2Int _targetCell;
+    private float _moveElapsed = 0f;
+    private float _moveDuration = 0.3f;
+
+    // AI 관련 변수
+    public bool AIEnabled = true;
+    private Vector2Int _aiTargetPosition;
+    private List<Vector2Int> _path = new List<Vector2Int>();
+
+    public override void Init()
+    {
+        base.Init();
+    }
+
+    public void MoveTo(Vector2Int targetCell)
+    {
+        if (_isMoving)
+            return;
+        if (!MapManager.Instance.CanMove(targetCell))
+            return;
+
+        _isMoving = true;
+        State = ECatState.Move;
+        MapManager.Instance.MoveTo(this, targetCell, false); // 점유만 처리, 위치는 직접 이동
+        _moveStart = transform.position;
+        _moveEnd = MapManager.Instance.CellToWorld(targetCell);
+        _targetCell = targetCell;
+        _moveElapsed = 0f;
+
+        // 이동 방향에 따라 Facing 설정
+        Vector3 direction = (_moveEnd - _moveStart).normalized;
+        IsFacingForward = direction.y <= 0; // y가 늘어나는 쪽이면 false, 아니면 true
+        IsFlipped = direction.x < 0; // 왼쪽 방향으로 이동하면 flip
+    }
+
+    void Update()
+    {
+        if (_isMoving)
+        {
+            _moveElapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(_moveElapsed / _moveDuration);
+            transform.position = Vector3.Lerp(_moveStart, _moveEnd, t);
+            if (t >= 1f)
+            {
+                transform.position = _moveEnd;
+                CellPosition = _targetCell;
+                _isMoving = false;
+                State = ECatState.Idle;
+
+                // 경로의 다음 스텝으로 이동
+                if (_path.Count > 0)
+                {
+                    _path.RemoveAt(0); // 현재 위치 제거
+                }
+                else
+                {
+                    // 목표 도착
+                    _aiTargetPosition = new Vector2Int(int.MinValue, int.MinValue);
+                }
+            }
+        }
+        else if (AIEnabled && State == ECatState.Idle)
+        {
+            if (_path.Count > 0)
+            {
+                if (MapManager.Instance.CanMove(_path[0]))
+                {
+                    MoveTo(_path[0]);
+                }
+                else
+                {
+                    // 경로 막힘, 다시 계산
+                    _path = MapManager.Instance.FindPath(CellPosition, _aiTargetPosition);
+                    if (_path.Count > 0)
+                    {
+                        MoveTo(_path[0]);
+                    }
+                    else
+                    {
+                        _path.Clear();
+                        _aiTargetPosition = new Vector2Int(int.MinValue, int.MinValue);
+                    }
+                }
+            }
+            else
+            {
+                TryAIMove();
+            }
+        }
+    }
+
+    private void TryAIMove()
+    {
+        // 새로운 랜덤 목표 선택
+        List<Vector2Int> walkableCells = MapManager.Instance.GetWalkableCells();
+        if (walkableCells.Count == 0) return;
+
+        Vector2Int randomTarget;
+        do
+        {
+            int randomIndex = Random.Range(0, walkableCells.Count);
+            randomTarget = walkableCells[randomIndex];
+        } while (randomTarget == CellPosition); // 현재 위치 제외
+
+        _aiTargetPosition = randomTarget;
+        _path = MapManager.Instance.FindPath(CellPosition, _aiTargetPosition);
+
+        if (_path.Count > 0)
+        {
+            MoveTo(_path[0]);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (_path == null || _path.Count == 0) return;
+
+        Gizmos.color = Color.green;
+        for (int i = 0; i < _path.Count; i++)
+        {
+            Vector3 worldPos = MapManager.Instance.CellToWorld(_path[i]);
+            Gizmos.DrawSphere(worldPos, 0.1f);
+            if (i < _path.Count - 1)
+            {
+                Vector3 nextWorldPos = MapManager.Instance.CellToWorld(_path[i + 1]);
+                Gizmos.DrawLine(worldPos, nextWorldPos);
+            }
+        }
+    }
+}
