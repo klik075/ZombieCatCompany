@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Define;
 
 public class UIManager : Singleton<UIManager>
 {
@@ -96,6 +97,8 @@ public class UIManager : Singleton<UIManager>
             popup.GetComponent<Canvas>().sortingOrder = _popupOrder;
         }
 
+        EventManager.Instance.TriggerEvent(EEventType.UI_PopupOpened);
+
         return popup as T;
     }
 
@@ -119,6 +122,7 @@ public class UIManager : Singleton<UIManager>
             popup.gameObject.SetActive(false);
 
         _popupOrder--;
+        EventManager.Instance.TriggerEvent(EEventType.UI_PopupClosed);
     }
 
     public void CloseAllPopupUI()

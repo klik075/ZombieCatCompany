@@ -1,0 +1,5 @@
+﻿EmployeeID,normalImagePath,zombieImagePath,Name,Role,Salary,State,Programming,Scenario,Graphics,Sound,Power
+100,Cat/ZCC_BC,Cat/ZCC_BC,나비,Boss,25,Full,10,10,10,10,10
+101,Cat/ZCC_BC,Cat/ZCC_BC,코코,Planner,25,Full,10,10,10,10,10
+102,Cat/ZCC_BC,Cat/ZCC_BC,치즈,Designer,25,Full,10,10,10,10,10
+103,Cat/ZCC_BC,Cat/ZCC_BC,유미,SoundWriter,25,Full,10,10,10,10,10

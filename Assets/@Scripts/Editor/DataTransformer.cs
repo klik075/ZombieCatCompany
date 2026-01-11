@@ -17,6 +17,7 @@ public class DataTransformer : EditorWindow
     {
         ParseExcelDataToJson<ItemDataLoader, ItemData>("Item");
         ParseExcelDataToJson<TextDataLoader, TextData>("Text");
+        ParseExcelDataToJson<MemberDataLoader, MemberData>("Member");
     }
 
     private static void ParseExcelDataToJson<Loader, LoaderData>(string filename) where Loader : new()

@@ -44,7 +44,7 @@ public class Cat : ObjectBase
         set { _isFlipped = value; _skeletonAnimation.skeleton.ScaleX = _isFlipped ? -1 : 1; }
     }
 
-    void Start()
+    protected virtual void Start()
     {
         _skeletonAnimation = GetComponent<SkeletonAnimation>();
             

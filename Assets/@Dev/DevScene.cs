@@ -21,25 +21,19 @@ public class DevScene : BaseScene
 
 		//UIManager.Instance.ShowSceneUI<UI_GameHUD>();
 
-		List<Vector2Int> walkableCells = MapManager.Instance.GetWalkableCells();
-        for (int i = 0; i < 5; i++)
-        {
-            bool placed = false;
-            int attempts = 0;
-            while (!placed && attempts < 100 && walkableCells.Count > 0)
-            {
-                int randomIndex = Random.Range(0, walkableCells.Count);
-                Vector2Int spawnPos = walkableCells[randomIndex];
-                walkableCells.RemoveAt(randomIndex);
-
-                Player cat = ObjectManager.Instance.SpawnPlayer("Cat");
-                if (MapManager.Instance.MoveTo(cat, spawnPos, true))
-                {
-                    placed = true;
-                }
-                attempts++;
-            }
-        }
+		// 구성원 시스템 초기화 (주인공 생성)
+		MemberManager.Instance.InitializeMainCharacter();
+		
+		// 테스트: 구성원 2명 추가 고용
+		int memberIndex;
+		if (MemberManager.Instance.HireMember(out memberIndex))
+		{
+			Debug.Log($"Hired member at index {memberIndex}");
+		}
+		if (MemberManager.Instance.HireMember(out memberIndex))
+		{
+			Debug.Log($"Hired member at index {memberIndex}");
+		}
     }
-
 }
+

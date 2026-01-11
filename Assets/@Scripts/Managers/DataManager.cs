@@ -23,6 +23,7 @@ public class DataManager : Singleton<DataManager>
 
     public Dictionary<string, TextData> TextDict { get; private set; } = new Dictionary<string, TextData>();
     public Dictionary<int, ItemData> ItemDict { get; private set;  } = new Dictionary<int, ItemData>();
+    public Dictionary<int, MemberData> MemberDict { get; private set;  } = new Dictionary<int, MemberData>();
 
     public void LoadData()
     {
@@ -33,6 +34,8 @@ public class DataManager : Singleton<DataManager>
 
         TextDict = LoadJson<TextDataLoader, string, TextData>("TextData").MakeDict();
         ItemDict = LoadJson<ItemDataLoader, int, ItemData>("ItemData").MakeDict();
+        MemberDict = LoadJson<MemberDataLoader, int, MemberData>("MemberData").MakeDict();
+
         // TODO
 
         Validate();

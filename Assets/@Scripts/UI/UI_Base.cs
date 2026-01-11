@@ -15,7 +15,10 @@ public interface IUI_Scene
 {
 
 }
+public interface IClickableUI
+{
 
+}
 public class UI_Base : MonoBehaviour
 {
     protected virtual void Awake()

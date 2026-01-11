@@ -73,6 +73,24 @@ public class MapManager : Singleton<MapManager>
         return _walkableMap[arrayX, arrayY];
     }
 
+    // Cat 등록
+    public void RegisterCat(Cat cat, Vector2Int position)
+    {
+        if (!_occupiedPositions.ContainsKey(position))
+        {
+            _occupiedPositions[position] = cat;
+        }
+    }
+
+    // Cat 등록 해제
+    public void UnregisterCat(Vector2Int position)
+    {
+        if (_occupiedPositions.ContainsKey(position))
+        {
+            _occupiedPositions.Remove(position);
+        }
+    }
+
     public bool MoveTo(Cat cat, Vector2Int newPosition, bool sync = false)
     {
         if (!CanMove(newPosition.x, newPosition.y)) 
@@ -84,7 +102,7 @@ public class MapManager : Singleton<MapManager>
 
         // Add to new position
         _occupiedPositions[newPosition] = cat;
-        cat.CellPosition = newPosition; // Assuming Cat has a setter, but it's private set
+        cat.CellPosition = newPosition;
 
         if (sync)
         {

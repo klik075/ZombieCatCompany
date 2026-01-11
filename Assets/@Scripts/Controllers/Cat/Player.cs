@@ -1,11 +1,16 @@
 using UnityEngine;
 using System.Collections.Generic;
+using static Define;
+using UnityEngine.UI;
+using Unity.VisualScripting;
 
 public class Player : Cat
 {
     private bool _isMoving = false;
     public bool CanMove => !_isMoving;
 
+    public MemberData MemberData { get; private set; }
+    public MemberData CurrentMemberData { get; private set; }
     // 이동 관련 변수
     private Vector3 _moveStart;
     private Vector3 _moveEnd;
@@ -22,7 +27,19 @@ public class Player : Cat
     {
         base.Init();
     }
-
+    public void SetMemberData(int employeeId)
+    {
+        if(DataManager.Instance.MemberDict.TryGetValue(employeeId, out MemberData data))
+        {
+            MemberData = data;
+            CurrentMemberData = data.DeepCopy();
+        }
+        else
+        {
+            MemberData = null;
+            CurrentMemberData = null;
+        }
+    }
     public void MoveTo(Vector2Int targetCell)
     {
         if (_isMoving)
@@ -44,7 +61,7 @@ public class Player : Cat
         IsFlipped = direction.x < 0; // 왼쪽 방향으로 이동하면 flip
     }
 
-    void Update()
+    public override void Update()
     {
         if (_isMoving)
         {
