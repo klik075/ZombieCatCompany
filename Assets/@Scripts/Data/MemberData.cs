@@ -7,8 +7,8 @@ using static Define;
 public class MemberData
 {
     public int EmployeeID;
-    public string normalImagePath;
-    public string zombieImagePath;
+    public string NormalImagePath;
+    public string ZombieImagePath;
     public string Name;
     public ERoleType Role;
     public int Salary;
@@ -79,8 +79,8 @@ public class MemberData
         return new MemberData
         {
             EmployeeID = this.EmployeeID,
-            normalImagePath = this.normalImagePath,
-            zombieImagePath = this.zombieImagePath,
+            NormalImagePath = this.NormalImagePath,
+            ZombieImagePath = this.ZombieImagePath,
             Name = this.Name,
             Role = this.Role,
             Salary = this.Salary,

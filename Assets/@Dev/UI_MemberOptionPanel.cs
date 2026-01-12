@@ -61,7 +61,15 @@ public class UI_MemberOptionPanel : UI_UGUI
                 memberSelectionPopup.SetInfo(MemberManager.Instance.MainCharacter);
                 break;
             case Buttons.MemberHireButton:
-                UI_MemberHireMethodsPopup memberHireMethodsPopup = UIManager.Instance.ShowPopupUI<UI_MemberHireMethodsPopup>();
+                if (GameManager.Instance.IsRecruiting)
+                {
+                    UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+                    chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, "이미 모집 중이다냥.");//대사 테이블이 필요할 듯.
+                }
+                else
+                {
+                    UI_MemberHireMethodsPopup memberHireMethodsPopup = UIManager.Instance.ShowPopupUI<UI_MemberHireMethodsPopup>();
+                }
                 break;
             case Buttons.MemberFireButton:
                 UI_MemberFirePopup memberFirePopup = UIManager.Instance.ShowPopupUI<UI_MemberFirePopup>();

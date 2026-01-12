@@ -2,8 +2,8 @@
   "members": [
     {
       "EmployeeID": 100,
-      "normalImagePath": "Cat/ZCC_BC",
-      "zombieImagePath": "Cat/ZCC_BC",
+      "NormalImagePath": "ZCC_BC",
+      "ZombieImagePath": "ZCC_ZBC",
       "Name": "나비",
       "Role": 0,
       "Salary": 25,
@@ -16,8 +16,8 @@
     },
     {
       "EmployeeID": 101,
-      "normalImagePath": "Cat/ZCC_BC",
-      "zombieImagePath": "Cat/ZCC_BC",
+      "NormalImagePath": "ZCC_GC",
+      "ZombieImagePath": "ZCC_ZGC",
       "Name": "코코",
       "Role": 1,
       "Salary": 25,
@@ -30,8 +30,8 @@
     },
     {
       "EmployeeID": 102,
-      "normalImagePath": "Cat/ZCC_BC",
-      "zombieImagePath": "Cat/ZCC_BC",
+      "NormalImagePath": "ZCC_OC",
+      "ZombieImagePath": "ZCC_ZOC",
       "Name": "치즈",
       "Role": 2,
       "Salary": 25,
@@ -44,8 +44,8 @@
     },
     {
       "EmployeeID": 103,
-      "normalImagePath": "Cat/ZCC_BC",
-      "zombieImagePath": "Cat/ZCC_BC",
+      "NormalImagePath": "ZCC_WC",
+      "ZombieImagePath": "ZCC_ZWC",
       "Name": "유미",
       "Role": 3,
       "Salary": 25,

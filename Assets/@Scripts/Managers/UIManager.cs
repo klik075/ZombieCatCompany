@@ -68,6 +68,7 @@ public class UIManager : Singleton<UIManager>
     private int _popupOrder = 100;
     private Stack<UI_Base> _popupStack = new Stack<UI_Base>();
     private Dictionary<string, UI_Base> _popups = new Dictionary<string, UI_Base>();
+    public int PopupCount => _popupStack.Count;
 
     public T ShowPopupUI<T>(string name = null) where T : UI_Base, IUI_Popup
 	{

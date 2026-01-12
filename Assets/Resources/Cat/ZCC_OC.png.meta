@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: eb7d11b2ddc305e42a3b83ff522c9984
+guid: c0e3803de7e1d0c4f995dacebcf1addc
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 4271289965254409854
-    second: ZCC_BC_0
+      213: -1830506965784446875
+    second: ZCC_OC_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ZCC_BC_0
+      name: ZCC_OC_0
       rect:
         serializedVersion: 2
-        x: 42
-        y: 34
-        width: 406
-        height: 457
+        x: 11
+        y: 6
+        width: 445
+        height: 517
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e7efda7d79ba64b30800000000000000
-      internalID: 4271289965254409854
+      spriteID: 5683a81fc9bb896e0800000000000000
+      internalID: -1830506965784446875
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ZCC_BC_0: 4271289965254409854
+      ZCC_OC_0: -1830506965784446875
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

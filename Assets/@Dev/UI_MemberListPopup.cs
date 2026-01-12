@@ -42,7 +42,7 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
         SalaryText4,
 
         //SubBottom
-        SubBottomSumText,
+        SubBottomSumNameText,
         SubBottomSumMemberText,
         SubBottomSumSalaryText,
     }
@@ -98,6 +98,7 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
     {
         //MemberManager의 구성원 정보를 불러와서 UI에 반영,
         int memberCount = MemberManager.Instance.MemberCount;
+        int totalSalary = 0;
         for (int i = 0; i < 4; i++)
         {
             var nameText = GetText((int)Texts.NameText1 + i);
@@ -118,6 +119,7 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
                     nameText.text = memberData.Name;
                     roleText.text = memberData.RoleToString(memberData.Role);
                     salaryText.text = $"${memberData.Salary}개";//Localize
+                    totalSalary += memberData.Salary;
                 }
                 else
                 {
@@ -128,13 +130,12 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
             }
             else
             {
-                // 빈 슬롯 처리
-                //nameText.gameObject.SetActive(false);
-                //roleText.gameObject.SetActive(false);
-                //salaryText.gameObject.SetActive(false);
                 frameButton.gameObject.SetActive(false);
             }
         }
+
+        GetText((int)Texts.SubBottomSumMemberText).text = $"{memberCount}마리";
+        GetText((int)Texts.SubBottomSumSalaryText).text = $"{totalSalary}개";
     }
     public override void RefreshUI()
     {

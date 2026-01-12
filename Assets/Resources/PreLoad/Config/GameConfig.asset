@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c147f983cfabfd141822ecd2be6ac2fd, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::GameConfig
-  initialGold: 500
-  initialLevel: 1
+  initialGold: 5000
+  initialYear: 1
+  initialFood: 100
+  initialGameMode: 0

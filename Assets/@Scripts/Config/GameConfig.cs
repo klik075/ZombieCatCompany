@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Define;
 
 [CreateAssetMenu(fileName = "GameConfig", menuName = "Config/GameConfig")]
 public class GameConfig : ScriptableObject
@@ -7,12 +8,21 @@ public class GameConfig : ScriptableObject
     
     [Min(500)]
     [SerializeField]
-    private int initialGold = 1000;
+    private int initialGold = 5000;
 
-    [Range(1, 20)]
+    [Min(1)]
     [SerializeField]
-    private int initialLevel = 1;
+    private int initialYear = 1;
+
+    [Min(0)]
+    [SerializeField]
+    private int initialFood = 100;
+
+    [SerializeField]
+    private EGameMode initialGameMode = EGameMode.Purchase;
 
     public int InitialGold => initialGold;
-    public int InitialLevel => initialLevel;
+    public int InitialYear => initialYear;
+    public int InitialFood => initialFood;
+    public EGameMode InitialGameMode => initialGameMode;
 }

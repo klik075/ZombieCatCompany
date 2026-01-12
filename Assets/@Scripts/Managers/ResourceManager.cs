@@ -47,7 +47,7 @@ public class ResourcesLoader : IResourceLoader
 
 	public void LoadAll(Action<float> onProgress = null, Action onComplete = null)
 	{
-        List<string> paths = new List<string> { "PreLoad" };
+        List<string> paths = new List<string> { "PreLoad", "Cat" };
         int totalPaths = paths.Count;
         int loadedPaths = 0;
 

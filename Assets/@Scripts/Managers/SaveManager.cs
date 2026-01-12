@@ -54,7 +54,10 @@ public class SaveManager : Singleton<SaveManager>
             return;
         }
 
-        string json = JsonConvert.SerializeObject(gameData);
+        // MemberManager 데이터 저장
+        gameData.PlayerSaveDatas = MemberManager.Instance.GetSaveData();
+
+        string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         File.WriteAllText(SavePath, json);
         Debug.Log($"SaveManager: Game saved to {SavePath}");
     }
@@ -69,7 +72,15 @@ public class SaveManager : Singleton<SaveManager>
         }
 
         string json = File.ReadAllText(SavePath);
-        GameManager.Instance.GameData = JsonConvert.DeserializeObject<GameData>(json);
+        GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
+        GameManager.Instance.GameData = gameData;
+        
+        // MemberManager 데이터 로드
+        if (gameData.PlayerSaveDatas != null && gameData.PlayerSaveDatas.Count > 0)
+        {
+            MemberManager.Instance.LoadFromSaveData(gameData.PlayerSaveDatas);
+        }
+        
         Debug.Log($"SaveManager: Game loaded from {SavePath}");
     }
 
@@ -78,9 +89,13 @@ public class SaveManager : Singleton<SaveManager>
         GameData gameData = new GameData()
         {
             Gold = DataManager.Instance.GameConfig.InitialGold,
-            Level = DataManager.Instance.GameConfig.InitialLevel
+            Year = DataManager.Instance.GameConfig.InitialYear,
+            Food = DataManager.Instance.GameConfig.InitialFood,
+            GameMode = DataManager.Instance.GameConfig.InitialGameMode,
+            PlayerSaveDatas = null,
         };
 
+        MemberManager.Instance.InitBoss();
         GameManager.Instance.GameData = gameData;
         Save();
     }

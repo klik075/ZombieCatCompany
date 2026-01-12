@@ -41,7 +41,15 @@ public class Cat : ObjectBase
     public bool IsFlipped
     {
         get { return _isFlipped; }
-        set { _isFlipped = value; _skeletonAnimation.skeleton.ScaleX = _isFlipped ? -1 : 1; }
+        set 
+        { 
+            _isFlipped = value;
+
+            if (_skeletonAnimation == null)
+                return;
+
+            _skeletonAnimation.skeleton.ScaleX = _isFlipped ? -1 : 1; 
+        }
     }
 
     protected virtual void Start()

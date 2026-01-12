@@ -1,19 +1,31 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Define;
 
+[System.Serializable]
+public class HireResult
+{
+    public List<MemberData> MemberDatas;//고용된 멤버 데이터들
+    public string message;
+    public HireMethodType HireMethod;//고용 방법
+}
 public class MemberManager : Singleton<MemberManager>
 {
+    public const int MAIN_CHARACTER_ID = 100;
     private const int MAX_MEMBERS = 4;
     private Player[] _members = new Player[MAX_MEMBERS];
 
     // 주인공(첫 번째 구성원)은 해고 불가
     public Player MainCharacter => _members[0];
+    
 
     // 현재 구성원 수
     public int MemberCount { get; private set; } = 0;
 
     // 게임 시작 시 주인공 초기화
-    public void InitializeMainCharacter()
+    public void InitBoss()
     {
         if (_members[0] != null)
         {
@@ -23,7 +35,7 @@ public class MemberManager : Singleton<MemberManager>
 
         // 주인공 스폰
         Player mainCharacter = ObjectManager.Instance.SpawnPlayer("Cat");
-        mainCharacter.SetMemberData(100);
+        mainCharacter.SetMemberData(MAIN_CHARACTER_ID);
         _members[0] = mainCharacter;
         MemberCount = 1;
 
@@ -34,13 +46,102 @@ public class MemberManager : Singleton<MemberManager>
         Debug.Log("Main character initialized");
     }
 
-    // 구성원 고용 (빈 자리에 추가)
-    public bool HireMember(out int memberIndex)
+    //고용 종류에 따라 랜덤한 직원 리스트 생성 후 매개 변수로 받은 액션에게 Result 전달 Invoke
+    public HireResult GenerateHireResult(HireMethodType hireMethodType)
     {
-        Random.InitState(System.DateTime.Now.Millisecond + MemberCount);
-        memberIndex = -1;
+        //hireMethodType 마다 다른 로직
 
-        // 팀이 가득 찬 경우
+        HireResult result = new HireResult
+        {
+            HireMethod = hireMethodType
+        };
+
+        result.MemberDatas = GenerateMemberDatas();
+        result.message = $"모집했던 결과가 나왔다냥.\r\n고양이 {result.MemberDatas.Count}마리가 지원했다냥.\r\n누구를 채용할까냥?";
+
+        return result;
+    }
+    public IEnumerator StartHiringProcess(HireMethodType hireMethodType, Action<HireResult> onComplete)
+    {
+        // 모집 중 상태로 변경
+        GameManager.Instance.IsRecruiting = true;
+
+        // 대기 시간
+        float waitTime = GetHireWaitTime(hireMethodType);
+        yield return new WaitForSeconds(waitTime);
+
+        // 채용 결과 생성
+        HireResult result = GenerateHireResult(hireMethodType);
+
+        // 모집 완료
+        GameManager.Instance.IsRecruiting = false;
+
+        // 콜백 호출
+        onComplete?.Invoke(result);
+    }
+    private float GetHireWaitTime(HireMethodType hireMethodType)
+    {
+        switch (hireMethodType)
+        {
+            case HireMethodType.Internet:
+                return 1f; // 추후에 변경
+            default:
+                return 1f;
+        }
+    }
+    public List<MemberData> GenerateMemberDatas(int count = 4)
+    {
+        List<MemberData> memberDatas = new List<MemberData>();
+        // 101~103 사이의 랜덤한 직원 ID 생성
+        for (int i = 0; i < count; i++)
+        {
+            int randomID = UnityEngine.Random.Range(101, 104);
+            MemberData memberData = new MemberData();
+            DataManager.Instance.MemberDict.TryGetValue(randomID, out memberData);
+            memberDatas.Add(memberData);
+        }
+        
+        return memberDatas;
+    }
+    public int GetAnnualIncome(MemberData memberData)
+    {
+        int salary = memberData.Salary * 100;
+
+        return salary;
+    }
+    public int GetHireCost(MemberData memberData)
+    {
+        int randomInt = UnityEngine.Random.Range(13, 16);
+        float rate = randomInt / 10.0f;
+        int hireCost = (int)(GetAnnualIncome(memberData) * rate);//나중에 100을 식량 코스트로 변경해야 함.
+
+        return hireCost;
+    }
+    public bool HireRandomMember(int start = 101, int end = 104)
+    {
+        //나중에 범위 체크 할 것
+
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond + MemberCount);
+
+        int employeeId = UnityEngine.Random.Range(start, end);
+
+        if(HireMember(employeeId))
+            return true;
+
+        return false;
+    }
+    public bool HireMember(int employeeId)
+    {
+        if (DataManager.Instance.MemberDict.TryGetValue(employeeId, out MemberData memberData))
+        {
+            HireMember(memberData);
+            return true;
+        }
+
+        return false;
+    }
+    public bool HireMember(MemberData memberData)
+    {
         if (MemberCount >= MAX_MEMBERS)
         {
             Debug.LogWarning("Cannot hire more members. Team is full!");
@@ -49,16 +150,14 @@ public class MemberManager : Singleton<MemberManager>
 
         // 현재 MemberCount 인덱스에 새 구성원 추가
         Player newMember = ObjectManager.Instance.SpawnPlayer("Cat");
-        newMember.SetMemberData(Random.Range(101,104));
+        newMember.SetMemberData(memberData);
         _members[MemberCount] = newMember;
-        memberIndex = MemberCount;
         MemberCount++;
 
         // 초기 위치 설정 (주인공 근처)
         Vector2Int spawnCell = FindSpawnPosition();
         MapManager.Instance.MoveTo(newMember, spawnCell, true);
 
-        Debug.Log($"Member hired at index {memberIndex}");
         return true;
     }
 
@@ -134,6 +233,67 @@ public class MemberManager : Singleton<MemberManager>
         return -1; // 찾지 못한 경우
     }
 
+    // 모든 구성원 저장 데이터 생성
+    public List<PlayerSaveData> GetSaveData()
+    {
+        List<PlayerSaveData> saveDatas = new List<PlayerSaveData>();
+        
+        for (int i = 0; i < MemberCount; i++)
+        {
+            if (_members[i] != null)
+            {
+                saveDatas.Add(_members[i].GetSaveData());
+            }
+        }
+        
+        return saveDatas;
+    }
+    
+    // 저장 데이터에서 구성원 복원
+    public void LoadFromSaveData(List<PlayerSaveData> saveDatas)
+    {
+        // 기존 멤버 정리
+        ClearAllMembers();
+        
+        if (saveDatas == null || saveDatas.Count == 0)
+        {
+            Debug.LogWarning("No member save data to load!");
+            return;
+        }
+        
+        for (int i = 0; i < saveDatas.Count && i < MAX_MEMBERS; i++)
+        {
+            PlayerSaveData saveData = saveDatas[i];
+            
+            // Player 스폰
+            Player player = ObjectManager.Instance.SpawnPlayer("Cat");
+            
+            // 저장된 데이터 로드
+            player.LoadFromSaveData(saveData);
+            
+            // 멤버 배열에 추가
+            _members[i] = player;
+        }
+        
+        MemberCount = saveDatas.Count;
+        Debug.Log($"Loaded {MemberCount} members from save data");
+    }
+    
+    // 모든 구성원 정리
+    public void ClearAllMembers()
+    {
+        for (int i = 0; i < MAX_MEMBERS; i++)
+        {
+            if (_members[i] != null)
+            {
+                MapManager.Instance.UnregisterCat(_members[i].CellPosition);
+                ObjectManager.Instance.Despawn(_members[i]);
+                _members[i] = null;
+            }
+        }
+        MemberCount = 0;
+    }
+
     // 모든 구성원 가져오기 (null 제외)
     public List<Player> GetAllMembers()
     {
@@ -192,25 +352,10 @@ public class MemberManager : Singleton<MemberManager>
         List<Vector2Int> walkableCells = MapManager.Instance.GetWalkableCells();
         if (walkableCells.Count > 0)
         {
-            return walkableCells[Random.Range(0, walkableCells.Count)];
+            return walkableCells[UnityEngine.Random.Range(0, walkableCells.Count)];
         }
 
         // 최후의 수단
         return new Vector2Int(0, 2);
     }
-
-    //// 모든 구성원 정리
-    //public void Clear()
-    //{
-    //    for (int i = 0; i < MemberCount; i++)
-    //    {
-    //        if (_members[i] != null)
-    //        {
-    //            MapManager.Instance.UnregisterCat(_members[i].CellPosition);
-    //            ObjectManager.Instance.Despawn(_members[i]);
-    //            _members[i] = null;
-    //        }
-    //    }
-    //    MemberCount = 0;
-    //}
 }

@@ -9,10 +9,27 @@ public static class Define
         DevScene,
     }
 
-    public enum EEventType
+    public enum EGameState
     {
         None,
+        Night,//게임 개발 전
+        Dev,//게임 개발 중
+        Morning,//아침
+        Popup,//팝업이 켜져 있는 상태에서는 게임의 시간 정지.
+        Ending,//엔딩
+    }
+    public enum EEventType
+    {
+        //=======General=============
+        Event,//이벤트
+        Dispatch,//파견
+
+        //===========================
+        //=======Trigger Events======
+        None,
+        YearChanged,
         GoldChanged,
+        FoodChanged,
         LanguageChanged,
 
         //LeftPanel
@@ -21,11 +38,16 @@ public static class Define
         UI_MenuButtonClicked,
         UI_SystemButtonClicked,
 
-        //Popup
-        UI_PopupClosed,//
+         //Popup
+        UI_PopupClosed,
         UI_PopupOpened,
+        //===========================
     }
-
+    public enum  EEventRewardType
+    {
+        Item,//아이템
+        Ending,//혈청 엔딩
+    }
     public enum ESound
     {
         Bgm,
@@ -69,6 +91,8 @@ public static class Define
         Hunger2,//배고픔
         Starvation,//굶주림
         Soon,//곧 죽음
+
+        Dispatch,//파견 중
     }
     public enum EAbilityType
     {
@@ -77,5 +101,34 @@ public static class Define
         Graphics,//그래픽
         Sound,//사운드
         Power//전투력
+    }
+    public enum EQualityType
+    {
+        Fun,//재미
+        Nyang,//냥력
+        Graphics,//그래픽
+        Sound,//사운드
+        Bug,//버그
+    }
+    public enum EGameMode
+    {
+        Purchase, //구매 모드
+        Extortion, //강탈 모드
+    }
+    public enum EEndingType
+    {
+        Starved,//굶어 죽음
+        Detection,//정체 발각
+        Serum,//혈청 투여
+    }
+    public enum ESynergyType
+    {
+        Good,//걸작
+        Normal,//평범
+        Bad,//똥게임
+    }
+    public enum HireMethodType
+    {
+        Internet,//인터넷
     }
 }

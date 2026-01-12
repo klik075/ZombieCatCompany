@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using static Define;
 using UnityEngine.UI;
 using Unity.VisualScripting;
+using System;
 
 public class Player : Cat
 {
     private bool _isMoving = false;
     public bool CanMove => !_isMoving;
-
-    public MemberData MemberData { get; private set; }
     public MemberData CurrentMemberData { get; private set; }
     // 이동 관련 변수
     private Vector3 _moveStart;
@@ -31,14 +30,59 @@ public class Player : Cat
     {
         if(DataManager.Instance.MemberDict.TryGetValue(employeeId, out MemberData data))
         {
-            MemberData = data;
             CurrentMemberData = data.DeepCopy();
         }
         else
         {
-            MemberData = null;
             CurrentMemberData = null;
         }
+    }
+    public void SetMemberData(MemberData memberData)
+    {
+        CurrentMemberData = memberData.DeepCopy();
+    }
+    
+    // 저장 데이터 생성
+    public PlayerSaveData GetSaveData()
+    {
+        PlayerSaveData playerSaveData = new PlayerSaveData()
+        {
+            State = State,
+            IsFacingForward = IsFacingForward,
+            IsFlipped = IsFlipped,
+            CellPosition = CellPosition,
+            CurrentMemberData = CurrentMemberData,
+            AIEnabled = AIEnabled
+        };
+        return playerSaveData;
+    }
+    
+    // 저장 데이터에서 로드
+    public void LoadFromSaveData(PlayerSaveData saveData)
+    {
+        if (saveData == null)
+        {
+            Debug.LogWarning("PlayerSaveData is null!");
+            return;
+        }
+
+        SetMemberData(saveData.CurrentMemberData);
+
+        // 상태 복원
+        State = saveData.State;
+        IsFacingForward = saveData.IsFacingForward;
+        IsFlipped = saveData.IsFlipped;
+        CellPosition = saveData.CellPosition;
+        AIEnabled = saveData.AIEnabled;
+        
+        // 위치 복원
+        transform.position = MapManager.Instance.CellToWorld(saveData.CellPosition);
+        MapManager.Instance.MoveTo(this, saveData.CellPosition, true);
+        
+        // 이동 중 상태 초기화
+        _isMoving = false;
+        _path.Clear();
+        _aiTargetPosition = new Vector2Int(int.MinValue, int.MinValue);
     }
     public void MoveTo(Vector2Int targetCell)
     {
@@ -126,7 +170,7 @@ public class Player : Cat
         Vector2Int randomTarget;
         do
         {
-            int randomIndex = Random.Range(0, walkableCells.Count);
+            int randomIndex = UnityEngine.Random.Range(0, walkableCells.Count);
             randomTarget = walkableCells[randomIndex];
         } while (randomTarget == CellPosition); // 현재 위치 제외
 

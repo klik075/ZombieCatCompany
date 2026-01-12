@@ -112,7 +112,7 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         GetText((int)Texts.AbilityScoreText5).text = memberData.Power.ToString();
 
         // 멤버 이미지 설정 (상태에 따라 normal/zombie 이미지 선택)
-        string imagePath = memberData.zombieImagePath;
+        string imagePath = memberData.ZombieImagePath;
         
         if (!string.IsNullOrEmpty(imagePath))
         {
