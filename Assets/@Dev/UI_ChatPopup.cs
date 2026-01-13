@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Define;
 
-public class UI_ChatPopup : UI_UGUI, IUI_Popup
+public class UI_ChatPopup : UI_UGUI, IUI_Popup, IClickableUI
 {
     enum GameObjects
     {

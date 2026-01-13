@@ -84,7 +84,7 @@ public class MemberManager : Singleton<MemberManager>
         switch (hireMethodType)
         {
             case HireMethodType.Internet:
-                return 1f; // 추후에 변경
+                return 3f; // 추후에 변경
             default:
                 return 1f;
         }

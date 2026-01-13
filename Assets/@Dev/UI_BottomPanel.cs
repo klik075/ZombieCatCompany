@@ -1,4 +1,7 @@
+using System.ComponentModel.Design;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static Define;
 public class UI_BottomPanel : UI_UGUI
 {
@@ -51,7 +54,34 @@ public class UI_BottomPanel : UI_UGUI
         QualityImage4,
         QualityImage5,
     }
+    private enum MenuButtonState
+    {
+        Menu,           // "메뉴" 표시
+        Back,           // "뒤로" 표시
+        Disabled        // 비활성화 (텍스트 없음)
+    }
+    private static class MenuButtonConfig
+    {
+        public static string GetText(MenuButtonState state)
+        {
+            switch (state)
+            {
+                case MenuButtonState.Menu:
+                    return "@메뉴"; // 나중에 LocalizationManager로 대체 가능
+                case MenuButtonState.Back:
+                    return "@뒤로";
+                case MenuButtonState.Disabled:
+                    return "";
+                default:
+                    return "";
+            }
+        }
 
+        public static bool IsInteractable(MenuButtonState state)
+        {
+            return state != MenuButtonState.Disabled;
+        }
+    }
     private UI_LeftPanel _leftPanel;
     
     protected override void Awake()
@@ -91,65 +121,64 @@ public class UI_BottomPanel : UI_UGUI
             return;
         }
 
-        if (_leftPanel == null)
-        {
-            EventManager.Instance.TriggerEvent(EEventType.UI_MenuButtonClicked);
-            return;
-        }
-
         // 2순위: LeftPanel의 OptionPanel이 열려있는 상태이면 닫기
         if (_leftPanel.HasActiveOptionPanel())
         {
             _leftPanel.CloseCurrentOptionPanel();
+            return;
         }
+
         // 3순위: LeftPanel이 열려있는 상태이면 닫기
-        else if (_leftPanel.gameObject.activeSelf)
+        if (_leftPanel.gameObject.activeSelf)
         {
             _leftPanel.gameObject.SetActive(false);
             UpdateMenuButtonText();
+            return;
         }
-        // 4순위: 아무것도 열려있지 않으면 메뉴 열기
-        else
-        {
-            EventManager.Instance.TriggerEvent(EEventType.UI_MenuButtonClicked);
-        }
-    }
 
-    private void UpdateMenuButtonText()// LeftPanel 상태에 따라 메뉴 버튼 텍스트 변경
+        // 4순위: 아무것도 열려있지 않으면 메뉴 열기
+        EventManager.Instance.TriggerEvent(EEventType.UI_MenuButtonClicked);
+    }
+    private MenuButtonState GetMenuButtonState()
     {
-        GetButton((int)Buttons.MenuButton).interactable = true;
-        // 팝업이 열려있으면 "뒤로"
+        // 팝업이 열려있는지 확인
         UI_Base lastPopupUI = UIManager.Instance.GetLastPopupUI<UI_Base>();
         if (lastPopupUI != null)
         {
+            // IClickableUI 팝업이면 비활성화
             if (lastPopupUI is IClickableUI)
             {
-                GetText((int)Texts.MenuButtonText).text = "";
-                GetButton((int)Buttons.MenuButton).interactable = false;
-                return;
+                return MenuButtonState.Disabled;
             }
-
-            GetText((int)Texts.MenuButtonText).text = "@뒤로";
-            return;
+            // 일반 팝업이면 "뒤로"
+            return MenuButtonState.Back;
         }
 
-        if (_leftPanel == null) 
-            return;
-
+        // LeftPanel이나 OptionPanel이 열려있으면 "뒤로"
         if (_leftPanel.gameObject.activeSelf || _leftPanel.HasActiveOptionPanel())
         {
-            GetText((int)Texts.MenuButtonText).text = "@뒤로";
+            return MenuButtonState.Back;
         }
-        else
-        {
-            GetText((int)Texts.MenuButtonText).text = "@메뉴";
-        }
+
+        // 모두 닫혀있으면 "메뉴"
+        return MenuButtonState.Menu;
+    }
+    private void UpdateMenuButtonText()
+    {
+        MenuButtonState state = GetMenuButtonState();
+        ApplyMenuButtonState(state);
+    }
+
+    private void ApplyMenuButtonState(MenuButtonState state)
+    {
+        GetButton((int)Buttons.MenuButton).interactable = MenuButtonConfig.IsInteractable(state);
+        GetText((int)Texts.MenuButtonText).text = MenuButtonConfig.GetText(state);
     }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
-
+        UpdateMenuButtonText();
         //TODO : Localization
     }
 }
