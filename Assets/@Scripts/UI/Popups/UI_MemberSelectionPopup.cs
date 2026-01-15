@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using static Define;
 
@@ -56,7 +57,9 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         //LeftContent
         MemberImage,
     }
-    private int currentIndex;
+
+    private EMemberSelectionType _selectionType;
+
     protected override void Awake()
     {
         base.Awake();
@@ -66,35 +69,50 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.NextButton).onClick.AddListener(() => NextMemberInfoUpdate());
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => PreviousMemberInfoUpdate());
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => MemberManager.Instance.SelectNextMember());
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => MemberManager.Instance.SelectPreviousMember());
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnOkayButtonClicked());
+
+        EventManager.Instance.AddEvent(EEventType.SelectedMemberChanged, UpdateContent);
+        EventManager.Instance.AddEvent(EEventType.EducationCompleted, UpdateContent);
     }
-    public void SetInfo(Player member)
+
+    public void SetInfo(EMemberSelectionType selectionType, int index = 0)
     {
-        UpdateContent(member);
+        _selectionType = selectionType;
+        MemberManager.Instance.SelectMemberByIndex(index);//현재 선택된 멤버 설정
     }
-    public void UpdateContent(Player member)
+
+    public void UpdateContent()
     {
-        MemberData memberData = member.CurrentMemberData;
+        Player selectedPlayer = MemberManager.Instance.SelectedPlayer;
         
-        if (memberData == null)
+        if (selectedPlayer == null || selectedPlayer?.CurrentMemberData == null)
         {
-            Debug.LogWarning("MemberData is null!");
+            Debug.LogWarning("No selected member or MemberData is null!");
             return;
         }
+
+        MemberData memberData = selectedPlayer.CurrentMemberData;
+
+        // 제목 표시 (현재 선택된 멤버의 순서)
+        int currentOrder = MemberManager.Instance.SelectedPlayerIndex + 1;
+        int totalMembers = MemberManager.Instance.PlayerCount;
+        string mainTitlePrefix = _selectionType == EMemberSelectionType.Education ? "@구성원 선택" : "@파견 선택";
+        GetText((int)Texts.MainTitleText).text = $"{mainTitlePrefix} {currentOrder}/{totalMembers}";
 
         // 이름 표시
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
         // 급여 표시
-        GetText((int)Texts.SubMiddleSalaryNameText).text = "식비";
-        GetText((int)Texts.SubMiddleSalaryText).text = $"{memberData.Salary}개";
+        GetText((int)Texts.SubMiddleSalaryNameText).text = "@식비";
+        GetText((int)Texts.SubMiddleSalaryText).text = $"{memberData.SalaryToString(ESalaryType.Food)}";
 
         // 역할 표시
         GetText((int)Texts.RoleText).text = memberData.RoleToString(memberData.Role);
 
         // 상태 표시
-        GetText((int)Texts.StateNameText).text = "상태";
+        GetText((int)Texts.StateNameText).text = "@상태";
         GetText((int)Texts.StateText).text = memberData.StateToString(memberData.State);
 
         // 능력치 이름 설정
@@ -124,27 +142,46 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         }
 
         // 확인 버튼 텍스트
-        GetText((int)Texts.OkayButtonText).text = "교육";
-        currentIndex = MemberManager.Instance.GetIndex(member) != -1 ? MemberManager.Instance.GetIndex(member) : 0;
-        int order = MemberManager.Instance.GetIndex(member) + 1;
-        GetText((int)Texts.MainTitleText).text = $"구성원 선택 {order}/{MemberManager.Instance.MemberCount}";
+        GetText((int)Texts.OkayButtonText).text = _selectionType == EMemberSelectionType.Education ? "@교육" : "@파견";
     }
-    public void NextMemberInfoUpdate()
+
+    private void OnOkayButtonClicked()
     {
-        int memberCount = MemberManager.Instance.MemberCount;
-        int nextIndex = (currentIndex + memberCount + 1) % memberCount;
-        UpdateContent(MemberManager.Instance.GetMember(nextIndex));
+        switch(_selectionType)
+        {
+            case EMemberSelectionType.Education:
+                HandleEducation();
+                break;
+            case EMemberSelectionType.Dispatch:
+                HandleDispatch();
+                break;
+            default:
+                Debug.LogWarning("Unknown member selection type.");
+                break;
+        }
     }
-    public void PreviousMemberInfoUpdate()
+
+    private void HandleEducation()
     {
-        int memberCount = MemberManager.Instance.MemberCount;
-        int prevIndex = (currentIndex + memberCount - 1) % memberCount;
-        UpdateContent(MemberManager.Instance.GetMember(prevIndex));
+        // 교육 가능 여부 체크
+        if (!EducationManager.Instance.CanReceiveEducation())
+        {
+            Debug.LogWarning($"현재 교육을 받을 수 없는 상태입니다.");
+            return;
+        }
+
+        UI_MemberEducationMethodsPopup educationPopup = UIManager.Instance.ShowPopupUI<UI_MemberEducationMethodsPopup>();
     }
+
+    private void HandleDispatch()
+    {
+
+    }
+
     public override void RefreshUI()
     {
         base.RefreshUI();
-
+        UpdateContent();
         //TODO : Localization
     }
 }

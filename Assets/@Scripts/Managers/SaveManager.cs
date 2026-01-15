@@ -91,7 +91,12 @@ public class SaveManager : Singleton<SaveManager>
             Gold = DataManager.Instance.GameConfig.InitialGold,
             Year = DataManager.Instance.GameConfig.InitialYear,
             Food = DataManager.Instance.GameConfig.InitialFood,
+            AnnualProfit = DataManager.Instance.GameConfig.InitialAnnualProfit,
             GameMode = DataManager.Instance.GameConfig.InitialGameMode,
+            CompanyName = DataManager.Instance.GameConfig.InitialCompanyName,
+            GameState = DataManager.Instance.GameConfig.InitialGameState,
+            NewDevTitle = DataManager.Instance.GameConfig.InitialNewDevTitle,
+            IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting,
             PlayerSaveDatas = null,
         };
 

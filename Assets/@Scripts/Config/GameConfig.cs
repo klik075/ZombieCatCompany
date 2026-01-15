@@ -19,10 +19,35 @@ public class GameConfig : ScriptableObject
     private int initialFood = 100;
 
     [SerializeField]
+    private int initialAnnualProfit = 0;
+
+    [SerializeField]
     private EGameMode initialGameMode = EGameMode.Purchase;
+
+    [Header("Company Settings")]
+    [SerializeField]
+    private string initialCompanyName = "ZombieCat Company";
+
+    [SerializeField]
+    private EGameState initialGameState = EGameState.Night;
+
+    [Header("Development Settings")]
+    [SerializeField]
+    private string initialNewDevTitle = "";
+
+    [Header("Recruitment Settings")]
+    [SerializeField]
+    private bool initialIsRecruiting = false;
 
     public int InitialGold => initialGold;
     public int InitialYear => initialYear;
     public int InitialFood => initialFood;
     public EGameMode InitialGameMode => initialGameMode;
+    public string InitialCompanyName => initialCompanyName;
+    public EGameState InitialGameState => initialGameState;
+
+    public int InitialAnnualProfit => initialAnnualProfit;
+    public string InitialNewDevTitle => initialNewDevTitle;
+
+    public bool InitialIsRecruiting => initialIsRecruiting;
 }

@@ -123,12 +123,20 @@ public class GameManager : Singleton<GameManager>
     public int AnnualProfit
     {
         get { return _gameData.AnnualProfit; }
-        set { _gameData.AnnualProfit = value; }
+        set 
+        { 
+            _gameData.AnnualProfit = value;
+            EventManager.Instance.TriggerEvent(Define.EEventType.AnnualProfitChanged);
+        }
     }
     public string NewDevTitle
     {
         get { return _gameData.NewDevTitle; }
-        set { _gameData.NewDevTitle = value; }
+        set 
+        { 
+            _gameData.NewDevTitle = value;
+            EventManager.Instance.TriggerEvent(Define.EEventType.NewDevTitleChanged);
+        }
     }
     public bool IsRecruiting
     {
@@ -148,6 +156,9 @@ public class GameManager : Singleton<GameManager>
     // 게임 시간 재개
     public void ResumeGame()
     {
+        if (UIManager.Instance.PopupCount != 0)
+            return;
+
         Time.timeScale = 1f;
     }
 }

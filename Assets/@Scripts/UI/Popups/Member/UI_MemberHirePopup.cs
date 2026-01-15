@@ -53,7 +53,6 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         //LeftContent
         MemberImage,
     }
-    private HireResult _hireResult;
     private int _currentIndex = 0;
     
     protected override void Awake()
@@ -70,35 +69,40 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => PreviousMemberInfoUpdate());
         GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnOkayButtonClicked());
     }
-    
-    public void SetInfo(HireResult hireResult)
+
+    protected override void OnEnable()
     {
-        _hireResult = hireResult;
-        _currentIndex = 0;
-        UpdateContent(_currentIndex);
+        base.OnEnable();
+        SetInfo();
+    }
+    public void SetInfo()
+    {
+        UpdateContent(0);
     }
     
     public void UpdateContent(int index)
     {
-        if (_hireResult == null)
+        HireResult hireResult = MemberManager.Instance.HireResult;
+
+        if (hireResult == null)
         {
             Debug.LogWarning("HireResult is null!");
             return;
         }
 
-        if (_hireResult.MemberDatas == null || _hireResult.MemberDatas.Count == 0)
+        if (hireResult.MemberDatas == null || hireResult.MemberDatas.Count == 0)
         {
             Debug.LogWarning("No member data available!");
             return;
         }
 
-        if (index < 0 || index >= _hireResult.MemberDatas.Count)
+        if (index < 0 || index >= hireResult.MemberDatas.Count)
         {
             Debug.LogWarning($"Invalid index: {index}");
             return;
         }
 
-        MemberData memberData = _hireResult.MemberDatas[index];
+        MemberData memberData = hireResult.MemberDatas[index];
         
         if (memberData == null)
         {
@@ -109,21 +113,21 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         _currentIndex = index;
 
         // 타이틀 텍스트 (현재 멤버 / 전체 멤버 수)
-        GetText((int)Texts.MainTitleText).text = $"@신규 고용 {_currentIndex + 1}/{_hireResult.MemberDatas.Count}";
+        GetText((int)Texts.MainTitleText).text = $"@신규 고용 {_currentIndex + 1}/{hireResult.MemberDatas.Count}";
 
         // 이름 표시
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
         // 급여 표시
         GetText((int)Texts.SubMiddleSalaryNameText).text = "@연봉";
-        GetText((int)Texts.SubMiddleSalaryText).text = $"{MemberManager.Instance.GetAnnualIncome(memberData)}G";
+        GetText((int)Texts.SubMiddleSalaryText).text = $"{memberData.SalaryToString(ESalaryType.Salary)}";
 
         // 역할 표시
         GetText((int)Texts.RoleText).text = memberData.RoleToString(memberData.Role);
 
         // 지불 금액 표시 (PaymentText는 급여와 동일하거나 다른 값일 수 있음)
         GetText((int)Texts.PaymentNameText).text = "@계약금";
-        GetText((int)Texts.PaymentText).text = $"{MemberManager.Instance.GetHireCost(memberData)}G";
+        GetText((int)Texts.PaymentText).text = $"{memberData.SalaryToString(ESalaryType.Deposit)}";
 
         // 능력치 이름 설정
         GetText((int)Texts.AbilityNameText1).text = memberData.AbilityToString(EAbilityType.Programming);
@@ -159,31 +163,37 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
     
     private void NextMemberInfoUpdate()
     {
-        if (_hireResult == null || _hireResult.MemberDatas == null || _hireResult.MemberDatas.Count == 0)
+        HireResult hireResult = MemberManager.Instance.HireResult;
+
+        if (hireResult == null || hireResult.MemberDatas == null || hireResult.MemberDatas.Count == 0)
             return;
         
-        int nextIndex = (_currentIndex + 1) % _hireResult.MemberDatas.Count;
+        int nextIndex = (_currentIndex + 1) % hireResult.MemberDatas.Count;
         UpdateContent(nextIndex);
     }
     
     private void PreviousMemberInfoUpdate()
     {
-        if (_hireResult == null || _hireResult.MemberDatas == null || _hireResult.MemberDatas.Count == 0)
+        HireResult hireResult = MemberManager.Instance.HireResult;
+
+        if (hireResult == null || hireResult.MemberDatas == null || hireResult.MemberDatas.Count == 0)
             return;
         
-        int prevIndex = (_currentIndex - 1 + _hireResult.MemberDatas.Count) % _hireResult.MemberDatas.Count;
+        int prevIndex = (_currentIndex - 1 + hireResult.MemberDatas.Count) % hireResult.MemberDatas.Count;
         UpdateContent(prevIndex);
     }
     
     private void OnOkayButtonClicked()
     {
-        if (_hireResult == null || _hireResult.MemberDatas == null || _currentIndex >= _hireResult.MemberDatas.Count)
+        HireResult hireResult = MemberManager.Instance.HireResult;
+
+        if (hireResult == null || hireResult.MemberDatas == null || _currentIndex >= hireResult.MemberDatas.Count)
         {
             Debug.LogWarning("Cannot hire: Invalid hire result!");
             return;
         }
         
-        MemberData selectedMember = _hireResult.MemberDatas[_currentIndex];
+        MemberData selectedMember = hireResult.MemberDatas[_currentIndex];
         
         if (selectedMember == null)
         {
@@ -195,7 +205,7 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         if (MemberManager.Instance.IsTeamFull())
         {
             Debug.LogWarning("Cannot hire: Team is full!");
-            // TODO: 팝업으로 "팀이 가득 찼습니다" 메시지 표시
+            // TODO: 현재 멤버를 해고 할 것인지.
             return;
         }
         
@@ -215,12 +225,10 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
             //GameManager.Instance.Gold -= hireCost;
             
             Debug.Log($"<color=green>Successfully hired {selectedMember.Name}!</color>");
-            _hireResult.MemberDatas.RemoveAt(_currentIndex);
+            hireResult.MemberDatas.RemoveAt(_currentIndex);
 
-            if (_hireResult.MemberDatas.Count > 0)
-            {
-                UpdateContent(0);
-            }
+            if (hireResult.MemberDatas.Count > 0)
+                SetInfo();
             else
                 UIManager.Instance.ClosePopupUI();
 
@@ -234,6 +242,7 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
     public override void RefreshUI()
     {
         base.RefreshUI();
+        SetInfo();
         // TODO: Localization
     }
 }

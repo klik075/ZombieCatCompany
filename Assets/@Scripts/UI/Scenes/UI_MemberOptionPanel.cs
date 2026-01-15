@@ -58,13 +58,13 @@ public class UI_MemberOptionPanel : UI_UGUI
                 break;
             case Buttons.MemberEducationButton:
                 UI_MemberSelectionPopup memberSelectionPopup = UIManager.Instance.ShowPopupUI<UI_MemberSelectionPopup>();
-                memberSelectionPopup.SetInfo(MemberManager.Instance.MainCharacter);
+                memberSelectionPopup.SetInfo(EMemberSelectionType.Education); // 교육 타입으로 설정
                 break;
             case Buttons.MemberHireButton:
                 if (GameManager.Instance.IsRecruiting)
                 {
                     UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-                    chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, "이미 모집 중이다냥.");//대사 테이블이 필요할 듯.
+                    chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, "@이미 모집 중이다냥.");
                 }
                 else
                 {

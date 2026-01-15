@@ -24,6 +24,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<string, TextData> TextDict { get; private set; } = new Dictionary<string, TextData>();
     public Dictionary<int, ItemData> ItemDict { get; private set;  } = new Dictionary<int, ItemData>();
     public Dictionary<int, MemberData> MemberDict { get; private set;  } = new Dictionary<int, MemberData>();
+    public Dictionary<int, EducationData> EducationDict { get; private set; } = new Dictionary<int, EducationData>();
 
     public void LoadData()
     {
@@ -35,8 +36,7 @@ public class DataManager : Singleton<DataManager>
         TextDict = LoadJson<TextDataLoader, string, TextData>("TextData").MakeDict();
         ItemDict = LoadJson<ItemDataLoader, int, ItemData>("ItemData").MakeDict();
         MemberDict = LoadJson<MemberDataLoader, int, MemberData>("MemberData").MakeDict();
-
-        // TODO
+        EducationDict = LoadJson<EducationDataLoader, int, EducationData>("EducationData").MakeDict();
 
         Validate();
     }

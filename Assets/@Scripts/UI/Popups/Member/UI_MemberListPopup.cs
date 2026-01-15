@@ -1,4 +1,5 @@
 using UnityEngine;
+using static Define;
 
 public class UI_MemberListPopup : UI_UGUI, IUI_Popup
 {
@@ -46,9 +47,12 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
         SubBottomSumMemberText,
         SubBottomSumSalaryText,
     }
+    private int[] _displayedMemberIndices;
     protected override void Awake()
     {
         base.Awake();
+
+        _displayedMemberIndices = new int[MemberManager.MAX_PLAYERS];
 
         BindObjects(typeof(GameObjects));
         BindButtons(typeof(Buttons));
@@ -58,67 +62,64 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.EmployeeFrame2).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame2));
         GetButton((int)Buttons.EmployeeFrame3).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame3));
         GetButton((int)Buttons.EmployeeFrame4).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame4));
+
+        EventManager.Instance.AddEvent(EEventType.MemberListChanged, UpdateContent);
     }
     protected override void OnEnable()
     {
         base.OnEnable();
-
         UpdateContent();
-    }
-    public void SetInfo()
-    {
-
     }
     public void OpenNextUI(Buttons buttonType)
     {
-        // 버튼 타입에서 멤버 인덱스 추출
-        int memberIndex = (int)buttonType - (int)Buttons.EmployeeFrame1;
+        // 버튼 타입에서 멤버 인덱스 계산
+        int slot = (int)buttonType - (int)Buttons.EmployeeFrame1;
         
         // 유효성 검사
-        if (memberIndex < 0 || memberIndex >= MemberManager.Instance.MemberCount)
+        if (slot < 0 || slot >= MemberManager.MAX_PLAYERS)
         {
-            Debug.LogWarning($"Invalid member index: {memberIndex}");
-            return;
-        }
-        
-        // 해당 멤버 정보 가져오기
-        Player member = MemberManager.Instance.GetMember(memberIndex);
-        if (member == null || member.CurrentMemberData == null)
-        {
-            Debug.LogWarning($"Member data not found at index: {memberIndex}");
+            Debug.LogWarning($"Invalid member index: {slot}");
             return;
         }
 
-        UIManager.Instance.ClosePopupUI();//현재 팝업 지우기
+        int actualIndex = _displayedMemberIndices[slot];
+        if (actualIndex < 0 || actualIndex >= MemberManager.Instance.PlayerCount)
+        {
+            Debug.LogWarning($"Invalid displayed member index for slot {slot}: {actualIndex}");
+            return;
+        }
 
-        UI_MemberSelectionPopup popup = UIManager.Instance.ShowPopupUI<UI_MemberSelectionPopup>();
-        popup.SetInfo(member);
+        UIManager.Instance.ClosePopupUI();//현재 팝업 닫기
+
+        UI_MemberSelectionPopup selectionPopup = UIManager.Instance.ShowPopupUI<UI_MemberSelectionPopup>();
+        selectionPopup.SetInfo(EMemberSelectionType.Education, actualIndex); // 기본적으로 교육으로 설정
     }
     public void UpdateContent()
     {
-        //MemberManager의 구성원 정보를 불러와서 UI에 반영,
-        int memberCount = MemberManager.Instance.MemberCount;
+        int memberCount = MemberManager.Instance.PlayerCount;
         int totalSalary = 0;
-        for (int i = 0; i < 4; i++)
+        for (int slot = 0; slot < MemberManager.MAX_PLAYERS; slot++)
         {
-            var nameText = GetText((int)Texts.NameText1 + i);
-            var roleText = GetText((int)Texts.RoleText1 + i);
-            var salaryText = GetText((int)Texts.SalaryText1 + i);
-            var frameButton = GetButton((int)Buttons.EmployeeFrame1 + i);
-            if (i < memberCount)
+            var nameText = GetText((int)Texts.NameText1 + slot);
+            var roleText = GetText((int)Texts.RoleText1 + slot);
+            var salaryText = GetText((int)Texts.SalaryText1 + slot);
+            var frameButton = GetButton((int)Buttons.EmployeeFrame1 + slot);
+            if (slot < memberCount)
             {
                 // 구성원 정보 표시
                 nameText.gameObject.SetActive(true);
                 roleText.gameObject.SetActive(true);
                 salaryText.gameObject.SetActive(true);
                 frameButton.gameObject.SetActive(true);
-                
-                MemberData memberData = MemberManager.Instance.GetMember(i).CurrentMemberData;
+
+                _displayedMemberIndices[slot] = slot; // 현재 UI는 간단한 1:1 매핑
+
+                MemberData memberData = MemberManager.Instance.GetMember(slot).CurrentMemberData;
                 if (memberData != null)
                 {
                     nameText.text = memberData.Name;
                     roleText.text = memberData.RoleToString(memberData.Role);
-                    salaryText.text = $"${memberData.Salary}개";//Localize
+                    salaryText.text = memberData.SalaryToString(ESalaryType.Food);
                     totalSalary += memberData.Salary;
                 }
                 else
@@ -130,15 +131,18 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
             }
             else
             {
+                _displayedMemberIndices[slot] = -1;
+
                 frameButton.gameObject.SetActive(false);
             }
         }
 
-        GetText((int)Texts.SubBottomSumMemberText).text = $"{memberCount}마리";
-        GetText((int)Texts.SubBottomSumSalaryText).text = $"{totalSalary}개";
+        GetText((int)Texts.SubBottomSumMemberText).text = $"@{memberCount}마리";
+        GetText((int)Texts.SubBottomSumSalaryText).text = $"@{totalSalary}개";
     }
     public override void RefreshUI()
     {
         base.RefreshUI();
+        UpdateContent();
     }
 }

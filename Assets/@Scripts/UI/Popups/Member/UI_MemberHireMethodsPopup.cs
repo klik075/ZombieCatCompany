@@ -27,7 +27,6 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
         HireMethodNameText1,
         HireMethodCostText1,
     }
-    private HireResult _hireResult;
     protected override void Awake()
     {
         base.Awake();
@@ -51,14 +50,7 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
     }
     private IEnumerator HireProcessCoroutine(HireMethodType hireMethodType)
     {
-        // MemberManager의 채용 프로세스 실행
-        _hireResult = null;
-        yield return CoroutineManager.Instance.Run(
-            MemberManager.Instance.StartHiringProcess(hireMethodType, (hireResult) => 
-            {
-                _hireResult = hireResult; 
-            })
-        );
+        yield return CoroutineManager.Instance.Run(MemberManager.Instance.StartHiringProcess(hireMethodType));
 
         // 팝업이 모두 닫힐 때까지 대기
         while (UIManager.Instance.PopupCount > 0)
@@ -67,12 +59,14 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
         }
 
         UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-        chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, _hireResult != null ? _hireResult.message : "", OpenMemberHirePopup);
+        chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MemberManager.Instance.HireResult.Message, OpenMemberHirePopup);
+
+        // 모집 완료
+        GameManager.Instance.IsRecruiting = false;
     }
     private void OpenMemberHirePopup()
     {
         UI_MemberHirePopup memberHirePopup = UIManager.Instance.ShowPopupUI<UI_MemberHirePopup>();
-        memberHirePopup.SetInfo(_hireResult);
     }
     public override void RefreshUI()
     {

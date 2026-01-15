@@ -26,10 +26,21 @@ public static class Define
 
         //===========================
         //=======Trigger Events======
+        //Game Data Events
         None,
         YearChanged,
         GoldChanged,
         FoodChanged,
+        AnnualProfitChanged,
+        NewDevTitleChanged,
+
+
+        //Member Events
+        MemberListChanged,
+        SelectedMemberChanged,
+        EducationCompleted,
+
+        //Lion
         LanguageChanged,
 
         //LeftPanel
@@ -130,5 +141,16 @@ public static class Define
     public enum HireMethodType
     {
         Internet,//인터넷
+    }
+    public enum EMemberSelectionType
+    {
+        Education,//교육
+        Dispatch,//파견
+    }
+    public enum ESalaryType
+    {
+        Salary,//연봉
+        Food,//식량
+        Deposit,//계약금
     }
 }

@@ -19,6 +19,51 @@ public class MemberData
     public int Sound;
     public int Power;
 
+    public int GetAbilityValue(EAbilityType eAbilityType)
+    {
+        switch(eAbilityType)
+        {
+            case EAbilityType.Programming:
+                return Programming;
+            case EAbilityType.Scenario:
+                return Scenario;
+            case EAbilityType.Graphics:
+                return Graphics;
+            case EAbilityType.Sound:
+                return Sound;
+            case EAbilityType.Power:
+                return Power;
+            default:
+                return 0;
+        }
+    }
+    public string SalaryToString(ESalaryType eSalaryType)
+    {
+        switch(eSalaryType)
+        {
+            case ESalaryType.Food:
+                return $"{SalaryToValue(eSalaryType)}°³";
+            case ESalaryType.Salary:
+            case ESalaryType.Deposit:
+                return $"{SalaryToValue(eSalaryType)}G";
+            default:
+                return "";
+        }
+    }
+    public int SalaryToValue(ESalaryType eSalaryType)
+    {
+        switch(eSalaryType)
+        {
+            case ESalaryType.Food:
+                return Salary;
+            case ESalaryType.Salary:
+                return (Salary * 100);
+            case ESalaryType.Deposit:
+                return ((int)(Salary * 100 * 1.3));
+            default:
+                return 0;
+        }
+    }
     public string RoleToString(ERoleType eRoleType)
     {
         switch(eRoleType)

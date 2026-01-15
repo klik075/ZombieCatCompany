@@ -96,15 +96,48 @@ public class UI_BottomPanel : UI_UGUI
         GetButton((int)Buttons.SaveButton).onClick.AddListener(OnClickSaveButton);
         GetButton((int)Buttons.MenuButton).onClick.AddListener(OnClickMenuButton);
 
+        // UI 관련 이벤트 구독
         EventManager.Instance.AddEvent(EEventType.UI_LeftPanelStateChanged, UpdateMenuButtonText);
         EventManager.Instance.AddEvent(EEventType.UI_PopupClosed, UpdateMenuButtonText);
         EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, UpdateMenuButtonText);
+        
+        // 게임 데이터 변경 이벤트 구독
+        EventManager.Instance.AddEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
+        EventManager.Instance.AddEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
     }
 
     // 부모(UI_NightGame)로부터 LeftPanel 참조 받기
     public void SetInfo(UI_LeftPanel leftPanel)
     {
         _leftPanel = leftPanel;
+    }
+
+    private void OnAnnualProfitChanged()
+    {
+        UpdateAnnualProfitUI(GameManager.Instance.AnnualProfit);
+    }
+
+    private void OnNewDevTitleChanged()
+    {
+        UpdateDevelopmentStatusUI(GameManager.Instance.NewDevTitle);
+    }
+
+    private void UpdateAnnualProfitUI(int annualProfit)
+    {
+        GetText((int)Texts.AnnualProfitText).text = $"{annualProfit:N0}G";
+    }
+
+    private void UpdateDevelopmentStatusUI(string newDevTitle)
+    {
+        // NewDevTitle이 비어있으면 기본 메시지 표시
+        if (string.IsNullOrEmpty(newDevTitle))
+        {
+            GetText((int)Texts.DevelopmentStatusText).text = "@신규 개발 없음";
+        }
+        else
+        {
+            GetText((int)Texts.DevelopmentStatusText).text = $"{newDevTitle}";
+        }
     }
 
     private void OnClickSaveButton()
@@ -179,6 +212,8 @@ public class UI_BottomPanel : UI_UGUI
     {
         base.RefreshUI();
         UpdateMenuButtonText();
+        OnAnnualProfitChanged();
+        OnNewDevTitleChanged();
         //TODO : Localization
     }
 }

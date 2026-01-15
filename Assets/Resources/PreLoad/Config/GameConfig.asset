@@ -12,7 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c147f983cfabfd141822ecd2be6ac2fd, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::GameConfig
-  initialGold: 5000
+  initialGold: 50000
   initialYear: 1
   initialFood: 100
+  initialAnnualProfit: 0
   initialGameMode: 0
+  initialCompanyName: "\uC880\uBE44\uB0E5\uCEF4\uD37C\uB2C8"
+  initialGameState: 1
+  initialNewDevTitle: 
+  initialIsRecruiting: 0
