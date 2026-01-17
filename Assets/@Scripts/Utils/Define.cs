@@ -150,7 +150,64 @@ public static class Define
     public enum ESalaryType
     {
         Salary,//연봉
-        Food,//식량
+        Food,//식비
         Deposit,//계약금
+    }
+    
+    public enum EMessageType
+    {
+        // 재정 관련
+        MoneyLow,          // 자금 부족
+
+        // 고용 관련
+        AlreadyRecruiting,     // 이미 모집 중
+        StartRecruiting,       // 모집 시작
+        CompleteRecruiting,    // 모집 완료
+        MembersFull,          // 멤버가 가득 참
+        MemberFired,           // 멤버 해고
+        MemberSwapped,          // 멤버 해고 후 고용
+        MemberHired,          // 멤버 고용
+
+        //해고 관련
+        MemberFiredConfirm,   //멤버 해고 확인
+    }
+
+    public enum EChatType
+    {
+        // 멤버 간 대화
+        MemberToMember,    // 멤버끼리 대화
+        MemberToBoss,      // 멤버가 사장에게
+        BossToMember,      // 사장이 멤버에게
+        
+        // 업무 관련
+        WorkRequest,       // 업무 요청
+        WorkComplete,      // 업무 완료
+        WorkProgress,      // 업무 진행 상황
+        
+        // 상태 관련
+        StatusReport,      // 상태 보고
+        ComplaintHungry,   // 배고픔 불만
+        ComplaintTired,    // 피로 불만
+        
+        // 감정 표현
+        Happy,             // 기쁨
+        Sad,               // 슬픔
+        Angry,             // 화남
+        Surprised,         // 놀람
+        
+        // 시스템
+        System,            // 시스템 메시지
+        Narration,         // 나레이션
+        
+        // 이벤트
+        EventMessage,      // 이벤트 발생 시
+        
+        // 랜덤 대화
+        RandomChat,        // 일상 대화
+    }
+    public enum EFireType
+    {
+        Normal,//일반 해고
+        Swap,//교체 해고
     }
 }

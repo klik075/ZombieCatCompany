@@ -52,7 +52,7 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         //LeftContent
         MemberImage,
     }
-
+    private EFireType _eFireType;
     protected override void Awake()
     {
         base.Awake();
@@ -64,18 +64,14 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
 
         GetButton((int)Buttons.NextButton).onClick.AddListener(() => MemberManager.Instance.SelectNextMember());
         GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => MemberManager.Instance.SelectPreviousMember());
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => FireSelectedMember());
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnClickOkayButton());
 
         EventManager.Instance.AddEvent(EEventType.SelectedMemberChanged, UpdateContent);
     }
-    protected override void OnEnable()
-    {
-        base.OnEnable();
-        SetInfo();
-    }
 
-    public void SetInfo(int index = 0)
+    public void SetInfo(EFireType eFireType, int index = 0)
     {
+        _eFireType = eFireType;
         MemberManager.Instance.SelectMemberByIndex(index);//ÇöÀç ¼±ÅÃµÈ ¸â¹ö ¼³Á¤
     }
 
@@ -141,15 +137,65 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.OkayButton).interactable = canFire;
     }
 
+    public void OnClickOkayButton()
+    {
+        Player player = MemberManager.Instance.SelectedPlayer;
+
+        if (player == null || player.CurrentMemberData == null)
+        {
+            Debug.LogWarning("Player, MemberData is null!");
+            return;
+        }
+
+        MemberData memberData = player.CurrentMemberData;
+        //¸â¹ö ÇØ°í ÆË¾÷
+        UI_MessagePopup messagePopup = UIManager.Instance.ShowPopupUI<UI_MessagePopup>();
+        messagePopup.SetInfo(MessageManager.Instance.GetMessageScript(EMessageType.MemberFired).Contents, new string[] {memberData.Name}, FireSelectedMember);
+    }
     private void FireSelectedMember()
     {
-        // ¸â¹ö ÇØ°í
+        Player selectedPlayer = MemberManager.Instance.SelectedPlayer;
+
+        if (selectedPlayer == null || selectedPlayer.CurrentMemberData == null)
+        {
+            Debug.LogWarning("Player, MemberData is null!");
+            return;
+        }
+
+        MemberData memberData = selectedPlayer.CurrentMemberData;
+
         bool success = MemberManager.Instance.FireSelectedMember();
-        
-        if (success)
+
+        if (_eFireType == EFireType.Normal)
+        {
+            //¸â¹ö ÇØ°í ¿Ï·á ÆË¾÷
+            UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MemberFiredConfirm).Contents, new string[] { memberData.Name });
+        }
+        else if(_eFireType == EFireType.Swap)
+        {
+
+            //¸â¹ö ±³Ã¼ ÆË¾÷
+            UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MemberSwapped).Contents, new string[] { memberData.Name, MemberManager.Instance.SelectedHireMemberData.Name }, OnStartSwap);
+        }
+
+        if (success && MemberManager.Instance.SelectedPlayerIndex != MemberManager.Instance.PlayerCount)
             MemberManager.Instance.SelectNextMember();
     }
-
+    public void OnStartSwap()
+    {
+        MemberData selectedHireMember = MemberManager.Instance.SelectedHireMemberData;
+        if (MemberManager.Instance.HireMember(selectedHireMember))
+        {
+            UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MemberHired).Contents, new string[] { selectedHireMember.Name }, OnCompleteSwap);
+        }
+    }
+    public void OnCompleteSwap()
+    {
+        UIManager.Instance.ClosePopupUI();
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

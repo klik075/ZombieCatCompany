@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
@@ -40,7 +41,7 @@ public class UI_ChatPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
     }
-    public void SetInfo(int employeeId, string script, Action action = null)//클릭 시 사용할 메서드 등록해야 함.
+    public void SetInfo(int employeeId, string[] scripts, string[] insertScripts = null, Action action = null)//클릭 시 사용할 메서드 등록해야 함.
     {
         DataManager.Instance.MemberDict.TryGetValue(employeeId, out MemberData memberData);
 
@@ -50,7 +51,7 @@ public class UI_ChatPopup : UI_UGUI, IUI_Popup, IClickableUI
         GetText((int)Texts.RoleText).text = memberData.RoleToString(memberData.Role);
         GetImage((int)Images.MemberImage).sprite = ResourceManager.Instance.Get<Sprite>(memberData.ZombieImagePath);
 
-        GetText((int)Texts.ContentText).text = string.IsNullOrEmpty(script) ? "" : script;
+        GetText((int)Texts.ContentText).text = GetContentText(scripts, insertScripts);
 
         Button clickButton = GetButton((int)Buttons.Click);
         clickButton.onClick.RemoveAllListeners();
@@ -59,6 +60,20 @@ public class UI_ChatPopup : UI_UGUI, IUI_Popup, IClickableUI
             clickButton.onClick.AddListener(() => OnClickButton(Buttons.Click, action));
         else
             clickButton.onClick.AddListener(() => ClosePopup());
+    }
+    public string GetContentText(string[] script, string[] insertScript)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < script.Length; i++)
+        {
+            stringBuilder.Append(script[i]);
+            if (insertScript != null && i < insertScript.Length)
+            {
+                stringBuilder.Append(insertScript[i]);
+            }
+        }
+
+        return stringBuilder.ToString();
     }
     public void ClosePopup()
     {

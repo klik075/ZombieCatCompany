@@ -82,7 +82,7 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
     
     public void UpdateContent(int index)
     {
-        HireResult hireResult = MemberManager.Instance.HireResult;
+        HireResult hireResult = MemberManager.Instance.CurrentHireResult;
 
         if (hireResult == null)
         {
@@ -102,8 +102,10 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
             return;
         }
 
-        MemberData memberData = hireResult.MemberDatas[index];
-        
+        MemberManager.Instance.SelectedHireMember(index);
+        MemberData memberData = MemberManager.Instance.SelectedHireMemberData;
+
+
         if (memberData == null)
         {
             Debug.LogWarning($"MemberData at index {index} is null!");
@@ -125,7 +127,7 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         // 역할 표시
         GetText((int)Texts.RoleText).text = memberData.RoleToString(memberData.Role);
 
-        // 지불 금액 표시 (PaymentText는 급여와 동일하거나 다른 값일 수 있음)
+        // 지불 금액 표시
         GetText((int)Texts.PaymentNameText).text = "@계약금";
         GetText((int)Texts.PaymentText).text = $"{memberData.SalaryToString(ESalaryType.Deposit)}";
 
@@ -163,7 +165,7 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
     
     private void NextMemberInfoUpdate()
     {
-        HireResult hireResult = MemberManager.Instance.HireResult;
+        HireResult hireResult = MemberManager.Instance.CurrentHireResult;
 
         if (hireResult == null || hireResult.MemberDatas == null || hireResult.MemberDatas.Count == 0)
             return;
@@ -174,7 +176,7 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
     
     private void PreviousMemberInfoUpdate()
     {
-        HireResult hireResult = MemberManager.Instance.HireResult;
+        HireResult hireResult = MemberManager.Instance.CurrentHireResult;
 
         if (hireResult == null || hireResult.MemberDatas == null || hireResult.MemberDatas.Count == 0)
             return;
@@ -185,60 +187,58 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
     
     private void OnOkayButtonClicked()
     {
-        HireResult hireResult = MemberManager.Instance.HireResult;
+        MemberData selectedHireMember = MemberManager.Instance.SelectedHireMemberData;
 
-        if (hireResult == null || hireResult.MemberDatas == null || _currentIndex >= hireResult.MemberDatas.Count)
-        {
-            Debug.LogWarning("Cannot hire: Invalid hire result!");
-            return;
-        }
-        
-        MemberData selectedMember = hireResult.MemberDatas[_currentIndex];
-        
-        if (selectedMember == null)
+        if (selectedHireMember == null)
         {
             Debug.LogWarning("Cannot hire: Selected member is null!");
             return;
         }
-        
+
+        // 자금이 충분한지 확인
+        int hireCost = selectedHireMember.SalaryToValue(ESalaryType.Deposit);
+        if (GameManager.Instance.Gold < hireCost)
+        {
+            //자금 부족 팝업
+            UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents);
+            return;
+        }
+
         // 팀이 가득 찼는지 확인
         if (MemberManager.Instance.IsTeamFull())
         {
-            Debug.LogWarning("Cannot hire: Team is full!");
-            // TODO: 현재 멤버를 해고 할 것인지.
+            //멤버 꽉참 팝업
+            UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MembersFull).Contents, action : OnClickMembersFullChatPopup);
             return;
         }
-        
-        //// 자금이 충분한지 확인
-        //int hireCost = MemberManager.Instance.GetHireCost(selectedMember);
-        //if (GameManager.Instance.Gold < hireCost)
-        //{
-        //    Debug.LogWarning($"Cannot hire: Not enough gold! Need {hireCost}, have {GameManager.Instance.Gold}");
-        //    // TODO: 팝업으로 "자금이 부족합니다" 메시지 표시
-        //    return;
-        //}
-        
+
         // 실제 멤버 고용
-        if (MemberManager.Instance.HireMember(selectedMember))
+        if (MemberManager.Instance.HireMember(selectedHireMember))
         {
-            //// 자금 차감
-            //GameManager.Instance.Gold -= hireCost;
-            
-            Debug.Log($"<color=green>Successfully hired {selectedMember.Name}!</color>");
-            hireResult.MemberDatas.RemoveAt(_currentIndex);
-
-            if (hireResult.MemberDatas.Count > 0)
-                SetInfo();
-            else
-                UIManager.Instance.ClosePopupUI();
-
+            //고용 팝업
+            UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MemberHired).Contents, new string[] { selectedHireMember.Name }, action : OnClickMemberHiredChatPopup);
         }
         else
         {
             Debug.LogError("Failed to hire member!");
         }
     }
-    
+    public void OnClickMembersFullChatPopup()
+    {
+        UI_MemberFirePopup memberFirePopup = UIManager.Instance.ShowPopupUI<UI_MemberFirePopup>();
+        memberFirePopup.SetInfo(EFireType.Swap);
+    }
+    public void OnClickMemberHiredChatPopup()
+    {
+        HireResult hireResult = MemberManager.Instance.CurrentHireResult;
+        if (hireResult.MemberDatas.Count > 0)
+            SetInfo();
+        else
+            UIManager.Instance.ClosePopupUI();
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

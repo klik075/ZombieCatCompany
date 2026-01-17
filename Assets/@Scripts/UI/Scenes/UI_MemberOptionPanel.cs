@@ -63,8 +63,9 @@ public class UI_MemberOptionPanel : UI_UGUI
             case Buttons.MemberHireButton:
                 if (GameManager.Instance.IsRecruiting)
                 {
+                    //이미 모집 중 팝업
                     UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-                    chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, "@이미 모집 중이다냥.");
+                    chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.AlreadyRecruiting).Contents);
                 }
                 else
                 {

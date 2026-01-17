@@ -39,14 +39,30 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
     }
     private void OnClickMethodButton(Buttons button)
     {
+        UI_ChatPopup chatPopup = null;
         switch (button)
         {
             case Buttons.HireMethodButton1:
-                CoroutineManager.Instance.Run(HireProcessCoroutine(HireMethodType.Internet));
+                if (GameManager.Instance.Gold < 500)// TODO : 모집 비용으로 변경할 것. MemberManager에서 수행할 것
+                {
+                    //자금 부족 팝업
+                    chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+                    chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents);
+                    return;
+                }
+                else
+                {
+                    GameManager.Instance.Gold -= 500; // TODO : 모집 비용으로 변경할 것. MemberManager에서 수행할 것
+                    CoroutineManager.Instance.Run(HireProcessCoroutine(HireMethodType.Internet));
+                }
                 break;
         }
 
         UIManager.Instance.ClosePopupUI();
+
+        //모집 시작 팝업
+        chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+        chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.StartRecruiting).Contents);
     }
     private IEnumerator HireProcessCoroutine(HireMethodType hireMethodType)
     {
@@ -58,15 +74,16 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
             yield return null;
         }
 
+        // 모집 완료 팝업
         UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-        chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MemberManager.Instance.HireResult.Message, OpenMemberHirePopup);
+        chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.CompleteRecruiting).Contents, MemberManager.Instance.CurrentHireResult.Messages, action : OpenMemberHirePopup);
 
         // 모집 완료
         GameManager.Instance.IsRecruiting = false;
     }
     private void OpenMemberHirePopup()
     {
-        UI_MemberHirePopup memberHirePopup = UIManager.Instance.ShowPopupUI<UI_MemberHirePopup>();
+        UIManager.Instance.ShowPopupUI<UI_MemberHirePopup>();
     }
     public override void RefreshUI()
     {

@@ -223,8 +223,9 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         if (!EducationManager.Instance.CanExecuteEducation())
         {
             EducationManager.Instance.SelectedEducation = null;
+            // 자금 부족 팝업
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, "@자금이 부족하다냥");
+            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents);
             return;
         }
 

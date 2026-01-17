@@ -1,7 +1,8 @@
 using System;
+using System.Text;
 using UnityEngine;
 
-public class UI_MessagePopup : UI_UGUI, IUI_Popup
+public class UI_MessagePopup : UI_UGUI, IUI_Popup, IClickableUI
 {
     enum GameObjects
     {
@@ -42,12 +43,26 @@ public class UI_MessagePopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.NoButton).onClick.AddListener(OnNoButtonClicked);
     }
 
-    public void SetInfo(string content, Action onOkayCallback = null)
+    public void SetInfo(string[] scripts, string[] insertScripts = null, Action action = null)
     {
-        _content = content;
-        _onOkayCallback = onOkayCallback;
+        _content = GetContentText(scripts, insertScripts);
+        _onOkayCallback = action;
         
         UpdateContent();
+    }
+    public string GetContentText(string[] script, string[] insertScript)
+    {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < script.Length; i++)
+        {
+            stringBuilder.Append(script[i]);
+            if (insertScript != null && i < insertScript.Length)
+            {
+                stringBuilder.Append(insertScript[i]);
+            }
+        }
+
+        return stringBuilder.ToString();
     }
 
     private void UpdateContent()

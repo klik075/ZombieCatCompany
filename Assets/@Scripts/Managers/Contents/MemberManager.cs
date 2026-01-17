@@ -8,7 +8,7 @@ using static Define;
 public class HireResult
 {
     public List<MemberData> MemberDatas;//고용된 멤버 데이터들
-    public string Message;
+    public string[] Messages;
     public HireMethodType HireMethod;//고용 방법
 }
 public class MemberManager : Singleton<MemberManager>
@@ -49,7 +49,8 @@ public class MemberManager : Singleton<MemberManager>
             EventManager.Instance.TriggerEvent(EEventType.MemberListChanged); 
         }
     }
-    public HireResult HireResult { get; private set; }
+    public HireResult CurrentHireResult { get; private set; }
+    public MemberData SelectedHireMemberData { get; private set; }
 
     #region Member Selection Management
 
@@ -67,6 +68,16 @@ public class MemberManager : Singleton<MemberManager>
         {
             Debug.LogWarning("Cannot select member: member not found in the team");
         }
+    }
+    public void SelectedHireMember(int index)
+    {
+        if (CurrentHireResult == null || CurrentHireResult.MemberDatas == null || index < 0 || index >= CurrentHireResult.MemberDatas.Count)
+        {
+            Debug.LogWarning("Cannot select hire member: invalid index or no hire result");
+            return;
+        }
+
+        SelectedHireMemberData = CurrentHireResult.MemberDatas[index];
     }
 
     /// <summary>
@@ -152,13 +163,13 @@ public class MemberManager : Singleton<MemberManager>
 
         result.HireMethod = hireMethodType;
         result.MemberDatas = GenerateMemberDatas();
-        result.Message = $"모집했던 결과가 나왔다냥.\r\n고양이 {result.MemberDatas.Count}마리가 지원했다냥.\r\n누구를 채용할까냥?";
+        result.Messages = new string[] { $"{result.MemberDatas.Count}" };
 
         return result;
     }
     public IEnumerator StartHiringProcess(HireMethodType hireMethodType)
     {
-        HireResult = null;
+        CurrentHireResult = null;
         // 모집 중 상태로 변경
         GameManager.Instance.IsRecruiting = true;
 
@@ -167,7 +178,7 @@ public class MemberManager : Singleton<MemberManager>
         yield return new WaitForSeconds(waitTime);
 
         // 채용 결과 생성
-        HireResult = GenerateHireResult(hireMethodType);
+        CurrentHireResult = GenerateHireResult(hireMethodType);
     }
     private float GetHireWaitTime(HireMethodType hireMethodType)
     {
@@ -224,9 +235,21 @@ public class MemberManager : Singleton<MemberManager>
             return false;
         }
 
+        if (memberData == null)
+            return false;
+
+        int hireCost = memberData.SalaryToValue(ESalaryType.Deposit);
+        if (GameManager.Instance.Gold < hireCost)
+            return false;
+
+        GameManager.Instance.Gold -= hireCost;
+        if(CurrentHireResult != null)
+            CurrentHireResult.MemberDatas.Remove(memberData);
+
         // 현재 MemberCount 인덱스에 새 구성원 추가
         Player newPlayer = ObjectManager.Instance.SpawnPlayer("Cat");
-        newPlayer.SetMemberData(memberData);
+        MemberData newMemberData = InfectMemberData(memberData);
+        newPlayer.SetMemberData(newMemberData);
         _players[PlayerCount] = newPlayer;
         PlayerCount++;
 
@@ -235,6 +258,40 @@ public class MemberManager : Singleton<MemberManager>
         MapManager.Instance.MoveTo(newPlayer, spawnCell, true);
 
         return true;
+    }
+    public MemberData InfectMemberData(MemberData memberData)
+    {
+        MemberData infectedMemberData = memberData.DeepCopy();
+        
+        // 각 능력치에서 0~현재값 사이의 랜덤한 값을 빼서 전투력으로 전환
+        int totalTransferredPower = 0;
+
+        // Programming 능력치 처리
+        totalTransferredPower += InfectAbility(ref infectedMemberData.Programming);
+
+        // Scenario 능력치 처리
+        totalTransferredPower += InfectAbility(ref infectedMemberData.Scenario);
+
+        // Graphics 능력치 처리
+        totalTransferredPower += InfectAbility(ref infectedMemberData.Graphics);
+
+        // Sound 능력치 처리
+        totalTransferredPower += InfectAbility(ref infectedMemberData.Sound);
+
+        // 전환된 능력치를 전투력에 추가
+        infectedMemberData.Power += totalTransferredPower;
+
+        return infectedMemberData;
+    }
+    private int InfectAbility(ref int statValue)
+    {
+        int transferAmount = 0;
+        if (statValue > 0)
+        {
+            transferAmount = UnityEngine.Random.Range(0, statValue + 1);
+            statValue -= transferAmount;
+        }
+        return transferAmount;
     }
     public bool CanFireMember(int memberIndex, bool ignoringStatus = false)
     {
