@@ -15,10 +15,12 @@ public class DataTransformer : EditorWindow
     [MenuItem("Tools/ParseExcel %#K")] // Ctrl+Shift+K
     public static void ParseExcelDataToJson()
     {
-        ParseExcelDataToJson<ItemDataLoader, ItemData>("Item");
         ParseExcelDataToJson<TextDataLoader, TextData>("Text");
         ParseExcelDataToJson<MemberDataLoader, MemberData>("Member");
         ParseExcelDataToJson<EducationDataLoader, EducationData>("Education");
+        ParseExcelDataToJson<GenreDataLoader, GenreData>("Genre");
+        ParseExcelDataToJson<ContentDataLoader, ContentData>("Content");
+        ParseExcelDataToJson<SynergyDataLoader, List<SynergyData>>("Synergy");
     }
 
     private static void ParseExcelDataToJson<Loader, LoaderData>(string filename) where Loader : new()

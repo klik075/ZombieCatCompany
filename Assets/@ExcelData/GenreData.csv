@@ -1,0 +1,16 @@
+﻿GenreId,GenreType,Cost,MainQuality
+300,ActionGame,1000,Fun
+301,Adventure,1000,Fun
+302,RPG,1000,Nyang
+303,Simulation,1000,Graphics
+304,PuzzleGame,1000,Fun
+305,StrategyGame,1000,Graphics
+306,Sports,1000,Fun
+307,Racing,1000,Sound
+308,HealingGame,1000,Nyang
+309,TowerDefense,1000,Graphics
+310,RhythmGame,1000,Sound
+311,HorrorGame,1000,Sound
+312,CardGame,1000,Nyang
+313,Sandbox,1000,Nyang
+314,Education,1000,Graphics

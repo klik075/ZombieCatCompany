@@ -211,4 +211,45 @@ public static class Define
         Normal,//일반 해고
         Swap,//교체 해고
     }
+    public enum EGenreType
+    {
+        ActionGame,
+        Adventure,
+        RPG,
+        Simulation,
+        PuzzleGame,
+        StrategyGame,
+        Sports,
+        Racing,
+        HealingGame,
+        TowerDefense,
+        RhythmGame,
+        HorrorGame,
+        CardGame,
+        Sandbox,
+        Education,
+    }
+    public enum EContentType
+    {
+        Box,
+        Tuna,
+        Snack,
+        Laser,
+        Thread,
+        Nap,
+        CatTower,
+        Claw,
+        Jumping,
+        Stealing,
+        Rat,
+        Cushion,
+        Smell,
+        Climbing,
+        Hiding,
+        Bell,
+        Shadow,
+        Water,
+        Sand,
+        Milk,
+    }
 }

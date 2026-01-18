@@ -13,8 +13,6 @@ public class EducationData
     public int Graphics;
     public int Sound;
     public int Power;
-
-
 }
 
 [Serializable]
