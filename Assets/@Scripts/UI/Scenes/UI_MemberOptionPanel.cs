@@ -74,6 +74,7 @@ public class UI_MemberOptionPanel : UI_UGUI
                 break;
             case Buttons.MemberFireButton:
                 UI_MemberFirePopup memberFirePopup = UIManager.Instance.ShowPopupUI<UI_MemberFirePopup>();
+                memberFirePopup.SetInfo(EFireType.Normal);
                 break;
         }
 

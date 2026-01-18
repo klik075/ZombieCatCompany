@@ -79,6 +79,11 @@ public class MemberManager : Singleton<MemberManager>
 
         SelectedHireMemberData = CurrentHireResult.MemberDatas[index];
     }
+    public void EndHire()
+    {
+        CurrentHireResult = null;
+        SelectedHireMemberData = null;
+    }
 
     /// <summary>
     /// 인덱스로 멤버를 선택합니다

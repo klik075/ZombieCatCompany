@@ -39,6 +39,7 @@ public static class Define
         MemberListChanged,
         SelectedMemberChanged,
         EducationCompleted,
+        MemberSwapped,
 
         //Lion
         LanguageChanged,

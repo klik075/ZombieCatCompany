@@ -68,6 +68,8 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.NextButton).onClick.AddListener(() => NextMemberInfoUpdate());
         GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => PreviousMemberInfoUpdate());
         GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnOkayButtonClicked());
+
+        EventManager.Instance.AddEvent(EEventType.MemberSwapped, CheckUpdate);
     }
 
     protected override void OnEnable()
@@ -233,11 +235,18 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
     }
     public void OnClickMemberHiredChatPopup()
     {
+        CheckUpdate();
+    }
+    public void CheckUpdate()
+    {
         HireResult hireResult = MemberManager.Instance.CurrentHireResult;
         if (hireResult.MemberDatas.Count > 0)
             SetInfo();
         else
+        {
+            MemberManager.Instance.EndHire();
             UIManager.Instance.ClosePopupUI();
+        }
     }
     public override void RefreshUI()
     {

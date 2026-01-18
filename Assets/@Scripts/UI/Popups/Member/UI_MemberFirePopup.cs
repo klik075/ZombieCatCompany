@@ -190,11 +190,13 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         {
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MemberHired).Contents, new string[] { selectedHireMember.Name }, OnCompleteSwap);
+            UpdateContent();
         }
     }
     public void OnCompleteSwap()
     {
         UIManager.Instance.ClosePopupUI();
+        EventManager.Instance.TriggerEvent(EEventType.MemberSwapped);
     }
     public override void RefreshUI()
     {
