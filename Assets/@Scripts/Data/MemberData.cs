@@ -64,7 +64,7 @@ public class MemberData
                 return 0;
         }
     }
-    public string RoleToString(ERoleType eRoleType)
+    public static string RoleToString(ERoleType eRoleType)
     {
         switch(eRoleType)
         {
@@ -82,7 +82,7 @@ public class MemberData
                 return "´©±¸³Ä ³Í";
         }
     }
-    public string AbilityToString(EAbilityType eAbilityType)
+    public static string AbilityToString(EAbilityType eAbilityType)
     {
         switch(eAbilityType)
         {
@@ -100,7 +100,7 @@ public class MemberData
                 return "´©±¸³Ä ³Í";
         }
     }
-    public string StateToString(EMemberStateType eMemberState)
+    public static string StateToString(EMemberStateType eMemberState)
     {
         switch(eMemberState)
         {
@@ -113,6 +113,8 @@ public class MemberData
                 return "±¾ÁÖ¸²";
             case EMemberStateType.Soon:
                 return "°ð²¿´Ú";
+            case EMemberStateType.Dispatch:
+                return "ÆÄ°ßÁß";
             default:
                 return "´©±¸³Ä ³Í";
         }

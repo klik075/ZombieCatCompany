@@ -126,19 +126,31 @@ public class MessageManager : Singleton<MessageManager>
         };
         _messageScripts[EMessageType.MemberFired] = new MessageScript
         {
-            Contents = new string[] { "", "@(을)를\r\n해고하시겠습니까?" }
+            Contents = new string[] { "", "(을)를\r\n해고하시겠습니까?" }
         };
         _messageScripts[EMessageType.MemberSwapped] = new MessageScript
         {
-            Contents = new string[] { "", "@(을)를 해고하고\r\n","(을)를 신규 고용했다냥." }
+            Contents = new string[] { "", "(을)를 해고하고\r\n","(을)를 신규 고용했다냥." }
         };
         _messageScripts[EMessageType.MemberHired] = new MessageScript
         {
-            Contents = new string[] { "", "@(을)를 감염시켰다냥.\r\n기존 능력치의 일부가 전투력으로 전환됐다냥." }
+            Contents = new string[] { "", "(을)를 감염시켰다냥.\r\n기존 능력치의 일부가 전투력으로 전환됐다냥." }
         };
         _messageScripts[EMessageType.MemberFiredConfirm] = new MessageScript
         {
-            Contents = new string[] { "", "@(을)를 해고했다냥." }
+            Contents = new string[] { "", "(을)를 해고했다냥." }
+        };
+        _messageScripts[EMessageType.SelectPlanner] = new MessageScript
+        {
+            Contents = new string[] { "", "번째 작품은 ","에 ","인 게임이다냥.","\r\n누구에 기획을 맡길까냥?" }
+        };
+        _messageScripts[EMessageType.SelectDesigner] = new MessageScript
+        {
+            Contents = new string[] { "누구에게 디자인을 맡길까냥 ?" }
+        };
+        _messageScripts[EMessageType.SelectSoundWriter] = new MessageScript
+        {
+            Contents = new string[] { "마지막으로 누구에게 사운드를 맡길까냥?" }
         };
     }
 

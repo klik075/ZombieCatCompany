@@ -127,17 +127,17 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         GetText((int)Texts.SubMiddleSalaryText).text = $"{memberData.SalaryToString(ESalaryType.Salary)}";
 
         // 역할 표시
-        GetText((int)Texts.RoleText).text = memberData.RoleToString(memberData.Role);
+        GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
 
         // 지불 금액 표시
         GetText((int)Texts.PaymentNameText).text = "@계약금";
         GetText((int)Texts.PaymentText).text = $"{memberData.SalaryToString(ESalaryType.Deposit)}";
 
         // 능력치 이름 설정
-        GetText((int)Texts.AbilityNameText1).text = memberData.AbilityToString(EAbilityType.Programming);
-        GetText((int)Texts.AbilityNameText2).text = memberData.AbilityToString(EAbilityType.Scenario);
-        GetText((int)Texts.AbilityNameText3).text = memberData.AbilityToString(EAbilityType.Graphics);
-        GetText((int)Texts.AbilityNameText4).text = memberData.AbilityToString(EAbilityType.Sound);
+        GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);
+        GetText((int)Texts.AbilityNameText2).text = MemberData.AbilityToString(EAbilityType.Scenario);
+        GetText((int)Texts.AbilityNameText3).text = MemberData.AbilityToString(EAbilityType.Graphics);
+        GetText((int)Texts.AbilityNameText4).text = MemberData.AbilityToString(EAbilityType.Sound);
 
         // 능력치 점수 설정
         GetText((int)Texts.AbilityScoreText1).text = memberData.Programming.ToString();

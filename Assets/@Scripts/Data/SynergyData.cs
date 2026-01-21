@@ -9,6 +9,19 @@ public class SynergyData
     public int GenreId;
     public int ContentId;
     public ESynergyType SynergyType;
+
+    public string SynergyTypeToString(ESynergyType synergyType)
+    {
+        switch (synergyType)
+        {
+            case ESynergyType.Good:
+                return "°«°×";
+            case ESynergyType.Bad:
+                return "¶Ë°×";
+            default:
+                return "Æò¹ü";
+        }
+    }
 }
 [Serializable]
 public class SynergyDataLoader : IDataLoader<int, List<SynergyData>>

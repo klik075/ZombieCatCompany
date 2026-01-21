@@ -33,7 +33,10 @@ public static class Define
         FoodChanged,
         AnnualProfitChanged,
         NewDevTitleChanged,
+        ProposalChanged,
+        GameDevStateChanged,
 
+        QualityChanged,
 
         //Member Events
         MemberListChanged,
@@ -133,12 +136,6 @@ public static class Define
         Detection,//정체 발각
         Serum,//혈청 투여
     }
-    public enum ESynergyType
-    {
-        Good,//걸작
-        Normal,//평범
-        Bad,//똥게임
-    }
     public enum HireMethodType
     {
         Internet,//인터넷
@@ -168,9 +165,14 @@ public static class Define
         MemberFired,           // 멤버 해고
         MemberSwapped,          // 멤버 해고 후 고용
         MemberHired,          // 멤버 고용
-
-        //해고 관련
         MemberFiredConfirm,   //멤버 해고 확인
+
+        // 개발 관련
+        SelectPlanner,       // 기획자 선택
+        SelectDesigner,      // 원화 선택
+        SelectSoundWriter,   // 사운드 작업 선택
+        StartDebugging,     // 디버깅 시작
+        CompleteGameDev,    // 게임 개발 완료
     }
 
     public enum EChatType
@@ -251,5 +253,30 @@ public static class Define
         Water,
         Sand,
         Milk,
+    }
+    public enum ESynergyType
+    {
+        Good,//걸작
+        Normal,//평범
+        Bad,//똥게임
+    }
+    public enum EProposalType
+    {
+        Genre,
+        Content,
+    }
+    public enum EGameDevType
+    {
+        None,
+        Scenario,
+        Graphics,
+        Sound,
+        Debug,
+        Complete,
+    }
+    public enum EPlayerImageType
+    {
+        Normal,
+        Zombie,
     }
 }

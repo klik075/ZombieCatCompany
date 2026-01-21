@@ -47,19 +47,19 @@ public class UI_ChatPopup : UI_UGUI, IUI_Popup, IClickableUI
 
         if(memberData == null)
             return;
-        
-        GetText((int)Texts.RoleText).text = memberData.RoleToString(memberData.Role);
-        GetImage((int)Images.MemberImage).sprite = ResourceManager.Instance.Get<Sprite>(memberData.ZombieImagePath);
-
-        GetText((int)Texts.ContentText).text = GetContentText(scripts, insertScripts);
 
         Button clickButton = GetButton((int)Buttons.Click);
         clickButton.onClick.RemoveAllListeners();
 
-        if(action != null)
+        if (action != null)
             clickButton.onClick.AddListener(() => OnClickButton(Buttons.Click, action));
         else
             clickButton.onClick.AddListener(() => ClosePopup());
+
+        GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
+        GetImage((int)Images.MemberImage).sprite = ResourceManager.Instance.Get<Sprite>(memberData.ZombieImagePath);
+
+        GetText((int)Texts.ContentText).text = GetContentText(scripts, insertScripts);
     }
     public string GetContentText(string[] script, string[] insertScript)
     {

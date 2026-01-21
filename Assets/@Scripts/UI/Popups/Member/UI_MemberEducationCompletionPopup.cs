@@ -100,11 +100,11 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
         GetText((int)Texts.SubMiddleNameText).text = $"@{memberData.Name}";
 
         // 능력치 이름 설정
-        GetText((int)Texts.AbilityNameText1).text = memberData.AbilityToString(EAbilityType.Programming);
-        GetText((int)Texts.AbilityNameText2).text = memberData.AbilityToString(EAbilityType.Scenario);
-        GetText((int)Texts.AbilityNameText3).text = memberData.AbilityToString(EAbilityType.Graphics);
-        GetText((int)Texts.AbilityNameText4).text = memberData.AbilityToString(EAbilityType.Sound);
-        GetText((int)Texts.AbilityNameText5).text = memberData.AbilityToString(EAbilityType.Power);
+        GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);
+        GetText((int)Texts.AbilityNameText2).text = MemberData.AbilityToString(EAbilityType.Scenario);
+        GetText((int)Texts.AbilityNameText3).text = MemberData.AbilityToString(EAbilityType.Graphics);
+        GetText((int)Texts.AbilityNameText4).text = MemberData.AbilityToString(EAbilityType.Sound);
+        GetText((int)Texts.AbilityNameText5).text = MemberData.AbilityToString(EAbilityType.Power);
 
         // 현재 능력치 점수 설정 (교육 적용 후)
         GetText((int)Texts.AbilityCurrentScoreText1).text = memberData.Programming.ToString();

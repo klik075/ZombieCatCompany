@@ -14,7 +14,6 @@ public class PlayerSaveData
     public MemberData CurrentMemberData;
     public bool AIEnabled;
 }
-
 [Serializable]
 public class GameData
 {
@@ -31,6 +30,7 @@ public class GameData
     public string NewDevTitle;//신규 개발 상태
 
     //Dev
+    public GameDevProjectData GameDevProjectData = new GameDevProjectData();
 
     //Morning
 

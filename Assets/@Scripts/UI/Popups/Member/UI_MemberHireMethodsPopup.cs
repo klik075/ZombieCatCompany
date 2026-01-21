@@ -53,7 +53,7 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
                 else
                 {
                     GameManager.Instance.Gold -= 500; // TODO : 모집 비용으로 변경할 것. MemberManager에서 수행할 것
-                    CoroutineManager.Instance.Run(HireProcessCoroutine(HireMethodType.Internet));
+                    CoroutineManager.Instance.Run(CoHireProcess(HireMethodType.Internet));
                 }
                 break;
         }
@@ -64,9 +64,9 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
         chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
         chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.StartRecruiting).Contents);
     }
-    private IEnumerator HireProcessCoroutine(HireMethodType hireMethodType)
+    private IEnumerator CoHireProcess(HireMethodType hireMethodType)
     {
-        yield return CoroutineManager.Instance.Run(MemberManager.Instance.StartHiringProcess(hireMethodType));
+        yield return CoroutineManager.Instance.Run(MemberManager.Instance.CoStartHiringProcess(hireMethodType));
 
         // 팝업이 모두 닫힐 때까지 대기
         while (UIManager.Instance.PopupCount > 0)

@@ -56,6 +56,7 @@ public class SaveManager : Singleton<SaveManager>
 
         // MemberManager 데이터 저장
         gameData.PlayerSaveDatas = MemberManager.Instance.GetSaveData();
+        gameData.GameDevProjectData = GameDevManager.Instance.GetSaveData();
 
         string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         File.WriteAllText(SavePath, json);
@@ -80,7 +81,10 @@ public class SaveManager : Singleton<SaveManager>
         {
             MemberManager.Instance.LoadFromSaveData(gameData.PlayerSaveDatas);
         }
-        
+        if(gameData.GameDevProjectData != null)
+        {
+            GameDevManager.Instance.LoadFromSaveData(gameData.GameDevProjectData);
+        }
         Debug.Log($"SaveManager: Game loaded from {SavePath}");
     }
 
@@ -98,9 +102,11 @@ public class SaveManager : Singleton<SaveManager>
             NewDevTitle = DataManager.Instance.GameConfig.InitialNewDevTitle,
             IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting,
             PlayerSaveDatas = null,
+            GameDevProjectData = null,
         };
 
         MemberManager.Instance.InitBoss();
+        GameDevManager.Instance.InitNewProject();
         GameManager.Instance.GameData = gameData;
         Save();
     }

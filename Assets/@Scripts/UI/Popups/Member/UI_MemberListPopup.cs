@@ -118,7 +118,7 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
                 if (memberData != null)
                 {
                     nameText.text = memberData.Name;
-                    roleText.text = memberData.RoleToString(memberData.Role);
+                    roleText.text = MemberData.RoleToString(memberData.Role);
                     salaryText.text = memberData.SalaryToString(ESalaryType.Food);
                     totalSalary += memberData.Salary;
                 }

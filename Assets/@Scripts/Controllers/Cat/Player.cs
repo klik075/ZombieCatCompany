@@ -199,4 +199,28 @@ public class Player : Cat
             }
         }
     }
+
+    /// <summary>
+    /// 멤버의 스프라이트 가져오기 (정상 상태 기준)
+    /// </summary>
+    /// <returns>멤버 스프라이트 또는 null</returns>
+    public Sprite GetMemberSprite(EPlayerImageType playerImageType = EPlayerImageType.Zombie)
+    {
+        if (CurrentMemberData == null)
+            return null;
+
+        string imagePath = playerImageType == EPlayerImageType.Normal ? CurrentMemberData.NormalImagePath : CurrentMemberData.ZombieImagePath;
+        
+        if (string.IsNullOrEmpty(imagePath))
+            return null;
+
+        Sprite memberSprite = ResourceManager.Instance.Get<Sprite>(imagePath);
+        
+        if (memberSprite == null)
+        {
+            Debug.LogWarning($"Failed to load sprite at path: {imagePath} for member: {CurrentMemberData.Name}");
+        }
+        
+        return memberSprite;
+    }
 }

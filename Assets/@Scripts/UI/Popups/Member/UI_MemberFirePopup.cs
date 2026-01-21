@@ -94,18 +94,18 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         GetText((int)Texts.SubMiddleSalaryText).text = memberData.SalaryToString(ESalaryType.Food);
 
         // 역할 표시
-        GetText((int)Texts.RoleText).text = memberData.RoleToString(memberData.Role);
+        GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
 
         // 상태 표시
         GetText((int)Texts.StateNameText).text = "@상태";
-        GetText((int)Texts.StateText).text = memberData.StateToString(memberData.State);
+        GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State);
 
         // 능력치 이름 설정
-        GetText((int)Texts.AbilityNameText1).text = memberData.AbilityToString(EAbilityType.Programming);
-        GetText((int)Texts.AbilityNameText2).text = memberData.AbilityToString(EAbilityType.Scenario);
-        GetText((int)Texts.AbilityNameText3).text = memberData.AbilityToString(EAbilityType.Graphics);
-        GetText((int)Texts.AbilityNameText4).text = memberData.AbilityToString(EAbilityType.Sound);
-        GetText((int)Texts.AbilityNameText5).text = memberData.AbilityToString(EAbilityType.Power);
+        GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);
+        GetText((int)Texts.AbilityNameText2).text = MemberData.AbilityToString(EAbilityType.Scenario);
+        GetText((int)Texts.AbilityNameText3).text = MemberData.AbilityToString(EAbilityType.Graphics);
+        GetText((int)Texts.AbilityNameText4).text = MemberData.AbilityToString(EAbilityType.Sound);
+        GetText((int)Texts.AbilityNameText5).text = MemberData.AbilityToString(EAbilityType.Power);
 
         // 능력치 점수 설정
         GetText((int)Texts.AbilityScoreText1).text = memberData.Programming.ToString();

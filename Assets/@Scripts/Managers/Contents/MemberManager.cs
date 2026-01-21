@@ -172,7 +172,7 @@ public class MemberManager : Singleton<MemberManager>
 
         return result;
     }
-    public IEnumerator StartHiringProcess(HireMethodType hireMethodType)
+    public IEnumerator CoStartHiringProcess(HireMethodType hireMethodType)
     {
         CurrentHireResult = null;
         // 모집 중 상태로 변경
@@ -523,4 +523,100 @@ public class MemberManager : Singleton<MemberManager>
         // 최후의 수단
         return new Vector2Int(0, 2);
     }
+
+    #region 게임 개발 관련 멤버 조회
+
+    /// <summary>
+    /// 특정 게임 개발 단계에 적합한 멤버들을 가져옵니다
+    /// </summary>
+    /// <param name="gameDevType">게임 개발 단계</param>
+    /// <returns>적합한 멤버들의 리스트</returns>
+    public List<Player> GetMembersForGameDevType(EGameDevType gameDevType)
+    {
+        List<Player> suitableMembers = new List<Player>();
+        
+        for (int i = 0; i < PlayerCount; i++)
+        {
+            if (_players[i] != null && IsMemberSuitableForDevType(_players[i], gameDevType))
+            {
+                suitableMembers.Add(_players[i]);
+            }
+        }
+        
+        return suitableMembers;
+    }
+
+    /// <summary>
+    /// 특정 게임 개발 단계에 적합한 멤버 수를 반환합니다
+    /// </summary>
+    /// <param name="gameDevType">게임 개발 단계</param>
+    /// <returns>적합한 멤버 수</returns>
+    public int GetSuitableMemberCount(EGameDevType gameDevType)
+    {
+        int count = 0;
+        
+        for (int i = 0; i < PlayerCount; i++)
+        {
+            if (_players[i] != null && IsMemberSuitableForDevType(_players[i], gameDevType))
+            {
+                count++;
+            }
+        }
+        
+        return count;
+    }
+
+    /// <summary>
+    /// 특정 게임 개발 단계에 적합한 멤버를 인덱스로 가져옵니다
+    /// </summary>
+    /// <param name="gameDevType">게임 개발 단계</param>
+    /// <param name="index">적합한 멤버들 중의 인덱스 (0부터 시작)</param>
+    /// <returns>해당 인덱스의 멤버 또는 null</returns>
+    public Player GetSuitableMemberByIndex(EGameDevType gameDevType, int index)
+    {
+        List<Player> suitableMembers = GetMembersForGameDevType(gameDevType);
+        
+        if (index >= 0 && index < suitableMembers.Count)
+        {
+            return suitableMembers[index];
+        }
+        
+        return null;
+    }
+
+    /// <summary>
+    /// 멤버가 특정 게임 개발 단계에 적합한지 확인합니다
+    /// </summary>
+    /// <param name="member">확인할 멤버</param>
+    /// <param name="gameDevType">게임 개발 단계</param>
+    /// <returns>적합하면 true</returns>
+    private bool IsMemberSuitableForDevType(Player member, EGameDevType gameDevType)
+    {
+        if (member?.CurrentMemberData == null)
+            return false;
+
+        ERoleType role = member.CurrentMemberData.Role;
+        
+        // Boss는 항상 포함
+        if (role == ERoleType.Boss)
+            return true;
+            
+        // 개발 타입에 따른 적합한 역할 확인
+        switch (gameDevType)
+        {
+            case EGameDevType.Scenario:
+                return role == ERoleType.Planner;
+            case EGameDevType.Graphics:
+                return role == ERoleType.Designer;
+            case EGameDevType.Sound:
+                return role == ERoleType.SoundWriter;
+            case EGameDevType.Debug:
+                // 디버그 단계에서는 모든 역할이 참여 가능
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    #endregion
 }
