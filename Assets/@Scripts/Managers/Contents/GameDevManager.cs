@@ -124,6 +124,7 @@ public class GameDevManager : Singleton<GameDevManager>
     private Dictionary<int, GenreData> _genreDataCache;
     private Dictionary<int, ContentData> _contentDataCache;
     private Dictionary<int, List<SynergyData>> _synergyDataCache;
+    private float _progressIncreaseDuration = 5.0f; // Progress 증가 지속 시간
 
     private void Awake()
     {
@@ -702,36 +703,6 @@ public class GameDevManager : Singleton<GameDevManager>
         }
     }
 
-    /// <summary>
-    /// 현재 단계에서 작업 진행 (점수 계산)
-    /// </summary>
-    public void ProcessWork(Player worker, EGameDevType stage)
-    {
-        if (_currentProject == null || worker == null)
-        {
-            Debug.LogWarning("No active project or worker!");
-            return;
-        }
-
-        var genreData = CurrentGenreData;
-        if (genreData == null)
-        {
-            Debug.LogError("GenreData not found!");
-            return;
-        }
-
-        // 작업 결과 계산 (하드코딩된 설정 사용)
-        var workResult = CalculateWorkResultInternal(worker.CurrentMemberData, genreData);
-        
-        // 프로젝트에 점수 반영
-        foreach (var kvp in workResult.gainedScores)
-        {
-            AddQualityScore(kvp.Key, kvp.Value);
-        }
-
-        Debug.Log($"Work completed! Gained scores: {string.Join(", ", workResult.gainedScores)}");
-    }
-
     #endregion
 
     #region Progress 관리
@@ -748,7 +719,8 @@ public class GameDevManager : Singleton<GameDevManager>
         }
 
         Debug.Log($"Work completed for {CurrentGameDevType} stage");
-        
+        MemberManager.Instance.MoveAllPlayersToSeats();
+
         // 현재 단계에 따른 Progress 증가 시작
         CoroutineManager.Instance.StartCoroutine(IncreaseProgressForCurrentStage());
     }
@@ -763,14 +735,14 @@ public class GameDevManager : Singleton<GameDevManager>
         
         Debug.Log($"Starting progress increase: {startProgress} -> {targetProgress}% for {CurrentGameDevType}");
         
-        float duration = 2.0f; // 2초 동안 진행
+        float duration = _progressIncreaseDuration;
         float elapsedTime = 0f;
         
         while (elapsedTime < duration && Progress < targetProgress)
         {
-            yield return new WaitWhile(() => Time.timeScale == 0);
+            yield return new WaitWhile(() => Time.timeScale == 0 || !MemberManager.Instance.IsAnyMemberAtSeat());
 
-            elapsedTime += Time.deltaTime;
+            elapsedTime += Time.deltaTime * (MemberManager.Instance.HowManyMemberSitting() / (float)MemberManager.MAX_PLAYERS);
             float t = elapsedTime / duration;
             
             // 선형 보간으로 Progress 증가

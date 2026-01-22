@@ -11,6 +11,21 @@ public class HireResult
     public string[] Messages;
     public HireMethodType HireMethod;//고용 방법
 }
+[System.Serializable]
+public struct PlayerSeatInfo
+{
+    public Vector2Int SeatPosition;
+    public bool IsFlipped;
+    public bool IsFacingForward;
+
+    // 생성자 추가 (선택사항, 초기화 편의)
+    public PlayerSeatInfo(Vector2Int position, bool isFlipped = false, bool isFacingForward = true)
+    {
+        SeatPosition = position;
+        IsFlipped = isFlipped;
+        IsFacingForward = isFacingForward;
+    }
+}
 public class MemberManager : Singleton<MemberManager>
 {
     public const int MAIN_CHARACTER_ID = 100;
@@ -18,7 +33,7 @@ public class MemberManager : Singleton<MemberManager>
     private Player[] _players = new Player[MAX_PLAYERS];
     
     // Player들의 개인 지정 자리 (MapManager에서 사용하는 좌표)
-    private Vector2Int[] _playerSeat = new Vector2Int[MAX_PLAYERS];
+    private PlayerSeatInfo[] _playerSeat = new PlayerSeatInfo[MAX_PLAYERS];
     private Vector2Int _doorWay = new Vector2Int(-4, -15);
 
     // 선택된 플레이어 관리
@@ -627,18 +642,35 @@ public class MemberManager : Singleton<MemberManager>
 
     #region Player Seat Management
 
+    // 기존 class를 struct로 변경
+    
+
     /// <summary>
     /// Player들의 개인 지정 자리 초기화
     /// _players 배열의 순서대로 지정된 자리 할당
     /// </summary>
     private void InitializePlayerSeats()
     {
-        _playerSeat[0] = new Vector2Int(-6, 1);//사장 자리
-        _playerSeat[1] = new Vector2Int(0, 1);//직원 1
-        _playerSeat[2] = new Vector2Int(-7, -8);//직원 2
-        _playerSeat[3] = new Vector2Int(-1, -8);//직원 3
+        _playerSeat[0] = new PlayerSeatInfo(new Vector2Int(-6, 1), false, true);//사장 자리
+        _playerSeat[1] = new PlayerSeatInfo(new Vector2Int(0, 1), false, true);//직원 1
+        _playerSeat[2] = new PlayerSeatInfo(new Vector2Int(-7, -8), true, false);//직원 2
+        _playerSeat[3] = new PlayerSeatInfo(new Vector2Int(-1, -8), true, false);//직원 3
     }
 
+    public PlayerSeatInfo GetPlayerSeatInfo(Player player)
+    {
+        int index = GetIndex(player);
+        return GetPlayerSeatInfo(index);
+    }
+    public PlayerSeatInfo GetPlayerSeatInfo(int playerIndex)
+    {
+        if (playerIndex < 0 || playerIndex >= MAX_PLAYERS)
+        {
+            Debug.LogWarning($"Invalid player index: {playerIndex}");
+            return default;
+        }
+        return _playerSeat[playerIndex];
+    }
     /// <summary>
     /// 특정 Player의 지정 자리 가져오기
     /// </summary>
@@ -652,7 +684,7 @@ public class MemberManager : Singleton<MemberManager>
             return Vector2Int.zero;
         }
 
-        return _playerSeat[playerIndex];
+        return _playerSeat[playerIndex].SeatPosition;
     }
 
     /// <summary>
@@ -684,7 +716,7 @@ public class MemberManager : Singleton<MemberManager>
             Debug.LogWarning($"Invalid player index: {playerIndex}");
             return;
         }
-        _playerSeat[playerIndex] = newSeat;
+        _playerSeat[playerIndex].SeatPosition = newSeat;
     }
 
     /// <summary>
@@ -751,11 +783,29 @@ public class MemberManager : Singleton<MemberManager>
         {
             if (_players[i] != null)
             {
-                _players[i].MoveToSeat(GetPlayerSeat(i));//이동이 완료되면 그때부터 Progress 진행하도록 수정할 것.
+                _players[i].MoveToSeat(GetPlayerSeat(i));
             }
         }
         
         Debug.Log("All players moved to their designated seats");
+    }
+    public int HowManyMemberSitting()
+    {
+        int count = 0;
+        for (int i = 0; i < PlayerCount; i++)
+        {
+            if (_players[i] != null)
+            {
+                Vector2Int seatPos = GetPlayerSeat(i);
+                if (_players[i].CellPosition == seatPos)
+                    count++;
+            }
+        }
+        return count;
+    }
+    public bool IsAnyMemberAtSeat()
+    {
+        return HowManyMemberSitting() > 0;
     }
 
     #endregion

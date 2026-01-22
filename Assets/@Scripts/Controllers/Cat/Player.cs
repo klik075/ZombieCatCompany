@@ -1,9 +1,10 @@
-using UnityEngine;
-using System.Collections.Generic;
-using static Define;
-using UnityEngine.UI;
-using Unity.VisualScripting;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.UI;
+using static Define;
 
 public class Player : Cat
 {
@@ -21,6 +22,7 @@ public class Player : Cat
     public bool AIEnabled = true;
     private Vector2Int _aiTargetPosition;
     private List<Vector2Int> _path = new List<Vector2Int>();
+    private bool _isWorking = false;
 
     public override void Init()
     {
@@ -126,11 +128,6 @@ public class Player : Cat
                 {
                     _path.RemoveAt(0); // 현재 위치 제거
                 }
-                else
-                {
-                    // 목표 도착
-                    _aiTargetPosition = new Vector2Int(int.MinValue, int.MinValue);
-                }
             }
         }
         else if (AIEnabled && State == ECatState.Idle)
@@ -158,7 +155,17 @@ public class Player : Cat
             }
             else
             {
-                TryAIMove();//게임 개발 중일 때는 움직이지 않도록 수정. 계속 움직이는 것 보다 멈추는 것도 필요.
+                //목표 도착
+                if (_isWorking == true)
+                {
+                    PlayerSeatInfo seatInfo = MemberManager.Instance.GetPlayerSeatInfo(this);
+                    IsFlipped = seatInfo.IsFlipped;
+                    IsFacingForward = seatInfo.IsFacingForward;
+                }
+                _aiTargetPosition = new Vector2Int(int.MinValue, int.MinValue);
+
+                if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.None)
+                    TryAIMove();
             }
         }
     }
@@ -198,11 +205,26 @@ public class Player : Cat
         // AI 이동 경로와 목표 초기화 (자리 이동이 우선)
         _path.Clear();
         _aiTargetPosition = targetPos;
-        _path = MapManager.Instance.FindPath(CellPosition, _aiTargetPosition);
+        CoroutineManager.Instance.StartCoroutine(CoFindPath(CellPosition, _aiTargetPosition));
 
         if (_path.Count > 0)
         {
             MoveTo(_path[0]);
+            _isWorking = true;
+        }
+    }
+    private IEnumerator CoFindPath(Vector2Int start, Vector2Int goal)
+    {
+        int count = 10;
+        WaitForSeconds wait = new WaitForSeconds(_moveDuration);
+        while (count > 0)
+        {
+            count--;
+            _path = MapManager.Instance.FindPath(start, goal);
+            if (_path.Count > 0)
+                yield break;
+
+            yield return wait;
         }
     }
     private void OnDrawGizmosSelected()
