@@ -16,6 +16,10 @@ public class MemberManager : Singleton<MemberManager>
     public const int MAIN_CHARACTER_ID = 100;
     public const int MAX_PLAYERS = 4;
     private Player[] _players = new Player[MAX_PLAYERS];
+    
+    // Player들의 개인 지정 자리 (MapManager에서 사용하는 좌표)
+    private Vector2Int[] _playerSeat = new Vector2Int[MAX_PLAYERS];
+    private Vector2Int _doorWay = new Vector2Int(-4, -15);
 
     // 선택된 플레이어 관리
     private int _selectedPlayerIndex = 0;
@@ -143,6 +147,9 @@ public class MemberManager : Singleton<MemberManager>
             return;
         }
 
+        // Player 지정 자리 초기화
+        InitializePlayerSeats();
+
         // 주인공 스폰
         Player mainCharacter = ObjectManager.Instance.SpawnPlayer("Cat");
         mainCharacter.SetMemberData(MAIN_CHARACTER_ID);
@@ -152,11 +159,8 @@ public class MemberManager : Singleton<MemberManager>
         // 주인공을 기본 선택으로 설정
         SelectedPlayerIndex = 0;
 
-        // 초기 위치 설정
-        Vector2Int startCell = new Vector2Int(0, 1);
-        MapManager.Instance.MoveTo(mainCharacter, startCell, true);
-
-        Debug.Log("Main character initialized and selected");
+        // 주인공을 지정 자리로 이동
+        MovePlayerToSeat(0, true);
     }
 
     //고용 종류에 따라 랜덤한 직원 리스트 생성 후 매개 변수로 받은 액션에게 Result 전달 Invoke
@@ -257,10 +261,7 @@ public class MemberManager : Singleton<MemberManager>
         newPlayer.SetMemberData(newMemberData);
         _players[PlayerCount] = newPlayer;
         PlayerCount++;
-
-        // 초기 위치 설정 (주인공 근처)
-        Vector2Int spawnCell = FindSpawnPosition();
-        MapManager.Instance.MoveTo(newPlayer, spawnCell, true);
+        MapManager.Instance.MoveTo(newPlayer, FindSpawnPosition(_doorWay), true);
 
         return true;
     }
@@ -365,6 +366,12 @@ public class MemberManager : Singleton<MemberManager>
         for (int i = startIndex; i < PlayerCount - 1; i++)
         {
             _players[i] = _players[i + 1];
+            
+            // 이동된 멤버를 새로운 인덱스에 맞는 지정 자리로 이동
+            if (_players[i] != null)
+            {
+                MovePlayerToSeat(i, true);
+            }
         }
         // 마지막 자리는 null로 설정
         _players[PlayerCount - 1] = null;
@@ -420,6 +427,9 @@ public class MemberManager : Singleton<MemberManager>
             Debug.LogWarning("No member save data to load!");
             return;
         }
+        
+        // Player 지정 자리 초기화
+        InitializePlayerSeats();
         
         for (int i = 0; i < saveDatas.Count && i < MAX_PLAYERS; i++)
         {
@@ -484,13 +494,8 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     // 스폰 위치 찾기 (주인공 근처 빈 공간)
-    private Vector2Int FindSpawnPosition()
+    private Vector2Int FindSpawnPosition(Vector2Int startPos)
     {
-        if (_players[0] == null)
-            return new Vector2Int(0, 0);
-
-        Vector2Int mainCharacterPos = _players[0].CellPosition;
-
         // 주변 8방향 탐색
         Vector2Int[] directions = new Vector2Int[]
         {
@@ -506,7 +511,7 @@ public class MemberManager : Singleton<MemberManager>
 
         foreach (var dir in directions)
         {
-            Vector2Int checkPos = mainCharacterPos + dir;
+            Vector2Int checkPos = startPos + dir;
             if (MapManager.Instance.CanMove(checkPos))
             {
                 return checkPos;
@@ -616,6 +621,141 @@ public class MemberManager : Singleton<MemberManager>
             default:
                 return false;
         }
+    }
+
+    #endregion
+
+    #region Player Seat Management
+
+    /// <summary>
+    /// Player들의 개인 지정 자리 초기화
+    /// _players 배열의 순서대로 지정된 자리 할당
+    /// </summary>
+    private void InitializePlayerSeats()
+    {
+        _playerSeat[0] = new Vector2Int(-6, 1);//사장 자리
+        _playerSeat[1] = new Vector2Int(0, 1);//직원 1
+        _playerSeat[2] = new Vector2Int(-7, -8);//직원 2
+        _playerSeat[3] = new Vector2Int(-1, -8);//직원 3
+    }
+
+    /// <summary>
+    /// 특정 Player의 지정 자리 가져오기
+    /// </summary>
+    /// <param name="playerIndex">Player의 인덱스</param>
+    /// <returns>해당 Player의 지정 자리 좌표</returns>
+    public Vector2Int GetPlayerSeat(int playerIndex)
+    {
+        if (playerIndex < 0 || playerIndex >= MAX_PLAYERS)
+        {
+            Debug.LogWarning($"Invalid player index: {playerIndex}");
+            return Vector2Int.zero;
+        }
+
+        return _playerSeat[playerIndex];
+    }
+
+    /// <summary>
+    /// 특정 Player 객체의 지정 자리 가져오기
+    /// </summary>
+    /// <param name="player">Player 객체</param>
+    /// <returns>해당 Player의 지정 자리 좌표</returns>
+    public Vector2Int GetPlayerSeat(Player player)
+    {
+        int index = GetIndex(player);
+        if (index == -1)
+        {
+            Debug.LogWarning("Player not found in team");
+            return Vector2Int.zero;
+        }
+
+        return GetPlayerSeat(index);
+    }
+
+    /// <summary>
+    /// 특정 Player의 지정 자리 변경
+    /// </summary>
+    /// <param name="playerIndex">Player의 인덱스</param>
+    /// <param name="newSeat">새로운 지정 자리 좌표</param>
+    public void SetPlayerSeat(int playerIndex, Vector2Int newSeat)
+    {
+        if (playerIndex < 0 || playerIndex >= MAX_PLAYERS)
+        {
+            Debug.LogWarning($"Invalid player index: {playerIndex}");
+            return;
+        }
+        _playerSeat[playerIndex] = newSeat;
+    }
+
+    /// <summary>
+    /// 특정 Player 객체의 지정 자리 변경
+    /// </summary>
+    /// <param name="player">Player 객체</param>
+    /// <param name="newSeat">새로운 지정 자리 좌표</param>
+    public void SetPlayerSeat(Player player, Vector2Int newSeat)
+    {
+        int index = GetIndex(player);
+        if (index == -1)
+        {
+            Debug.LogWarning("Player not found in team");
+            return;
+        }
+
+        SetPlayerSeat(index, newSeat);
+    }
+
+    /// <summary>
+    /// Player를 자신의 지정 자리로 이동시키기
+    /// </summary>
+    /// <param name="playerIndex">Player의 인덱스</param>
+    /// <param name="immediate">즉시 이동 여부</param>
+    public void MovePlayerToSeat(int playerIndex, bool immediate = false)
+    {
+        if (playerIndex < 0 || playerIndex >= PlayerCount || _players[playerIndex] == null)
+        {
+            Debug.LogWarning($"Cannot move player {playerIndex} to seat: invalid index or null player");
+            return;
+        }
+
+        Vector2Int seatPosition = GetPlayerSeat(playerIndex);
+        Player player = _players[playerIndex];
+
+        Debug.Log($"Moving player {playerIndex} to seat position {seatPosition}");
+        MapManager.Instance.MoveTo(player, seatPosition, immediate);
+    }
+
+    /// <summary>
+    /// 특정 Player 객체를 자신의 지정 자리로 이동시키기
+    /// </summary>
+    /// <param name="player">Player 객체</param>
+    /// <param name="immediate">즉시 이동 여부</param>
+    public void MovePlayerToSeat(Player player, bool immediate = false)
+    {
+        int index = GetIndex(player);
+        if (index == -1)
+        {
+            Debug.LogWarning("Player not found in team");
+            return;
+        }
+
+        MovePlayerToSeat(index, immediate);
+    }
+
+    /// <summary>
+    /// 모든 Player들을 각자의 지정 자리로 이동시키기
+    /// </summary>
+    /// <param name="immediate">즉시 이동 여부</param>
+    public void MoveAllPlayersToSeats()
+    {
+        for (int i = 0; i < PlayerCount; i++)
+        {
+            if (_players[i] != null)
+            {
+                _players[i].MoveToSeat(GetPlayerSeat(i));//이동이 완료되면 그때부터 Progress 진행하도록 수정할 것.
+            }
+        }
+        
+        Debug.Log("All players moved to their designated seats");
     }
 
     #endregion

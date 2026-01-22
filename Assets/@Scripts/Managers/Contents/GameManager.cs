@@ -147,6 +147,8 @@ public class GameManager : Singleton<GameManager>
     {
         EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, PauseGame);
         EventManager.Instance.AddEvent(EEventType.UI_PopupClosed, ResumeGame);
+        EventManager.Instance.AddEvent(EEventType.UI_LeftPanelOpened, PauseGame);
+        EventManager.Instance.AddEvent(EEventType.UI_LeftPanelClosed, ResumeGame);
     }
     public void PauseGame()
     {

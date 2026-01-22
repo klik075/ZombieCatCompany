@@ -51,6 +51,8 @@ public static class Define
 
         //LeftPanel
         UI_LeftPanelStateChanged,
+        UI_LeftPanelOpened,
+        UI_LeftPanelClosed,
 
         UI_MenuButtonClicked,
         UI_SystemButtonClicked,

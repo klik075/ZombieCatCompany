@@ -84,6 +84,8 @@ public class Player : Cat
         _path.Clear();
         _aiTargetPosition = new Vector2Int(int.MinValue, int.MinValue);
     }
+
+    //1셀 단위 이동
     public void MoveTo(Vector2Int targetCell)
     {
         if (_isMoving)
@@ -156,7 +158,7 @@ public class Player : Cat
             }
             else
             {
-                TryAIMove();
+                TryAIMove();//게임 개발 중일 때는 움직이지 않도록 수정. 계속 움직이는 것 보다 멈추는 것도 필요.
             }
         }
     }
@@ -165,7 +167,8 @@ public class Player : Cat
     {
         // 새로운 랜덤 목표 선택
         List<Vector2Int> walkableCells = MapManager.Instance.GetWalkableCells();
-        if (walkableCells.Count == 0) return;
+        if (walkableCells.Count == 0) 
+            return;
 
         Vector2Int randomTarget;
         do
@@ -182,7 +185,26 @@ public class Player : Cat
             MoveTo(_path[0]);
         }
     }
+    public void MoveToSeat(Vector2Int targetPos)
+    {
+        // 현재 이동 중이라면 이동 상태 초기화 및 즉시 중단
+        if (_isMoving)
+        {
+            _isMoving = false;
+            State = ECatState.Idle;
+            transform.position = MapManager.Instance.CellToWorld(CellPosition); // 현재 셀 위치로 보정
+        }
 
+        // AI 이동 경로와 목표 초기화 (자리 이동이 우선)
+        _path.Clear();
+        _aiTargetPosition = targetPos;
+        _path = MapManager.Instance.FindPath(CellPosition, _aiTargetPosition);
+
+        if (_path.Count > 0)
+        {
+            MoveTo(_path[0]);
+        }
+    }
     private void OnDrawGizmosSelected()
     {
         if (_path == null || _path.Count == 0) return;

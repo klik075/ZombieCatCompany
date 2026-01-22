@@ -204,6 +204,11 @@ public class UI_LeftPanel : UI_UGUI
 
     private void NotifyStateChanged()
     {
+        if(IsActive == false)
+            EventManager.Instance.TriggerEvent(EEventType.UI_LeftPanelClosed);
+        else
+            EventManager.Instance.TriggerEvent(EEventType.UI_LeftPanelOpened);
+
         EventManager.Instance.TriggerEvent(EEventType.UI_LeftPanelStateChanged);//BottomPanel에서 감지
     }
 
