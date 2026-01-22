@@ -117,7 +117,6 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
     // GameDevManager로부터 애니메이션 데이터 가져오기
     private WorkAnimationData GetWorkAnimationData()
     {
-        GenreData genreData = GameDevManager.Instance.CurrentGenreData;
         Player worker = MemberManager.Instance.SelectedPlayer;
         
         if (worker == null)
@@ -127,7 +126,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
         }
 
         // Manager에서 WorkResult를 계산하고 DTO로 변환
-        var workResult = GameDevManager.Instance.CalculateWorkResult(worker.CurrentMemberData, genreData);
+        var workResult = GameDevManager.Instance.CalculateWorkResult(worker.CurrentMemberData);
         return new WorkAnimationData(workResult.qualitySequence);
     }
 
@@ -315,13 +314,13 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
         GameDevManager.Instance.AddQualityScore(quality, 1);
         _currentWorkCount++;
         _completedQualityCount++;
-        UpdateQuality();
         
         // 모든 품질 완료 시 정리
         if (_completedQualityCount >= _totalQualityCount)
         {
             SetInteractable(true);
             CleanupAnimationCanvas();
+            EventManager.Instance.TriggerEvent(EEventType.WorkCompleted);
             Debug.Log("All qualities completed! Work finished.");
         }
     }

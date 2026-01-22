@@ -35,8 +35,10 @@ public static class Define
         NewDevTitleChanged,
         ProposalChanged,
         GameDevStateChanged,
+        GameDevProgressChanged,
 
         QualityChanged,
+        WorkCompleted,
 
         //Member Events
         MemberListChanged,

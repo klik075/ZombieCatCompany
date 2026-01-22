@@ -97,11 +97,14 @@ public class UI_BottomPanel : UI_UGUI
         GetButton((int)Buttons.MenuButton).onClick.AddListener(OnClickMenuButton);
 
         // UI 관련 이벤트 구독
-        EventManager.Instance.AddEvent(EEventType.UI_LeftPanelStateChanged, UpdateMenuButtonText);
-        EventManager.Instance.AddEvent(EEventType.UI_PopupClosed, UpdateMenuButtonText);
-        EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, UpdateMenuButtonText);
+        EventManager.Instance.AddEvent(EEventType.UI_LeftPanelStateChanged, UpdateUIStates);
+        EventManager.Instance.AddEvent(EEventType.UI_PopupClosed, UpdateUIStates);
+        EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, UpdateUIStates);
         
         // 게임 데이터 변경 이벤트 구독
+        EventManager.Instance.AddEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
+        EventManager.Instance.AddEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
+        EventManager.Instance.AddEvent(EEventType.QualityChanged, OnQualityChanged);
         EventManager.Instance.AddEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
         EventManager.Instance.AddEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
     }
@@ -120,6 +123,68 @@ public class UI_BottomPanel : UI_UGUI
     private void OnNewDevTitleChanged()
     {
         UpdateDevelopmentStatusUI(GameManager.Instance.NewDevTitle);
+    }
+
+    private void OnGameDevStateChanged()
+    {
+        UpdateBottomPanelBasedOnDevState();
+    }
+    private void OnGameDevProgressChanged()
+    {
+        UpdateNewWorkText();
+    }
+    private void OnQualityChanged()
+    {
+        UpdateQualityText();
+    }
+    private void UpdateQualityText()
+    {
+        if (GetObject((int)GameObjects.GameDevBottomPanel1).activeSelf == false)
+            return;
+
+        GetText((int)Texts.QualityText1).text = GameDevManager.Instance.GetQualityScore(EQualityType.Fun).ToString();
+        GetText((int)Texts.QualityText2).text = GameDevManager.Instance.GetQualityScore(EQualityType.Nyang).ToString();
+        GetText((int)Texts.QualityText3).text = GameDevManager.Instance.GetQualityScore(EQualityType.Graphics).ToString();
+        GetText((int)Texts.QualityText4).text = GameDevManager.Instance.GetQualityScore(EQualityType.Sound).ToString();
+        GetText((int)Texts.QualityText5).text = GameDevManager.Instance.GetQualityScore(EQualityType.Bug).ToString();
+    }
+    private void UpdateNewWorkText()
+    {
+        if (GetObject((int)GameObjects.GameDevBottomPanel1).activeSelf == false)
+            return;
+
+        EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
+        switch(currentDevType)
+        {
+            case EGameDevType.None:
+                break;
+            case EGameDevType.Scenario:
+            case EGameDevType.Graphics:
+            case EGameDevType.Sound:
+            case EGameDevType.Complete:
+                GetText((int)Texts.NewWorkText).text = $"{GameDevManager.Instance.Progress}%";
+                break;
+            case EGameDevType.Debug:
+                GetText((int)Texts.NewWorkNameText).text = "디버그 중";
+                break;
+            default:
+                break;
+        }
+    }
+    private void UpdateBottomPanelBasedOnDevState()
+    {
+        EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
+        
+        bool isNightPanel = (currentDevType == EGameDevType.None);
+        bool isGameDevPanel = !isNightPanel;
+        
+        // NightBottomPanel1 활성화/비활성화
+        GetObject((int)GameObjects.NightBottomPanel1).SetActive(isNightPanel);
+        
+        // GameDevBottomPanel1 활성화/비활성화
+        GetObject((int)GameObjects.GameDevBottomPanel1).SetActive(isGameDevPanel);
+        
+        // MorningBottomPanel1은 현재 로직에서 제외 (다른 조건에서 관리)
     }
 
     private void UpdateAnnualProfitUI(int annualProfit)
@@ -142,6 +207,7 @@ public class UI_BottomPanel : UI_UGUI
 
     private void OnClickSaveButton()
     {
+        SaveManager.Instance.Save();
         Debug.Log("SaveButton Clicked");
     }
 
@@ -164,13 +230,33 @@ public class UI_BottomPanel : UI_UGUI
         // 3순위: LeftPanel이 열려있는 상태이면 닫기
         if (_leftPanel.gameObject.activeSelf)
         {
-            _leftPanel.gameObject.SetActive(false);
+            _leftPanel.IsActive = false;
             UpdateMenuButtonText();
             return;
         }
 
         // 4순위: 아무것도 열려있지 않으면 메뉴 열기
         EventManager.Instance.TriggerEvent(EEventType.UI_MenuButtonClicked);
+    }
+
+    // SaveButton 상태 확인 (Left 패널이나 Popup이 열려있으면 비활성화)
+    private bool IsSaveButtonEnabled()
+    {
+        // 팝업이 열려있는지 확인
+        UI_Base lastPopupUI = UIManager.Instance.GetLastPopupUI<UI_Base>();
+        if (lastPopupUI != null)
+        {
+            return false; // 팝업이 있으면 비활성화
+        }
+
+        // LeftPanel이나 OptionPanel이 열려있으면 비활성화
+        if (_leftPanel.gameObject.activeSelf || _leftPanel.HasActiveOptionPanel())
+        {
+            return false;
+        }
+
+        // 모두 닫혀있으면 활성화
+        return true;
     }
     private MenuButtonState GetMenuButtonState()
     {
@@ -196,10 +282,26 @@ public class UI_BottomPanel : UI_UGUI
         // 모두 닫혀있으면 "메뉴"
         return MenuButtonState.Menu;
     }
+    // UI 상태 통합 업데이트 (MenuButton과 SaveButton 모두 제어)
+    private void UpdateUIStates()
+    {
+        UpdateMenuButtonText();
+        UpdateSaveButtonState();
+    }
+
     private void UpdateMenuButtonText()
     {
         MenuButtonState state = GetMenuButtonState();
         ApplyMenuButtonState(state);
+    }
+
+    private void UpdateSaveButtonState()
+    {
+        bool isEnabled = IsSaveButtonEnabled();
+        GetButton((int)Buttons.SaveButton).interactable = isEnabled;
+        GetText((int)Texts.SaveButtonText).text = isEnabled ? "@세이브" : "";
+
+        Debug.Log($"SaveButton state changed: {(isEnabled ? "Enabled" : "Disabled")}");
     }
 
     private void ApplyMenuButtonState(MenuButtonState state)
@@ -211,7 +313,8 @@ public class UI_BottomPanel : UI_UGUI
     public override void RefreshUI()
     {
         base.RefreshUI();
-        UpdateMenuButtonText();
+        UpdateUIStates(); // MenuButton과 SaveButton 상태 모두 업데이트
+        UpdateBottomPanelBasedOnDevState(); // GameDev 상태에 따른 패널 전환
         OnAnnualProfitChanged();
         OnNewDevTitleChanged();
         //TODO : Localization

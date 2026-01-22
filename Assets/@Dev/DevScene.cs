@@ -23,7 +23,7 @@ public class DevScene : BaseScene
 	}
     void OnApplicationQuit()
     {
-        SaveManager.Instance.Save();
+        
     }
 }
 

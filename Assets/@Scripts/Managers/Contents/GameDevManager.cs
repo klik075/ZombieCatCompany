@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using static Define;
 using System;
@@ -72,9 +73,12 @@ public class GameDevManager : Singleton<GameDevManager>
     {
         get => _currentProject?.progress ?? 0;
         set 
-        { 
+        {
             if (_currentProject != null)
+            { 
                 _currentProject.progress = Mathf.Clamp(value, 0, 100);
+                EventManager.Instance.TriggerEvent(EEventType.GameDevProgressChanged);
+            }
         }
     }
 
@@ -126,6 +130,7 @@ public class GameDevManager : Singleton<GameDevManager>
         CacheGameDevData();
 
         EventManager.Instance.AddEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
+        EventManager.Instance.AddEvent(EEventType.WorkCompleted, OnWorkCompleted);
     }
 
     #region 데이터 캐싱
@@ -497,10 +502,26 @@ public class GameDevManager : Singleton<GameDevManager>
     /// <summary>
     /// 작업 결과 계산 (UI에서 사용)
     /// </summary>
-    public WorkResult CalculateWorkResult(MemberData worker, GenreData genreData)
+    public WorkResult CalculateWorkResult(MemberData worker)
     {
         var result = new WorkResult();
-        EQualityType mainQuality = genreData.MainQuality;
+        EQualityType mainQuality;
+
+        switch (CurrentGameDevType)
+        {
+            case EGameDevType.Scenario:
+                mainQuality = EQualityType.Nyang;
+                break;
+            case EGameDevType.Graphics:
+                mainQuality = EQualityType.Graphics;
+                break;
+            case EGameDevType.Sound:
+                mainQuality = EQualityType.Sound;
+                break;
+            default:
+                mainQuality = EQualityType.Fun;
+                break;
+        }
 
         // 시도 횟수 계산
         int mainAbility = GetAbilityByQuality(worker, mainQuality);
@@ -659,6 +680,7 @@ public class GameDevManager : Singleton<GameDevManager>
                 _currentProject.bugScore += score;
                 break;
         }
+        EventManager.Instance.TriggerEvent(EEventType.QualityChanged);
     }
 
     /// <summary>
@@ -708,6 +730,105 @@ public class GameDevManager : Singleton<GameDevManager>
         }
 
         Debug.Log($"Work completed! Gained scores: {string.Join(", ", workResult.gainedScores)}");
+    }
+
+    #endregion
+
+    #region Progress 관리
+
+    /// <summary>
+    /// 작업 완료 이벤트 핸들러
+    /// </summary>
+    private void OnWorkCompleted()
+    {
+        if (_currentProject == null)
+        {
+            Debug.LogWarning("No active project for work completion!");
+            return;
+        }
+
+        Debug.Log($"Work completed for {CurrentGameDevType} stage");
+        
+        // 현재 단계에 따른 Progress 증가 시작
+        CoroutineManager.Instance.StartCoroutine(IncreaseProgressForCurrentStage());
+    }
+
+    /// <summary>
+    /// 현재 단계에 따라 Progress를 증가시키는 코루틴
+    /// </summary>
+    private IEnumerator IncreaseProgressForCurrentStage()
+    {
+        int targetProgress = GetTargetProgressForStage(CurrentGameDevType);
+        int startProgress = Progress;
+        
+        Debug.Log($"Starting progress increase: {startProgress} -> {targetProgress}% for {CurrentGameDevType}");
+        
+        float duration = 2.0f; // 2초 동안 진행
+        float elapsedTime = 0f;
+        
+        while (elapsedTime < duration && Progress < targetProgress)
+        {
+            yield return new WaitWhile(() => Time.timeScale == 0);
+
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+            
+            // 선형 보간으로 Progress 증가
+            int newProgress = Mathf.RoundToInt(Mathf.Lerp(startProgress, targetProgress, t));
+            Progress = newProgress;
+            
+            yield return null;
+        }
+        
+        // 최종 목표 Progress 설정
+        Progress = targetProgress;
+        
+        // 다음 단계로 전환
+        AdvanceToNextStage();
+        
+        Debug.Log($"Progress increase completed: {Progress}% for {CurrentGameDevType}");
+    }
+
+    /// <summary>
+    /// 현재 단계에 따른 목표 Progress 반환
+    /// </summary>
+    private int GetTargetProgressForStage(EGameDevType stage)
+    {
+        return stage switch
+        {
+            EGameDevType.Scenario => 33,
+            EGameDevType.Graphics => 66,
+            EGameDevType.Sound => 100,
+            _ => Progress // 다른 단계들은 현재 Progress 유지
+        };
+    }
+
+    /// <summary>
+    /// 다음 단계로 전환
+    /// </summary>
+    private void AdvanceToNextStage()
+    {
+        EGameDevType nextStage = GetNextStage(CurrentGameDevType);
+        
+        if (nextStage != CurrentGameDevType)
+        {
+            Debug.Log($"Advancing from {CurrentGameDevType} to {nextStage}");
+            CurrentGameDevType = nextStage;
+        }
+    }
+
+    /// <summary>
+    /// 현재 단계의 다음 단계 반환
+    /// </summary>
+    private EGameDevType GetNextStage(EGameDevType currentStage)
+    {
+        return currentStage switch
+        {
+            EGameDevType.Scenario => EGameDevType.Graphics,
+            EGameDevType.Graphics => EGameDevType.Sound,
+            EGameDevType.Sound => EGameDevType.Debug,
+            _ => currentStage // Debug, Complete는 현재 단계 유지
+        };
     }
 
     #endregion
