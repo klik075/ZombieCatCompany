@@ -1,0 +1,624 @@
+fileFormatVersion: 2
+guid: 674a47f324a973642a8ce6534e6b7ae1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 5214972278515132237
+    second: cat_blackzombie_0
+  - first:
+      213: -6759553122240839616
+    second: cat_blackzombie_1
+  - first:
+      213: -3932424620924814981
+    second: cat_blackzombie_2
+  - first:
+      213: -4732484339381402575
+    second: cat_blackzombie_3
+  - first:
+      213: 787160970882189834
+    second: cat_blackzombie_4
+  - first:
+      213: -3344637162695989655
+    second: cat_blackzombie_5
+  - first:
+      213: 6222421499456664454
+    second: cat_blackzombie_6
+  - first:
+      213: 929836741205565882
+    second: cat_blackzombie_7
+  - first:
+      213: -9209319892244822319
+    second: cat_blackzombie_8
+  - first:
+      213: 5839638417585169876
+    second: cat_blackzombie_9
+  - first:
+      213: -9038974738610657287
+    second: cat_blackzombie_10
+  - first:
+      213: -6240085360056133594
+    second: cat_blackzombie_11
+  - first:
+      213: -1638861458154487754
+    second: cat_blackzombie_12
+  - first:
+      213: -596553053859187554
+    second: cat_blackzombie_13
+  - first:
+      213: 1279783488449735729
+    second: cat_blackzombie_14
+  - first:
+      213: -8331132008361822348
+    second: cat_blackzombie_15
+  - first:
+      213: 5780839155230500676
+    second: cat_blackzombie_16
+  - first:
+      213: -2762179331516857983
+    second: cat_blackzombie_17
+  - first:
+      213: -2557844600963472873
+    second: cat_blackzombie_18
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 0
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 0
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 0
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: cat_blackzombie_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 227
+        width: 32
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d47676e38ad4f5840800000000000000
+      internalID: 5214972278515132237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_1
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 228
+        width: 32
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 040c37cbf3e3132a0800000000000000
+      internalID: -6759553122240839616
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_2
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 149
+        width: 61
+        height: 76
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b79b6c364a83d69c0800000000000000
+      internalID: -3932424620924814981
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_3
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 195
+        width: 39
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 134821e2196d25eb0800000000000000
+      internalID: -4732484339381402575
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_4
+      rect:
+        serializedVersion: 2
+        x: 66
+        y: 149
+        width: 34
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0a0c728bbe8cea00800000000000000
+      internalID: 787160970882189834
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_5
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 125
+        width: 33
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9666fee98367591d0800000000000000
+      internalID: -3344637162695989655
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_6
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 76
+        width: 73
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6833eddc26b7a5650800000000000000
+      internalID: 6222421499456664454
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_7
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 104
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab12aa2f69177ec00800000000000000
+      internalID: 929836741205565882
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_8
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 108
+        width: 38
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d60fcfd95ce13080800000000000000
+      internalID: -9209319892244822319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_9
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 93
+        width: 36
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d563e873309a0150800000000000000
+      internalID: 5839638417585169876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_10
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 98
+        width: 34
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9f7e163ad5c1f8280800000000000000
+      internalID: -9038974738610657287
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_11
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 3
+        width: 75
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6281db92d63c669a0800000000000000
+      internalID: -6240085360056133594
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_12
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 68
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6308f96df289149e0800000000000000
+      internalID: -1638861458154487754
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_13
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 68
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e947c0f782e98b7f0800000000000000
+      internalID: -596553053859187554
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_14
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 58
+        width: 40
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13ce47a5d44b2c110800000000000000
+      internalID: 1279783488449735729
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_15
+      rect:
+        serializedVersion: 2
+        x: 199
+        y: 58
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 477f4b0249fd16c80800000000000000
+      internalID: -8331132008361822348
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_16
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 3
+        width: 75
+        height: 63
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 447ee2f559aa93050800000000000000
+      internalID: 5780839155230500676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_17
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 3
+        width: 66
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 181030b5884caa9d0800000000000000
+      internalID: -2762179331516857983
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_blackzombie_18
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 3
+        width: 28
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 712ebe033e5b08cd0800000000000000
+      internalID: -2557844600963472873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      cat_blackzombie_0: 5214972278515132237
+      cat_blackzombie_1: -6759553122240839616
+      cat_blackzombie_10: -9038974738610657287
+      cat_blackzombie_11: -6240085360056133594
+      cat_blackzombie_12: -1638861458154487754
+      cat_blackzombie_13: -596553053859187554
+      cat_blackzombie_14: 1279783488449735729
+      cat_blackzombie_15: -8331132008361822348
+      cat_blackzombie_16: 5780839155230500676
+      cat_blackzombie_17: -2762179331516857983
+      cat_blackzombie_18: -2557844600963472873
+      cat_blackzombie_2: -3932424620924814981
+      cat_blackzombie_3: -4732484339381402575
+      cat_blackzombie_4: 787160970882189834
+      cat_blackzombie_5: -3344637162695989655
+      cat_blackzombie_6: 6222421499456664454
+      cat_blackzombie_7: 929836741205565882
+      cat_blackzombie_8: -9209319892244822319
+      cat_blackzombie_9: 5839638417585169876
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

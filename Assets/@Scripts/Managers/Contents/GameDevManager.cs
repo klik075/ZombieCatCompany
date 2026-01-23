@@ -131,7 +131,7 @@ public class GameDevManager : Singleton<GameDevManager>
         CacheGameDevData();
 
         EventManager.Instance.AddEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
-        EventManager.Instance.AddEvent(EEventType.WorkCompleted, OnWorkCompleted);
+        EventManager.Instance.AddEvent(EEventType.WorkCompleted, OnMainWorkCompleted);
     }
 
     #region 데이터 캐싱
@@ -436,7 +436,7 @@ public class GameDevManager : Singleton<GameDevManager>
                 break;
             case EGameDevType.Complete:
                 UI_ChatPopup completePopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-                completePopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.CompleteGameDev).Contents, action: OnClickChatPopup);
+                completePopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.CompleteGameDev).Contents, new string[] { $"{GameManager.Instance.Year}" }, action: OnClickChatPopup);
                 break;
             default:
                 break;
@@ -455,16 +455,20 @@ public class GameDevManager : Singleton<GameDevManager>
                 selectionPopup.SetInfo();
                 break;
             case EGameDevType.Debug:
-                //디버깅 제거 시작
+                StartDebug();
                 break;
             case EGameDevType.Complete:
-                //게임 개발 완료 UI 호출
+                UI_GameDevCompletionPopup completionPopup = UIManager.Instance.ShowPopupUI<UI_GameDevCompletionPopup>();
+                completionPopup.SetInfo();
                 break;
             default:
                 break;
         }
     }
-
+    public void StartDebug()
+    {
+        QualityManager.Instance.StartIndividualWork();
+    }
     /// <summary>
     /// 작업 결과 계산 (UI에서 사용)
     /// </summary>
@@ -522,9 +526,16 @@ public class GameDevManager : Singleton<GameDevManager>
     public WorkResult CalculateIndividualWorkResult(MemberData worker)
     {
         var result = new WorkResult();
-        EQualityType mainQuality = GetMainQualityByRole(worker);
-
         int tries = UnityEngine.Random.Range(0, 7);//수치 따로 뺄 것, 밸런스 조정 필요
+
+        if (CurrentGameDevType == EGameDevType.Debug)
+        {
+            result.tries = tries;
+            result.mainQuality = EQualityType.Bug;
+            return result;
+        }
+
+        EQualityType mainQuality = GetMainQualityByRole(worker);
         var (quality, score) = RollOneScore(mainQuality, isIndividual : true);
 
         result.tries = tries;
@@ -680,7 +691,15 @@ public class GameDevManager : Singleton<GameDevManager>
                 _currentProject.soundScore += score;
                 break;
             case EQualityType.Bug:
-                _currentProject.bugScore += score;
+                if (CurrentGameDevType == EGameDevType.Debug)
+                {
+                    int temp = _currentProject.bugScore - score;
+                    _currentProject.bugScore = Mathf.Max(0, temp);
+                }
+                else
+                { 
+                    _currentProject.bugScore += score;
+                }
                 break;
         }
         EventManager.Instance.TriggerEvent(EEventType.QualityChanged);
@@ -712,7 +731,7 @@ public class GameDevManager : Singleton<GameDevManager>
     /// <summary>
     /// 작업 완료 이벤트 핸들러
     /// </summary>
-    private void OnWorkCompleted()
+    private void OnMainWorkCompleted()
     {
         if (_currentProject == null)
         {
@@ -724,13 +743,13 @@ public class GameDevManager : Singleton<GameDevManager>
         MemberManager.Instance.MoveAllPlayersToSeats();
 
         // 현재 단계에 따른 Progress 증가 시작
-        CoroutineManager.Instance.StartCoroutine(IncreaseProgressForCurrentStage());
+        CoroutineManager.Instance.StartCoroutine(CoIncreaseProgressForCurrentStage());
     }
 
     /// <summary>
     /// 현재 단계에 따라 Progress를 증가시키는 코루틴
     /// </summary>
-    private IEnumerator IncreaseProgressForCurrentStage()
+    private IEnumerator CoIncreaseProgressForCurrentStage()
     {
         int targetProgress = GetTargetProgressForStage(CurrentGameDevType);
         int startProgress = Progress;
@@ -762,10 +781,6 @@ public class GameDevManager : Singleton<GameDevManager>
         
         // 최종 목표 Progress 설정
         Progress = targetProgress;
-        
-        // 다음 단계로 전환
-        AdvanceToNextStage();
-        
         Debug.Log($"Progress increase completed: {Progress}% for {CurrentGameDevType}");
     }
 
@@ -786,7 +801,7 @@ public class GameDevManager : Singleton<GameDevManager>
     /// <summary>
     /// 다음 단계로 전환
     /// </summary>
-    private void AdvanceToNextStage()
+    public void AdvanceToNextStage()
     {
         EGameDevType nextStage = GetNextStage(CurrentGameDevType);
         
@@ -807,6 +822,8 @@ public class GameDevManager : Singleton<GameDevManager>
             EGameDevType.Scenario => EGameDevType.Graphics,
             EGameDevType.Graphics => EGameDevType.Sound,
             EGameDevType.Sound => EGameDevType.Debug,
+            EGameDevType.Debug => EGameDevType.Complete,
+            EGameDevType.Complete => EGameDevType.None,
             _ => currentStage // Debug, Complete는 현재 단계 유지
         };
     }

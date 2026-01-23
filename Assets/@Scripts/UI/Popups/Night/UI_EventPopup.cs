@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -43,7 +44,14 @@ public class UI_EventPopup : UI_UGUI, IUI_Popup, IClickableUI
     }
     public void SetInfo()
     {
-        
+        Canvas canvas = GetComponent<Canvas>();
+        CoroutineManager.Instance.StartCoroutine(ForceUpdateLayout(canvas));
+    }
+    private IEnumerator ForceUpdateLayout(Canvas mainCanvas)
+    {
+        Canvas.ForceUpdateCanvases();
+        LayoutRebuilder.ForceRebuildLayoutImmediate(mainCanvas.GetComponent<RectTransform>());
+        yield return null;
     }
     public void OnClickButton()
     {
@@ -52,7 +60,6 @@ public class UI_EventPopup : UI_UGUI, IUI_Popup, IClickableUI
     public override void RefreshUI()
     {
         base.RefreshUI();
-        LayoutRebuilder.ForceRebuildLayoutImmediate(_rectTransform);
-
+        SetInfo();
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UI_GameDevCompletionPopup : UI_UGUI, IUI_Popup
@@ -57,10 +58,16 @@ public class UI_GameDevCompletionPopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
     }
+    public void SetInfo()
+    {
+
+    }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
 
     }
+
+    
 }

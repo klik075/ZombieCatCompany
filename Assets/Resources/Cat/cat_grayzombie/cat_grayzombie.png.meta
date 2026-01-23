@@ -1,0 +1,624 @@
+fileFormatVersion: 2
+guid: 546cc327009900644aaf37e2956681a5
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3777542935989445906
+    second: cat_grayzombie_0
+  - first:
+      213: 978670704142394796
+    second: cat_grayzombie_1
+  - first:
+      213: -4724777391538128976
+    second: cat_grayzombie_2
+  - first:
+      213: -4383747837645067647
+    second: cat_grayzombie_3
+  - first:
+      213: -3384092962937317067
+    second: cat_grayzombie_4
+  - first:
+      213: -4913630948763335061
+    second: cat_grayzombie_5
+  - first:
+      213: -7016632636185529468
+    second: cat_grayzombie_6
+  - first:
+      213: -8713249233381246349
+    second: cat_grayzombie_7
+  - first:
+      213: -2247614288212693991
+    second: cat_grayzombie_8
+  - first:
+      213: 2109858955290030005
+    second: cat_grayzombie_9
+  - first:
+      213: -564883572876157009
+    second: cat_grayzombie_10
+  - first:
+      213: -1694289074932595070
+    second: cat_grayzombie_11
+  - first:
+      213: -2387936135840839096
+    second: cat_grayzombie_12
+  - first:
+      213: 5281514543921880703
+    second: cat_grayzombie_13
+  - first:
+      213: 419103525767548395
+    second: cat_grayzombie_14
+  - first:
+      213: -6071783707523079851
+    second: cat_grayzombie_15
+  - first:
+      213: -3425847485159011264
+    second: cat_grayzombie_16
+  - first:
+      213: -1598510183728427486
+    second: cat_grayzombie_17
+  - first:
+      213: 5119157696104391537
+    second: cat_grayzombie_18
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 0
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 0
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 0
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: cat_grayzombie_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 228
+        width: 32
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 215ef6739478c6430800000000000000
+      internalID: 3777542935989445906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_1
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 197
+        width: 39
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca52d78f1dfe49d00800000000000000
+      internalID: 978670704142394796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_2
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 151
+        width: 60
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0b7b29ecef73e6eb0800000000000000
+      internalID: -4724777391538128976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_3
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 151
+        width: 35
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18a6748519cc923c0800000000000000
+      internalID: -4383747837645067647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_4
+      rect:
+        serializedVersion: 2
+        x: 102
+        y: 145
+        width: 29
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 539d83141694901d0800000000000000
+      internalID: -3384092962937317067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_5
+      rect:
+        serializedVersion: 2
+        x: 133
+        y: 134
+        width: 28
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b6688958fa64fcbb0800000000000000
+      internalID: -4913630948763335061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_6
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 78
+        width: 73
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 483bfb80bc9ef9e90800000000000000
+      internalID: -7016632636185529468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_7
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 105
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 37abddcacf1541780800000000000000
+      internalID: -8713249233381246349
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_8
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 102
+        width: 36
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 91c6df696bedec0e0800000000000000
+      internalID: -2247614288212693991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_9
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 95
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5bf2d349a89b74d10800000000000000
+      internalID: 2109858955290030005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_10
+      rect:
+        serializedVersion: 2
+        x: 198
+        y: 100
+        width: 35
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: faf534322612928f0800000000000000
+      internalID: -564883572876157009
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_11
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 5
+        width: 75
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 28641d5201dac78e0800000000000000
+      internalID: -1694289074932595070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_12
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 69
+        width: 38
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84a43ec7cb85cded0800000000000000
+      internalID: -2387936135840839096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_13
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 69
+        width: 36
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7ed58abe75bb4940800000000000000
+      internalID: 5281514543921880703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_14
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 60
+        width: 40
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bed0d79af64f0d500800000000000000
+      internalID: 419103525767548395
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_15
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 60
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 551251043e0bcbba0800000000000000
+      internalID: -6071783707523079851
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_16
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 5
+        width: 76
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04c8e68fcd1f470d0800000000000000
+      internalID: -3425847485159011264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_17
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 5
+        width: 66
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22ec5090573f0d9e0800000000000000
+      internalID: -1598510183728427486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_grayzombie_18
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 5
+        width: 25
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17362895dc6ea0740800000000000000
+      internalID: 5119157696104391537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      cat_grayzombie_0: 3777542935989445906
+      cat_grayzombie_1: 978670704142394796
+      cat_grayzombie_10: -564883572876157009
+      cat_grayzombie_11: -1694289074932595070
+      cat_grayzombie_12: -2387936135840839096
+      cat_grayzombie_13: 5281514543921880703
+      cat_grayzombie_14: 419103525767548395
+      cat_grayzombie_15: -6071783707523079851
+      cat_grayzombie_16: -3425847485159011264
+      cat_grayzombie_17: -1598510183728427486
+      cat_grayzombie_18: 5119157696104391537
+      cat_grayzombie_2: -4724777391538128976
+      cat_grayzombie_3: -4383747837645067647
+      cat_grayzombie_4: -3384092962937317067
+      cat_grayzombie_5: -4913630948763335061
+      cat_grayzombie_6: -7016632636185529468
+      cat_grayzombie_7: -8713249233381246349
+      cat_grayzombie_8: -2247614288212693991
+      cat_grayzombie_9: 2109858955290030005
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

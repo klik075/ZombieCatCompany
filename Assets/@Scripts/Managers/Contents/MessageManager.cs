@@ -152,6 +152,14 @@ public class MessageManager : Singleton<MessageManager>
         {
             Contents = new string[] { "마지막으로 누구에게 사운드를 맡길까냥?" }
         };
+        _messageScripts[EMessageType.StartDebugging] = new MessageScript
+        {
+            Contents = new string[] { "버그 제거를 시작하자냥!" }
+        };
+        _messageScripts[EMessageType.CompleteGameDev] = new MessageScript
+        {
+            Contents = new string[] { "","번째 게임이 완성되었다냥." }
+        };
     }
 
     //private void InitializeChatScripts()

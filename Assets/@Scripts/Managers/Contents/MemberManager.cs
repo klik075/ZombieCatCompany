@@ -166,7 +166,7 @@ public class MemberManager : Singleton<MemberManager>
         InitializePlayerSeats();
 
         // 주인공 스폰
-        Player mainCharacter = ObjectManager.Instance.SpawnPlayer("Cat");
+        Player mainCharacter = ObjectManager.Instance.SpawnPlayer("cat_blackzombie");
         mainCharacter.SetMemberData(MAIN_CHARACTER_ID);
         _players[0] = mainCharacter;
         PlayerCount = 1;
@@ -271,7 +271,7 @@ public class MemberManager : Singleton<MemberManager>
             CurrentHireResult.MemberDatas.Remove(memberData);
 
         // 현재 MemberCount 인덱스에 새 구성원 추가
-        Player newPlayer = ObjectManager.Instance.SpawnPlayer("Cat");
+        Player newPlayer = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(memberData.EmployeeID));
         MemberData newMemberData = InfectMemberData(memberData);
         newPlayer.SetMemberData(newMemberData);
         _players[PlayerCount] = newPlayer;
@@ -279,6 +279,29 @@ public class MemberManager : Singleton<MemberManager>
         MapManager.Instance.MoveTo(newPlayer, FindSpawnPosition(_doorWay), true);
 
         return true;
+    }
+    public string GetMemberPrefabName(int employeeId)
+    {
+        string name = "";
+        switch (employeeId)
+        {
+            case 100:
+                name = "cat_blackzombie";
+                break;
+            case 101:
+                name = "cat_grayzombie";
+                break;
+            case 102:
+                name = "cat_brownzombie";
+                break;
+            case 103:
+                name = "cat_whitezombie";
+                break;
+            default:
+                name = "cat_blackzombie";
+                break;
+        }
+        return name;
     }
     public MemberData InfectMemberData(MemberData memberData)
     {

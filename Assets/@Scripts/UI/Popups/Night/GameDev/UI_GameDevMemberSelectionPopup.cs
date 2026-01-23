@@ -166,7 +166,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup
 
     private void UpdateMemberImage(MemberData memberData)
     {
-        string imagePath = memberData.NormalImagePath;
+        string imagePath = memberData.ZombieImagePath;
         
         if (!string.IsNullOrEmpty(imagePath))
         {

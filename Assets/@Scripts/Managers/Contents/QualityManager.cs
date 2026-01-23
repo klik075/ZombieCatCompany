@@ -236,17 +236,17 @@ public class QualityManager : Singleton<QualityManager>
             _ => Color.white
         };
     }
-    private TextMeshProUGUI CreateQualityText(int count)
+    private TextMeshProUGUI CreateQualityText(int count, bool positive = true)
     {
         GameObject textObj = new GameObject("QualityText");
         TextMeshProUGUI textMesh = textObj.AddComponent<TextMeshProUGUI>();
-        textMesh.text = GetQualityString(count);
+        textMesh.text = GetQualityString(count, positive);
         textMesh.fontSize = 40;
         textMesh.alignment = TextAlignmentOptions.Left | TextAlignmentOptions.Center;
         textMesh.color = Color.white;
         return textMesh;
     }
-    private string GetQualityString(int count)
+    private string GetQualityString(int count, bool positive = true)
     {
         string text = "";
         switch (count)
@@ -254,7 +254,7 @@ public class QualityManager : Singleton<QualityManager>
             case int when count <= 0:
                 break;
             case int when count > 0:
-                text = $"+{count}";
+                text = positive == true ? $"+{count}" : $"-{count}";
                 break;
         }
         return text;
@@ -336,12 +336,20 @@ public class QualityManager : Singleton<QualityManager>
             yield return coroutine;
         }
 
+        GameDevManager.Instance.AdvanceToNextStage();
         CleanupAnimationCanvas();
     }
 
     private IEnumerator CoProcessIndividualWork(Player player)
     {
+        if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.Debug)
+        {
+            if(GameDevManager.Instance.CurrentProject.bugScore == 0)
+                yield break;
+        }
+
         float elapsed = 0f;
+        List<Coroutine> coAnimList = new List<Coroutine>();
         while (elapsed < 10f)
         {
             if (player.CellPosition != MemberManager.Instance.GetPlayerSeat(player) || player.State == Cat.ECatState.Work)
@@ -351,8 +359,14 @@ public class QualityManager : Singleton<QualityManager>
                 continue;
             }
 
-            // 25% 확률로 작업 실행
-            if (UnityEngine.Random.value < 0.25f)
+            if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.Debug)
+            {
+                if (GameDevManager.Instance.CurrentProject.bugScore == 0)
+                    yield break;
+            }
+
+            // 95% 확률로 작업 실행
+            if (UnityEngine.Random.value < 0.95f)
             {
                 // 작업 시작
                 player.DoWork();
@@ -365,12 +379,20 @@ public class QualityManager : Singleton<QualityManager>
                     int qualityCount = workResult.tries;
 
                     // 애니메이션 코루틴 시작
-                    CoroutineManager.Instance.StartCoroutine(CoShowIndividualQualityAnimation(player, quality, qualityCount));
+                    coAnimList.Add(CoroutineManager.Instance.StartCoroutine(CoShowIndividualQualityAnimation(player, quality, qualityCount)));
                 }
             }
 
             yield return new WaitForSecondsRealtime(5f);
             elapsed += 5f;
+        }
+
+        if (coAnimList.Count > 0)
+        {
+            foreach (var coAnim in coAnimList)
+            {
+                yield return coAnim;
+            }
         }
     }
 
@@ -400,7 +422,8 @@ public class QualityManager : Singleton<QualityManager>
             qualityRect.sizeDelta = new Vector2(QUALITY_IMAGE_SIZE / 2, QUALITY_IMAGE_SIZE / 2);
 
             // Quality 텍스트 생성 (이미지 바로 오른쪽)
-            TextMeshProUGUI qualityText = CreateQualityText(qualityCount);
+            bool positive = GameDevManager.Instance.CurrentGameDevType != EGameDevType.Debug;
+            TextMeshProUGUI qualityText = CreateQualityText(qualityCount, positive);
             if (qualityText != null)
             {
                 RectTransform textRect = qualityText.GetComponent<RectTransform>();

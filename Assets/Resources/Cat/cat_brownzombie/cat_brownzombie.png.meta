@@ -1,0 +1,624 @@
+fileFormatVersion: 2
+guid: 1de178a4a58b8b243927b22a8ec97d56
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3115126412921187042
+    second: cat_brownzombie_0
+  - first:
+      213: -8620530237293995814
+    second: cat_brownzombie_1
+  - first:
+      213: 2816571113597438360
+    second: cat_brownzombie_2
+  - first:
+      213: 7297297340909661865
+    second: cat_brownzombie_3
+  - first:
+      213: -8190452497873508960
+    second: cat_brownzombie_4
+  - first:
+      213: 6610044669286499185
+    second: cat_brownzombie_5
+  - first:
+      213: -1568661091816916389
+    second: cat_brownzombie_6
+  - first:
+      213: -6859957594159744012
+    second: cat_brownzombie_7
+  - first:
+      213: -6261679689467600034
+    second: cat_brownzombie_8
+  - first:
+      213: -6358462764904191279
+    second: cat_brownzombie_9
+  - first:
+      213: -7225313047141489999
+    second: cat_brownzombie_10
+  - first:
+      213: -7205385552442088546
+    second: cat_brownzombie_11
+  - first:
+      213: 9059199997632817314
+    second: cat_brownzombie_12
+  - first:
+      213: 494874751106001427
+    second: cat_brownzombie_13
+  - first:
+      213: 8605309194287488888
+    second: cat_brownzombie_14
+  - first:
+      213: -7313408473943392537
+    second: cat_brownzombie_15
+  - first:
+      213: -6091931731902110497
+    second: cat_brownzombie_16
+  - first:
+      213: -2338753043843467163
+    second: cat_brownzombie_17
+  - first:
+      213: -2390252013216950314
+    second: cat_brownzombie_18
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 0
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 0
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 0
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: cat_brownzombie_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 228
+        width: 32
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2eaaa98c7f62b3b20800000000000000
+      internalID: 3115126412921187042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 200
+        width: 39
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad8d3963c69bd5880800000000000000
+      internalID: -8620530237293995814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_2
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 152
+        width: 59
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8990a964188761720800000000000000
+      internalID: 2816571113597438360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 152
+        width: 35
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aea251d445354560800000000000000
+      internalID: 7297297340909661865
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_4
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 142
+        width: 31
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0a5e98a19daa55e80800000000000000
+      internalID: -8190452497873508960
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_5
+      rect:
+        serializedVersion: 2
+        x: 134
+        y: 142
+        width: 30
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 173494eea989bbb50800000000000000
+      internalID: 6610044669286499185
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_6
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 78
+        width: 73
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5ab6415c0ffa3ae0800000000000000
+      internalID: -1568661091816916389
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_7
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 102
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4fb7dd9e9e88cc0a0800000000000000
+      internalID: -6859957594159744012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_8
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 107
+        width: 36
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e53610c8f7b0a19a0800000000000000
+      internalID: -6261679689467600034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_9
+      rect:
+        serializedVersion: 2
+        x: 152
+        y: 107
+        width: 29
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1da665ccdc332c7a0800000000000000
+      internalID: -6358462764904191279
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_10
+      rect:
+        serializedVersion: 2
+        x: 183
+        y: 99
+        width: 28
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b2e222a0188abb90800000000000000
+      internalID: -7225313047141489999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_11
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 4
+        width: 75
+        height: 72
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9325fc0404510c90800000000000000
+      internalID: -7205385552442088546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_12
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 67
+        width: 40
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a8af10766eb8bd70800000000000000
+      internalID: 9059199997632817314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_13
+      rect:
+        serializedVersion: 2
+        x: 122
+        y: 67
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31aabf3d6f52ed600800000000000000
+      internalID: 494874751106001427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_14
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 59
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87f98eb8e133c6770800000000000000
+      internalID: 8605309194287488888
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_15
+      rect:
+        serializedVersion: 2
+        x: 194
+        y: 59
+        width: 34
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7eeb545bdbd818a90800000000000000
+      internalID: -7313408473943392537
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_16
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 4
+        width: 76
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd46b04cd5c157ba0800000000000000
+      internalID: -6091931731902110497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_17
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 4
+        width: 66
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 568b8547f741b8fd0800000000000000
+      internalID: -2338753043843467163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_brownzombie_18
+      rect:
+        serializedVersion: 2
+        x: 226
+        y: 4
+        width: 25
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d79a84457e14ded0800000000000000
+      internalID: -2390252013216950314
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      cat_brownzombie_0: 3115126412921187042
+      cat_brownzombie_1: -8620530237293995814
+      cat_brownzombie_10: -7225313047141489999
+      cat_brownzombie_11: -7205385552442088546
+      cat_brownzombie_12: 9059199997632817314
+      cat_brownzombie_13: 494874751106001427
+      cat_brownzombie_14: 8605309194287488888
+      cat_brownzombie_15: -7313408473943392537
+      cat_brownzombie_16: -6091931731902110497
+      cat_brownzombie_17: -2338753043843467163
+      cat_brownzombie_18: -2390252013216950314
+      cat_brownzombie_2: 2816571113597438360
+      cat_brownzombie_3: 7297297340909661865
+      cat_brownzombie_4: -8190452497873508960
+      cat_brownzombie_5: 6610044669286499185
+      cat_brownzombie_6: -1568661091816916389
+      cat_brownzombie_7: -6859957594159744012
+      cat_brownzombie_8: -6261679689467600034
+      cat_brownzombie_9: -6358462764904191279
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
