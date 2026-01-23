@@ -227,6 +227,14 @@ public class Player : Cat
             yield return wait;
         }
     }
+    public void DoWork()
+    {
+        State = ECatState.Work;
+    }
+    public void FinishWork()
+    {
+        State = ECatState.Idle;
+    }
     private void OnDrawGizmosSelected()
     {
         if (_path == null || _path.Count == 0) return;

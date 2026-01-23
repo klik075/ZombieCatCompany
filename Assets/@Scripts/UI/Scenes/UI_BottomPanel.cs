@@ -301,7 +301,7 @@ public class UI_BottomPanel : UI_UGUI
         GetButton((int)Buttons.SaveButton).interactable = isEnabled;
         GetText((int)Texts.SaveButtonText).text = isEnabled ? "@ºº¿Ã∫Í" : "";
 
-        Debug.Log($"SaveButton state changed: {(isEnabled ? "Enabled" : "Disabled")}");
+        //Debug.Log($"SaveButton state changed: {(isEnabled ? "Enabled" : "Disabled")}");
     }
 
     private void ApplyMenuButtonState(MenuButtonState state)

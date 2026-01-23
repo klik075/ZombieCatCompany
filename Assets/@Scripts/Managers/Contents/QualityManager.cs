@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
@@ -86,7 +87,14 @@ public class QualityManager : Singleton<QualityManager>
         // 애니메이션 코루틴 시작
         CoroutineManager.Instance.StartCoroutine(CoAnimateQualitySequence(startPosition, targetPositions, interval));
     }
+    public void StartIndividualWork()
+    {
+        // 애니메이션 Canvas 생성
+        CreateAnimationCanvas();
 
+        // 코루틴 실행
+        CoroutineManager.Instance.StartCoroutine(CoStartIndividualWork());
+    }
     /// <summary>
     /// GameDevManager로부터 작업 애니메이션 데이터 가져오기
     /// </summary>
@@ -215,7 +223,7 @@ public class QualityManager : Singleton<QualityManager>
 
         return qualityObj;
     }
-
+    
     private Color GetQualityColor(EQualityType quality)
     {
         return quality switch
@@ -224,10 +232,33 @@ public class QualityManager : Singleton<QualityManager>
             EQualityType.Nyang => Color.green,
             EQualityType.Graphics => Color.red,
             EQualityType.Sound => Color.yellow,
+            EQualityType.Bug => Color.black,
             _ => Color.white
         };
     }
-
+    private TextMeshProUGUI CreateQualityText(int count)
+    {
+        GameObject textObj = new GameObject("QualityText");
+        TextMeshProUGUI textMesh = textObj.AddComponent<TextMeshProUGUI>();
+        textMesh.text = GetQualityString(count);
+        textMesh.fontSize = 40;
+        textMesh.alignment = TextAlignmentOptions.Left | TextAlignmentOptions.Center;
+        textMesh.color = Color.white;
+        return textMesh;
+    }
+    private string GetQualityString(int count)
+    {
+        string text = "";
+        switch (count)
+        {
+            case int when count <= 0:
+                break;
+            case int when count > 0:
+                text = $"+{count}";
+                break;
+        }
+        return text;
+    }
     private void StartQualityAnimation(GameObject qualityObj, Vector2 targetPos, EQualityType quality)
     {
         RectTransform rectTransform = qualityObj.GetComponent<RectTransform>();
@@ -280,6 +311,118 @@ public class QualityManager : Singleton<QualityManager>
         {
             CleanupAnimationCanvas();
             _onAllQualitiesComplete?.Invoke();
+        }
+    }
+
+    private IEnumerator CoStartIndividualWork()
+    {
+        List<Player> players = MemberManager.Instance.GetAllMembers();
+        if (players == null || players.Count == 0)
+        {
+            CleanupAnimationCanvas();
+            yield break;
+        }
+
+        // 각 플레이어 별 코루틴 시작 (동시 실행)
+        List<Coroutine> coroutines = new List<Coroutine>();
+        foreach (Player player in players)
+        {
+            coroutines.Add(CoroutineManager.Instance.StartCoroutine(CoProcessIndividualWork(player)));
+        }
+
+        // 모든 코루틴이 끝날 때까지 기다림
+        foreach (Coroutine coroutine in coroutines)
+        {
+            yield return coroutine;
+        }
+
+        CleanupAnimationCanvas();
+    }
+
+    private IEnumerator CoProcessIndividualWork(Player player)
+    {
+        float elapsed = 0f;
+        while (elapsed < 10f)
+        {
+            if (player.CellPosition != MemberManager.Instance.GetPlayerSeat(player) || player.State == Cat.ECatState.Work)
+            {
+                yield return new WaitForSecondsRealtime(1f);
+                elapsed += 1f;
+                continue;
+            }
+
+            // 25% 확률로 작업 실행
+            if (UnityEngine.Random.value < 0.25f)
+            {
+                // 작업 시작
+                player.DoWork();
+
+                // Quality 데이터 계산
+                var workResult = GameDevManager.Instance.CalculateIndividualWorkResult(player.CurrentMemberData);
+                if (workResult.tries > 0)
+                {
+                    EQualityType quality = workResult.mainQuality;
+                    int qualityCount = workResult.tries;
+
+                    // 애니메이션 코루틴 시작
+                    CoroutineManager.Instance.StartCoroutine(CoShowIndividualQualityAnimation(player, quality, qualityCount));
+                }
+            }
+
+            yield return new WaitForSecondsRealtime(5f);
+            elapsed += 5f;
+        }
+    }
+
+    private IEnumerator CoShowIndividualQualityAnimation(Player player, EQualityType quality, int qualityCount)
+    {
+        // Quality 이미지 생성
+        GameObject qualityObj = CreateQualityImage(quality);
+        if (qualityObj != null)
+        {
+            RectTransform qualityRect = qualityObj.GetComponent<RectTransform>();
+            qualityRect.SetParent(_animationCanvas.transform, false);
+            
+            // Player의 World Position을 Canvas의 Local Position으로 변환
+            Vector3 worldPos = player.transform.position;
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+            
+            RectTransform canvasRect = _animationCanvas.GetComponent<RectTransform>();
+            Vector2 uiPos;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRect, 
+                screenPos, 
+                null, // Overlay Canvas는 null 사용
+                out uiPos
+            );
+            
+            qualityRect.anchoredPosition = uiPos;
+            qualityRect.sizeDelta = new Vector2(QUALITY_IMAGE_SIZE / 2, QUALITY_IMAGE_SIZE / 2);
+
+            // Quality 텍스트 생성 (이미지 바로 오른쪽)
+            TextMeshProUGUI qualityText = CreateQualityText(qualityCount);
+            if (qualityText != null)
+            {
+                RectTransform textRect = qualityText.GetComponent<RectTransform>();
+                textRect.SetParent(_animationCanvas.transform, false);
+                
+                // 텍스트 위치를 이미지 오른쪽에 배치
+                Vector2 textOffset = new Vector2(QUALITY_IMAGE_SIZE / 2 + 10, 0);
+                textRect.anchoredPosition = uiPos + textOffset;
+                textRect.pivot = new Vector2(0, 0.5f);
+                textRect.sizeDelta = new Vector2(100, 50);
+            }
+
+            GameDevManager.Instance.AddQualityScore(quality, qualityCount);
+
+            // 4초 동안 표시 후 삭제
+            yield return new WaitForSecondsRealtime(4f);
+            
+            if (qualityObj != null) 
+                Destroy(qualityObj);
+            if (qualityText != null) 
+                Destroy(qualityText.gameObject);
+            player.FinishWork();
         }
     }
 

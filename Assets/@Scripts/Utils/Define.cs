@@ -140,7 +140,7 @@ public static class Define
         Detection,//정체 발각
         Serum,//혈청 투여
     }
-    public enum HireMethodType
+    public enum EHireMethodType
     {
         Internet,//인터넷
     }

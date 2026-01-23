@@ -9,7 +9,7 @@ public class HireResult
 {
     public List<MemberData> MemberDatas;//고용된 멤버 데이터들
     public string[] Messages;
-    public HireMethodType HireMethod;//고용 방법
+    public EHireMethodType HireMethod;//고용 방법
 }
 [System.Serializable]
 public struct PlayerSeatInfo
@@ -179,7 +179,7 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     //고용 종류에 따라 랜덤한 직원 리스트 생성 후 매개 변수로 받은 액션에게 Result 전달 Invoke
-    public HireResult GenerateHireResult(HireMethodType hireMethodType)
+    public HireResult GenerateHireResult(EHireMethodType hireMethodType)
     {
         //hireMethodType 마다 다른 로직
 
@@ -191,7 +191,7 @@ public class MemberManager : Singleton<MemberManager>
 
         return result;
     }
-    public IEnumerator CoStartHiringProcess(HireMethodType hireMethodType)
+    public IEnumerator CoStartHiringProcess(EHireMethodType hireMethodType)
     {
         CurrentHireResult = null;
         // 모집 중 상태로 변경
@@ -204,11 +204,11 @@ public class MemberManager : Singleton<MemberManager>
         // 채용 결과 생성
         CurrentHireResult = GenerateHireResult(hireMethodType);
     }
-    private float GetHireWaitTime(HireMethodType hireMethodType)
+    private float GetHireWaitTime(EHireMethodType hireMethodType)
     {
         switch (hireMethodType)
         {
-            case HireMethodType.Internet:
+            case EHireMethodType.Internet:
                 return 3f; // 추후에 변경
             default:
                 return 1f;

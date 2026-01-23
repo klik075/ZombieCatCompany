@@ -466,41 +466,6 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// 작업 결과 계산 (스펙대로 구현)
-    /// </summary>
-    private WorkResult CalculateWorkResultInternal(MemberData worker, GenreData genreData)
-    {
-        var result = new WorkResult();
-        EQualityType mainQuality = genreData.MainQuality;
-
-        // 시도 횟수 계산
-        int mainAbility = GetAbilityByQuality(worker, mainQuality);
-        int minTries = 1 + (mainAbility / 5);
-        int offset = GetOffset(worker, mainQuality);
-        int tries = Mathf.Max(minTries, 1) + UnityEngine.Random.Range(0, offset + 1);
-
-        result.tries = tries;
-        result.mainQuality = mainQuality;
-
-        // 각 시도에 대해 점수 계산
-        for (int i = 0; i < tries; i++)
-        {
-            var (quality, score) = RollOneScore(worker, mainQuality);
-            
-            // Bug는 점수 획득 불가
-            if (quality == EQualityType.Bug)
-                continue;
-
-            if (!result.gainedScores.ContainsKey(quality))
-                result.gainedScores[quality] = 0;
-            
-            result.gainedScores[quality] += score;
-        }
-
-        return result;
-    }
-
-    /// <summary>
     /// 작업 결과 계산 (UI에서 사용)
     /// </summary>
     public WorkResult CalculateWorkResult(MemberData worker)
@@ -536,7 +501,7 @@ public class GameDevManager : Singleton<GameDevManager>
         // 각 시도에 대해 점수 계산
         for (int i = 0; i < tries; i++)
         {
-            var (quality, score) = RollOneScore(worker, mainQuality);
+            var (quality, score) = RollOneScore(mainQuality);
             
             // Bug는 점수 획득 불가
             if (quality == EQualityType.Bug)
@@ -551,15 +516,46 @@ public class GameDevManager : Singleton<GameDevManager>
 
         return result;
     }
+    /// <summary>
+    /// 개인 작업 결과 계산
+    /// </summary>
+    public WorkResult CalculateIndividualWorkResult(MemberData worker)
+    {
+        var result = new WorkResult();
+        EQualityType mainQuality = GetMainQualityByRole(worker);
 
+        int tries = UnityEngine.Random.Range(0, 7);//수치 따로 뺄 것, 밸런스 조정 필요
+        var (quality, score) = RollOneScore(mainQuality, isIndividual : true);
+
+        result.tries = tries;
+        result.mainQuality = quality;
+        return result;
+    }
+    private EQualityType GetMainQualityByRole(MemberData worker)
+    {
+        // 직업에 따라 메인 품질 결정
+        switch (worker.Role)
+        {
+            case ERoleType.Boss:
+                return EQualityType.Bug;
+            case ERoleType.Planner:
+                return EQualityType.Nyang;
+            case ERoleType.Designer:
+                return EQualityType.Graphics;
+            case ERoleType.SoundWriter:
+                return EQualityType.Sound;
+            default:
+                return EQualityType.Fun;
+        }
+    }
     /// <summary>
     /// 한 번의 시도에서 품질과 점수 결정
     /// </summary>
-    public (EQualityType quality, int score) RollOneScore(MemberData worker, EQualityType mainQuality)
+    public (EQualityType quality, int score) RollOneScore(EQualityType mainQuality, bool isIndividual = false)
     {
         // 확률 기반으로 품질 선택
-        EQualityType selectedQuality = SelectQualityByProbability(mainQuality);
-        
+        EQualityType selectedQuality = SelectQualityByProbability(mainQuality, isIndividual);
+
         // 점수는 항상 1점
         int score = 1;
         
@@ -570,7 +566,7 @@ public class GameDevManager : Singleton<GameDevManager>
     /// 확률에 따른 품질 선택
     /// Fun: 20%, Main: 70%, 나머지 서브 품질들: 각각 5%
     /// </summary>
-    private EQualityType SelectQualityByProbability(EQualityType mainQuality)
+    private EQualityType SelectQualityByProbability(EQualityType mainQuality, bool isIndividual = false)
     {
         float randomValue = UnityEngine.Random.value;
         
@@ -579,7 +575,12 @@ public class GameDevManager : Singleton<GameDevManager>
         {
             return EQualityType.Fun;
         }
-        
+
+        if (randomValue < 0.4f && isIndividual)
+        {
+            return EQualityType.Bug;
+        }
+
         // Main: 70% (0.2 ~ 0.9)
         if (randomValue < 0.9f)
         {
@@ -598,7 +599,6 @@ public class GameDevManager : Singleton<GameDevManager>
         // 두 번째 서브: 5% (0.95 ~ 1.0)
         return sub2;
     }
-
     /// <summary>
     /// 품질 타입에 해당하는 능력치 반환
     /// </summary>
@@ -650,6 +650,8 @@ public class GameDevManager : Singleton<GameDevManager>
                 return (EQualityType.Nyang, EQualityType.Sound);
             case EQualityType.Sound:
                 return (EQualityType.Nyang, EQualityType.Graphics);
+            case EQualityType.Bug:
+                return (EQualityType.Bug, EQualityType.Bug);
             default:
                 return (EQualityType.Graphics, EQualityType.Sound);
         }
@@ -737,10 +739,16 @@ public class GameDevManager : Singleton<GameDevManager>
         
         float duration = _progressIncreaseDuration;
         float elapsedTime = 0f;
-        
+        bool startIndividualWork = false;
         while (elapsedTime < duration && Progress < targetProgress)
         {
             yield return new WaitWhile(() => Time.timeScale == 0 || !MemberManager.Instance.IsAnyMemberAtSeat());
+
+            if (startIndividualWork == false)
+            {
+                QualityManager.Instance.StartIndividualWork();
+                startIndividualWork = true;
+            }
 
             elapsedTime += Time.deltaTime * (MemberManager.Instance.HowManyMemberSitting() / (float)MemberManager.MAX_PLAYERS);
             float t = elapsedTime / duration;
