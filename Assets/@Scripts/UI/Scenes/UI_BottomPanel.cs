@@ -122,7 +122,7 @@ public class UI_BottomPanel : UI_UGUI
 
     private void OnNewDevTitleChanged()
     {
-        UpdateDevelopmentStatusUI(GameManager.Instance.NewDevTitle);
+        UpdateDevelopmentStatusUI(GameDevManager.Instance.CurrentGameTitle);
     }
 
     private void OnGameDevStateChanged()

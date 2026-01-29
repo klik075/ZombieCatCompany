@@ -10,7 +10,7 @@ public class SynergyData
     public int ContentId;
     public ESynergyType SynergyType;
 
-    public string SynergyTypeToString(ESynergyType synergyType)
+    public static string SynergyTypeToString(ESynergyType synergyType)
     {
         switch (synergyType)
         {
@@ -20,6 +20,18 @@ public class SynergyData
                 return "¶Ë°×";
             default:
                 return "Æò¹ü";
+        }
+    }
+    public static float SynergyTypeToRate(ESynergyType synergyType)
+    {
+        switch (synergyType)
+        {
+            case ESynergyType.Good:
+                return 1.1f;
+            case ESynergyType.Bad:
+                return 0.9f;
+            default:
+                return 1f;
         }
     }
 }

@@ -185,7 +185,7 @@ public class UI_GameSelectionPopup : UI_UGUI, IUI_Popup
             : $"{GenreData.GenreToString(genreData.GenreType)}(와)과 조합 = ";
 
         GetText((int)Texts.SynergyNameText).text = combinationText;
-        GetText((int)Texts.SynergyText).text = synergyData.SynergyTypeToString(synergyData.SynergyType);
+        GetText((int)Texts.SynergyText).text = SynergyData.SynergyTypeToString(synergyData.SynergyType);
     }
     
     private int GetTotalItemCount()

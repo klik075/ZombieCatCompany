@@ -8,7 +8,7 @@ using System;
 public class GameDevProjectData
 {
     public string gameTitle;
-    public EGameDevType gameDevStep;
+    public EGameDevType gameDevType;
     public int progress;
     public EGenreType selectedGenre;
     public EContentType selectedContent;
@@ -22,7 +22,7 @@ public class GameDevProjectData
     
     public GameDevProjectData()
     {
-        gameDevStep = EGameDevType.None;
+        gameDevType = EGameDevType.None;
         progress = 0;
         selectedGenre = EGenreType.ActionGame;
         selectedContent = EContentType.Box;
@@ -55,15 +55,15 @@ public class GameDevManager : Singleton<GameDevManager>
     // GameDevProjectData를 통한 통합 접근
     public EGameDevType CurrentGameDevType 
     { 
-        get => _currentProject?.gameDevStep ?? EGameDevType.None;
+        get => _currentProject?.gameDevType ?? EGameDevType.None;
         private set 
         {
             if (_currentProject != null)
             {
-                if (_currentProject.gameDevStep == value)
+                if (_currentProject.gameDevType == value)
                     return;
 
-                _currentProject.gameDevStep = value;
+                _currentProject.gameDevType = value;
                 EventManager.Instance.TriggerEvent(EEventType.GameDevStateChanged);
             }
         }
@@ -84,11 +84,14 @@ public class GameDevManager : Singleton<GameDevManager>
 
     public string CurrentGameTitle 
     { 
-        get => _currentProject?.gameTitle ?? "";
-        private set 
+        get => _currentProject?.gameTitle ?? $"{GameManager.Instance.Year}번째 게임";
+        set 
         {
             if (_currentProject != null)
+            { 
                 _currentProject.gameTitle = value;
+                EventManager.Instance.TriggerEvent(EEventType.NewDevTitleChanged);
+            }
         }
     }
 
@@ -305,7 +308,7 @@ public class GameDevManager : Singleton<GameDevManager>
         GameDevProjectData saveData = new GameDevProjectData()
         {
             gameTitle = _currentProject.gameTitle,
-            gameDevStep = _currentProject.gameDevStep,
+            gameDevType = _currentProject.gameDevType,
             progress = _currentProject.progress,
             selectedGenre = _currentProject.selectedGenre,
             selectedContent = _currentProject.selectedContent,

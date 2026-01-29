@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2875460165741218736}
   - component: {fileID: 1812948727058239246}
   m_Layer: 5
-  m_Name: EvaluationTextFrame
+  m_Name: EvaluationTextFrame4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -309,7 +309,7 @@ GameObject:
   - component: {fileID: 1348987195337726310}
   - component: {fileID: 3336640840139676991}
   m_Layer: 5
-  m_Name: EvaluationTextFrame
+  m_Name: EvaluationTextFrame1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -357,7 +357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.95686275}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -731,7 +731,7 @@ GameObject:
   - component: {fileID: 7878632878919072588}
   - component: {fileID: 4515605104904675399}
   m_Layer: 5
-  m_Name: EvaluationTextFrame
+  m_Name: EvaluationTextFrame2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1407,7 +1407,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 111.5, y: 111.5}
+  m_SizeDelta: {x: 88, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1059943339070469275
 CanvasRenderer:
@@ -1437,7 +1437,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 4271289965254409854, guid: eb7d11b2ddc305e42a3b83ff522c9984, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c0e3803de7e1d0c4f995dacebcf1addc, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1860,7 +1860,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 111.5, y: 111.5}
+  m_SizeDelta: {x: 88, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5503452126342559350
 CanvasRenderer:
@@ -1890,7 +1890,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 4271289965254409854, guid: eb7d11b2ddc305e42a3b83ff522c9984, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 87cfbf52a059ae24c8fabcd62e64f4a7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2356,7 +2356,7 @@ GameObject:
   - component: {fileID: 7559444141711283139}
   - component: {fileID: 7631213991803727425}
   m_Layer: 5
-  m_Name: EvaluationTextFrame
+  m_Name: EvaluationTextFrame3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2669,7 +2669,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 111.5, y: 111.5}
+  m_SizeDelta: {x: 88, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6586099164752507475
 CanvasRenderer:
@@ -2699,7 +2699,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 4271289965254409854, guid: eb7d11b2ddc305e42a3b83ff522c9984, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bb5fa233a780d2849a9cdb17d200c802, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3444,7 +3444,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 111.5, y: 111.5}
+  m_SizeDelta: {x: 88, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &194714673206933663
 CanvasRenderer:
@@ -3474,7 +3474,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 4271289965254409854, guid: eb7d11b2ddc305e42a3b83ff522c9984, type: 3}
+  m_Sprite: {fileID: 21300000, guid: eb7d11b2ddc305e42a3b83ff522c9984, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

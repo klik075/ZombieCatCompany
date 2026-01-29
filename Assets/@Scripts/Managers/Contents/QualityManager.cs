@@ -6,6 +6,27 @@ using UnityEngine;
 using UnityEngine.UI;
 using static Define;
 
+public class QualityData
+{
+    public static string QualityToString(EQualityType qualityType)
+    {
+        switch (qualityType)
+        {
+            case EQualityType.Fun:
+                return "재미";
+            case EQualityType.Nyang:
+                return "냥력";
+            case EQualityType.Graphics:
+                return "그래픽";
+            case EQualityType.Sound:
+                return "사운드";
+            case EQualityType.Bug:
+                return "버그";
+            default:
+                return "알 수 없음";
+        }
+    }
+}
 /// <summary>
 /// 작업 애니메이션을 위한 데이터 전달 객체 (DTO)
 /// </summary>

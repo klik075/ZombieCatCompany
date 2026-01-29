@@ -277,6 +277,9 @@ public static class Define
         Sound,
         Debug,
         Complete,
+        Purchase,
+        Maintenance,
+        Defence,
     }
     public enum EPlayerImageType
     {
