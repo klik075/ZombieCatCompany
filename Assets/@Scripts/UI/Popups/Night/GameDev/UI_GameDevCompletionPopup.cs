@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class UI_GameDevCompletionPopup : UI_UGUI, IUI_Popup
+public class UI_GameDevCompletionPopup : UI_UGUI, IUI_Popup, IClickableUI
 {
     enum GameObjects
     {

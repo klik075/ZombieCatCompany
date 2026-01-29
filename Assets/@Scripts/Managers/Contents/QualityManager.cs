@@ -46,6 +46,7 @@ public class QualityManager : Singleton<QualityManager>
     private Action<EQualityType> _onQualityComplete;
     private Action _onAllQualitiesComplete;
 
+    public bool isAnimating => _animationCanvasObj != null;
     #region Public API
 
     /// <summary>
@@ -352,12 +353,26 @@ public class QualityManager : Singleton<QualityManager>
 
         float elapsed = 0f;
         List<Coroutine> coAnimList = new List<Coroutine>();
+        float nextWorkInterval = UnityEngine.Random.Range(5f, 7f);
+        float nextWorkTime = UnityEngine.Random.Range(0f, 6f);
+        
         while (elapsed < 10f)
         {
+            // 매 프레임마다 체크
+            yield return null;
+            
+            // Time.timeScale이 0보다 클 때만 elapsed 증가
+            if (Time.timeScale > 0)
+            {
+                elapsed += Time.deltaTime;
+            }
+            else
+            {
+                continue; // 일시정지 중이면 작업 안 함
+            }
+
             if (player.CellPosition != MemberManager.Instance.GetPlayerSeat(player) || player.State == Cat.ECatState.Work)
             {
-                yield return new WaitForSecondsRealtime(1f);
-                elapsed += 1f;
                 continue;
             }
 
@@ -367,26 +382,29 @@ public class QualityManager : Singleton<QualityManager>
                     yield break;
             }
 
-            // 95% 확률로 작업 실행
-            if (UnityEngine.Random.value < 0.95f)
+            // 5초마다 작업 실행
+            if (elapsed > nextWorkTime)
             {
-                // 작업 시작
-                player.DoWork();
-
-                // Quality 데이터 계산
-                var workResult = GameDevManager.Instance.CalculateIndividualWorkResult(player.CurrentMemberData);
-                if (workResult.tries > 0)
+                // 95% 확률로 작업 실행
+                if (UnityEngine.Random.value < 0.95f)
                 {
-                    EQualityType quality = workResult.mainQuality;
-                    int qualityCount = workResult.tries;
+                    // 작업 시작
+                    player.DoWork();
 
-                    // 애니메이션 코루틴 시작
-                    coAnimList.Add(CoroutineManager.Instance.StartCoroutine(CoShowIndividualQualityAnimation(player, quality, qualityCount)));
+                    // Quality 데이터 계산
+                    var workResult = GameDevManager.Instance.CalculateIndividualWorkResult(player.CurrentMemberData);
+                    if (workResult.tries > 0)
+                    {
+                        EQualityType quality = workResult.mainQuality;
+                        int qualityCount = workResult.tries;
+
+                        // 애니메이션 코루틴 시작
+                        coAnimList.Add(CoroutineManager.Instance.StartCoroutine(CoShowIndividualQualityAnimation(player, quality, qualityCount)));
+                    }
                 }
+                
+                nextWorkTime += nextWorkInterval;
             }
-
-            yield return new WaitForSecondsRealtime(5f);
-            elapsed += 5f;
         }
 
         if (coAnimList.Count > 0)
@@ -396,7 +414,9 @@ public class QualityManager : Singleton<QualityManager>
                 yield return coAnim;
             }
         }
-        player.FinishWork();
+
+        if(player.State == Cat.ECatState.Work)
+            player.FinishWork();
     }
 
     private IEnumerator CoShowIndividualQualityAnimation(Player player, EQualityType quality, int qualityCount)
@@ -442,7 +462,7 @@ public class QualityManager : Singleton<QualityManager>
             GameDevManager.Instance.AddQualityScore(quality, qualityCount);
 
             // 4초 동안 표시 후 삭제
-            yield return new WaitForSecondsRealtime(4f);
+            yield return new WaitForSeconds(4f);
             
             if (qualityObj != null) 
                 Destroy(qualityObj);

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
-public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup
+public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
 {
     enum GameObjects
     {

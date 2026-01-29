@@ -8,8 +8,10 @@ public class Cat : ObjectBase
     {
         b_wait,
         b_walk,
+        b_work,
         f_wait,
-        f_walk
+        f_walk,
+        f_work,
     }
 
     public enum ECatState
@@ -84,7 +86,6 @@ public class Cat : ObjectBase
     private void UpdateAnimation()
     {
         EAnimation animation;
-        string prefix = _isFacingForward ? "f_" : "b_" ;
 
         switch (_state)
         {
@@ -95,8 +96,7 @@ public class Cat : ObjectBase
                 animation = _isFacingForward ? EAnimation.f_walk : EAnimation.b_walk;
                 break;
             case ECatState.Work:
-                // Assuming Work uses wait animation, adjust if needed
-                animation = _isFacingForward ? EAnimation.f_wait : EAnimation.b_wait;
+                animation = _isFacingForward ? EAnimation.f_work : EAnimation.b_work;
                 break;
             default:
                 animation = EAnimation.f_wait;

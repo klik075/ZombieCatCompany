@@ -785,6 +785,11 @@ public class GameDevManager : Singleton<GameDevManager>
             yield return null;
         }
         
+        while(QualityManager.Instance.isAnimating)
+        {
+            yield return null;
+        }
+
         // 최종 목표 Progress 설정
         Progress = targetProgress;
         Debug.Log($"Progress increase completed: {Progress}% for {CurrentGameDevType}");

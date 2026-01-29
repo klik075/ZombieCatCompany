@@ -22,7 +22,7 @@ public class Player : Cat
     public bool AIEnabled = true;
     private Vector2Int _aiTargetPosition;
     private List<Vector2Int> _path = new List<Vector2Int>();
-    private bool _isWorking = false;
+    private bool _isSited = false;
 
     public override void Init()
     {
@@ -155,14 +155,14 @@ public class Player : Cat
             }
             else
             {
-                //목표 도착
-                if (_isWorking == true)
+                //작업 자리로 갔는지 확인
+                if (_isSited == true)
                 {
                     PlayerSeatInfo seatInfo = MemberManager.Instance.GetPlayerSeatInfo(this);
                     IsFlipped = seatInfo.IsFlipped;
                     IsFacingForward = seatInfo.IsFacingForward;
+                    _isSited = false;
                 }
-                _aiTargetPosition = new Vector2Int(int.MinValue, int.MinValue);
 
                 if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.None)
                     TryAIMove();
@@ -210,12 +210,12 @@ public class Player : Cat
         if (_path.Count > 0)
         {
             MoveTo(_path[0]);
-            _isWorking = true;
+            _isSited = true;
         }
     }
     private IEnumerator CoFindPath(Vector2Int start, Vector2Int goal)
     {
-        int count = 10;
+        int count = 5;
         WaitForSeconds wait = new WaitForSeconds(_moveDuration);
         while (count > 0)
         {
