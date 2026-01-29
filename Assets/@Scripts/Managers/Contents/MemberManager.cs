@@ -166,7 +166,7 @@ public class MemberManager : Singleton<MemberManager>
         InitializePlayerSeats();
 
         // 주인공 스폰
-        Player mainCharacter = ObjectManager.Instance.SpawnPlayer("cat_blackzombie");
+        Player mainCharacter = ObjectManager.Instance.SpawnPlayer("CatBlackZombie");
         mainCharacter.SetMemberData(MAIN_CHARACTER_ID);
         _players[0] = mainCharacter;
         PlayerCount = 1;
@@ -286,19 +286,19 @@ public class MemberManager : Singleton<MemberManager>
         switch (employeeId)
         {
             case 100:
-                name = "cat_blackzombie";
+                name = "CatBlackZombie";
                 break;
             case 101:
-                name = "cat_grayzombie";
+                name = "CatGrayZombie";
                 break;
             case 102:
-                name = "cat_brownzombie";
+                name = "CatBrownZombie";
                 break;
             case 103:
-                name = "cat_whitezombie";
+                name = "CatWhiteZombie";
                 break;
             default:
-                name = "cat_blackzombie";
+                name = "CatBlackZombie";
                 break;
         }
         return name;
@@ -404,12 +404,6 @@ public class MemberManager : Singleton<MemberManager>
         for (int i = startIndex; i < PlayerCount - 1; i++)
         {
             _players[i] = _players[i + 1];
-            
-            // 이동된 멤버를 새로운 인덱스에 맞는 지정 자리로 이동
-            if (_players[i] != null)
-            {
-                MovePlayerToSeat(i, true);
-            }
         }
         // 마지막 자리는 null로 설정
         _players[PlayerCount - 1] = null;
@@ -474,8 +468,8 @@ public class MemberManager : Singleton<MemberManager>
             PlayerSaveData saveData = saveDatas[i];
             
             // Player 스폰
-            Player player = ObjectManager.Instance.SpawnPlayer("Cat");
-            
+            Player player = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
+
             // 저장된 데이터 로드
             player.LoadFromSaveData(saveData);
             

@@ -1,10 +1,22 @@
 fileFormatVersion: 2
-guid: a1347da64ca6af64ebd2c1de8e553ec2
+guid: 8f98d442252ce57438adb17b0ab3b5ef
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4549871927518758641
-    second: Test_0
+      213: -2668601008721903356
+    second: SoundQuality_0
+  - first:
+      213: -3575357831656750181
+    second: SoundQuality_1
+  - first:
+      213: 8366216723634510138
+    second: SoundQuality_2
+  - first:
+      213: -2309006254152244810
+    second: SoundQuality_3
+  - first:
+      213: -4607746676057360584
+    second: SoundQuality_4
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +58,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -113,23 +125,111 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Test_0
+      name: SoundQuality_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 537
-        height: 129
+        x: 18
+        y: 135
+        width: 88
+        height: 232
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 64, y: 50, z: 73, w: 50}
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: f09f8b2969b9bd0c0800000000000000
-      internalID: -4549871927518758641
+      spriteID: 401c1eb758937fad0800000000000000
+      internalID: -2668601008721903356
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoundQuality_1
+      rect:
+        serializedVersion: 2
+        x: 73
+        y: 173
+        width: 71
+        height: 160
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b934033cef6c16ec0800000000000000
+      internalID: -3575357831656750181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoundQuality_2
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 126
+        width: 220
+        height: 234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a39da26b8c5ca1470800000000000000
+      internalID: 8366216723634510138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoundQuality_3
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 173
+        width: 71
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b1a915ab03c4ffd0800000000000000
+      internalID: -2309006254152244810
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SoundQuality_4
+      rect:
+        serializedVersion: 2
+        x: 393
+        y: 135
+        width: 86
+        height: 232
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8373d9e9fcefd00c0800000000000000
+      internalID: -4607746676057360584
       vertices: []
       indices: 
       edges: []
@@ -138,7 +238,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: c149e756fa36de44096b83d248a28244
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +248,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Test_0: -4549871927518758641
+      SoundQuality_0: -2668601008721903356
+      SoundQuality_1: -3575357831656750181
+      SoundQuality_2: 8366216723634510138
+      SoundQuality_3: -2309006254152244810
+      SoundQuality_4: -4607746676057360584
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
