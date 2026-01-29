@@ -213,9 +213,9 @@ public class QualityManager : Singleton<QualityManager>
         GameObject qualityObj = new GameObject($"Quality_{quality}");
         UnityEngine.UI.Image image = qualityObj.AddComponent<UnityEngine.UI.Image>();
 
-        image.sprite = null;
+        string spriteName = GetQualitySpriteName(quality);
+        image.sprite = ResourceManager.Instance.Get<Sprite>(spriteName);
         image.type = UnityEngine.UI.Image.Type.Simple;
-        image.color = GetQualityColor(quality);
         image.raycastTarget = false;
 
         RectTransform rectTransform = qualityObj.GetComponent<RectTransform>();
@@ -223,17 +223,17 @@ public class QualityManager : Singleton<QualityManager>
 
         return qualityObj;
     }
-    
-    private Color GetQualityColor(EQualityType quality)
+
+    private string GetQualitySpriteName(EQualityType quality)
     {
         return quality switch
         {
-            EQualityType.Fun => Color.blue,
-            EQualityType.Nyang => Color.green,
-            EQualityType.Graphics => Color.red,
-            EQualityType.Sound => Color.yellow,
-            EQualityType.Bug => Color.black,
-            _ => Color.white
+            EQualityType.Fun => "FunQuality",
+            EQualityType.Nyang => "NyangQuality",
+            EQualityType.Graphics => "GraphicsQuality",
+            EQualityType.Sound => "SoundQuality",
+            EQualityType.Bug => "BugQuality",
+            _ => "FunQuality"
         };
     }
     private TextMeshProUGUI CreateQualityText(int count, bool positive = true)
@@ -336,8 +336,10 @@ public class QualityManager : Singleton<QualityManager>
             yield return coroutine;
         }
 
-        GameDevManager.Instance.AdvanceToNextStage();
         CleanupAnimationCanvas();
+
+        if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.Debug)
+            GameDevManager.Instance.AdvanceToNextStage();
     }
 
     private IEnumerator CoProcessIndividualWork(Player player)
@@ -394,6 +396,7 @@ public class QualityManager : Singleton<QualityManager>
                 yield return coAnim;
             }
         }
+        player.FinishWork();
     }
 
     private IEnumerator CoShowIndividualQualityAnimation(Player player, EQualityType quality, int qualityCount)

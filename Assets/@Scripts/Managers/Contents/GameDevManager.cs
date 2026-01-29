@@ -526,7 +526,7 @@ public class GameDevManager : Singleton<GameDevManager>
     public WorkResult CalculateIndividualWorkResult(MemberData worker)
     {
         var result = new WorkResult();
-        int tries = UnityEngine.Random.Range(0, 7);//수치 따로 뺄 것, 밸런스 조정 필요
+        int tries = UnityEngine.Random.Range(1, 7);//수치 따로 뺄 것, 밸런스 조정 필요
 
         if (CurrentGameDevType == EGameDevType.Debug)
         {
@@ -756,10 +756,12 @@ public class GameDevManager : Singleton<GameDevManager>
         
         Debug.Log($"Starting progress increase: {startProgress} -> {targetProgress}% for {CurrentGameDevType}");
         
-        float duration = _progressIncreaseDuration;
-        float elapsedTime = 0f;
+        float baseDuration = _progressIncreaseDuration;
         bool startIndividualWork = false;
-        while (elapsedTime < duration && Progress < targetProgress)
+        
+        float acceleratedTime = 0f; // 가속된 시간 누적
+        
+        while (Progress < targetProgress)
         {
             yield return new WaitWhile(() => Time.timeScale == 0 || !MemberManager.Instance.IsAnyMemberAtSeat());
 
@@ -769,8 +771,12 @@ public class GameDevManager : Singleton<GameDevManager>
                 startIndividualWork = true;
             }
 
-            elapsedTime += Time.deltaTime * (MemberManager.Instance.HowManyMemberSitting() / (float)MemberManager.MAX_PLAYERS);
-            float t = elapsedTime / duration;
+            // 멤버 수에 따라 가속된 시간 누적 (멤버가 많을수록 빠르게 증가)
+            float memberRatio = MemberManager.Instance.HowManyMemberSitting() / (float)MemberManager.MAX_PLAYERS;
+            acceleratedTime += Time.deltaTime * memberRatio;
+            
+            // duration 기준으로 진행도 계산
+            float t = Mathf.Clamp01(acceleratedTime / baseDuration);
             
             // 선형 보간으로 Progress 증가
             int newProgress = Mathf.RoundToInt(Mathf.Lerp(startProgress, targetProgress, t));
@@ -782,6 +788,7 @@ public class GameDevManager : Singleton<GameDevManager>
         // 최종 목표 Progress 설정
         Progress = targetProgress;
         Debug.Log($"Progress increase completed: {Progress}% for {CurrentGameDevType}");
+        AdvanceToNextStage();
     }
 
     /// <summary>
@@ -830,3 +837,4 @@ public class GameDevManager : Singleton<GameDevManager>
 
     #endregion
 }
+
