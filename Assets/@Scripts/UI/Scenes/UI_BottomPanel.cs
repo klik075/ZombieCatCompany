@@ -128,6 +128,7 @@ public class UI_BottomPanel : UI_UGUI
     private void OnGameDevStateChanged()
     {
         UpdateBottomPanelBasedOnDevState();
+        UpdateNewWorkText();
     }
     private void OnGameDevProgressChanged()
     {
@@ -165,7 +166,7 @@ public class UI_BottomPanel : UI_UGUI
                 GetText((int)Texts.NewWorkText).text = $"{GameDevManager.Instance.Progress}%";
                 break;
             case EGameDevType.Debug:
-                GetText((int)Texts.NewWorkNameText).text = "디버그 중";
+                GetText((int)Texts.NewWorkText).text = "디버그 중";
                 break;
             default:
                 break;
