@@ -12,10 +12,19 @@ public static class Define
     public enum EGameState
     {
         None,
+
+        Event,//이벤트
+        DispatchResult,//파견 결과
+        Dispatch,//파견 선택
+        FoodRationing,//식량 배급
+
         Night,//게임 개발 전
+        Hire,//고용 중
         Dev,//게임 개발 중
+
         Morning,//아침
-        Popup,//팝업이 켜져 있는 상태에서는 게임의 시간 정지.
+        Defence,//방어
+
         Ending,//엔딩
     }
     public enum EEventType
@@ -80,21 +89,6 @@ public static class Define
         KOR,
         ENG,
     }
-
-	public enum EAnimation
-	{
-		b_wait,
-		b_walk,
-		f_wait,
-		f_walk
-	}
-
-	public enum ECatState
-	{
-		Idle,
-		Move,
-		Work
-	}
     public enum ERoleType
     {
         Boss,//사장
@@ -277,9 +271,6 @@ public static class Define
         Sound,
         Debug,
         Complete,
-        Purchase,
-        Maintenance,
-        Defence,
     }
     public enum EPlayerImageType
     {

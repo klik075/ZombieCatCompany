@@ -743,7 +743,9 @@ public class GameDevManager : Singleton<GameDevManager>
         }
 
         Debug.Log($"Work completed for {CurrentGameDevType} stage");
-        MemberManager.Instance.MoveAllPlayersToSeats();
+
+        if (CurrentGameDevType == EGameDevType.Scenario)
+            MemberManager.Instance.MoveAllPlayersToSeats();
 
         // 현재 단계에 따른 Progress 증가 시작
         CoroutineManager.Instance.StartCoroutine(CoIncreaseProgressForCurrentStage());

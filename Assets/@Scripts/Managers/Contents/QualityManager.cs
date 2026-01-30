@@ -392,7 +392,7 @@ public class QualityManager : Singleton<QualityManager>
                 continue; // 일시정지 중이면 작업 안 함
             }
 
-            if (player.CellPosition != MemberManager.Instance.GetPlayerSeat(player) || player.State == Cat.ECatState.Work)
+            if (player.CellPosition != MemberManager.Instance.GetPlayerSeat(player) || player.State == Cat.ECatState.Work || player.State == Cat.ECatState.Move)
             {
                 continue;
             }
@@ -462,8 +462,8 @@ public class QualityManager : Singleton<QualityManager>
                 out uiPos
             );
             
-            qualityRect.anchoredPosition = uiPos;
-            qualityRect.sizeDelta = new Vector2(QUALITY_IMAGE_SIZE / 2, QUALITY_IMAGE_SIZE / 2);
+            qualityRect.anchoredPosition = uiPos + new Vector2(0f, 200f);
+            qualityRect.sizeDelta = new Vector2(QUALITY_IMAGE_SIZE, QUALITY_IMAGE_SIZE);
 
             // Quality 텍스트 생성 (이미지 바로 오른쪽)
             bool positive = GameDevManager.Instance.CurrentGameDevType != EGameDevType.Debug;
@@ -475,7 +475,7 @@ public class QualityManager : Singleton<QualityManager>
                 
                 // 텍스트 위치를 이미지 오른쪽에 배치
                 Vector2 textOffset = new Vector2(QUALITY_IMAGE_SIZE / 2 + 10, 0);
-                textRect.anchoredPosition = uiPos + textOffset;
+                textRect.anchoredPosition = uiPos + textOffset + new Vector2(0f, 200f);
                 textRect.pivot = new Vector2(0, 0.5f);
                 textRect.sizeDelta = new Vector2(100, 50);
             }

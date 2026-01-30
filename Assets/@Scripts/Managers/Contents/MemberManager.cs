@@ -34,7 +34,7 @@ public class MemberManager : Singleton<MemberManager>
     
     // Player들의 개인 지정 자리 (MapManager에서 사용하는 좌표)
     private PlayerSeatInfo[] _playerSeat = new PlayerSeatInfo[MAX_PLAYERS];
-    private Vector2Int _doorWay = new Vector2Int(-4, -15);
+    private Vector2Int _doorWay = new Vector2Int(-3, -8);
 
     // 선택된 플레이어 관리
     private int _selectedPlayerIndex = 0;
@@ -668,10 +668,10 @@ public class MemberManager : Singleton<MemberManager>
     /// </summary>
     private void InitializePlayerSeats()
     {
-        _playerSeat[0] = new PlayerSeatInfo(new Vector2Int(-6, 1), false, true);//사장 자리
-        _playerSeat[1] = new PlayerSeatInfo(new Vector2Int(0, 1), false, true);//직원 1
-        _playerSeat[2] = new PlayerSeatInfo(new Vector2Int(-7, -8), true, false);//직원 2
-        _playerSeat[3] = new PlayerSeatInfo(new Vector2Int(-1, -8), true, false);//직원 3
+        _playerSeat[0] = new PlayerSeatInfo(new Vector2Int(-3, 0), false, true);//사장 자리
+        _playerSeat[1] = new PlayerSeatInfo(new Vector2Int(0, 0), false, true);//직원 1
+        _playerSeat[2] = new PlayerSeatInfo(new Vector2Int(-4, -4), true, false);//직원 2
+        _playerSeat[3] = new PlayerSeatInfo(new Vector2Int(-1, -4), true, false);//직원 3
     }
 
     public PlayerSeatInfo GetPlayerSeatInfo(Player player)
