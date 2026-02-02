@@ -19,8 +19,10 @@ public static class Define
         FoodRationing,//식량 배급
 
         Night,//게임 개발 전
-        Hire,//고용 중
+        Recruiting,//고용 중
         Dev,//게임 개발 중
+
+        FoodPurchase,//식량 구매
 
         Morning,//아침
         Defence,//방어
@@ -41,10 +43,11 @@ public static class Define
         GoldChanged,
         FoodChanged,
         AnnualProfitChanged,
-        NewDevTitleChanged,
+        GameStateChanged,
         ProposalChanged,
         GameDevStateChanged,
         GameDevProgressChanged,
+        NewDevTitleChanged,
 
         QualityChanged,
         WorkCompleted,
@@ -164,8 +167,12 @@ public static class Define
         MemberSwapped,          // 멤버 해고 후 고용
         MemberHired,          // 멤버 고용
         MemberFiredConfirm,   //멤버 해고 확인
+        NoRecruiting,         //모집 불가
+        NoFire,              //해고 불가
 
         // 개발 관련
+        NoDev,              // 개발 불가. 모집 중
+        AlreadyDev,         // 이미 개발 중
         SelectPlanner,       // 기획자 선택
         SelectDesigner,      // 원화 선택
         SelectSoundWriter,   // 사운드 작업 선택
@@ -271,6 +278,7 @@ public static class Define
         Sound,
         Debug,
         Complete,
+        EndDev,
     }
     public enum EPlayerImageType
     {

@@ -27,8 +27,8 @@ public class GameData
 
     //Night
     public int AnnualProfit;//연간 이익
-    public string NewDevTitle;//신규 개발 상태
 
+    public HireResult HireResult;
     //Dev
     public GameDevProjectData GameDevProjectData = new GameDevProjectData();
 
@@ -118,7 +118,11 @@ public class GameManager : Singleton<GameManager>
     public EGameState GameState
     {
         get { return _gameData.GameState; }
-        set { _gameData.GameState = value; }
+        set 
+        { 
+            _gameData.GameState = value; 
+            EventManager.Instance.TriggerEvent(Define.EEventType.GameStateChanged);
+        }
     }
     public int AnnualProfit
     {
@@ -129,19 +133,14 @@ public class GameManager : Singleton<GameManager>
             EventManager.Instance.TriggerEvent(Define.EEventType.AnnualProfitChanged);
         }
     }
-    public string NewDevTitle
-    {
-        get { return _gameData.NewDevTitle; }
-        set 
-        { 
-            _gameData.NewDevTitle = value;
-            EventManager.Instance.TriggerEvent(Define.EEventType.NewDevTitleChanged);
-        }
-    }
     public bool IsRecruiting
     {
         get { return _gameData.IsRecruiting; }
-        set { _gameData.IsRecruiting = value; }
+        set 
+        { 
+            _gameData.IsRecruiting = value;
+            GameState = value ? EGameState.Recruiting : EGameState.Night;
+        }
     }
     private void Awake()
     {

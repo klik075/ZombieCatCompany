@@ -10,6 +10,19 @@ public class HireResult
     public List<MemberData> MemberDatas;//고용된 멤버 데이터들
     public string[] Messages;
     public EHireMethodType HireMethod;//고용 방법
+
+    public HireResult DeepCopy()
+    {
+        HireResult copy = new HireResult();
+        copy.HireMethod = this.HireMethod;
+        copy.Messages = (string[])this.Messages.Clone();
+        copy.MemberDatas = new List<MemberData>();
+        foreach (var memberData in this.MemberDatas)
+        {
+            copy.MemberDatas.Add(memberData.DeepCopy());
+        }
+        return copy;
+    }
 }
 [System.Serializable]
 public struct PlayerSeatInfo
@@ -191,18 +204,48 @@ public class MemberManager : Singleton<MemberManager>
 
         return result;
     }
-    public IEnumerator CoStartHiringProcess(EHireMethodType hireMethodType)
+    public void StartHire(EHireMethodType hireMethodType, bool isLoad = false)
     {
+        CoroutineManager.Instance.Run(CoHireProcess(hireMethodType, isLoad));
+    }
+    private IEnumerator CoHireProcess(EHireMethodType hireMethodType, bool isLoad)
+    {
+        yield return CoroutineManager.Instance.Run(MemberManager.Instance.CoStartHiringProcess(hireMethodType, isLoad));
+
+        // 팝업이 모두 닫힐 때까지 대기
+        while (UIManager.Instance.PopupCount > 0)
+        {
+            yield return null;
+        }
+
+        // 모집 완료 팝업
+        UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+        chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.CompleteRecruiting).Contents, MemberManager.Instance.CurrentHireResult.Messages, action: OpenMemberHirePopup);
+
+        // 모집 완료
+        GameManager.Instance.IsRecruiting = false;
+    }
+    public IEnumerator CoStartHiringProcess(EHireMethodType hireMethodType, bool isLoad)
+    {
+        HireResult temp = null;
+        if (isLoad)
+            temp = CurrentHireResult.DeepCopy();
+
         CurrentHireResult = null;
-        // 모집 중 상태로 변경
         GameManager.Instance.IsRecruiting = true;
+
+        if(isLoad == false)
+            CurrentHireResult = GenerateHireResult(hireMethodType);
+        else
+            CurrentHireResult = temp;
 
         // 대기 시간
         float waitTime = GetHireWaitTime(hireMethodType);
         yield return new WaitForSeconds(waitTime);
-
-        // 채용 결과 생성
-        CurrentHireResult = GenerateHireResult(hireMethodType);
+    }
+    private void OpenMemberHirePopup()
+    {
+        UIManager.Instance.ShowPopupUI<UI_MemberHirePopup>();
     }
     private float GetHireWaitTime(EHireMethodType hireMethodType)
     {
@@ -433,7 +476,7 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     // 모든 구성원 저장 데이터 생성
-    public List<PlayerSaveData> GetSaveData()
+    public List<PlayerSaveData> GetPlayerSaveData()
     {
         List<PlayerSaveData> saveDatas = new List<PlayerSaveData>();
         
@@ -447,7 +490,15 @@ public class MemberManager : Singleton<MemberManager>
         
         return saveDatas;
     }
-    
+    public HireResult GetHireResult()
+    {
+        HireResult hireResult = CurrentHireResult.DeepCopy();
+        return hireResult;
+    }
+    public void LoadHireResult(HireResult hireResult)
+    {
+        CurrentHireResult = hireResult.DeepCopy();
+    }
     // 저장 데이터에서 구성원 복원
     public void LoadFromSaveData(List<PlayerSaveData> saveDatas)
     {
@@ -752,7 +803,10 @@ public class MemberManager : Singleton<MemberManager>
 
         SetPlayerSeat(index, newSeat);
     }
+    public void MovePlayerToDoorWay(Player player)
+    {
 
+    }
     /// <summary>
     /// Player를 자신의 지정 자리로 이동시키기
     /// </summary>

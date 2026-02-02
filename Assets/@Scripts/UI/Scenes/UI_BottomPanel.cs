@@ -107,6 +107,7 @@ public class UI_BottomPanel : UI_UGUI
         EventManager.Instance.AddEvent(EEventType.QualityChanged, OnQualityChanged);
         EventManager.Instance.AddEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
         EventManager.Instance.AddEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
+        EventManager.Instance.AddEvent(EEventType.GameStateChanged, OnGameStateChanged);
     }
 
     // 부모(UI_NightGame)로부터 LeftPanel 참조 받기
@@ -137,6 +138,10 @@ public class UI_BottomPanel : UI_UGUI
     private void OnQualityChanged()
     {
         UpdateQualityText();
+    }
+    private void OnGameStateChanged()
+    {
+        UpdateSaveButtonState();
     }
     private void UpdateQualityText()
     {
@@ -243,6 +248,11 @@ public class UI_BottomPanel : UI_UGUI
     // SaveButton 상태 확인 (Left 패널이나 Popup이 열려있으면 비활성화)
     private bool IsSaveButtonEnabled()
     {
+        if (GameManager.Instance.GameState != EGameState.Night && GameManager.Instance.GameState != EGameState.Recruiting)
+        {
+            return false;
+        }
+
         // 팝업이 열려있는지 확인
         UI_Base lastPopupUI = UIManager.Instance.GetLastPopupUI<UI_Base>();
         if (lastPopupUI != null)

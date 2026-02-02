@@ -31,10 +31,6 @@ public class GameConfig : ScriptableObject
     [SerializeField]
     private EGameState initialGameState = EGameState.Night;
 
-    [Header("Development Settings")]
-    [SerializeField]
-    private string initialNewDevTitle = "";
-
     [Header("Recruitment Settings")]
     [SerializeField]
     private bool initialIsRecruiting = false;
@@ -47,7 +43,6 @@ public class GameConfig : ScriptableObject
     public EGameState InitialGameState => initialGameState;
 
     public int InitialAnnualProfit => initialAnnualProfit;
-    public string InitialNewDevTitle => initialNewDevTitle;
 
     public bool InitialIsRecruiting => initialIsRecruiting;
 }

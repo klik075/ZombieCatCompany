@@ -89,6 +89,7 @@ public class UI_MagazineReviewPopup : UI_UGUI, IUI_Popup, IClickableUI
 
         yield return new WaitForSecondsRealtime(1f);
 
+        GameDevManager.Instance.CurrentEvaluationScore = _totalScore;
         GameDevManager.Instance.AdvanceToNextStage();
         SetClickInteractable(true);
     }

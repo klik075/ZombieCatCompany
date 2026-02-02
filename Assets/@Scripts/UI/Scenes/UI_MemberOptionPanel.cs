@@ -61,7 +61,7 @@ public class UI_MemberOptionPanel : UI_UGUI
                 memberSelectionPopup.SetInfo(EMemberSelectionType.Education); // 교육 타입으로 설정
                 break;
             case Buttons.MemberHireButton:
-                if (GameManager.Instance.IsRecruiting)
+                if (GameManager.Instance.GameState == EGameState.Recruiting)
                 {
                     //이미 모집 중 팝업
                     UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
@@ -69,12 +69,27 @@ public class UI_MemberOptionPanel : UI_UGUI
                 }
                 else
                 {
-                    UI_MemberHireMethodsPopup memberHireMethodsPopup = UIManager.Instance.ShowPopupUI<UI_MemberHireMethodsPopup>();
+                    if (GameManager.Instance.GameState == EGameState.Night)
+                    {
+                        UI_MemberHireMethodsPopup memberHireMethodsPopup = UIManager.Instance.ShowPopupUI<UI_MemberHireMethodsPopup>();
+                        break;
+                    }
+
+                    UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+                    chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.NoRecruiting).Contents);
                 }
                 break;
             case Buttons.MemberFireButton:
-                UI_MemberFirePopup memberFirePopup = UIManager.Instance.ShowPopupUI<UI_MemberFirePopup>();
-                memberFirePopup.SetInfo(EFireType.Normal);
+                if (GameManager.Instance.GameState == EGameState.Night)
+                {
+                    UI_MemberFirePopup memberFirePopup = UIManager.Instance.ShowPopupUI<UI_MemberFirePopup>();
+                    memberFirePopup.SetInfo(EFireType.Normal);
+                }
+                else
+                {
+                    UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+                    chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.NoFire).Contents);
+                }
                 break;
         }
 

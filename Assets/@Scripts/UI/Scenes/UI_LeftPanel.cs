@@ -176,10 +176,26 @@ public class UI_LeftPanel : UI_UGUI
         switch (buttonType)
         {
             case Buttons.GameDevButton:
-                UI_ProposalPopup memberListPopup = UIManager.Instance.ShowPopupUI<UI_ProposalPopup>();
+                if (GameManager.Instance.GameState == EGameState.Night)
+                {
+                    UI_ProposalPopup memberListPopup = UIManager.Instance.ShowPopupUI<UI_ProposalPopup>();
+                }
+                else
+                {
+                    UI_ChatPopup chatPopup;
+
+                    if (GameManager.Instance.GameState == EGameState.Dev)
+                    {
+                        chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+                        chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.NoDev).Contents);
+                        break;
+                    }
+
+                    chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+                    chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.NoDev).Contents);
+                }
                 break;
             case Buttons.DiaryButton:
-                //TODO: 일기장 팝업 열기
                 UI_EventPopup diaryPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
                 diaryPopup.SetInfo();
                 break;

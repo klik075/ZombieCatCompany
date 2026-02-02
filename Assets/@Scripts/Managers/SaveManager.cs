@@ -55,8 +55,9 @@ public class SaveManager : Singleton<SaveManager>
         }
 
         // MemberManager 데이터 저장
-        gameData.PlayerSaveDatas = MemberManager.Instance.GetSaveData();
-        gameData.GameDevProjectData = GameDevManager.Instance.GetSaveData();
+        gameData.PlayerSaveDatas = MemberManager.Instance.GetPlayerSaveData();
+        gameData.HireResult = GameManager.Instance.IsRecruiting ? MemberManager.Instance.GetHireResult() : null;
+        gameData.GameDevProjectData = GameDevManager.Instance.GetGameDevProjectData();
 
         string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         File.WriteAllText(SavePath, json);
@@ -81,6 +82,11 @@ public class SaveManager : Singleton<SaveManager>
         {
             MemberManager.Instance.LoadFromSaveData(gameData.PlayerSaveDatas);
         }
+        if (gameData.HireResult != null)
+        {
+            MemberManager.Instance.LoadHireResult(gameData.HireResult);
+            MemberManager.Instance.StartHire(gameData.HireResult.HireMethod, true);
+        }
         if(gameData.GameDevProjectData != null)
         {
             GameDevManager.Instance.LoadFromSaveData(gameData.GameDevProjectData);
@@ -99,7 +105,6 @@ public class SaveManager : Singleton<SaveManager>
             GameMode = DataManager.Instance.GameConfig.InitialGameMode,
             CompanyName = DataManager.Instance.GameConfig.InitialCompanyName,
             GameState = DataManager.Instance.GameConfig.InitialGameState,
-            NewDevTitle = DataManager.Instance.GameConfig.InitialNewDevTitle,
             IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting,
             PlayerSaveDatas = null,
             GameDevProjectData = null,

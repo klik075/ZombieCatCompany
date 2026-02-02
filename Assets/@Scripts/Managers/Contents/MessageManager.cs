@@ -160,6 +160,18 @@ public class MessageManager : Singleton<MessageManager>
         {
             Contents = new string[] { "","번째 게임이 완성되었다냥." }
         };
+        _messageScripts[EMessageType.NoRecruiting] = new MessageScript
+        {
+            Contents = new string[] { "지금은 모집할 수 없다냥." }
+        };
+        _messageScripts[EMessageType.NoFire] = new MessageScript
+        {
+            Contents = new string[] { "지금은 해고할 수 없다냥." }
+        };
+        _messageScripts[EMessageType.NoDev] = new MessageScript
+        {
+            Contents = new string[] { "지금은 개발할 수 없다냥." }
+        };
     }
 
     //private void InitializeChatScripts()

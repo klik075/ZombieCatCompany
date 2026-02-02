@@ -18,6 +18,5 @@ MonoBehaviour:
   initialAnnualProfit: 0
   initialGameMode: 0
   initialCompanyName: "\uC880\uBE44\uB0E5\uCEF4\uD37C\uB2C8"
-  initialGameState: 1
-  initialNewDevTitle: 
+  initialGameState: 5
   initialIsRecruiting: 0

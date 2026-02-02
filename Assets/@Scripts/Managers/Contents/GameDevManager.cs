@@ -12,7 +12,8 @@ public class GameDevProjectData
     public int progress;
     public EGenreType selectedGenre;
     public EContentType selectedContent;
-    
+    public int EvaluationScore;
+
     // 품질 점수들
     public int funScore;
     public int nyangScore;
@@ -26,6 +27,7 @@ public class GameDevProjectData
         progress = 0;
         selectedGenre = EGenreType.ActionGame;
         selectedContent = EContentType.Box;
+        EvaluationScore = 0;
 
         funScore = 0;
         nyangScore = 0;
@@ -83,8 +85,14 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     public string CurrentGameTitle 
-    { 
-        get => _currentProject?.gameTitle ?? $"{GameManager.Instance.Year}번째 게임";
+    {
+        get
+        {
+            if (GameManager.Instance.GameState == EGameState.Night)
+                return "신규 개발 없음";
+
+            return _currentProject?.gameTitle ?? $"{GameManager.Instance.Year}번째 게임";
+        }
         set 
         {
             if (_currentProject != null)
@@ -119,7 +127,23 @@ public class GameDevManager : Singleton<GameDevManager>
             return GetContentData(EContentType.Box);
         }
     }
+    public int CurrentEvaluationScore
+    {
+        get
+        {
+            if (_currentProject != null)
+                return _currentProject.EvaluationScore;
 
+            return 0;
+        }
+        set
+        {
+            if (_currentProject != null)
+            {
+                _currentProject.EvaluationScore = Mathf.Clamp(value,4, 40);
+            }
+        }
+    }
     // 선택된 장르와 콘텐츠 기반 시너지
     public ESynergyType CurrentSynergy { get { return GetSynergyType(CurrentGenreData.GenreType, CurrentContentData.ContentType); } }
 
@@ -127,7 +151,7 @@ public class GameDevManager : Singleton<GameDevManager>
     private Dictionary<int, GenreData> _genreDataCache;
     private Dictionary<int, ContentData> _contentDataCache;
     private Dictionary<int, List<SynergyData>> _synergyDataCache;
-    private float _progressIncreaseDuration = 5.0f; // Progress 증가 지속 시간
+    private float _progressIncreaseDuration = 4.0f; // Progress 증가 지속 시간
 
     private void Awake()
     {
@@ -303,7 +327,7 @@ public class GameDevManager : Singleton<GameDevManager>
     /// <summary>
     /// 게임 개발 관련 저장 데이터 생성
     /// </summary>
-    public GameDevProjectData GetSaveData()
+    public GameDevProjectData GetGameDevProjectData()
     {
         GameDevProjectData saveData = new GameDevProjectData()
         {
@@ -412,6 +436,7 @@ public class GameDevManager : Singleton<GameDevManager>
     /// </summary>
     public void StartNewProject()
     {
+        GameManager.Instance.GameState = EGameState.Dev;
         CurrentGameDevType = EGameDevType.Scenario;
         Progress = 0;
     }
@@ -440,6 +465,16 @@ public class GameDevManager : Singleton<GameDevManager>
             case EGameDevType.Complete:
                 UI_ChatPopup completePopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
                 completePopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.CompleteGameDev).Contents, new string[] { $"{GameManager.Instance.Year}" }, action: OnClickChatPopup);
+                break;
+            case EGameDevType.EndDev:
+                if (GameManager.Instance.GameMode == EGameMode.Purchase)
+                { 
+                    GameManager.Instance.GameState = EGameState.FoodPurchase;
+                }
+                else
+                {
+                    GameManager.Instance.GameState = EGameState.Morning;
+                }
                 break;
             default:
                 break;
@@ -840,8 +875,8 @@ public class GameDevManager : Singleton<GameDevManager>
             EGameDevType.Graphics => EGameDevType.Sound,
             EGameDevType.Sound => EGameDevType.Debug,
             EGameDevType.Debug => EGameDevType.Complete,
-            EGameDevType.Complete => EGameDevType.None,
-            _ => currentStage // Debug, Complete는 현재 단계 유지
+            EGameDevType.Complete => EGameDevType.EndDev,
+            _ => currentStage 
         };
     }
 
