@@ -13,6 +13,10 @@ public class MapManager : Singleton<MapManager>
 
     void Awake()
     {
+        Init();
+    }
+    public void Init()
+    {
         _tilemap = FindFirstObjectByType<Tilemap>();
         InitializeWalkableMap();
     }
@@ -90,7 +94,41 @@ public class MapManager : Singleton<MapManager>
             _occupiedPositions.Remove(position);
         }
     }
+    // 스폰 위치 찾기 (주인공 근처 빈 공간)
+    public Vector2Int FindNearPosition(Vector2Int startPos)
+    {
+        // 주변 8방향 탐색
+        Vector2Int[] directions = new Vector2Int[]
+        {
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0),
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1),
+            new Vector2Int(1, 1),
+            new Vector2Int(1, -1),
+            new Vector2Int(-1, 1),
+            new Vector2Int(-1, -1)
+        };
 
+        foreach (var dir in directions)
+        {
+            Vector2Int checkPos = startPos + dir;
+            if (CanMove(checkPos))
+            {
+                return checkPos;
+            }
+        }
+
+        // 주변에 빈 공간이 없으면 걸을 수 있는 랜덤 위치
+        List<Vector2Int> walkableCells = GetWalkableCells();
+        if (walkableCells.Count > 0)
+        {
+            return walkableCells[UnityEngine.Random.Range(0, walkableCells.Count)];
+        }
+
+        // 최후의 수단
+        return new Vector2Int(0, 2);
+    }
     public bool MoveTo(Cat cat, Vector2Int newPosition, bool sync = false)
     {
         if (!CanMove(newPosition.x, newPosition.y)) 

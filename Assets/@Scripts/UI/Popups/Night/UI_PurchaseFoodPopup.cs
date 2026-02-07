@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
@@ -57,10 +58,20 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
     }
+    public void SetInfo()
+    {
+        UpdateContent();
+    }
+    private void UpdateContent()
+    {
+
+    }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
 
     }
+
+    
 }

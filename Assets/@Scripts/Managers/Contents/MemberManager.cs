@@ -25,14 +25,14 @@ public class HireResult
     }
 }
 [System.Serializable]
-public struct PlayerSeatInfo
+public struct MemberSeatInfo
 {
     public Vector2Int SeatPosition;
     public bool IsFlipped;
     public bool IsFacingForward;
 
     // 생성자 추가 (선택사항, 초기화 편의)
-    public PlayerSeatInfo(Vector2Int position, bool isFlipped = false, bool isFacingForward = true)
+    public MemberSeatInfo(Vector2Int position, bool isFlipped = false, bool isFacingForward = true)
     {
         SeatPosition = position;
         IsFlipped = isFlipped;
@@ -42,42 +42,42 @@ public struct PlayerSeatInfo
 public class MemberManager : Singleton<MemberManager>
 {
     public const int MAIN_CHARACTER_ID = 100;
-    public const int MAX_PLAYERS = 4;
-    private Player[] _players = new Player[MAX_PLAYERS];
-    
-    // Player들의 개인 지정 자리 (MapManager에서 사용하는 좌표)
-    private PlayerSeatInfo[] _playerSeat = new PlayerSeatInfo[MAX_PLAYERS];
-    private Vector2Int _doorWay = new Vector2Int(-3, -8);
+    public const int MAX_MEMBERS = 4;
+    private Member[] _members = new Member[MAX_MEMBERS];
+    public Vector2Int DoorWay = new Vector2Int(-3, -8);
 
+    // Player들의 개인 지정 자리 (MapManager에서 사용하는 좌표)
+    private MemberSeatInfo[] _memberNightSeat = new MemberSeatInfo[MAX_MEMBERS];
+    private MemberSeatInfo[] _memberMorningSeat = new MemberSeatInfo[MAX_MEMBERS];
     // 선택된 플레이어 관리
-    private int _selectedPlayerIndex = 0;
+    private int _selectedMemberIndex = 0;
 
     // 현재 선택된 플레이어의 인덱스
-    public int SelectedPlayerIndex
+    public int SelectedMemberIndex
     {
-        get { return _selectedPlayerIndex; }
+        get { return _selectedMemberIndex; }
         private set 
         {
-            _selectedPlayerIndex = value;
+            _selectedMemberIndex = value;
             EventManager.Instance.TriggerEvent(EEventType.SelectedMemberChanged);
         }
     }
     // 현재 선택된 플레이어
-    public Player SelectedPlayer
+    public Member SelectedMember
     {
-        get { return GetMember(_selectedPlayerIndex); }
+        get { return GetMember(_selectedMemberIndex); }
     }
     // 주인공(첫 번째 구성원)은 해고 불가
-    public Player MainCharacter => _players[0];
+    public Member MainCharacter => _members[0];
 
-    private int playerCount = 0;
+    private int memberCount = 0;
     // 현재 구성원 수
-    public int PlayerCount 
+    public int MemberCount 
     { 
-        get { return playerCount; }
+        get { return memberCount; }
         private set 
         {
-            playerCount = value;
+            memberCount = value;
             EventManager.Instance.TriggerEvent(EEventType.MemberListChanged); 
         }
     }
@@ -89,7 +89,7 @@ public class MemberManager : Singleton<MemberManager>
     /// <summary>
     /// 특정 멤버를 선택합니다
     /// </summary>
-    public void SelectMember(Player member)
+    public void SelectMember(Member member)
     {
         int index = GetIndex(member);
         if (index != -1)
@@ -122,11 +122,11 @@ public class MemberManager : Singleton<MemberManager>
     /// </summary>
     public void SelectMemberByIndex(int index)
     {
-        if (index >= 0 && index < PlayerCount && _players[index] != null)
+        if (index >= 0 && index < MemberCount && _members[index] != null)
         {
-            SelectedPlayerIndex = index;
+            SelectedMemberIndex = index;
             //OnSelectedMemberChanged?.Invoke(SelectedPlayer); 선택 트리거 발동
-            Debug.Log($"Selected member: {SelectedPlayer.CurrentMemberData?.Name} (Index: {index})");
+            Debug.Log($"Selected member: {SelectedMember.CurrentMemberData?.Name} (Index: {index})");
         }
         else
         {
@@ -139,9 +139,9 @@ public class MemberManager : Singleton<MemberManager>
     /// </summary>
     public void SelectNextMember()
     {
-        if (PlayerCount <= 1) return;
+        if (MemberCount <= 1) return;
         
-        int nextIndex = (SelectedPlayerIndex + 1) % PlayerCount;
+        int nextIndex = (SelectedMemberIndex + 1) % MemberCount;
         SelectMemberByIndex(nextIndex);
     }
 
@@ -150,9 +150,9 @@ public class MemberManager : Singleton<MemberManager>
     /// </summary>
     public void SelectPreviousMember()
     {
-        if (PlayerCount <= 1) return;
+        if (MemberCount <= 1) return;
         
-        int prevIndex = (SelectedPlayerIndex - 1 + PlayerCount) % PlayerCount;
+        int prevIndex = (SelectedMemberIndex - 1 + MemberCount) % MemberCount;
         SelectMemberByIndex(prevIndex);
     }
 
@@ -169,26 +169,26 @@ public class MemberManager : Singleton<MemberManager>
     // 게임 시작 시 주인공 초기화
     public void InitBoss()
     {
-        if (_players[0] != null)
+        if (_members[0] != null)
         {
             Debug.LogWarning("Main character already exists!");
             return;
         }
 
         // Player 지정 자리 초기화
-        InitializePlayerSeats();
+        InitializeMemberSeats();
 
         // 주인공 스폰
-        Player mainCharacter = ObjectManager.Instance.SpawnPlayer("CatBlackZombie");
+        Member mainCharacter = ObjectManager.Instance.SpawnPlayer("CatBlackZombie");
         mainCharacter.SetMemberData(MAIN_CHARACTER_ID);
-        _players[0] = mainCharacter;
-        PlayerCount = 1;
+        _members[0] = mainCharacter;
+        MemberCount = 1;
 
         // 주인공을 기본 선택으로 설정
-        SelectedPlayerIndex = 0;
+        SelectedMemberIndex = 0;
 
         // 주인공을 지정 자리로 이동
-        MovePlayerToSeat(0, true);
+        MoveMemberToSeat(0, true);
     }
 
     //고용 종류에 따라 랜덤한 직원 리스트 생성 후 매개 변수로 받은 액션에게 Result 전달 Invoke
@@ -275,7 +275,7 @@ public class MemberManager : Singleton<MemberManager>
     {
         //나중에 범위 체크 할 것
 
-        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond + PlayerCount);
+        UnityEngine.Random.InitState(System.DateTime.Now.Millisecond + MemberCount);
 
         int employeeId = UnityEngine.Random.Range(start, end);
 
@@ -296,7 +296,7 @@ public class MemberManager : Singleton<MemberManager>
     }
     public bool HireMember(MemberData memberData)
     {
-        if (PlayerCount >= MAX_PLAYERS)
+        if (MemberCount >= MAX_MEMBERS)
         {
             Debug.LogWarning("Cannot hire more members. Team is full!");
             return false;
@@ -314,12 +314,12 @@ public class MemberManager : Singleton<MemberManager>
             CurrentHireResult.MemberDatas.Remove(memberData);
 
         // 현재 MemberCount 인덱스에 새 구성원 추가
-        Player newPlayer = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(memberData.EmployeeID));
+        Member newPlayer = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(memberData.EmployeeID));
         MemberData newMemberData = InfectMemberData(memberData);
         newPlayer.SetMemberData(newMemberData);
-        _players[PlayerCount] = newPlayer;
-        PlayerCount++;
-        MapManager.Instance.MoveTo(newPlayer, FindSpawnPosition(_doorWay), true);
+        _members[MemberCount] = newPlayer;
+        MemberCount++;
+        MapManager.Instance.MoveTo(newPlayer, MapManager.Instance.FindNearPosition(DoorWay), true);
 
         return true;
     }
@@ -387,13 +387,13 @@ public class MemberManager : Singleton<MemberManager>
             return false;
 
         // 유효성 검사
-        if (memberIndex < 0 || memberIndex >= PlayerCount)
+        if (memberIndex < 0 || memberIndex >= MemberCount)
             return false;
 
-        if (_players[memberIndex] == null)
+        if (_members[memberIndex] == null)
             return false;
 
-        MemberData memberData = _players[memberIndex].CurrentMemberData;
+        MemberData memberData = _members[memberIndex].CurrentMemberData;
 
         if (memberData == null)
             return false;
@@ -409,10 +409,10 @@ public class MemberManager : Singleton<MemberManager>
     // 구성원 해고
     public bool FireSelectedMember(bool ignoringStatus = false)
     {
-        bool success = FireMember(SelectedPlayerIndex, ignoringStatus);
+        bool success = FireMember(SelectedMemberIndex, ignoringStatus);
 
         if(success)
-            SelectedPlayerIndex--;
+            SelectedMemberIndex--;
 
         return success;
     }
@@ -427,48 +427,48 @@ public class MemberManager : Singleton<MemberManager>
         }
 
         // 맵에서 위치 해제
-        MapManager.Instance.UnregisterCat(_players[memberIndex].CellPosition);
+        MapManager.Instance.UnregisterCat(_members[memberIndex].CellPosition);
 
         // 구성원 제거
-        ObjectManager.Instance.Despawn(_players[memberIndex]);
-        _players[memberIndex] = null;
+        ObjectManager.Instance.Despawn(_members[memberIndex]);
+        _members[memberIndex] = null;
 
         // 뒤에 있는 구성원들을 앞으로 한 칸씩 이동
         ShiftMembersForward(memberIndex);
-        PlayerCount--;
+        MemberCount--;
 
-        Debug.Log($"Member at index {memberIndex} fired and members shifted forward. Current count: {PlayerCount}");
+        Debug.Log($"Member at index {memberIndex} fired and members shifted forward. Current count: {MemberCount}");
         return true;
     }
 
     // 구성원들을 앞으로 한 칸씩 이동
     private void ShiftMembersForward(int startIndex)
     {
-        for (int i = startIndex; i < PlayerCount - 1; i++)
+        for (int i = startIndex; i < MemberCount - 1; i++)
         {
-            _players[i] = _players[i + 1];
+            _members[i] = _members[i + 1];
         }
         // 마지막 자리는 null로 설정
-        _players[PlayerCount - 1] = null;
+        _members[MemberCount - 1] = null;
     }
 
     // 특정 인덱스의 구성원 가져오기
-    public Player GetMember(int memberIndex)
+    public Member GetMember(int memberIndex)
     {
-        if (memberIndex < 0 || memberIndex >= PlayerCount)
+        if (memberIndex < 0 || memberIndex >= MemberCount)
             return null;
-        return _players[memberIndex];
+        return _members[memberIndex];
     }
 
     // Player 객체로 인덱스 찾기
-    public int GetIndex(Player player)
+    public int GetIndex(Member player)
     {
         if (player == null)
             return -1;
 
-        for (int i = 0; i < PlayerCount; i++)
+        for (int i = 0; i < MemberCount; i++)
         {
-            if (_players[i] == player)
+            if (_members[i] == player)
                 return i;
         }
 
@@ -480,11 +480,11 @@ public class MemberManager : Singleton<MemberManager>
     {
         List<PlayerSaveData> saveDatas = new List<PlayerSaveData>();
         
-        for (int i = 0; i < PlayerCount; i++)
+        for (int i = 0; i < MemberCount; i++)
         {
-            if (_players[i] != null)
+            if (_members[i] != null)
             {
-                saveDatas.Add(_players[i].GetSaveData());
+                saveDatas.Add(_members[i].GetSaveData());
             }
         }
         
@@ -512,104 +512,68 @@ public class MemberManager : Singleton<MemberManager>
         }
         
         // Player 지정 자리 초기화
-        InitializePlayerSeats();
+        InitializeMemberSeats();
         
-        for (int i = 0; i < saveDatas.Count && i < MAX_PLAYERS; i++)
+        for (int i = 0; i < saveDatas.Count && i < MAX_MEMBERS; i++)
         {
             PlayerSaveData saveData = saveDatas[i];
             
             // Player 스폰
-            Player player = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
+            Member player = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
 
             // 저장된 데이터 로드
             player.LoadFromSaveData(saveData);
             
             // 멤버 배열에 추가
-            _players[i] = player;
+            _members[i] = player;
         }
         
-        PlayerCount = saveDatas.Count;
+        MemberCount = saveDatas.Count;
 
         // 첫 번째 멤버를 기본 선택으로 설정
-        SelectedPlayerIndex = 0;
+        SelectedMemberIndex = 0;
         
-        Debug.Log($"Loaded {PlayerCount} members from save data");
+        Debug.Log($"Loaded {MemberCount} members from save data");
     }
     
     // 모든 구성원 정리
     public void ClearAllMembers()
     {
-        for (int i = 0; i < MAX_PLAYERS; i++)
+        for (int i = 0; i < MAX_MEMBERS; i++)
         {
-            if (_players[i] != null)
+            if (_members[i] != null)
             {
-                MapManager.Instance.UnregisterCat(_players[i].CellPosition);
-                ObjectManager.Instance.Despawn(_players[i]);
-                _players[i] = null;
+                MapManager.Instance.UnregisterCat(_members[i].CellPosition);
+                ObjectManager.Instance.Despawn(_members[i]);
+                _members[i] = null;
             }
         }
-        PlayerCount = 0;
-        SelectedPlayerIndex = 0;
+        MemberCount = 0;
+        SelectedMemberIndex = 0;
     }
 
     // 모든 구성원 가져오기 (null 제외)
-    public List<Player> GetAllMembers()
+    public List<Member> GetAllMembers()
     {
-        List<Player> players = new List<Player>();
-        for (int i = 0; i < PlayerCount; i++)
+        List<Member> members = new List<Member>();
+        for (int i = 0; i < MemberCount; i++)
         {
-            if (_players[i] != null)
-                players.Add(_players[i]);
+            if (_members[i] != null)
+                members.Add(_members[i]);
         }
-        return players;
+        return members;
     }
 
     // 빈 슬롯 개수 가져오기
     public int GetEmptySlotCount()
     {
-        return MAX_PLAYERS - PlayerCount;
+        return MAX_MEMBERS - MemberCount;
     }
 
     // 팀이 가득 찼는지 확인
     public bool IsTeamFull()
     {
-        return PlayerCount >= MAX_PLAYERS;
-    }
-
-    // 스폰 위치 찾기 (주인공 근처 빈 공간)
-    private Vector2Int FindSpawnPosition(Vector2Int startPos)
-    {
-        // 주변 8방향 탐색
-        Vector2Int[] directions = new Vector2Int[]
-        {
-            new Vector2Int(1, 0),
-            new Vector2Int(-1, 0),
-            new Vector2Int(0, 1),
-            new Vector2Int(0, -1),
-            new Vector2Int(1, 1),
-            new Vector2Int(1, -1),
-            new Vector2Int(-1, 1),
-            new Vector2Int(-1, -1)
-        };
-
-        foreach (var dir in directions)
-        {
-            Vector2Int checkPos = startPos + dir;
-            if (MapManager.Instance.CanMove(checkPos))
-            {
-                return checkPos;
-            }
-        }
-
-        // 주변에 빈 공간이 없으면 걸을 수 있는 랜덤 위치
-        List<Vector2Int> walkableCells = MapManager.Instance.GetWalkableCells();
-        if (walkableCells.Count > 0)
-        {
-            return walkableCells[UnityEngine.Random.Range(0, walkableCells.Count)];
-        }
-
-        // 최후의 수단
-        return new Vector2Int(0, 2);
+        return MemberCount >= MAX_MEMBERS;
     }
 
     #region 게임 개발 관련 멤버 조회
@@ -619,15 +583,15 @@ public class MemberManager : Singleton<MemberManager>
     /// </summary>
     /// <param name="gameDevType">게임 개발 단계</param>
     /// <returns>적합한 멤버들의 리스트</returns>
-    public List<Player> GetMembersForGameDevType(EGameDevType gameDevType)
+    public List<Member> GetMembersForGameDevType(EGameDevType gameDevType)
     {
-        List<Player> suitableMembers = new List<Player>();
+        List<Member> suitableMembers = new List<Member>();
         
-        for (int i = 0; i < PlayerCount; i++)
+        for (int i = 0; i < MemberCount; i++)
         {
-            if (_players[i] != null && IsMemberSuitableForDevType(_players[i], gameDevType))
+            if (_members[i] != null && IsMemberSuitableForDevType(_members[i], gameDevType))
             {
-                suitableMembers.Add(_players[i]);
+                suitableMembers.Add(_members[i]);
             }
         }
         
@@ -643,9 +607,9 @@ public class MemberManager : Singleton<MemberManager>
     {
         int count = 0;
         
-        for (int i = 0; i < PlayerCount; i++)
+        for (int i = 0; i < MemberCount; i++)
         {
-            if (_players[i] != null && IsMemberSuitableForDevType(_players[i], gameDevType))
+            if (_members[i] != null && IsMemberSuitableForDevType(_members[i], gameDevType))
             {
                 count++;
             }
@@ -660,9 +624,9 @@ public class MemberManager : Singleton<MemberManager>
     /// <param name="gameDevType">게임 개발 단계</param>
     /// <param name="index">적합한 멤버들 중의 인덱스 (0부터 시작)</param>
     /// <returns>해당 인덱스의 멤버 또는 null</returns>
-    public Player GetSuitableMemberByIndex(EGameDevType gameDevType, int index)
+    public Member GetSuitableMemberByIndex(EGameDevType gameDevType, int index)
     {
-        List<Player> suitableMembers = GetMembersForGameDevType(gameDevType);
+        List<Member> suitableMembers = GetMembersForGameDevType(gameDevType);
         
         if (index >= 0 && index < suitableMembers.Count)
         {
@@ -678,7 +642,7 @@ public class MemberManager : Singleton<MemberManager>
     /// <param name="member">확인할 멤버</param>
     /// <param name="gameDevType">게임 개발 단계</param>
     /// <returns>적합하면 true</returns>
-    private bool IsMemberSuitableForDevType(Player member, EGameDevType gameDevType)
+    private bool IsMemberSuitableForDevType(Member member, EGameDevType gameDevType)
     {
         if (member?.CurrentMemberData == null)
             return false;
@@ -717,74 +681,81 @@ public class MemberManager : Singleton<MemberManager>
     /// Player들의 개인 지정 자리 초기화
     /// _players 배열의 순서대로 지정된 자리 할당
     /// </summary>
-    private void InitializePlayerSeats()
+    private void InitializeMemberSeats()
     {
-        _playerSeat[0] = new PlayerSeatInfo(new Vector2Int(-3, 0), false, true);//사장 자리
-        _playerSeat[1] = new PlayerSeatInfo(new Vector2Int(0, 0), false, true);//직원 1
-        _playerSeat[2] = new PlayerSeatInfo(new Vector2Int(-4, -4), true, false);//직원 2
-        _playerSeat[3] = new PlayerSeatInfo(new Vector2Int(-1, -4), true, false);//직원 3
+        _memberNightSeat[0] = new MemberSeatInfo(new Vector2Int(-3, 0), false, true);//사장 자리
+        _memberNightSeat[1] = new MemberSeatInfo(new Vector2Int(0, 0), false, true);//직원 1
+        _memberNightSeat[2] = new MemberSeatInfo(new Vector2Int(-4, -4), true, false);//직원 2
+        _memberNightSeat[3] = new MemberSeatInfo(new Vector2Int(-1, -4), true, false);//직원 3
+
+        _memberMorningSeat[0] = new MemberSeatInfo(new Vector2Int(-4, -2), false, true);//사장 자리
+        _memberMorningSeat[1] = new MemberSeatInfo(new Vector2Int(-3, -2), false, true);//직원 1
+        _memberMorningSeat[2] = new MemberSeatInfo(new Vector2Int(-2, -2), false, true);//직원 2
+        _memberMorningSeat[3] = new MemberSeatInfo(new Vector2Int(-1, -2), false, true);//직원 3
     }
 
-    public PlayerSeatInfo GetPlayerSeatInfo(Player player)
+    public MemberSeatInfo GetMemberSeatInfo(Member member, bool isNight = true)
     {
-        int index = GetIndex(player);
-        return GetPlayerSeatInfo(index);
+        int index = GetIndex(member);
+        return GetMemberSeatInfo(index, isNight);
     }
-    public PlayerSeatInfo GetPlayerSeatInfo(int playerIndex)
+    public MemberSeatInfo GetMemberSeatInfo(int memberIndex, bool isNight = true)
     {
-        if (playerIndex < 0 || playerIndex >= MAX_PLAYERS)
+        if (memberIndex < 0 || memberIndex >= MAX_MEMBERS)
         {
-            Debug.LogWarning($"Invalid player index: {playerIndex}");
+            Debug.LogWarning($"Invalid player index: {memberIndex}");
             return default;
         }
-        return _playerSeat[playerIndex];
+        return isNight ? _memberNightSeat[memberIndex] : _memberMorningSeat[memberIndex];
     }
     /// <summary>
     /// 특정 Player의 지정 자리 가져오기
     /// </summary>
-    /// <param name="playerIndex">Player의 인덱스</param>
+    /// <param name="memberIndex">Player의 인덱스</param>
     /// <returns>해당 Player의 지정 자리 좌표</returns>
-    public Vector2Int GetPlayerSeat(int playerIndex)
+    public Vector2Int GetMemberSeat(int memberIndex, bool isNight = true)
     {
-        if (playerIndex < 0 || playerIndex >= MAX_PLAYERS)
-        {
-            Debug.LogWarning($"Invalid player index: {playerIndex}");
-            return Vector2Int.zero;
-        }
-
-        return _playerSeat[playerIndex].SeatPosition;
+        return GetMemberSeatInfo(memberIndex, isNight).SeatPosition;
     }
 
     /// <summary>
     /// 특정 Player 객체의 지정 자리 가져오기
     /// </summary>
-    /// <param name="player">Player 객체</param>
+    /// <param name="member">Player 객체</param>
     /// <returns>해당 Player의 지정 자리 좌표</returns>
-    public Vector2Int GetPlayerSeat(Player player)
+    public Vector2Int GetMemberSeat(Member member, bool isNight = true)
     {
-        int index = GetIndex(player);
+        int index = GetIndex(member);
         if (index == -1)
         {
             Debug.LogWarning("Player not found in team");
             return Vector2Int.zero;
         }
 
-        return GetPlayerSeat(index);
+        return GetMemberSeat(index, isNight);
     }
 
     /// <summary>
     /// 특정 Player의 지정 자리 변경
     /// </summary>
-    /// <param name="playerIndex">Player의 인덱스</param>
+    /// <param name="memberIndex">Player의 인덱스</param>
     /// <param name="newSeat">새로운 지정 자리 좌표</param>
-    public void SetPlayerSeat(int playerIndex, Vector2Int newSeat)
+    public void SetMemberSeat(int memberIndex, Vector2Int newSeat, bool isNight = true)
     {
-        if (playerIndex < 0 || playerIndex >= MAX_PLAYERS)
+        if (memberIndex < 0 || memberIndex >= MAX_MEMBERS)
         {
-            Debug.LogWarning($"Invalid player index: {playerIndex}");
+            Debug.LogWarning($"Invalid player index: {memberIndex}");
             return;
         }
-        _playerSeat[playerIndex].SeatPosition = newSeat;
+
+        if (isNight)
+        {
+            _memberNightSeat[memberIndex].SeatPosition = newSeat;
+        }
+        else
+        {
+            _memberMorningSeat[memberIndex].SeatPosition = newSeat;
+        }
     }
 
     /// <summary>
@@ -792,7 +763,7 @@ public class MemberManager : Singleton<MemberManager>
     /// </summary>
     /// <param name="player">Player 객체</param>
     /// <param name="newSeat">새로운 지정 자리 좌표</param>
-    public void SetPlayerSeat(Player player, Vector2Int newSeat)
+    public void SetMemberSeat(Member player, Vector2Int newSeat, bool isNight = true)
     {
         int index = GetIndex(player);
         if (index == -1)
@@ -801,60 +772,60 @@ public class MemberManager : Singleton<MemberManager>
             return;
         }
 
-        SetPlayerSeat(index, newSeat);
+        SetMemberSeat(index, newSeat, isNight);
     }
-    public void MovePlayerToDoorWay(Player player)
+    public void MoveMemberToDoorWay(Member member)
     {
 
     }
     /// <summary>
     /// Player를 자신의 지정 자리로 이동시키기
     /// </summary>
-    /// <param name="playerIndex">Player의 인덱스</param>
+    /// <param name="memberIndex">Player의 인덱스</param>
     /// <param name="immediate">즉시 이동 여부</param>
-    public void MovePlayerToSeat(int playerIndex, bool immediate = false)
+    public void MoveMemberToSeat(int memberIndex, bool immediate = false)
     {
-        if (playerIndex < 0 || playerIndex >= PlayerCount || _players[playerIndex] == null)
+        if (memberIndex < 0 || memberIndex >= MemberCount || _members[memberIndex] == null)
         {
-            Debug.LogWarning($"Cannot move player {playerIndex} to seat: invalid index or null player");
+            Debug.LogWarning($"Cannot move player {memberIndex} to seat: invalid index or null player");
             return;
         }
 
-        Vector2Int seatPosition = GetPlayerSeat(playerIndex);
-        Player player = _players[playerIndex];
+        Vector2Int seatPosition = GetMemberSeat(memberIndex);
+        Member player = _members[memberIndex];
 
-        Debug.Log($"Moving player {playerIndex} to seat position {seatPosition}");
+        Debug.Log($"Moving player {memberIndex} to seat position {seatPosition}");
         MapManager.Instance.MoveTo(player, seatPosition, immediate);
     }
 
     /// <summary>
     /// 특정 Player 객체를 자신의 지정 자리로 이동시키기
     /// </summary>
-    /// <param name="player">Player 객체</param>
+    /// <param name="member">Player 객체</param>
     /// <param name="immediate">즉시 이동 여부</param>
-    public void MovePlayerToSeat(Player player, bool immediate = false)
+    public void MoveMemberToSeat(Member member, bool immediate = false)
     {
-        int index = GetIndex(player);
+        int index = GetIndex(member);
         if (index == -1)
         {
             Debug.LogWarning("Player not found in team");
             return;
         }
 
-        MovePlayerToSeat(index, immediate);
+        MoveMemberToSeat(index, immediate);
     }
 
     /// <summary>
     /// 모든 Player들을 각자의 지정 자리로 이동시키기
     /// </summary>
     /// <param name="immediate">즉시 이동 여부</param>
-    public void MoveAllPlayersToSeats()
+    public void MoveAllMembersToSeats()
     {
-        for (int i = 0; i < PlayerCount; i++)
+        for (int i = 0; i < MemberCount; i++)
         {
-            if (_players[i] != null)
+            if (_members[i] != null)
             {
-                _players[i].MoveToSeat(GetPlayerSeat(i));
+                _members[i].MoveToSeat(GetMemberSeat(i));
             }
         }
         
@@ -863,12 +834,12 @@ public class MemberManager : Singleton<MemberManager>
     public int HowManyMemberSitting()
     {
         int count = 0;
-        for (int i = 0; i < PlayerCount; i++)
+        for (int i = 0; i < MemberCount; i++)
         {
-            if (_players[i] != null)
+            if (_members[i] != null)
             {
-                Vector2Int seatPos = GetPlayerSeat(i);
-                if (_players[i].CellPosition == seatPos)
+                Vector2Int seatPos = GetMemberSeat(i);
+                if (_members[i].CellPosition == seatPos)
                     count++;
             }
         }
@@ -878,6 +849,22 @@ public class MemberManager : Singleton<MemberManager>
     {
         return HowManyMemberSitting() > 0;
     }
-
+    public bool AreAllMembersDisabled()
+    {
+        foreach (var member in _members)
+        {
+            if (member != null && member.gameObject.activeSelf)
+                return false;
+        }
+        return true;
+    }
+    public void ActiveAllMembers()
+    {
+        foreach (var member in _members)
+        {
+            if (member != null && member.gameObject.activeSelf == false)
+                member.gameObject.SetActive(true);
+        }
+    }
     #endregion
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UI_FenceStatePopup : UI_UGUI, IUI_Popup
@@ -60,6 +61,10 @@ public class UI_FenceStatePopup : UI_UGUI, IUI_Popup
     protected override void Start()
     {
         base.Start();
+
+    }
+    public void SetInfo()
+    {
 
     }
     public override void RefreshUI()

@@ -1,0 +1,676 @@
+fileFormatVersion: 2
+guid: 94e27774a1ce2d948a9186f769d86f65
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3092063599737781914
+    second: cat_persian_0
+  - first:
+      213: -2719602963039039024
+    second: cat_persian_1
+  - first:
+      213: -4980464902701337192
+    second: cat_persian_2
+  - first:
+      213: 538100241212036066
+    second: cat_persian_3
+  - first:
+      213: 6878293295779815060
+    second: cat_persian_4
+  - first:
+      213: 3520334620498962405
+    second: cat_persian_5
+  - first:
+      213: -370181115784605777
+    second: cat_persian_6
+  - first:
+      213: 5310577432221128570
+    second: cat_persian_7
+  - first:
+      213: 1035686971454134723
+    second: cat_persian_8
+  - first:
+      213: -7763307269581915566
+    second: cat_persian_9
+  - first:
+      213: -696776123955314403
+    second: cat_persian_10
+  - first:
+      213: 5907123493369055795
+    second: cat_persian_11
+  - first:
+      213: 7795375575138354162
+    second: cat_persian_12
+  - first:
+      213: 588030861724048661
+    second: cat_persian_13
+  - first:
+      213: 4796926859331736831
+    second: cat_persian_14
+  - first:
+      213: -295699626732702292
+    second: cat_persian_15
+  - first:
+      213: 1291477081944798330
+    second: cat_persian_16
+  - first:
+      213: -6624087900375058217
+    second: cat_persian_17
+  - first:
+      213: 4688835696075310596
+    second: cat_persian_18
+  - first:
+      213: -2491298516881182916
+    second: cat_persian_19
+  - first:
+      213: -6186728144062747814
+    second: cat_persian_20
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 0
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 0
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: cat_persian_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 156
+        width: 58
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a9e3945267739ea20800000000000000
+      internalID: 3092063599737781914
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_1
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 208
+        width: 34
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0d155f1a387024ad0800000000000000
+      internalID: -2719602963039039024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_2
+      rect:
+        serializedVersion: 2
+        x: 99
+        y: 210
+        width: 26
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 895bf220f85d1eab0800000000000000
+      internalID: -4980464902701337192
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_3
+      rect:
+        serializedVersion: 2
+        x: 63
+        y: 156
+        width: 36
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e3def28157b77700800000000000000
+      internalID: 538100241212036066
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_4
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 177
+        width: 32
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 49e18eb4f4b947f50800000000000000
+      internalID: 6878293295779815060
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_5
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 79
+        width: 71
+        height: 75
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5e7a9519fadbad030800000000000000
+      internalID: 3520334620498962405
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_6
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 146
+        width: 35
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fafc91b8c3adcdaf0800000000000000
+      internalID: -370181115784605777
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_7
+      rect:
+        serializedVersion: 2
+        x: 156
+        y: 129
+        width: 37
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a771fb7b906f2b940800000000000000
+      internalID: 5310577432221128570
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_8
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 131
+        width: 35
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c9160030df7f5e00800000000000000
+      internalID: 1035686971454134723
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_9
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 104
+        width: 37
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25abc5a8b21334490800000000000000
+      internalID: -7763307269581915566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_10
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 110
+        width: 39
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d118ba39ecd8456f0800000000000000
+      internalID: -696776123955314403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_11
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 92
+        width: 38
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 33a80aa15815af150800000000000000
+      internalID: 5907123493369055795
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_12
+      rect:
+        serializedVersion: 2
+        x: 201
+        y: 93
+        width: 35
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f3c0eea8ccbe2c60800000000000000
+      internalID: 7795375575138354162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_13
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 3
+        width: 74
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51d570604fa192800800000000000000
+      internalID: 588030861724048661
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_14
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 71
+        width: 43
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff49ff7309b129240800000000000000
+      internalID: 4796926859331736831
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_15
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 71
+        width: 35
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca5b16491c675ebf0800000000000000
+      internalID: -295699626732702292
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_16
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 58
+        width: 46
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a74b0e0409f3ce110800000000000000
+      internalID: 1291477081944798330
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_17
+      rect:
+        serializedVersion: 2
+        x: 209
+        y: 58
+        width: 27
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7d87e2986238214a0800000000000000
+      internalID: -6624087900375058217
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_18
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 3
+        width: 80
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4068dba1937121140800000000000000
+      internalID: 4688835696075310596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_19
+      rect:
+        serializedVersion: 2
+        x: 161
+        y: 3
+        width: 66
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3fe6d7c2312d6dd0800000000000000
+      internalID: -2491298516881182916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cat_persian_20
+      rect:
+        serializedVersion: 2
+        x: 229
+        y: 3
+        width: 24
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5b6a3b1883542aa0800000000000000
+      internalID: -6186728144062747814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      cat_persian_0: 3092063599737781914
+      cat_persian_1: -2719602963039039024
+      cat_persian_10: -696776123955314403
+      cat_persian_11: 5907123493369055795
+      cat_persian_12: 7795375575138354162
+      cat_persian_13: 588030861724048661
+      cat_persian_14: 4796926859331736831
+      cat_persian_15: -295699626732702292
+      cat_persian_16: 1291477081944798330
+      cat_persian_17: -6624087900375058217
+      cat_persian_18: 4688835696075310596
+      cat_persian_19: -2491298516881182916
+      cat_persian_2: -4980464902701337192
+      cat_persian_20: -6186728144062747814
+      cat_persian_3: 538100241212036066
+      cat_persian_4: 6878293295779815060
+      cat_persian_5: 3520334620498962405
+      cat_persian_6: -370181115784605777
+      cat_persian_7: 5310577432221128570
+      cat_persian_8: 1035686971454134723
+      cat_persian_9: -7763307269581915566
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

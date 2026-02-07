@@ -77,7 +77,7 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
 
     public void UpdateContent()
     {
-        Player player = MemberManager.Instance.SelectedPlayer;
+        Member player = MemberManager.Instance.SelectedMember;
 
         if (player == null || player.CurrentMemberData == null)
         {
@@ -128,9 +128,9 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         // 확인 버튼 텍스트
         GetText((int)Texts.OkayButtonText).text = "@해고";
         
-        int currentIndex = MemberManager.Instance.SelectedPlayerIndex;
+        int currentIndex = MemberManager.Instance.SelectedMemberIndex;
         int order = currentIndex + 1;
-        GetText((int)Texts.MainTitleText).text = $"@구성원 해고 {order}/{MemberManager.Instance.PlayerCount}";
+        GetText((int)Texts.MainTitleText).text = $"@구성원 해고 {order}/{MemberManager.Instance.MemberCount}";
         
         // 해고 버튼 활성화/비활성화 처리
         bool canFire = MemberManager.Instance.CanFireMember(currentIndex);
@@ -139,7 +139,7 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
 
     public void OnClickOkayButton()
     {
-        Player player = MemberManager.Instance.SelectedPlayer;
+        Member player = MemberManager.Instance.SelectedMember;
 
         if (player == null || player.CurrentMemberData == null)
         {
@@ -154,7 +154,7 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
     }
     private void FireSelectedMember()
     {
-        Player selectedPlayer = MemberManager.Instance.SelectedPlayer;
+        Member selectedPlayer = MemberManager.Instance.SelectedMember;
 
         if (selectedPlayer == null || selectedPlayer.CurrentMemberData == null)
         {
@@ -180,7 +180,7 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MemberSwapped).Contents, new string[] { memberData.Name, MemberManager.Instance.SelectedHireMemberData.Name }, OnStartSwap);
         }
 
-        if (success && MemberManager.Instance.SelectedPlayerIndex != MemberManager.Instance.PlayerCount)
+        if (success && MemberManager.Instance.SelectedMemberIndex != MemberManager.Instance.MemberCount)
             MemberManager.Instance.SelectNextMember();
     }
     public void OnStartSwap()

@@ -85,7 +85,7 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
 
     public void UpdateContent()
     {
-        Player selectedPlayer = MemberManager.Instance.SelectedPlayer;
+        Member selectedPlayer = MemberManager.Instance.SelectedMember;
         
         if (selectedPlayer == null || selectedPlayer?.CurrentMemberData == null)
         {
@@ -96,8 +96,8 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         MemberData memberData = selectedPlayer.CurrentMemberData;
 
         // 제목 표시 (현재 선택된 멤버의 순서)
-        int currentOrder = MemberManager.Instance.SelectedPlayerIndex + 1;
-        int totalMembers = MemberManager.Instance.PlayerCount;
+        int currentOrder = MemberManager.Instance.SelectedMemberIndex + 1;
+        int totalMembers = MemberManager.Instance.MemberCount;
         string mainTitlePrefix = _selectionType == EMemberSelectionType.Education ? "@구성원 선택" : "@파견 선택";
         GetText((int)Texts.MainTitleText).text = $"{mainTitlePrefix} {currentOrder}/{totalMembers}";
 

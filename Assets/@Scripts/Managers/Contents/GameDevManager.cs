@@ -470,6 +470,7 @@ public class GameDevManager : Singleton<GameDevManager>
                 if (GameManager.Instance.GameMode == EGameMode.Purchase)
                 { 
                     GameManager.Instance.GameState = EGameState.FoodPurchase;
+                    PurchaseManager.Instance.StartPurchase();
                 }
                 else
                 {
@@ -780,7 +781,7 @@ public class GameDevManager : Singleton<GameDevManager>
         Debug.Log($"Work completed for {CurrentGameDevType} stage");
 
         if (CurrentGameDevType == EGameDevType.Scenario)
-            MemberManager.Instance.MoveAllPlayersToSeats();
+            MemberManager.Instance.MoveAllMembersToSeats();
 
         // 현재 단계에 따른 Progress 증가 시작
         CoroutineManager.Instance.StartCoroutine(CoIncreaseProgressForCurrentStage());
@@ -812,7 +813,7 @@ public class GameDevManager : Singleton<GameDevManager>
             }
 
             // 멤버 수에 따라 가속된 시간 누적 (멤버가 많을수록 빠르게 증가)
-            float memberRatio = MemberManager.Instance.HowManyMemberSitting() / (float)MemberManager.MAX_PLAYERS;
+            float memberRatio = MemberManager.Instance.HowManyMemberSitting() / (float)MemberManager.MAX_MEMBERS;
             acceleratedTime += Time.deltaTime * memberRatio;
             
             // duration 기준으로 진행도 계산

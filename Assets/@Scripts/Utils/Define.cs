@@ -7,6 +7,7 @@ public static class Define
         Unknown,
         LoadingScene,
         DevScene,
+        MorningScene,
     }
 
     public enum EGameState
@@ -51,6 +52,9 @@ public static class Define
 
         QualityChanged,
         WorkCompleted,
+
+        //Purchase Events
+        MerchantStateChanged,
 
         //Member Events
         MemberListChanged,
@@ -178,6 +182,11 @@ public static class Define
         SelectSoundWriter,   // 사운드 작업 선택
         StartDebugging,     // 디버깅 시작
         CompleteGameDev,    // 게임 개발 완료
+
+        // 통조림 구매 관련
+        MerchantHello,        // 암상인 인사
+        PurchaseMessage,      // 통조림 구매 메시지
+        MerchantBye,          // 구매 완료
     }
 
     public enum EChatType

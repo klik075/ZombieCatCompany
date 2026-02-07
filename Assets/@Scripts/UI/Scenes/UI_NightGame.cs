@@ -31,8 +31,6 @@ public class UI_NightGame : UI_UGUI, IUI_Scene
         BindObjects(typeof(GameObjects));
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
-
-        
     }
 
     public override void RefreshUI()

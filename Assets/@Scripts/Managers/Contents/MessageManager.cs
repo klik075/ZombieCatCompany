@@ -172,6 +172,18 @@ public class MessageManager : Singleton<MessageManager>
         {
             Contents = new string[] { "지금은 개발할 수 없다냥." }
         };
+        _messageScripts[EMessageType.MerchantHello] = new MessageScript
+        {
+            Contents = new string[] { "반갑다냥.\r\n통조림을 구매할 거냥?" }
+        };
+        _messageScripts[EMessageType.PurchaseMessage] = new MessageScript
+        {
+            Contents = new string[] { "통조림을 구매할까?" }
+        };
+        _messageScripts[EMessageType.MerchantBye] = new MessageScript
+        {
+            Contents = new string[] { "다음에 또 오겠다냥." }
+        };
     }
 
     //private void InitializeChatScripts()

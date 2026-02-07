@@ -29,6 +29,7 @@ public class UI_MessagePopup : UI_UGUI, IUI_Popup, IClickableUI
     }
 
     private Action _onOkayCallback;
+    private Action _onNoCallback;
     private string _content;
 
     protected override void Awake()
@@ -43,11 +44,12 @@ public class UI_MessagePopup : UI_UGUI, IUI_Popup, IClickableUI
         GetButton((int)Buttons.NoButton).onClick.AddListener(OnNoButtonClicked);
     }
 
-    public void SetInfo(string[] scripts, string[] insertScripts = null, Action action = null)
+    public void SetInfo(string[] scripts, string[] insertScripts = null, Action okAction = null, Action noAction = null)
     {
         _content = GetContentText(scripts, insertScripts);
-        _onOkayCallback = action;
-        
+        _onOkayCallback = okAction;
+        _onNoCallback = noAction;
+
         UpdateContent();
     }
     public string GetContentText(string[] script, string[] insertScript)
@@ -82,6 +84,7 @@ public class UI_MessagePopup : UI_UGUI, IUI_Popup, IClickableUI
     private void OnNoButtonClicked()
     {
         UIManager.Instance.ClosePopupUI();
+        _onNoCallback?.Invoke();
     }
 
     public override void RefreshUI()

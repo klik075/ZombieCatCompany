@@ -148,6 +148,22 @@ public class GameManager : Singleton<GameManager>
         EventManager.Instance.AddEvent(EEventType.UI_PopupClosed, ResumeGame);
         EventManager.Instance.AddEvent(EEventType.UI_LeftPanelOpened, PauseGame);
         EventManager.Instance.AddEvent(EEventType.UI_LeftPanelClosed, ResumeGame);
+        EventManager.Instance.AddEvent(EEventType.GameStateChanged, OnChangedGameState);
+    }
+    private void OnChangedGameState()
+    {
+        switch (GameState)
+        {
+            case EGameState.Morning:
+
+                break;
+            case EGameState.Defence:
+                break;
+            case EGameState.Ending:
+                break;
+            default:
+                break;
+        }
     }
     public void PauseGame()
     {

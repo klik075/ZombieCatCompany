@@ -26,9 +26,10 @@ public class ObjectManager : Singleton<ObjectManager>
     #endregion
 
     private HashSet<ObjectBase> _objects = new HashSet<ObjectBase>();
-    private HashSet<Player> _players = new HashSet<Player>();
+    private HashSet<Member> _players = new HashSet<Member>();
+    private HashSet<Merchant> _merchants = new HashSet<Merchant>();
 
-    public Player SpawnPlayer(string prefab = "Player", bool pooling = false)
+    public Member SpawnPlayer(string prefab = "Player", bool pooling = false)
     {
         GameObject go = null;
         if (pooling)
@@ -39,13 +40,33 @@ public class ObjectManager : Singleton<ObjectManager>
         go.name = prefab;
         go.transform.parent = PlayerRoot;
 
-        Player player = go.GetOrAddComponent<Player>();
+        Member player = go.GetOrAddComponent<Member>();
         _objects.Add(player);
         _players.Add(player);
 
         player.Pooling = pooling;
 
         return player;
+    }
+    public Merchant SpawnMerchant(string prefab = "Merchant", bool pooling = false)
+    {
+        GameObject go = null;
+        if (pooling)
+            go = PoolManager.Instance.Pop(prefab);
+        else
+            go = ResourceManager.Instance.Instantiate(prefab);
+
+        go.name = prefab;
+        go.transform.parent = NpcRoot;
+
+        Merchant merchant = go.GetOrAddComponent<Merchant>();
+
+        _objects.Add(merchant);
+        _merchants.Add(merchant);
+
+        merchant.Pooling = pooling;
+
+        return merchant;
     }
 
     public void Despawn(ObjectBase obj)
@@ -55,7 +76,7 @@ public class ObjectManager : Singleton<ObjectManager>
 
         _objects.Remove(obj);
 
-        if (obj is Player player)
+        if (obj is Member player)
             _players.Remove(player);
 
         if (obj.Pooling)

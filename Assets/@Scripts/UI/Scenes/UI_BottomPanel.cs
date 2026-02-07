@@ -142,6 +142,7 @@ public class UI_BottomPanel : UI_UGUI
     private void OnGameStateChanged()
     {
         UpdateSaveButtonState();
+        UpdateBottomPanelBasedOnGameState();
     }
     private void UpdateQualityText()
     {
@@ -189,10 +190,14 @@ public class UI_BottomPanel : UI_UGUI
         
         // GameDevBottomPanel1 활성화/비활성화
         GetObject((int)GameObjects.GameDevBottomPanel1).SetActive(isGameDevPanel);
-        
-        // MorningBottomPanel1은 현재 로직에서 제외 (다른 조건에서 관리)
     }
-
+    private void UpdateBottomPanelBasedOnGameState()
+    {
+        EGameState gameState = GameManager.Instance.GameState;
+        bool isMorningPanel = (gameState == EGameState.Morning);
+        GetObject((int)GameObjects.MorningBottomPanel1).SetActive(isMorningPanel);
+        GetObject((int)GameObjects.NightBottomPanel1).SetActive(!isMorningPanel);
+    }
     private void UpdateAnnualProfitUI(int annualProfit)
     {
         GetText((int)Texts.AnnualProfitText).text = $"{annualProfit:N0}G";

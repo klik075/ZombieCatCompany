@@ -82,7 +82,7 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
 
     public void UpdateContent()
     {
-        Player selectedPlayer = MemberManager.Instance.SelectedPlayer;
+        Member selectedPlayer = MemberManager.Instance.SelectedMember;
         EducationData educationData = EducationManager.Instance.SelectedEducation;
 
         if (selectedPlayer?.CurrentMemberData == null || educationData == null)
@@ -165,7 +165,7 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
 
     private void ApplyEducation()
     {
-        Player targetMember = MemberManager.Instance.SelectedPlayer;
+        Member targetMember = MemberManager.Instance.SelectedMember;
         EducationData educationData = EducationManager.Instance.SelectedEducation;
 
         if (targetMember?.CurrentMemberData == null || educationData == null)

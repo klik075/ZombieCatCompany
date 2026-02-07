@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 28c37389a069e784e97af0827c1c3a88
+guid: 6de7e1ed0d6bbe04c8fb9bdbd2ad8496
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3319549875292126301
-    second: "\uD39C\uC2A4_\uBC30\uACBD\uC81C\uAC70_0"
+      213: 7514386376753719093
+    second: "\uBCF5\uB3C42_\uBC30\uACBD\uC81C\uAC70_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: "\uD39C\uC2A4_\uBC30\uACBD\uC81C\uAC70_0"
+      name: ZCC_HallwayBottom
       rect:
         serializedVersion: 2
-        x: 108
-        y: 22
-        width: 403
-        height: 376
+        x: 12
+        y: 2
+        width: 537
+        height: 442
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d5cbafa1609611e20800000000000000
-      internalID: 3319549875292126301
+      spriteID: 537a073c896784860800000000000000
+      internalID: 7514386376753719093
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 0ba706b82728e3b459f529283d5387c1
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      "\uD39C\uC2A4_\uBC30\uACBD\uC81C\uAC70_0": 3319549875292126301
+      ZCC_HallwayBottom: 7514386376753719093
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

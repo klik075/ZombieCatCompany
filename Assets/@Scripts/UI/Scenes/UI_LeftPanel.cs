@@ -139,6 +139,9 @@ public class UI_LeftPanel : UI_UGUI
             case Buttons.SystemButton:
                 OpenOptionPanel(_systemOptionPanel.gameObject);
                 break;
+            case Buttons.FenceButton:
+                OpenPopup(buttonType);
+                break;
         }
     }
 
@@ -204,6 +207,10 @@ public class UI_LeftPanel : UI_UGUI
                 //UI_EventPopup은 일기장과 파견 결과가 동일한 팝업을 사용하고 내용은 Diary인지, DispatchResult인지에 따라 다르게 설정
                 UI_EventPopup dispatchResultPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
                 dispatchResultPopup.SetInfo();
+                break;
+            case Buttons.FenceButton:
+                UI_FenceStatePopup fenceStatePopup = UIManager.Instance.ShowPopupUI<UI_FenceStatePopup>();
+                fenceStatePopup.SetInfo();
                 break;
         }
         // LeftPanel 숨김

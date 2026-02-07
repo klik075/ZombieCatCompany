@@ -101,7 +101,7 @@ public class EducationManager : Singleton<EducationManager>
     /// </summary>
     public bool CanReceiveEducation()
     {
-        Player player = MemberManager.Instance.SelectedPlayer;
+        Member player = MemberManager.Instance.SelectedMember;
 
         if (player == null || player?.CurrentMemberData == null) 
             return false;

@@ -43,5 +43,6 @@ public class UI_MorningGame : UI_UGUI, IUI_Scene
         _topPanel.RefreshUI();
         _bottomPanel.RefreshUI();
         _leftPanel.RefreshUI();
+        _defensePanel.RefreshUI();
     }
 }

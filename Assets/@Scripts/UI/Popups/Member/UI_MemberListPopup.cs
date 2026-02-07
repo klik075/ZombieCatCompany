@@ -52,7 +52,7 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
     {
         base.Awake();
 
-        _displayedMemberIndices = new int[MemberManager.MAX_PLAYERS];
+        _displayedMemberIndices = new int[MemberManager.MAX_MEMBERS];
 
         BindObjects(typeof(GameObjects));
         BindButtons(typeof(Buttons));
@@ -76,14 +76,14 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
         int slot = (int)buttonType - (int)Buttons.EmployeeFrame1;
         
         // 유효성 검사
-        if (slot < 0 || slot >= MemberManager.MAX_PLAYERS)
+        if (slot < 0 || slot >= MemberManager.MAX_MEMBERS)
         {
             Debug.LogWarning($"Invalid member index: {slot}");
             return;
         }
 
         int actualIndex = _displayedMemberIndices[slot];
-        if (actualIndex < 0 || actualIndex >= MemberManager.Instance.PlayerCount)
+        if (actualIndex < 0 || actualIndex >= MemberManager.Instance.MemberCount)
         {
             Debug.LogWarning($"Invalid displayed member index for slot {slot}: {actualIndex}");
             return;
@@ -96,9 +96,9 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
     }
     public void UpdateContent()
     {
-        int memberCount = MemberManager.Instance.PlayerCount;
+        int memberCount = MemberManager.Instance.MemberCount;
         int totalSalary = 0;
-        for (int slot = 0; slot < MemberManager.MAX_PLAYERS; slot++)
+        for (int slot = 0; slot < MemberManager.MAX_MEMBERS; slot++)
         {
             var nameText = GetText((int)Texts.NameText1 + slot);
             var roleText = GetText((int)Texts.RoleText1 + slot);

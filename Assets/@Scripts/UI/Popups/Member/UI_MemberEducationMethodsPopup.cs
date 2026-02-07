@@ -116,7 +116,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
     public void UpdateContent()
     {
         // MemberManager에서 현재 선택된 멤버 가져오기
-        Player player = MemberManager.Instance.SelectedPlayer;
+        Member player = MemberManager.Instance.SelectedMember;
         
         if (player == null || player?.CurrentMemberData == null)
         {

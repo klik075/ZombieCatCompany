@@ -122,7 +122,7 @@ public class QualityManager : Singleton<QualityManager>
     /// </summary>
     private WorkAnimationData GetWorkAnimationData()
     {
-        Player worker = MemberManager.Instance.SelectedPlayer;
+        Member worker = MemberManager.Instance.SelectedMember;
         
         if (worker == null)
         {
@@ -338,7 +338,7 @@ public class QualityManager : Singleton<QualityManager>
 
     private IEnumerator CoStartIndividualWork()
     {
-        List<Player> players = MemberManager.Instance.GetAllMembers();
+        List<Member> players = MemberManager.Instance.GetAllMembers();
         if (players == null || players.Count == 0)
         {
             CleanupAnimationCanvas();
@@ -347,7 +347,7 @@ public class QualityManager : Singleton<QualityManager>
 
         // 각 플레이어 별 코루틴 시작 (동시 실행)
         List<Coroutine> coroutines = new List<Coroutine>();
-        foreach (Player player in players)
+        foreach (Member player in players)
         {
             coroutines.Add(CoroutineManager.Instance.StartCoroutine(CoProcessIndividualWork(player)));
         }
@@ -364,7 +364,7 @@ public class QualityManager : Singleton<QualityManager>
             GameDevManager.Instance.AdvanceToNextStage();
     }
 
-    private IEnumerator CoProcessIndividualWork(Player player)
+    private IEnumerator CoProcessIndividualWork(Member player)
     {
         if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.Debug)
         {
@@ -392,7 +392,7 @@ public class QualityManager : Singleton<QualityManager>
                 continue; // 일시정지 중이면 작업 안 함
             }
 
-            if (player.CellPosition != MemberManager.Instance.GetPlayerSeat(player) || player.State == Cat.ECatState.Work || player.State == Cat.ECatState.Move)
+            if (player.CellPosition != MemberManager.Instance.GetMemberSeat(player) || player.State == Cat.ECatState.Work || player.State == Cat.ECatState.Move)
             {
                 continue;
             }
@@ -440,7 +440,7 @@ public class QualityManager : Singleton<QualityManager>
             player.FinishWork();
     }
 
-    private IEnumerator CoShowIndividualQualityAnimation(Player player, EQualityType quality, int qualityCount)
+    private IEnumerator CoShowIndividualQualityAnimation(Member player, EQualityType quality, int qualityCount)
     {
         // Quality 이미지 생성
         GameObject qualityObj = CreateQualityImage(quality);

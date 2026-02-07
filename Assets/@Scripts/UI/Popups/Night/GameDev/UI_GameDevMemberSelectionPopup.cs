@@ -99,7 +99,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
         if (suitableMemberCount == 0)
             return;
         
-        Player currentMember = MemberManager.Instance.GetSuitableMemberByIndex(currentDevType, _currentMemberIndex);
+        Member currentMember = MemberManager.Instance.GetSuitableMemberByIndex(currentDevType, _currentMemberIndex);
         if (currentMember != null)
         {
             UpdateMemberInfo(currentMember);
@@ -130,7 +130,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
         }
     }
 
-    private void UpdateMemberInfo(Player member)
+    private void UpdateMemberInfo(Member member)
     {
         MemberData memberData = member.CurrentMemberData;
         
@@ -188,7 +188,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
         GetButton((int)Buttons.NextButton).interactable = _currentMemberIndex < suitableMemberCount - 1;
     }
 
-    private void UpdateOkayButton(Player member)
+    private void UpdateOkayButton(Member member)
     {
         bool isDispatchMember = member.CurrentMemberData.State == EMemberStateType.Dispatch;
         GetButton((int)Buttons.OkayButton).interactable = !isDispatchMember;
@@ -219,7 +219,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
     private void OnClickOkayButton()
     {
         EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
-        Player selectedMember = MemberManager.Instance.GetSuitableMemberByIndex(currentDevType, _currentMemberIndex);
+        Member selectedMember = MemberManager.Instance.GetSuitableMemberByIndex(currentDevType, _currentMemberIndex);
         
         if (selectedMember == null)
         {

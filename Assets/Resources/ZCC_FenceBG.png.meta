@@ -1,12 +1,10 @@
 fileFormatVersion: 2
-guid: 3987f1c30d293d14e8b7dd7b43c9596e
-labels:
-- UnityAI
+guid: 28c37389a069e784e97af0827c1c3a88
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7578475288679429406
-    second: ZCC_BG_0
+      213: 3319549875292126301
+    second: "\uD39C\uC2A4_\uBC30\uACBD\uC81C\uAC70_0"
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -115,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: ZCC_BG_0
+      name: ZCC_FenceBG
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 2496
-        height: 1664
+        x: 108
+        y: 22
+        width: 403
+        height: 376
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -130,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e1530d06f172c2960800000000000000
-      internalID: 7578475288679429406
+      spriteID: d5cbafa1609611e20800000000000000
+      internalID: 3319549875292126301
       vertices: []
       indices: 
       edges: []
@@ -140,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: b39a50ceff1bb104e9a9d3865d5db891
+    spriteID: 6f61aaf2e52760c4f8220d419becd3ba
     internalID: 0
     vertices: []
     indices: 
@@ -150,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      ZCC_BG_0: 7578475288679429406
+      ZCC_FenceBG: 3319549875292126301
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

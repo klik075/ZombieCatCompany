@@ -163,7 +163,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
 
     private void UpdateContent()
     {
-        Player worker = MemberManager.Instance.SelectedPlayer;
+        Member worker = MemberManager.Instance.SelectedMember;
         if (worker != null)
         {
             GetText((int)Texts.MainTitleText).text = worker.CurrentMemberData.Name;
