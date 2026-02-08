@@ -75,13 +75,15 @@ public class Merchant : Cat
     
     public void MoveToBossNearPosition()
     {
-        var movement = new PathMovement(_gridManager.FindPath(CellPosition, _bossNearPosition), _gridManager);
+        var movement = MovementPoolManager.Instance.Get<PathMovement>()
+            .Initialize(_gridManager.FindPath(CellPosition, _bossNearPosition), _gridManager);
         SetMovementStrategy(movement);
     }
-    
+
     public void MoveToDoorWay()
     {
-        var movement = new PathMovement(_gridManager.FindPath(CellPosition, _doorWay), _gridManager);
+        var movement = MovementPoolManager.Instance.Get<PathMovement>()
+            .Initialize(_gridManager.FindPath(CellPosition, _doorWay), _gridManager);
         SetMovementStrategy(movement);
     }
     private void Hello()

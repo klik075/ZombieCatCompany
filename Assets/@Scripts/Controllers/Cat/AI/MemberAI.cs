@@ -14,7 +14,7 @@ public class MemberAI
     // 행동 확률 설정
     private const float MOVE_PROBABILITY = 0.5f;  // 50% 확률로 이동
     private const float MIN_WAIT_TIME = 1f;       // 최소 대기 시간
-    private const float MAX_WAIT_TIME = 3f;       // 최대 대기 시간
+    private const float MAX_WAIT_TIME = 2f;       // 최대 대기 시간
     
     public bool IsEnabled
     {
@@ -68,12 +68,13 @@ public class MemberAI
             randomTarget = walkableCells[randomIndex];
         } while (randomTarget == _owner.CellPosition);
         
-        // 랜덤 이동 전략 생성
         List<Vector2Int> path = _gridManager.FindPath(_owner.CellPosition, randomTarget);
         if (path.Count > 0)
         {
-            var pathMovement = new PathMovement(path, _gridManager);
-            _owner.SetMovementStrategy(pathMovement);
+            // 풀에서 가져와서 초기화
+            var movement = MovementPoolManager.Instance.Get<PathMovement>()
+                .Initialize(path, _gridManager);
+            _owner.SetMovementStrategy(movement);
         }
     }
     
@@ -82,11 +83,12 @@ public class MemberAI
     /// </summary>
     private void TryWait()
     {
-        // 랜덤 대기 시간 설정 (1~3초)
         float waitTime = Random.Range(MIN_WAIT_TIME, MAX_WAIT_TIME);
         
-        var waitMovement = new WaitMovement(waitTime);
-        _owner.SetMovementStrategy(waitMovement);
+        // 풀에서 가져와서 초기화
+        var movement = MovementPoolManager.Instance.Get<WaitMovement>()
+            .Initialize(waitTime);
+        _owner.SetMovementStrategy(movement);
     }
     
     public void OnMoveCompleted()

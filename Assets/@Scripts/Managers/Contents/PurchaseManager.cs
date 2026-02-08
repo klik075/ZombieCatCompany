@@ -43,7 +43,8 @@ public class PurchaseManager : Singleton<PurchaseManager>
         Vector2Int door = MemberManager.Instance.DoorWay;
         foreach (Member member in MemberManager.Instance.GetAllMembers())
         {
-            var doorMovement = new SeatMovement(door, new GridManagerAdapter());
+            var doorMovement = MovementPoolManager.Instance.Get<SeatMovement>()
+                .Initialize(door, member.GridManager);
             member.SetMovementStrategy(doorMovement);
         }
         CoroutineManager.Instance.StartCoroutine(CoWaitForMemberLeave());

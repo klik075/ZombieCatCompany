@@ -19,13 +19,31 @@ public class SeatMovement : IMovementStrategy
     
     public bool IsComplete { get; private set; }
     
+    // 기본 생성자 추가
+    public SeatMovement()
+    {
+    }
+    
     public SeatMovement(Vector2Int seatPosition, IGridManager gridManager)
+    {
+        Initialize(seatPosition, gridManager);
+    }
+    
+    /// <summary>
+    /// 재사용을 위한 재초기화
+    /// </summary>
+    public SeatMovement Initialize(Vector2Int seatPosition, IGridManager gridManager)
     {
         _seatPosition = seatPosition;
         _gridManager = gridManager;
         _path = new List<Vector2Int>();
-        IsComplete = false;
+        _currentIndex = 0;
+        _retryTimer = 0f;
+        _stuckTimer = 0f;
+        _pathCalculated = false;
         _lastPosition = new Vector2Int(int.MinValue, int.MinValue);
+        IsComplete = false;
+        return this;
     }
     
     public void Execute(Cat cat)

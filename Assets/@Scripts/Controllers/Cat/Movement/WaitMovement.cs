@@ -11,11 +11,25 @@ public class WaitMovement : IMovementStrategy
     
     public bool IsComplete { get; private set; }
     
+    // 기본 생성자 추가
+    public WaitMovement()
+    {
+    }
+    
     public WaitMovement(float waitDuration)
+    {
+        Initialize(waitDuration);
+    }
+    
+    /// <summary>
+    /// 재사용을 위한 재초기화
+    /// </summary>
+    public WaitMovement Initialize(float waitDuration)
     {
         _waitDuration = waitDuration;
         _elapsedTime = 0f;
         IsComplete = false;
+        return this;
     }
     
     public void Execute(Cat cat)

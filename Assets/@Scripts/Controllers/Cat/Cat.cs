@@ -31,6 +31,7 @@ public class Cat : ObjectBase
     // 이동 시스템 (컴포지션)
     protected CatMover _mover;
     protected IGridManager _gridManager;
+    public IGridManager GridManager { get { return _gridManager; } }
 
     public ECatState State
     {

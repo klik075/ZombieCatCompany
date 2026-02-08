@@ -12,10 +12,25 @@ public class PathMovement : IMovementStrategy
     
     public bool IsComplete => _currentIndex >= _path.Count;
     
+    //기본 생성자 추가 (new T()를 위해)
+    public PathMovement()
+    {
+    }
+    
     public PathMovement(List<Vector2Int> path, IGridManager gridManager)
+    {
+        Initialize(path, gridManager);
+    }
+    
+    /// <summary>
+    /// 재사용을 위한 재초기화
+    /// </summary>
+    public PathMovement Initialize(List<Vector2Int> path, IGridManager gridManager)
     {
         _path = path ?? new List<Vector2Int>();
         _gridManager = gridManager;
+        _currentIndex = 0;
+        return this;
     }
     
     public void Execute(Cat cat)

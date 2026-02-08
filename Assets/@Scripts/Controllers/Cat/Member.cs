@@ -48,13 +48,17 @@ public class Member : Cat
     
     public void MoveToSeat(Vector2Int seatPosition)
     {
-        var seatMovement = new SeatMovement(seatPosition, _gridManager);
+        // 풀에서 가져와서 초기화
+        var seatMovement = MovementPoolManager.Instance.Get<SeatMovement>()
+            .Initialize(seatPosition, _gridManager);
+        
         seatMovement.OnArrived += () =>
         {
             MemberSeatInfo seatInfo = MemberManager.Instance.GetMemberSeatInfo(this);
             IsFlipped = seatInfo.IsFlipped;
             IsFacingForward = seatInfo.IsFacingForward;
         };
+        
         SetMovementStrategy(seatMovement);
     }
     
