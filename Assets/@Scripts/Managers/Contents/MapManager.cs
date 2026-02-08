@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using static Define;
 
 public class MapManager : Singleton<MapManager>
 {
@@ -14,6 +15,25 @@ public class MapManager : Singleton<MapManager>
     void Awake()
     {
         Init();
+    }
+    public void InitForScene(EScene sceneType)
+    {
+        // 기존 점유 정보 모두 클리어 (새 씬이므로)
+        _occupiedPositions.Clear();
+
+        // 새 Tilemap 찾기
+        _tilemap = FindFirstObjectByType<Tilemap>();
+
+        if (_tilemap == null)
+        {
+            Debug.LogError($"Failed to find Tilemap in {sceneType} scene!");
+            return;
+        }
+
+        // 타일맵 데이터 다시 로드
+        InitializeWalkableMap();
+
+        Debug.Log($"MapManager initialized for {sceneType} scene");
     }
     public void Init()
     {
@@ -64,9 +84,10 @@ public class MapManager : Singleton<MapManager>
         return CanMove(position.x, position.y);
     }
 
-    private bool IsWalkable(int x, int y)
+    public bool IsWalkable(int x, int y)
     {
-        if (_walkableMap == null) return false;
+        if (_walkableMap == null) 
+            return false;
 
         BoundsInt bounds = _tilemap.cellBounds;
         int arrayX = x - bounds.xMin;
@@ -75,6 +96,11 @@ public class MapManager : Singleton<MapManager>
             return false;
 
         return _walkableMap[arrayX, arrayY];
+    }
+
+    public bool IsWalkable(Vector2Int position)
+    {
+        return IsWalkable(position.x, position.y);
     }
 
     // Cat 등록
@@ -97,6 +123,7 @@ public class MapManager : Singleton<MapManager>
     // 스폰 위치 찾기 (주인공 근처 빈 공간)
     public Vector2Int FindNearPosition(Vector2Int startPos)
     {
+        List<Vector2Int> checkedPositions = new List<Vector2Int>();
         // 주변 8방향 탐색
         Vector2Int[] directions = new Vector2Int[]
         {
@@ -115,8 +142,12 @@ public class MapManager : Singleton<MapManager>
             Vector2Int checkPos = startPos + dir;
             if (CanMove(checkPos))
             {
-                return checkPos;
+                checkedPositions.Add(checkPos);
             }
+        }
+        if (checkedPositions.Count > 0)
+        {
+            return checkedPositions[UnityEngine.Random.Range(0, checkedPositions.Count)];
         }
 
         // 주변에 빈 공간이 없으면 걸을 수 있는 랜덤 위치
@@ -139,6 +170,37 @@ public class MapManager : Singleton<MapManager>
             _occupiedPositions.Remove(cat.CellPosition);
 
         // Add to new position
+        _occupiedPositions[newPosition] = cat;
+        cat.CellPosition = newPosition;
+
+        if (sync)
+        {
+            cat.transform.position = CellToWorld(newPosition);
+        }
+
+        return true;
+    }
+    public bool MoveToForce(Cat cat, Vector2Int newPosition, bool sync = false)
+    {
+        // 목표 지점이 walkable한지만 체크 (점유는 무시)
+        if (!IsWalkable(newPosition.x, newPosition.y))
+        {
+            Debug.LogWarning($"Cannot move to seat {newPosition}: position is not walkable");
+            return false;
+        }
+
+        // 기존 위치 해제
+        if (_occupiedPositions.ContainsKey(cat.CellPosition))
+            _occupiedPositions.Remove(cat.CellPosition);
+
+        // 목표 지점에 다른 Cat이 있으면 강제로 덮어쓰기 (좌석 이동이므로)
+        if (_occupiedPositions.ContainsKey(newPosition))
+        {
+            Debug.LogWarning($"Seat {newPosition} was occupied, but forcing move for seat assignment");
+            _occupiedPositions.Remove(newPosition);
+        }
+
+        // 새 위치 점유
         _occupiedPositions[newPosition] = cat;
         cat.CellPosition = newPosition;
 
@@ -187,7 +249,7 @@ public class MapManager : Singleton<MapManager>
     }
 
     // A* 경로 찾기
-    public List<Vector2Int> FindPath(Vector2Int start, Vector2Int goal)
+    public List<Vector2Int> FindPath(Vector2Int start, Vector2Int goal)//start 미포함
     {
         List<Vector2Int> path = new List<Vector2Int>();
         if (!IsWalkable(start.x, start.y) || !CanMove(goal)) 
@@ -227,7 +289,8 @@ public class MapManager : Singleton<MapManager>
             foreach (Vector2Int dir in directions)
             {
                 Vector2Int neighbor = current + dir;
-                if (!CanMove(neighbor) || closedSet.Contains(neighbor)) continue;
+                if (!CanMove(neighbor) || closedSet.Contains(neighbor)) 
+                    continue;
 
                 int tentativeGScore = G[current] + 1; // Cost is 1 for each step
                 if (!G.ContainsKey(neighbor) || tentativeGScore < G[neighbor])

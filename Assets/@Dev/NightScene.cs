@@ -7,13 +7,13 @@ using Random = UnityEngine.Random;
 using System.Collections;
 
 
-public class DevScene : BaseScene
+public class NightScene : BaseScene
 {
 	protected override void Awake()
 	{
 		base.Awake();
 
-		SceneType = Define.EScene.DevScene;
+		SceneType = Define.EScene.NightScene;
 
         ResourceManager.Instance.LoadAll();
         DataManager.Instance.LoadData();

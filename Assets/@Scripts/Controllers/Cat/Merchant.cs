@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using static Define;
-using static Merchant;
 
-public class Merchant : MovableCat
+public class Merchant : Cat
 {
     public enum MerchantState
     {
@@ -12,7 +9,7 @@ public class Merchant : MovableCat
         End,
     }
     private Vector2Int _doorWay;          // 등장,퇴장 위치
-    private Vector2Int _bossPosition; // 보스 위치
+    private Vector2Int _bossNearPosition; // 보스 근처 위치
     private Vector2Int _targetNull;
     private bool _isTalked = false;
     private MerchantState _merchantState;
@@ -30,45 +27,62 @@ public class Merchant : MovableCat
     }
 
     public string MerchantName = "암상인";
-    public override void Init()
+    
+    protected override void Awake()
     {
-        base.Init();
-
+        base.Awake();
+        
         _doorWay = MemberManager.Instance.DoorWay;
-        _bossPosition = MemberManager.Instance.GetMemberSeat(0);
+        _bossNearPosition = MapManager.Instance.FindNearPosition(MemberManager.Instance.GetMemberSeat(0));
         _isTalked = false;
         _merchantState = MerchantState.Start;
         _targetNull = new Vector2Int(int.MinValue, int.MinValue);
-        _aiTargetPosition = _targetNull;
     }
 
-    protected override void OnAIIdle()
+    protected override void Start()
     {
-        if (_aiTargetPosition != _targetNull)
+        base.Start();
+        
+        _mover.OnMoveCompleted += OnMoveCompleted;
+    }
+    
+    public override void Update()
+    {
+        base.Update();
+        
+        // Merchant는 AI가 필요 없으므로 Update에서 특별한 처리 없음
+    }
+    
+    private void OnMoveCompleted()
+    {
+        // 목표 위치에 도착했는지 확인
+        if (CellPosition == _bossNearPosition)
         {
-            if (CellPosition != _aiTargetPosition)
-                return;
-
-            _aiTargetPosition = _targetNull;
-
-            if (_isTalked == false)
+            if (!_isTalked)
             {
                 Hello();
             }
-            else
+        }
+        else if (CellPosition == _doorWay)
+        {
+            if (_isTalked)
             {
                 PurchaseManager.Instance.MemberLeave();
                 ObjectManager.Instance.Despawn(this);
             }
         }
     }
+    
     public void MoveToBossNearPosition()
     {
-        MoveToPosition(MapManager.Instance.FindNearPosition(_bossPosition));
+        var movement = new PathMovement(_gridManager.FindPath(CellPosition, _bossNearPosition), _gridManager);
+        SetMovementStrategy(movement);
     }
+    
     public void MoveToDoorWay()
     {
-        MoveToPosition(MapManager.Instance.FindNearPosition(_doorWay));
+        var movement = new PathMovement(_gridManager.FindPath(CellPosition, _doorWay), _gridManager);
+        SetMovementStrategy(movement);
     }
     private void Hello()
     {
@@ -108,3 +122,4 @@ public class Merchant : MovableCat
         MyMerchantState = _merchantState == MerchantState.Start ? MerchantState.End : MerchantState.Start;
     }
 }
+

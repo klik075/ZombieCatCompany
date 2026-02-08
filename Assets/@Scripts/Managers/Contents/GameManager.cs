@@ -4,7 +4,7 @@ using UnityEngine;
 using static Define;
 
 [Serializable]
-public class PlayerSaveData
+public class MemberSaveData
 {
     public Cat.ECatState State;
     public bool IsFacingForward;
@@ -38,7 +38,7 @@ public class GameData
     public bool IsRecruiting; //멤버 모집 중인지
 
     // 멤버 관련 데이터
-    public List<PlayerSaveData> PlayerSaveDatas = new List<PlayerSaveData>(); // 모든 플레이어(멤버) 상태
+    public List<MemberSaveData> MemberSaveDatas = new List<MemberSaveData>(); // 모든 멤버 상태
     
     public Dictionary<EGameMode, EndingData[]> EndingRecords = new Dictionary<EGameMode, EndingData[]>();//모드 별 엔딩 기록들 1~6
     

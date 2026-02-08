@@ -6,7 +6,7 @@ public static class Define
     {
         Unknown,
         LoadingScene,
-        DevScene,
+        NightScene,
         MorningScene,
     }
 

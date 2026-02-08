@@ -21,6 +21,6 @@ public class LoadingScene : BaseScene
     {
 		Debug.Log($"Loading Complete");
         DataManager.Instance.LoadData();
-        SceneManager.Instance.LoadScene(Define.EScene.DevScene);
+        SceneManager.Instance.LoadScene(Define.EScene.NightScene);
 	}
 }

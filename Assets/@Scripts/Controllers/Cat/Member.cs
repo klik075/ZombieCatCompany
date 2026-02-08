@@ -1,105 +1,69 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UI;
 using static Define;
 
-public class Member : MovableCat
+public class Member : Cat
 {
     public MemberData CurrentMemberData { get; private set; }
-    private bool _isSited = false;
-    public override void Init()
+    
+    private MemberAI _ai;
+    
+    public bool AIEnabled
     {
-        base.Init();
+        get => _ai?.IsEnabled ?? false;
+        set 
+        { 
+            if (_ai != null) 
+                _ai.IsEnabled = value; 
+        }
     }
-
+    
+    protected override void Start()
+    {
+        base.Start();
+        _ai = new MemberAI(this, _gridManager);
+        _mover.OnMoveCompleted += OnMoveCompleted;
+    }
+    
+    public override void Update()
+    {
+        base.Update();
+        if (!_mover.IsMoving && !_mover.HasStrategy)
+            _ai?.Update();
+    }
+    
+    private void OnMoveCompleted() { _ai?.OnMoveCompleted(); }
+    
     public void SetMemberData(int employeeId)
     {
         if (DataManager.Instance.MemberDict.TryGetValue(employeeId, out MemberData data))
-        {
             CurrentMemberData = data.DeepCopy();
-        }
         else
-        {
             CurrentMemberData = null;
-        }
     }
-
+    
     public void SetMemberData(MemberData memberData)
     {
-        CurrentMemberData = memberData.DeepCopy();
+        CurrentMemberData = memberData?.DeepCopy();
     }
-
-    // 한 칸 이동이 완료된 후 호출되는 메서드
-    protected override void OnMoveCompleted()
+    
+    public void MoveToSeat(Vector2Int seatPosition)
     {
-        
-    }
-
-    // 모든 이동이 끝났을 때 호출되는 메서드
-    protected override void OnAIIdle()
-    {
-        if (_isSited)
+        var seatMovement = new SeatMovement(seatPosition, _gridManager);
+        seatMovement.OnArrived += () =>
         {
             MemberSeatInfo seatInfo = MemberManager.Instance.GetMemberSeatInfo(this);
             IsFlipped = seatInfo.IsFlipped;
             IsFacingForward = seatInfo.IsFacingForward;
-            _isSited = false;
-        }
-
-        if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.None)
-        {
-            TryRandomMove();
-        }
-        else if(GameManager.Instance.GameState == EGameState.FoodPurchase)
-        {
-
-        }
+        };
+        SetMovementStrategy(seatMovement);
     }
-
-    private void TryRandomMove()
+    
+    public void DoWork() { State = ECatState.Work; }
+    public void FinishWork() { State = ECatState.Idle; }
+    
+    public MemberSaveData GetSaveData()
     {
-        var walkableCells = MapManager.Instance.GetWalkableCells();
-        if (walkableCells.Count == 0) return;
-
-        Vector2Int randomTarget;
-        do
-        {
-            int randomIndex = UnityEngine.Random.Range(0, walkableCells.Count);
-            randomTarget = walkableCells[randomIndex];
-        } while (randomTarget == CellPosition);
-
-        _aiTargetPosition = randomTarget;
-        _path = MapManager.Instance.FindPath(CellPosition, _aiTargetPosition);
-
-        if (_path.Count > 0)
-        {
-            MoveTo(_path[0]);
-        }
-    }
-
-    public void MoveToSeat(Vector2Int targetPos)
-    {
-        MoveToPosition(targetPos);
-        _isSited = true;
-    }
-
-    public void DoWork()
-    {
-        State = ECatState.Work;
-    }
-
-    public void FinishWork()
-    {
-        State = ECatState.Idle;
-    }
-
-    // 저장/로드 로직은 Player만 필요하므로 여기 유지
-    public PlayerSaveData GetSaveData()
-    {
-        return new PlayerSaveData()
+        return new MemberSaveData()
         {
             State = State,
             IsFacingForward = IsFacingForward,
@@ -109,43 +73,40 @@ public class Member : MovableCat
             AIEnabled = AIEnabled
         };
     }
-
-    public void LoadFromSaveData(PlayerSaveData saveData)
+    
+    public void LoadFromSaveData(MemberSaveData saveData)
     {
         if (saveData == null) return;
-
         SetMemberData(saveData.CurrentMemberData);
         State = saveData.State;
         IsFacingForward = saveData.IsFacingForward;
         IsFlipped = saveData.IsFlipped;
         CellPosition = saveData.CellPosition;
         AIEnabled = saveData.AIEnabled;
-        
         transform.position = MapManager.Instance.CellToWorld(saveData.CellPosition);
         MapManager.Instance.MoveTo(this, saveData.CellPosition, true);
-        
-        _isMoving = false;
-        _path.Clear();
-        _aiTargetPosition = new Vector2Int(int.MinValue, int.MinValue);
+        ClearMovementStrategy();
     }
-
+    
+    public void LoadFromSaveDataNoCellpos(MemberSaveData saveData)
+    {
+        if (saveData == null) return;
+        SetMemberData(saveData.CurrentMemberData);
+        State = saveData.State;
+        IsFacingForward = saveData.IsFacingForward;
+        IsFlipped = saveData.IsFlipped;
+        AIEnabled = saveData.AIEnabled;
+        ClearMovementStrategy();
+    }
+    
     public Sprite GetMemberSprite(EPlayerImageType playerImageType = EPlayerImageType.Zombie)
     {
         if (CurrentMemberData == null) return null;
-
-        string imagePath = playerImageType == EPlayerImageType.Normal 
-            ? CurrentMemberData.NormalImagePath 
-            : CurrentMemberData.ZombieImagePath;
-        
+        string imagePath = playerImageType == EPlayerImageType.Normal ? CurrentMemberData.NormalImagePath : CurrentMemberData.ZombieImagePath;
         if (string.IsNullOrEmpty(imagePath)) return null;
-
         Sprite memberSprite = ResourceManager.Instance.Get<Sprite>(imagePath);
-        
         if (memberSprite == null)
-        {
             Debug.LogWarning($"Failed to load sprite: {imagePath} for {CurrentMemberData.Name}");
-        }
-        
         return memberSprite;
     }
 }

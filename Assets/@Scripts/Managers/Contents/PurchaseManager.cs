@@ -28,7 +28,10 @@ public class PurchaseManager : Singleton<PurchaseManager>
             return;
 
         _merchant = ObjectManager.Instance.SpawnMerchant("Merchant");
-        MapManager.Instance.MoveTo(_merchant, MapManager.Instance.FindNearPosition(MemberManager.Instance.DoorWay), true);
+        Vector2Int spawnPos = MapManager.Instance.FindNearPosition(MemberManager.Instance.DoorWay);
+        _merchant.transform.position = MapManager.Instance.CellToWorld(spawnPos);
+        _merchant.CellPosition = spawnPos;
+        MapManager.Instance.RegisterCat(_merchant, spawnPos);
         _merchant.MoveToBossNearPosition();
     }
     private void EndPurchase()
@@ -40,7 +43,8 @@ public class PurchaseManager : Singleton<PurchaseManager>
         Vector2Int door = MemberManager.Instance.DoorWay;
         foreach (Member member in MemberManager.Instance.GetAllMembers())
         {
-            member.MoveToPosition(door);
+            var doorMovement = new SeatMovement(door, new GridManagerAdapter());
+            member.SetMovementStrategy(doorMovement);
         }
         CoroutineManager.Instance.StartCoroutine(CoWaitForMemberLeave());
     }

@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using System.Collections;
 using System.IO;
 using UnityEngine;
-
+using static Define;
 public class SaveManager : Singleton<SaveManager>
 {
     private const string SAVE_FILE_NAME = "GameData.json";
@@ -55,7 +55,7 @@ public class SaveManager : Singleton<SaveManager>
         }
 
         // MemberManager 데이터 저장
-        gameData.PlayerSaveDatas = MemberManager.Instance.GetPlayerSaveData();
+        gameData.MemberSaveDatas = MemberManager.Instance.GetPlayerSaveData();
         gameData.HireResult = GameManager.Instance.IsRecruiting ? MemberManager.Instance.GetHireResult() : null;
         gameData.GameDevProjectData = GameDevManager.Instance.GetGameDevProjectData();
 
@@ -78,9 +78,10 @@ public class SaveManager : Singleton<SaveManager>
         GameManager.Instance.GameData = gameData;
         
         // MemberManager 데이터 로드
-        if (gameData.PlayerSaveDatas != null && gameData.PlayerSaveDatas.Count > 0)
+        if (gameData.MemberSaveDatas != null && gameData.MemberSaveDatas.Count > 0)
         {
-            MemberManager.Instance.LoadFromSaveData(gameData.PlayerSaveDatas);
+            bool isMorning = (gameData.GameState == EGameState.Morning);
+            MemberManager.Instance.LoadFromSaveData(gameData.MemberSaveDatas, !isMorning);
         }
         if (gameData.HireResult != null)
         {
@@ -92,6 +93,18 @@ public class SaveManager : Singleton<SaveManager>
             GameDevManager.Instance.LoadFromSaveData(gameData.GameDevProjectData);
         }
         Debug.Log($"SaveManager: Game loaded from {SavePath}");
+    }
+    public GameData GetGameData()
+    {
+        if (File.Exists(SavePath) == false)
+        {
+            Debug.Log("SaveManager: No save file found.");
+            return null;
+        }
+
+        string json = File.ReadAllText(SavePath);
+        GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
+        return gameData;
     }
 
     public void Reset()
@@ -106,7 +119,7 @@ public class SaveManager : Singleton<SaveManager>
             CompanyName = DataManager.Instance.GameConfig.InitialCompanyName,
             GameState = DataManager.Instance.GameConfig.InitialGameState,
             IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting,
-            PlayerSaveDatas = null,
+            MemberSaveDatas = null,
             GameDevProjectData = null,
         };
 

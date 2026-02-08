@@ -4,7 +4,7 @@ public class ObjectBase : MonoBehaviour
 {
     public bool Pooling { get; set; } = false;
 
-    public virtual void Awake()
+    protected virtual void Awake()
     {
         Init();
     }
