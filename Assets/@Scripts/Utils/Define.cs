@@ -294,4 +294,10 @@ public static class Define
         Normal,
         Zombie,
     }
+    public enum EInputFieldType
+    {
+        None,
+        ChangeGameTitle,    // 게임 타이틀 변경
+        PurchaseFood        // 통조림 구매
+    }
 }

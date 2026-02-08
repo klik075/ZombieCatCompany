@@ -142,6 +142,7 @@ public class GameManager : Singleton<GameManager>
             GameState = value ? EGameState.Recruiting : EGameState.Night;
         }
     }
+    public const int FOOD_PRICE_PER_UNIT = 100; // 통조림 1개당 가격
     private void Awake()
     {
         EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, PauseGame);
@@ -164,6 +165,27 @@ public class GameManager : Singleton<GameManager>
             default:
                 break;
         }
+    }
+    public bool TryPurchaseFood(int amount)
+    {
+        if (amount <= 0)
+        {
+            return false;
+        }
+
+        int totalCost = amount * FOOD_PRICE_PER_UNIT;
+
+        if (Gold < totalCost)
+        {
+            return false;
+        }
+
+        // 구매 성공
+        Gold -= totalCost;
+        Food += amount;
+
+        Debug.Log($"통조림 구매 성공: {amount}개, 총 비용: {totalCost:N0}원");
+        return true;
     }
     public void PauseGame()
     {
