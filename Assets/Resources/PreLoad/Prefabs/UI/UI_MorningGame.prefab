@@ -479,7 +479,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &517206510170382665
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5040,7 +5040,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6243294228635991863}
   - component: {fileID: 550287713786145788}
-  - component: {fileID: 7760563616399848635}
+  - component: {fileID: 5514224878665772557}
   m_Layer: 5
   m_Name: UI_LeftPanel
   m_TagString: Untagged
@@ -5078,7 +5078,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3246425626017622066}
   m_CullTransparentMesh: 1
---- !u!114 &7760563616399848635
+--- !u!114 &5514224878665772557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5087,9 +5087,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3246425626017622066}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9240246e9ce46f489e566c089e109db, type: 3}
+  m_Script: {fileID: 11500000, guid: 58d4368a89f4345489d00005b93cb434, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_LeftPanel
+  m_EditorClassIdentifier: Assembly-CSharp::UI_MorningLeftPanel
 --- !u!1 &3490281604297085406
 GameObject:
   m_ObjectHideFlags: 0
@@ -8079,7 +8079,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8098674453169645827
 RectTransform:
   m_ObjectHideFlags: 0

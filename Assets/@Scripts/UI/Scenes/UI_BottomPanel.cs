@@ -82,7 +82,7 @@ public class UI_BottomPanel : UI_UGUI
             return state != MenuButtonState.Disabled;
         }
     }
-    private UI_LeftPanel _leftPanel;
+    private UI_LeftPanelBase _leftPanel;
     
     protected override void Awake()
     {
@@ -111,7 +111,7 @@ public class UI_BottomPanel : UI_UGUI
     }
 
     // 부모(UI_NightGame)로부터 LeftPanel 참조 받기
-    public void SetInfo(UI_LeftPanel leftPanel)
+    public void SetInfo(UI_LeftPanelBase leftPanel)
     {
         _leftPanel = leftPanel;
     }

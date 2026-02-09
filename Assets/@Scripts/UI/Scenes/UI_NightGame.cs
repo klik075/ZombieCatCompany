@@ -15,7 +15,7 @@ public class UI_NightGame : UI_UGUI, IUI_Scene
         
     }
     private UI_TopPanel _topPanel;
-    private UI_LeftPanel _leftPanel;
+    private UI_NightLeftPanel _leftPanel;
     private UI_BottomPanel _bottomPanel;
     
     protected override void Awake()
@@ -23,7 +23,7 @@ public class UI_NightGame : UI_UGUI, IUI_Scene
         base.Awake();
 
         _topPanel = Utils.FindChildComponent<UI_TopPanel>(gameObject, recursive: true);
-        _leftPanel = Utils.FindChildComponent<UI_LeftPanel>(gameObject, recursive: true);
+        _leftPanel = Utils.FindChildComponent<UI_NightLeftPanel>(gameObject, recursive: true);
         _bottomPanel = Utils.FindChildComponent<UI_BottomPanel>(gameObject, recursive: true);
 
         _bottomPanel.SetInfo(_leftPanel);// BottomPanel에 LeftPanel 참조 전달

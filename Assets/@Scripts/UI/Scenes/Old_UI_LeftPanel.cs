@@ -1,7 +1,7 @@
 using UnityEngine;
 using static Define;
 
-public class UI_LeftPanel : UI_UGUI
+public class Old_UI_LeftPanel : UI_UGUI
 {
     enum GameObjects
     {
@@ -92,13 +92,13 @@ public class UI_LeftPanel : UI_UGUI
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        _memberOptionPanel = Utils.FindChildComponent<UI_MemberOptionPanel>(gameObject, recursive: true);
-        if (_memberOptionPanel != null)
-            _memberOptionPanel.SetInfo(this);
+        //_memberOptionPanel = Utils.FindChildComponent<UI_MemberOptionPanel>(gameObject, recursive: true);
+        //if (_memberOptionPanel != null)
+        //    _memberOptionPanel.SetInfo(this);
 
-        _systemOptionPanel = Utils.FindChildComponent<UI_SystemOptionPanel>(gameObject, recursive: true);
-        if (_systemOptionPanel != null)
-            _systemOptionPanel.SetInfo(this);
+        //_systemOptionPanel = Utils.FindChildComponent<UI_SystemOptionPanel>(gameObject, recursive: true);
+        //if (_systemOptionPanel != null)
+        //    _systemOptionPanel.SetInfo(this);
 
         // 버튼 이벤트 등록 - 공통
         GetButton((int)Buttons.MemberButton)?.onClick.AddListener(() => OnClickMenuButton(Buttons.MemberButton));

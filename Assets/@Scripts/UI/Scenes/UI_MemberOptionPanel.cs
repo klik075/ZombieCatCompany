@@ -26,7 +26,7 @@ public class UI_MemberOptionPanel : UI_UGUI
         MemberHireButtonText,
         MemberFireButtonText,
     }
-    private UI_LeftPanel _leftPanel;
+    private UI_LeftPanelBase _leftPanel;
     protected override void Awake()
     {
         base.Awake();
@@ -45,7 +45,7 @@ public class UI_MemberOptionPanel : UI_UGUI
 
         gameObject.SetActive(false);
     }
-    public void SetInfo(UI_LeftPanel leftPanel)
+    public void SetInfo(UI_LeftPanelBase leftPanel)
     {
         _leftPanel = leftPanel;
     }

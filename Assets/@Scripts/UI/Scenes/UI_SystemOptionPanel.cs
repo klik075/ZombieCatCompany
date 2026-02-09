@@ -18,7 +18,7 @@ public class UI_SystemOptionPanel : UI_UGUI
         SystemSettingButtonText,
         SystemHowToPlayButtonText,
     }
-    private UI_LeftPanel _leftPanel;
+    private UI_LeftPanelBase _leftPanel;
     protected override void Awake()
     {
         base.Awake();
@@ -32,7 +32,7 @@ public class UI_SystemOptionPanel : UI_UGUI
 
         gameObject.SetActive(false);
     }
-    public void SetInfo(UI_LeftPanel leftPanel)
+    public void SetInfo(UI_LeftPanelBase leftPanel)
     {
         _leftPanel = leftPanel;
     }

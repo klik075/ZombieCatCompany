@@ -7072,7 +7072,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7877036914006694504}
   - component: {fileID: 6130948697775894902}
-  - component: {fileID: 7526218844066874901}
+  - component: {fileID: 7851778905169201680}
   m_Layer: 5
   m_Name: UI_LeftPanel
   m_TagString: Untagged
@@ -7109,7 +7109,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7655881272312533557}
   m_CullTransparentMesh: 1
---- !u!114 &7526218844066874901
+--- !u!114 &7851778905169201680
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7118,9 +7118,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7655881272312533557}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9240246e9ce46f489e566c089e109db, type: 3}
+  m_Script: {fileID: 11500000, guid: 44a6538fa03e3d748a82c04200252cf3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UI_LeftPanel
+  m_EditorClassIdentifier: Assembly-CSharp::UI_NightLeftPanel
 --- !u!1 &7895839938373984866
 GameObject:
   m_ObjectHideFlags: 0
