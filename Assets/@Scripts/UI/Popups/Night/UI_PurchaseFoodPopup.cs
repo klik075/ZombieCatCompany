@@ -43,8 +43,9 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
     // 팝업 닫힘 이벤트
     public event Action OnClosed;
     
-    private int _purchaseAmount = 0;  // 구매 희망 개수
-    
+    private int _purchaseAmount;  // 구매 희망 개수
+    private const int MIN_PURCHASE_AMOUNT = 1;
+
     protected override void Awake()
     {
         base.Awake();
@@ -76,7 +77,7 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
     public void SetInfo()
     {
         OnClosed = null;
-        _purchaseAmount = 0;
+        _purchaseAmount = MIN_PURCHASE_AMOUNT;
         UpdateContent();
     }
     
@@ -95,28 +96,27 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
         
         // 설명
         GetText((int)Texts.DescriptionText).text = "먹을 만한 통조림.";
-        
+
+        UpdateFoodText();
+
+        // 버튼 텍스트
+        GetText((int)Texts.InputButtonText).text = "개수 입력";
+        GetText((int)Texts.OkayButtonText).text = "구매";
+    }
+    private void UpdateFoodText()
+    {
         // 구매 희망 개수
         GetText((int)Texts.InputFoodNameText).text = "구매 희망";
         GetText((int)Texts.InputFoodText).text = $"{_purchaseAmount}개";
-        
+
         // 개당 가격
         GetText((int)Texts.CostNameText).text = "개당 가격";
         GetText((int)Texts.CostText).text = $"{GameManager.FOOD_PRICE_PER_UNIT:N0}G";
-        
+
         // 총 가격
         int totalCost = _purchaseAmount * GameManager.FOOD_PRICE_PER_UNIT;
         GetText((int)Texts.TotalCostNameText).text = "총 가격";
         GetText((int)Texts.TotalCostText).text = $"{totalCost:N0}G";
-        
-        // 버튼 텍스트
-        GetText((int)Texts.InputButtonText).text = "개수 입력";
-        GetText((int)Texts.OkayButtonText).text = "구매";
-        
-        //// 구매 버튼 활성화 여부
-        //bool canPurchase = _purchaseAmount > 0 && 
-        //                  GameManager.Instance.Gold >= totalCost;
-        //GetButton((int)Buttons.OkayButton).interactable = canPurchase;
     }
     private void UpdatePossesionFood()
     {
@@ -129,7 +129,7 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
     private void OnClickInputButton()
     {
         UI_InputFieldPopup inputPopup = UIManager.Instance.ShowPopupUI<UI_InputFieldPopup>();
-        //inputPopup.SetInfo(EInputFieldType.PurchaseFood, OnInputCompleted);
+        inputPopup.SetInfo(EInputFieldType.PurchaseFood, OnInputCompleted);
     }
     
     /// <summary>
@@ -139,8 +139,8 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
     {
         if (int.TryParse(input, out int amount))
         {
-            _purchaseAmount = Mathf.Max(0, amount);
-            UpdateContent();
+            _purchaseAmount = Mathf.Max(MIN_PURCHASE_AMOUNT, amount);
+            UpdateFoodText();
         }
     }
     
@@ -150,7 +150,7 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
     private void OnClickOkayButton()
     {
         bool success = GameManager.Instance.TryPurchaseFood(_purchaseAmount);
-        
+
         if (!success)
         {
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
@@ -158,6 +158,10 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
                 MemberManager.MAIN_CHARACTER_ID,
                 MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents
             );
+        }
+        else
+        {
+            //구매 사운드
         }
     }
 

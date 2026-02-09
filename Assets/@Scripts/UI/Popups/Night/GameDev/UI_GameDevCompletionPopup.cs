@@ -99,7 +99,11 @@ public class UI_GameDevCompletionPopup : UI_UGUI, IUI_Popup, IClickableUI
     private void OpenInputFieldPopup()
     {
         UI_InputFieldPopup InputPopup = UIManager.Instance.ShowPopupUI<UI_InputFieldPopup>();
-        InputPopup.SetInfo();
+        InputPopup.SetInfo(EInputFieldType.ChangeGameTitle, OnInputCompleted);
+    }
+    private void OnInputCompleted(string input)
+    {
+        GameDevManager.Instance.CurrentGameTitle = input;
     }
     private void OpenMagazineReviewPopup()
     {

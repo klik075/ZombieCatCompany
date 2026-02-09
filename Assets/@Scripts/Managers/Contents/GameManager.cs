@@ -156,7 +156,7 @@ public class GameManager : Singleton<GameManager>
         switch (GameState)
         {
             case EGameState.Morning:
-
+                SceneManager.Instance.LoadScene(EScene.MorningScene);
                 break;
             case EGameState.Defence:
                 break;

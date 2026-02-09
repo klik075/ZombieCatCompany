@@ -1,6 +1,7 @@
 using System;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using static Define;
 public class UI_InputFieldPopup : UI_UGUI, IUI_Popup, IClickableUI
 {
     enum GameObjects
@@ -31,6 +32,9 @@ public class UI_InputFieldPopup : UI_UGUI, IUI_Popup, IClickableUI
 
     }
 
+    private EInputFieldType _currentType;
+    private Action<string> _onConfirm;
+
     protected override void Awake()
     {
         base.Awake();
@@ -43,21 +47,46 @@ public class UI_InputFieldPopup : UI_UGUI, IUI_Popup, IClickableUI
         GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnOkayButtonClicked());
         GetButton((int)Buttons.NoButton).onClick.AddListener(() => OnNoButtonClicked());
     }
-    public void SetInfo()
+    public void SetInfo(EInputFieldType type, Action<string> onConfirm)
     {
+        _currentType = type;
+        _onConfirm = onConfirm;
+
         UpdateContent();
     }
     public void UpdateContent()
     {
-        GetText((int)Texts.MainTitleText).text = "게임 타이틀";
-        GetText((int)Texts.Placeholder).text = "게임 이름 입력";
+        UpdateUIByType();
         GetText((int)Texts.NoButtonText).text = "뒤로";
         GetText((int)Texts.OkayButtonText).text = "결정";
+    }
+    private void UpdateUIByType()
+    {
+        string mainTitle = "";
+        string placeholder = "";
+
+        switch (_currentType)
+        {
+            case EInputFieldType.ChangeGameTitle:
+                mainTitle = "게임 타이틀";
+                placeholder = "게임 이름 입력";
+                break;
+            case EInputFieldType.PurchaseFood:
+                mainTitle = "통조림 개수";
+                placeholder = "통조림 개수 입력";
+                break;
+            default:
+                break;
+        }
+
+        GetText((int)Texts.MainTitleText).text = mainTitle;
+        GetText((int)Texts.Placeholder).text = placeholder;
     }
     public void OnOkayButtonClicked()
     {
         string inputText = GetObject((int)GameObjects.InputField).GetComponent<TMP_InputField>().text;
-        GameDevManager.Instance.CurrentGameTitle = inputText;
+
+        _onConfirm?.Invoke(inputText);
         OnNoButtonClicked();
     }
     public void OnNoButtonClicked()

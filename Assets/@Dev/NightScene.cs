@@ -20,6 +20,7 @@ public class NightScene : BaseScene
         //IAPManager.Instance.Init();
 
         SaveManager.Instance.Load();
+        UIManager.Instance.ShowSceneUI<UI_NightGame>();
 	}
     void OnApplicationQuit()
     {
