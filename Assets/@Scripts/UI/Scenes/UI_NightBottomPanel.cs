@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
@@ -12,21 +13,19 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
     
     enum Buttons
     {
-        // 공통 버튼 (자식에서 바인딩)
         SaveButton,
         MenuButton,
     }
     
     enum Texts
     {
-        // 공통 텍스트
+        // 공통
         SaveButtonText,
         MenuButtonText,
 
         // GameDevBottomPanel1
         NewWorkNameText,
         NewWorkText,
-
         QualityText1,
         QualityText2,
         QualityText3,
@@ -41,7 +40,6 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
 
     enum Images
     {
-        // GameDevBottomPanel1 이미지들
         QualityImage1,
         QualityImage2,
         QualityImage3,
@@ -59,45 +57,129 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
 
     protected override void RegisterButtonEvents()
     {
-        // 공통 버튼 이벤트 (Base 메서드 사용)
-        GetButton((int)Buttons.SaveButton)?.onClick.AddListener(OnClickSaveButton);
-        GetButton((int)Buttons.MenuButton)?.onClick.AddListener(OnClickMenuButton);
-
-        // 밤 전용 버튼 이벤트
-        // ...
+        GetButton((int)Buttons.SaveButton).onClick.AddListener(OnClickSaveButton);
+        GetButton((int)Buttons.MenuButton).onClick.AddListener(OnClickMenuButton);
     }
 
-    protected override Button GetMenuButton()
+    protected override void RegisterSpecificEvents()
     {
-        return GetButton((int)Buttons.MenuButton);
+        // 밤 전용 게임 데이터 변경 이벤트 구독
+        EventManager.Instance.AddEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
+        EventManager.Instance.AddEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
+        EventManager.Instance.AddEvent(EEventType.QualityChanged, OnQualityChanged);
+        EventManager.Instance.AddEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
+        EventManager.Instance.AddEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
     }
 
-    protected override void OnLeftPanelStateChanged()
+    protected override Button GetSaveButton() => GetButton((int)Buttons.SaveButton);
+    protected override Button GetMenuButton() => GetButton((int)Buttons.MenuButton);
+    protected override TMP_Text GetSaveButtonText() => GetText((int)Texts.SaveButtonText);
+    protected override TMP_Text GetMenuButtonText() => GetText((int)Texts.MenuButtonText);
+
+    // 밤 전용 이벤트 처리
+    private void OnAnnualProfitChanged()
     {
-        base.OnLeftPanelStateChanged();
-        
-        // 밤 전용 상태 변경 처리
-        UpdateNightPanelVisibility();
+        UpdateAnnualProfitUI(GameManager.Instance.AnnualProfit);
     }
 
-    private void UpdateNightPanelVisibility()
+    private void OnNewDevTitleChanged()
     {
-        EGameState currentState = GameManager.Instance.GameState;
-        
-        GameObject gameDevPanel = GetObject((int)GameObjects.GameDevBottomPanel1);
-        GameObject nightPanel = GetObject((int)GameObjects.NightBottomPanel1);
+        UpdateDevelopmentStatusUI(GameDevManager.Instance.CurrentGameTitle);
+    }
 
-        if (gameDevPanel != null)
-            gameDevPanel.SetActive(currentState == EGameState.Dev);
-            
-        if (nightPanel != null)
-            nightPanel.SetActive(currentState == EGameState.Night);
+    private void OnGameDevStateChanged()
+    {
+        UpdateBottomPanelBasedOnDevState();
+        UpdateNewWorkText();
+    }
+
+    private void OnGameDevProgressChanged()
+    {
+        UpdateNewWorkText();
+    }
+
+    private void OnQualityChanged()
+    {
+        UpdateQualityText();
+    }
+
+    protected override void OnGameStateChanged()
+    {
+        base.OnGameStateChanged();
+        UpdateBottomPanelBasedOnDevState();
+    }
+
+    // 밤 전용 UI 업데이트 메서드들
+    private void UpdateQualityText()
+    {
+        if (GetObject((int)GameObjects.GameDevBottomPanel1).activeSelf == false)
+            return;
+
+        GetText((int)Texts.QualityText1).text = GameDevManager.Instance.GetQualityScore(EQualityType.Fun).ToString();
+        GetText((int)Texts.QualityText2).text = GameDevManager.Instance.GetQualityScore(EQualityType.Nyang).ToString();
+        GetText((int)Texts.QualityText3).text = GameDevManager.Instance.GetQualityScore(EQualityType.Graphics).ToString();
+        GetText((int)Texts.QualityText4).text = GameDevManager.Instance.GetQualityScore(EQualityType.Sound).ToString();
+        GetText((int)Texts.QualityText5).text = GameDevManager.Instance.GetQualityScore(EQualityType.Bug).ToString();
+    }
+
+    private void UpdateNewWorkText()
+    {
+        if (GetObject((int)GameObjects.GameDevBottomPanel1).activeSelf == false)
+            return;
+
+        EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
+        switch (currentDevType)
+        {
+            case EGameDevType.None:
+                break;
+            case EGameDevType.Scenario:
+            case EGameDevType.Graphics:
+            case EGameDevType.Sound:
+            case EGameDevType.Complete:
+                GetText((int)Texts.NewWorkText).text = $"{GameDevManager.Instance.Progress}%";
+                break;
+            case EGameDevType.Debug:
+                GetText((int)Texts.NewWorkText).text = "디버그 중";
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void UpdateBottomPanelBasedOnDevState()
+    {
+        EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
+
+        bool isNightPanel = (currentDevType == EGameDevType.None);
+        bool isGameDevPanel = !isNightPanel;
+
+        GetObject((int)GameObjects.NightBottomPanel1).SetActive(isNightPanel);
+        GetObject((int)GameObjects.GameDevBottomPanel1).SetActive(isGameDevPanel);
+    }
+
+    private void UpdateAnnualProfitUI(int annualProfit)
+    {
+        GetText((int)Texts.AnnualProfitText).text = $"{annualProfit:N0}G";
+    }
+
+    private void UpdateDevelopmentStatusUI(string newDevTitle)
+    {
+        if (string.IsNullOrEmpty(newDevTitle))
+        {
+            GetText((int)Texts.DevelopmentStatusText).text = "@신규 개발 없음";
+        }
+        else
+        {
+            GetText((int)Texts.DevelopmentStatusText).text = $"{newDevTitle}";
+        }
     }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
-        UpdateNightPanelVisibility();
-        //TODO: Night 전용 Localization
+        UpdateBottomPanelBasedOnDevState();
+        OnAnnualProfitChanged();
+        OnNewDevTitleChanged();
+        //TODO: Localization
     }
 }

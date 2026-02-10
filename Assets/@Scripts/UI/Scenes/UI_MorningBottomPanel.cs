@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
@@ -11,14 +12,13 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
     
     enum Buttons
     {
-        // 공통 버튼 (자식에서 바인딩)
         SaveButton,
         MenuButton,
     }
     
     enum Texts
     {
-        // 공통 텍스트
+        // 공통
         SaveButtonText,
         MenuButtonText,
 
@@ -27,7 +27,9 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
         FenceHpText,
         FenceDurabilityNameText,
         FenceDurabilityText,
+        CompanyText
     }
+
     protected override void PerformBinding()
     {
         BindObjects(typeof(GameObjects));
@@ -37,29 +39,28 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
 
     protected override void RegisterButtonEvents()
     {
-        // 공통 버튼 사건 (Base 메서드 사용)
-        GetButton((int)Buttons.SaveButton)?.onClick.AddListener(OnClickSaveButton);
-        GetButton((int)Buttons.MenuButton)?.onClick.AddListener(OnClickMenuButton);
-
-        // 낮 전용 버튼 사건
-        // ...
+        GetButton((int)Buttons.SaveButton).onClick.AddListener(OnClickSaveButton);
+        GetButton((int)Buttons.MenuButton).onClick.AddListener(OnClickMenuButton);
     }
 
-    protected override Button GetMenuButton()
+    protected override void RegisterSpecificEvents()
     {
-        return GetButton((int)Buttons.MenuButton);
+        // 낮 전용 게임 데이터 변경 이벤트 구독
+        // 예: 울타리 HP 변경, 내구도 변경 등
     }
 
-    protected override void OnLeftPanelStateChanged()
-    {
-        base.OnLeftPanelStateChanged();
-        
-        // 낮 전용 상태 변경 처리
-    }
+    protected override Button GetSaveButton() => GetButton((int)Buttons.SaveButton);
+    protected override Button GetMenuButton() => GetButton((int)Buttons.MenuButton);
+    protected override TMP_Text GetSaveButtonText() => GetText((int)Texts.SaveButtonText);
+    protected override TMP_Text GetMenuButtonText() => GetText((int)Texts.MenuButtonText);
+
+    // 낮 전용 UI 업데이트 메서드들
+    //TODO: 울타리 HP, 내구도 업데이트 메서드 추가
 
     public override void RefreshUI()
     {
         base.RefreshUI();
-        //TODO: Morning 전용 Localization
+        //TODO: 낮 전용 UI 업데이트
+        //TODO: Localization
     }
 }

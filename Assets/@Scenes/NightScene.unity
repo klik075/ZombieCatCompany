@@ -254,7 +254,7 @@ GameObject:
   - component: {fileID: 206242588}
   - component: {fileID: 206242589}
   m_Layer: 0
-  m_Name: '@DevScene'
+  m_Name: '@NightScene'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

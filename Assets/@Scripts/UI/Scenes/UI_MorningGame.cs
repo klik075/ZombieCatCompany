@@ -16,7 +16,7 @@ public class UI_MorningGame : UI_UGUI, IUI_Scene
     }
     private UI_TopPanel _topPanel;
     private UI_MorningLeftPanel _leftPanel;
-    private UI_BottomPanel _bottomPanel;
+    private UI_MorningBottomPanel _bottomPanel;
     private UI_DefensePanel _defensePanel;
 
     protected override void Awake()
@@ -25,7 +25,7 @@ public class UI_MorningGame : UI_UGUI, IUI_Scene
 
         _topPanel = Utils.FindChildComponent<UI_TopPanel>(gameObject, recursive: true);
         _leftPanel = Utils.FindChildComponent<UI_MorningLeftPanel>(gameObject, recursive: true);
-        _bottomPanel = Utils.FindChildComponent<UI_BottomPanel>(gameObject, recursive: true);
+        _bottomPanel = Utils.FindChildComponent<UI_MorningBottomPanel>(gameObject, recursive: true);
         _defensePanel = Utils.FindChildComponent<UI_DefensePanel>(gameObject, recursive: true);
 
         _bottomPanel.SetInfo(_leftPanel);// BottomPanel에 LeftPanel 참조 전달
