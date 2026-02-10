@@ -501,44 +501,49 @@ public class MemberManager : Singleton<MemberManager>
         CurrentHireResult = hireResult.DeepCopy();
     }
     // 저장 데이터에서 구성원 복원
-    public void LoadFromSaveData(List<MemberSaveData> saveDatas, bool isNight = true)
+    public void LoadFromSaveData()
     {
         // 기존 멤버 정리
         ClearAllMembers();
-        
-        if (saveDatas == null || saveDatas.Count == 0)
-        {
-            Debug.LogWarning("No member save data to load!");
-            return;
-        }
-        
-        // Player 지정 자리 초기화
         InitializeMemberSeats();
-        
+
+        MapManager.Instance.InitForScene();
+
+        bool isNight = SceneManager.Instance.CurrentSceneType == EScene.NightScene ? true : false;
+
+        GameData gameData = SaveManager.Instance.GetGameData();
+        List<MemberSaveData> saveDatas = gameData.MemberSaveDatas;
+
         for (int i = 0; i < saveDatas.Count && i < MAX_MEMBERS; i++)
         {
             MemberSaveData saveData = saveDatas[i];
-            
-            // Player 스폰
-            Member player = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
+            if(saveData == null)
+                continue;
+
+            Member member = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
+
+            member.LoadFromSaveDataNoCellpos(saveData);
+
+            _members[i] = member;
 
             // 저장된 데이터 로드
             if (isNight)
-                player.LoadFromSaveData(saveData);
-            else
-            { 
-                player.LoadFromSaveDataNoCellpos(saveData);
-                MemberSeatInfo seatInfo = GetMemberSeatInfo(i, isNight);
-
-                // AI 비활성화 (이동 중 랜덤 이동 방지)
-                player.AIEnabled = isNight ? true : false;
-
-                // 즉시 지정 자리로 이동
-                MapManager.Instance.MoveTo(player, seatInfo.SeatPosition, true);
+            {
+                member.AIEnabled = true;
+                MemberSeatInfo seatInfo = GetMemberSeatInfo(i, isNight: true);
+                member.MoveToSeat(seatInfo.SeatPosition);
             }
+            else
+            {
+                member.AIEnabled = false;
+                MemberSeatInfo seatInfo = GetMemberSeatInfo(i, isNight: false);
 
-            // 멤버 배열에 추가
-            _members[i] = player;
+                MapManager.Instance.MoveTo(member, seatInfo.SeatPosition, true);
+
+                member.IsFlipped = seatInfo.IsFlipped;
+                member.IsFacingForward = seatInfo.IsFacingForward;
+                member.State = ECatState.Idle;
+            }
         }
         
         MemberCount = saveDatas.Count;
@@ -787,10 +792,6 @@ public class MemberManager : Singleton<MemberManager>
 
         SetMemberSeat(index, newSeat, isNight);
     }
-    public void MoveMemberToDoorWay(Member member)
-    {
-
-    }
     /// <summary>
     /// Player를 자신의 지정 자리로 이동시키기
     /// </summary>
@@ -861,60 +862,6 @@ public class MemberManager : Singleton<MemberManager>
     public bool IsAnyMemberAtSeat()
     {
         return HowManyMemberSitting() > 0;
-    }
-    public bool AreAllMembersDisabled()
-    {
-        foreach (var member in _members)
-        {
-            if (member != null && member.gameObject.activeSelf)
-                return false;
-        }
-        return true;
-    }
-    public void ActiveAllMembers()
-    {
-        foreach (var member in _members)
-        {
-            if (member != null && member.gameObject.activeSelf == false)
-                member.gameObject.SetActive(true);
-        }
-    }
-    public void TransitionToScene(EScene sceneType)
-    {
-        ClearAllMembers();
-        MapManager.Instance.InitForScene(sceneType);
-
-        bool isNight = (sceneType == EScene.NightScene);
-        
-        GameData gameData = SaveManager.Instance.GetGameData();
-        List<MemberSaveData> saveDatas = gameData.MemberSaveDatas;
-
-        // 모든 멤버를 해당 씬의 지정 자리로 이동
-        for (int i = 0; i < MemberCount; i++)
-        {
-            MemberSaveData saveData = saveDatas[i];
-            if (saveData == null)
-                break;
-
-            Member member = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
-            member.LoadFromSaveDataNoCellpos(saveData);
-
-            _members[i] = member;
-            MemberSeatInfo seatInfo = GetMemberSeatInfo(i, isNight);
-
-            // AI 비활성화 (이동 중 랜덤 이동 방지)
-            _members[i].AIEnabled = isNight ? true : false;
-
-            // 즉시 지정 자리로 이동
-            MapManager.Instance.MoveTo(_members[i], seatInfo.SeatPosition, true);
-
-            // 방향 설정
-            _members[i].IsFlipped = seatInfo.IsFlipped;
-            _members[i].IsFacingForward = seatInfo.IsFacingForward;
-            _members[i].State = ECatState.Idle;
-        }
-
-        Debug.Log($"Transitioned {MemberCount} members to {sceneType} scene");
     }
     #endregion
 }

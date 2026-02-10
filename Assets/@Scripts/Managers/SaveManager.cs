@@ -80,8 +80,7 @@ public class SaveManager : Singleton<SaveManager>
         // MemberManager 데이터 로드
         if (gameData.MemberSaveDatas != null && gameData.MemberSaveDatas.Count > 0)
         {
-            bool isMorning = (gameData.GameState == EGameState.Morning);
-            MemberManager.Instance.LoadFromSaveData(gameData.MemberSaveDatas, !isMorning);
+            MemberManager.Instance.LoadFromSaveData();
         }
         if (gameData.HireResult != null)
         {

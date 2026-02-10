@@ -7,16 +7,12 @@ public class MorningScene : BaseScene
         base.Awake();
 
         SceneType = EScene.MorningScene;
+
         ResourceManager.Instance.LoadAll();
         DataManager.Instance.LoadData();
-
         SaveManager.Instance.Load();
-        MapManager.Instance.InitForScene(EScene.MorningScene);
+
         UIManager.Instance.ShowSceneUI<UI_MorningGame>();
-    }
-    private void Start()
-    {
-        GameManager.Instance.GameState = EGameState.Morning;
     }
     void OnApplicationQuit()
     {

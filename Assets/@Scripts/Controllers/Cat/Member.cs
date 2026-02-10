@@ -80,7 +80,9 @@ public class Member : Cat
     
     public void LoadFromSaveData(MemberSaveData saveData)
     {
-        if (saveData == null) return;
+        if (saveData == null) 
+            return;
+
         SetMemberData(saveData.CurrentMemberData);
         State = saveData.State;
         IsFacingForward = saveData.IsFacingForward;
@@ -94,7 +96,9 @@ public class Member : Cat
     
     public void LoadFromSaveDataNoCellpos(MemberSaveData saveData)
     {
-        if (saveData == null) return;
+        if (saveData == null) 
+            return;
+
         SetMemberData(saveData.CurrentMemberData);
         State = saveData.State;
         IsFacingForward = saveData.IsFacingForward;
@@ -105,9 +109,13 @@ public class Member : Cat
     
     public Sprite GetMemberSprite(EPlayerImageType playerImageType = EPlayerImageType.Zombie)
     {
-        if (CurrentMemberData == null) return null;
+        if (CurrentMemberData == null) 
+            return null;
+
         string imagePath = playerImageType == EPlayerImageType.Normal ? CurrentMemberData.NormalImagePath : CurrentMemberData.ZombieImagePath;
-        if (string.IsNullOrEmpty(imagePath)) return null;
+        if (string.IsNullOrEmpty(imagePath)) 
+            return null;
+
         Sprite memberSprite = ResourceManager.Instance.Get<Sprite>(imagePath);
         if (memberSprite == null)
             Debug.LogWarning($"Failed to load sprite: {imagePath} for {CurrentMemberData.Name}");

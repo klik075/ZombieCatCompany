@@ -16,7 +16,7 @@ public class MapManager : Singleton<MapManager>
     {
         Init();
     }
-    public void InitForScene(EScene sceneType)
+    public void InitForScene()
     {
         // 기존 점유 정보 모두 클리어 (새 씬이므로)
         _occupiedPositions.Clear();
@@ -25,15 +25,10 @@ public class MapManager : Singleton<MapManager>
         _tilemap = FindFirstObjectByType<Tilemap>();
 
         if (_tilemap == null)
-        {
-            Debug.LogError($"Failed to find Tilemap in {sceneType} scene!");
             return;
-        }
 
         // 타일맵 데이터 다시 로드
         InitializeWalkableMap();
-
-        Debug.Log($"MapManager initialized for {sceneType} scene");
     }
     public void Init()
     {
