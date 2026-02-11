@@ -55,12 +55,6 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
         BindImages(typeof(Images));
     }
 
-    protected override void RegisterButtonEvents()
-    {
-        GetButton((int)Buttons.SaveButton).onClick.AddListener(OnClickSaveButton);
-        GetButton((int)Buttons.MenuButton).onClick.AddListener(OnClickMenuButton);
-    }
-
     protected override void RegisterSpecificEvents()
     {
         // 밤 전용 게임 데이터 변경 이벤트 구독

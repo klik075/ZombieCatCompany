@@ -43,11 +43,6 @@ public abstract class UI_LeftPanelBase : UI_UGUI
             }
         }
     }
-    // 추상 메서드 - 파생 클래스에서 구현
-    protected abstract void PerformBinding(); // 바인딩만 수행
-    protected abstract void RegisterCommonButtonEvents(); // 공통 버튼 이벤트 등록
-    protected abstract void RegisterSpecificButtonEvents(); // 고유 버튼 이벤트 등록
-
     protected override void Awake()
     {
         base.Awake();
@@ -58,17 +53,35 @@ public abstract class UI_LeftPanelBase : UI_UGUI
         // 공통 옵션 패널 초기화
         InitializeCommonPanels();
 
-        // 공통 버튼 이벤트 등록
+        // 공통 버튼 이벤트 등록 (부모에서 자동 처리)
         RegisterCommonButtonEvents();
 
-        // 파생 클래스의 고유 버튼 이벤트 등록
-        RegisterSpecificButtonEvents();
+        // 파생 클래스의 고유 이벤트 등록
+        RegisterSpecificEvents();
 
         // 이벤트 등록
         EventManager.Instance.AddEvent(EEventType.UI_MenuButtonClicked, OnMenuButtonClicked);
 
         gameObject.SetActive(false);
     }
+
+    // 공통 버튼 이벤트 등록 (Member, System 버튼)
+    private void RegisterCommonButtonEvents()
+    {
+        UnityEngine.UI.Button memberButton = GetMemberButton();
+        if (memberButton != null)
+            memberButton.onClick.AddListener(OnClickMemberButton);
+
+        UnityEngine.UI.Button systemButton = GetSystemButton();
+        if (systemButton != null)
+            systemButton.onClick.AddListener(OnClickSystemButton);
+    }
+
+    // 추상 메서드 - 파생 클래스에서 구현
+    protected abstract void PerformBinding(); // 바인딩만 수행
+    protected abstract void RegisterSpecificEvents(); // 고유 이벤트 등록
+    protected abstract UnityEngine.UI.Button GetMemberButton(); // Member 버튼 반환
+    protected abstract UnityEngine.UI.Button GetSystemButton(); // System 버튼 반환
 
     // 공통 옵션 패널 초기화
     private void InitializeCommonPanels()

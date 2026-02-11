@@ -45,8 +45,8 @@ public abstract class UI_BottomPanelBase : UI_UGUI
         // 파생 클래스에서 모든 바인딩 수행
         PerformBinding();
 
-        // 파생 클래스에서 이벤트 등록
-        RegisterButtonEvents();
+        // 공통 버튼 이벤트 등록 (부모에서 자동 처리)
+        RegisterCommonButtonEvents();
 
         // 공통 UI 이벤트 구독
         EventManager.Instance.AddEvent(EEventType.UI_LeftPanelStateChanged, UpdateUIStates);
@@ -56,6 +56,20 @@ public abstract class UI_BottomPanelBase : UI_UGUI
 
         // 파생 클래스의 고유 이벤트 구독
         RegisterSpecificEvents();
+
+        UpdateUIStates();
+    }
+
+    // 공통 버튼 이벤트 등록 (Save, Menu 버튼)
+    private void RegisterCommonButtonEvents()
+    {
+        Button saveButton = GetSaveButton();
+        if (saveButton != null)
+            saveButton.onClick.AddListener(OnClickSaveButton);
+
+        Button menuButton = GetMenuButton();
+        if (menuButton != null)
+            menuButton.onClick.AddListener(OnClickMenuButton);
     }
 
     // LeftPanel 설정
@@ -195,7 +209,6 @@ public abstract class UI_BottomPanelBase : UI_UGUI
 
     // 추상 메서드 - 파생 클래스에서 구현
     protected abstract void PerformBinding();
-    protected abstract void RegisterButtonEvents();
     protected abstract void RegisterSpecificEvents();
     protected abstract Button GetSaveButton();
     protected abstract Button GetMenuButton();

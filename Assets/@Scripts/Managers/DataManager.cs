@@ -22,7 +22,6 @@ public class DataManager : Singleton<DataManager>
     public IAPConfig IAPConfig { get; private set; }
     //public GameDevQualityRuleConfig GameDevQualityRuleConfig { get; private set; }
 
-    public Dictionary<string, TextData> TextDict { get; private set; } = new Dictionary<string, TextData>();
     public Dictionary<int, MemberData> MemberDict { get; private set;  } = new Dictionary<int, MemberData>();
     public Dictionary<int, EducationData> EducationDict { get; private set; } = new Dictionary<int, EducationData>();
     public Dictionary<int, GenreData> GenreDict { get; private set; } = new Dictionary<int, GenreData>();
@@ -37,7 +36,6 @@ public class DataManager : Singleton<DataManager>
         IAPConfig = LoadScriptableObject<IAPConfig>("IAPConfig");
         //GameDevQualityRuleConfig = LoadScriptableObject<GameDevQualityRuleConfig>("GameDevQualityRuleConfig");
 
-        TextDict = LoadJson<TextDataLoader, string, TextData>("TextData").MakeDict();
         MemberDict = LoadJson<MemberDataLoader, int, MemberData>("MemberData").MakeDict();
         EducationDict = LoadJson<EducationDataLoader, int, EducationData>("EducationData").MakeDict();
         GenreDict = LoadJson<GenreDataLoader, int, GenreData>("GenreData").MakeDict();

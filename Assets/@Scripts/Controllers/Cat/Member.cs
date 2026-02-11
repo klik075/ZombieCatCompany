@@ -20,6 +20,7 @@ public class Member : Cat
     protected override void Start()
     {
         base.Start();
+
         _ai = new MemberAI(this, _gridManager);
         _mover.OnMoveCompleted += OnMoveCompleted;
     }

@@ -21,6 +21,7 @@ public class Cat : ObjectBase
         Work
     }
 
+    //애니메이션 및 상태
     private SkeletonAnimation _skeletonAnimation;
     private ECatState _state;
     private bool _isFacingForward = true;
@@ -66,7 +67,6 @@ public class Cat : ObjectBase
         _skeletonAnimation = GetComponent<SkeletonAnimation>();
         _gridManager = new GridManagerAdapter();
         _mover = new CatMover(this, _gridManager);
-            
         State = ECatState.Idle;
     }
 
@@ -97,6 +97,7 @@ public class Cat : ObjectBase
         _mover?.Update();
     }
 
+    #region 이동 처리
     /// <summary>
     /// 단일 셀로 이동 (재사용 가능한 기본 메서드)
     /// </summary>
@@ -120,15 +121,9 @@ public class Cat : ObjectBase
     {
         _mover?.ClearStrategy();
     }
+    #endregion
 
-    public void PlayAnimation(EAnimation animation)
-    {
-        if (_skeletonAnimation != null)
-        {
-            _skeletonAnimation.AnimationState.SetAnimation(0, animation.ToString(), true);
-        }
-    }
-
+    #region 애니메이션 처리
     private void UpdateAnimation()
     {
         EAnimation animation;
@@ -151,7 +146,16 @@ public class Cat : ObjectBase
 
         PlayAnimation(animation);
     }
-    
+    public void PlayAnimation(EAnimation animation)
+    {
+        if (_skeletonAnimation != null)
+        {
+            _skeletonAnimation.AnimationState.SetAnimation(0, animation.ToString(), true);
+        }
+    }
+    #endregion
+
+    #region 경로 시각화 (디버그용)
     /// <summary>
     /// 에디터에서 선택했을 때 경로 시각화 (디버그용)
     /// </summary>
@@ -217,5 +221,6 @@ public class Cat : ObjectBase
         
         return field?.GetValue(_mover) as IMovementStrategy;
     }
+    #endregion
 }
 

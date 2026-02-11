@@ -15,7 +15,6 @@ public class DataTransformer : EditorWindow
     [MenuItem("Tools/ParseExcel %#K")] // Ctrl+Shift+K
     public static void ParseExcelDataToJson()
     {
-        ParseExcelDataToJson<TextDataLoader, TextData>("Text");
         ParseExcelDataToJson<MemberDataLoader, MemberData>("Member");
         ParseExcelDataToJson<EducationDataLoader, EducationData>("Education");
         ParseExcelDataToJson<GenreDataLoader, GenreData>("Genre");

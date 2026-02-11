@@ -34,15 +34,12 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
         BindTexts(typeof(Texts));
     }
 
-    // 공통 버튼 이벤트 등록
-    protected override void RegisterCommonButtonEvents()
-    {
-        GetButton((int)Buttons.MemberButton)?.onClick.AddListener(OnClickMemberButton);
-        GetButton((int)Buttons.SystemButton)?.onClick.AddListener(OnClickSystemButton);
-    }
+    // 공통 버튼 반환 (부모에서 자동 등록에 사용)
+    protected override UnityEngine.UI.Button GetMemberButton() => GetButton((int)Buttons.MemberButton);
+    protected override UnityEngine.UI.Button GetSystemButton() => GetButton((int)Buttons.SystemButton);
 
     // 밤 전용 버튼 이벤트 등록
-    protected override void RegisterSpecificButtonEvents()
+    protected override void RegisterSpecificEvents()
     {
         GetButton((int)Buttons.GameDevButton)?.onClick.AddListener(OnClickGameDevButton);
         GetButton((int)Buttons.DiaryButton)?.onClick.AddListener(OnClickDiaryButton);
@@ -59,8 +56,10 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
         else
         {
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, 
-                MessageManager.Instance.GetMessageScript(EMessageType.NoDev).Contents);
+            chatPopup.SetInfo(
+                MemberManager.MAIN_CHARACTER_ID, 
+                MessageManager.Instance.GetMessageScript(EMessageType.NoDev).Contents
+                );
         }
         
         IsActive = false;

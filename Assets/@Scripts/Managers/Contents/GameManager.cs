@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
@@ -17,16 +17,16 @@ public class MemberSaveData
 [Serializable]
 public class GameData
 {
-    public int Year;//¿¬Â÷
-    public int Gold;//ÀÚ±İ
-    public int Food;//½Ä·®
-    public EGameMode GameMode;//°ÔÀÓ ¸ğµå
-    public string CompanyName;//È¸»ç ¸í
+    public int Year;//ì—°ì°¨
+    public int Gold;//ìê¸ˆ
+    public int Food;//ì‹ëŸ‰
+    public EGameMode GameMode;//ê²Œì„ ëª¨ë“œ
+    public string CompanyName;//íšŒì‚¬ ëª…
 
-    public EGameState GameState;//°ÔÀÓ »óÅÂ
+    public EGameState GameState;//ê²Œì„ ìƒíƒœ
 
     //Night
-    public int AnnualProfit;//¿¬°£ ÀÌÀÍ
+    public int AnnualProfit;//ì—°ê°„ ì´ìµ
 
     public HireResult HireResult;
     //Dev
@@ -35,22 +35,31 @@ public class GameData
     //Morning
 
     //etc
-    public bool IsRecruiting; //¸â¹ö ¸ğÁı ÁßÀÎÁö
+    public bool IsRecruiting; //ë©¤ë²„ ëª¨ì§‘ ì¤‘ì¸ì§€
 
-    // ¸â¹ö °ü·Ã µ¥ÀÌÅÍ
-    public List<MemberSaveData> MemberSaveDatas = new List<MemberSaveData>(); // ¸ğµç ¸â¹ö »óÅÂ
+    // ë©¤ë²„ ê´€ë ¨ ë°ì´í„°
+    public List<MemberSaveData> MemberSaveDatas = new List<MemberSaveData>(); // ëª¨ë“  ë©¤ë²„ ìƒíƒœ
     
-    public Dictionary<EGameMode, EndingData[]> EndingRecords = new Dictionary<EGameMode, EndingData[]>();//¸ğµå º° ¿£µù ±â·Ïµé 1~6
-    
-    // ¸Ê »óÅÂ (ÇÊ¿ä½Ã Ãß°¡)
-    // public MapSaveData MapData;
+    public Dictionary<EGameMode, EndingData[]> EndingRecords = new Dictionary<EGameMode, EndingData[]>();//ëª¨ë“œ ë³„ ì—”ë”© ê¸°ë¡ë“¤ 1~6
 }
 
 [Serializable]
 public class EndingData
 {
-    public string EndingName;//¿£µù ÀÌ¸§
-    public EGameMode GameMode;//°ÔÀÓ ¸ğµå
+    public EGameMode GameMode;//ê²Œì„ ëª¨ë“œ
+    public string EndingName;//ì—”ë”© ì´ë¦„
+    public string CompanyName;//íšŒì‚¬ ëª…
+    public int Year;//ì—°ì°¨
+    public int TotalGold;//ì´ ìê¸ˆ
+    public int ConsumedFood;//ë¨¹ì€ í†µì¡°ë¦¼ ìˆ˜
+    public int DeadMembersCount;//ì£½ì€ ë©¤ë²„ ìˆ˜
+    public int KilledCatsCount;//ì¡ì€ ê³ ì–‘ì´ ìˆ˜
+    public int HiredMembersCount;//ê³ ìš©í•œ ë©¤ë²„ ìˆ˜
+    public int EducationCount;//êµìœ¡ íšŸìˆ˜
+    public int DispatchedMembersCount;//íŒŒê²¬ ë³´ë‚¸ ë©¤ë²„ ìˆ˜
+    public int TotalEnhancementLevel;//ê°•í™”ìˆ˜ì¹˜
+    public int EnhancementFailCount;//ê°•í™” ì‹¤íŒ¨ íšŸìˆ˜
+
 }
 
 public class GameManager : Singleton<GameManager>
@@ -142,7 +151,7 @@ public class GameManager : Singleton<GameManager>
             GameState = value ? EGameState.Recruiting : EGameState.Night;
         }
     }
-    public const int FOOD_PRICE_PER_UNIT = 100; // ÅëÁ¶¸² 1°³´ç °¡°İ
+    public const int FOOD_PRICE_PER_UNIT = 100; // í†µì¡°ë¦¼ 1ê°œë‹¹ ê°€ê²©
     private void Awake()
     {
         EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, PauseGame);
@@ -180,11 +189,11 @@ public class GameManager : Singleton<GameManager>
             return false;
         }
 
-        // ±¸¸Å ¼º°ø
+        // êµ¬ë§¤ ì„±ê³µ
         Gold -= totalCost;
         Food += amount;
 
-        Debug.Log($"ÅëÁ¶¸² ±¸¸Å ¼º°ø: {amount}°³, ÃÑ ºñ¿ë: {totalCost:N0}¿ø");
+        Debug.Log($"í†µì¡°ë¦¼ êµ¬ë§¤ ì„±ê³µ: {amount}ê°œ, ì´ ë¹„ìš©: {totalCost:N0}ì›");
         return true;
     }
     public void PauseGame()
@@ -192,7 +201,7 @@ public class GameManager : Singleton<GameManager>
         Time.timeScale = 0f;
     }
 
-    // °ÔÀÓ ½Ã°£ Àç°³
+    // ê²Œì„ ì‹œê°„ ì¬ê°œ
     public void ResumeGame()
     {
         if (UIManager.Instance.PopupCount != 0)

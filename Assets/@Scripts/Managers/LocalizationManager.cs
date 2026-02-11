@@ -30,15 +30,15 @@ public class LocalizationManager : Singleton<LocalizationManager>
 
     public string GetLocalizedText(string templateID)
     {
-        if (DataManager.Instance.TextDict.TryGetValue(templateID, out TextData textData))
-        {
-            return _currentLanguage switch
-            {
-                ELanguage.KOR => textData.KOR,
-                ELanguage.ENG => textData.ENG,
-                _ => textData.ENG
-            };
-        }
+        //if (DataManager.Instance.TextDict.TryGetValue(templateID, out TextData textData))
+        //{
+        //    return _currentLanguage switch
+        //    {
+        //        ELanguage.KOR => textData.KOR,
+        //        ELanguage.ENG => textData.ENG,
+        //        _ => textData.ENG
+        //    };
+        //}
 
         Debug.LogWarning($"LocalizationManager: Text not found for TemplateID: {templateID}");
         return string.Empty;
