@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,10 +9,10 @@ public class SaveManagerEditor : EditorWindow
     [MenuItem("Tools/DeleteSaveFile %#L")] // Ctrl+Shift+L
     public static void DeleteSaveFile()
     {
-        if (File.Exists(SaveManager.SavePath))
+        if (File.Exists(SaveManager.GameDataPath))
         {
-            File.Delete(SaveManager.SavePath);
-            Debug.Log($"Save File Deleted : {SaveManager.SavePath}");
+            File.Delete(SaveManager.GameDataPath);
+            Debug.Log($"Save File Deleted : {SaveManager.GameDataPath}");
         }
         else
         {

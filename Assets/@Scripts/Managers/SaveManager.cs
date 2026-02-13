@@ -1,17 +1,21 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using UnityEditor.Overlays;
 using UnityEngine;
 using static Define;
 public class SaveManager : Singleton<SaveManager>
 {
-    private const string SAVE_FILE_NAME = "GameData.json";
-    public static string SavePath => Path.Combine(Application.persistentDataPath, SAVE_FILE_NAME);
+    private const string USER_DATA_FILE_NAME = "UserData.json";
+    private const string GAME_DATA_FILE_NAME = "GameData.json";
+    public static string UserDataPath => Path.Combine(Application.persistentDataPath, USER_DATA_FILE_NAME);
+    public static string GameDataPath => Path.Combine(Application.persistentDataPath, GAME_DATA_FILE_NAME);
 
     private const float AUTO_SAVE_INTERVAL = 10f;
     private Coroutine _coAutoSave;
 
-    #region AutoSave
+    #region Auto Save
     public void StartAutoSave()
     {
         StopAutoSave();
@@ -39,104 +43,220 @@ public class SaveManager : Singleton<SaveManager>
 
         while (true)
         {
-            Save();
+            SaveGame();
             yield return wait;
         }
     }
     #endregion
 
-    public void Save()
+    #region SaveFile Check
+
+    /// <summary>
+    /// 유저 데이터 파일이 존재하는지 확인
+    /// </summary>
+    public bool HasUserData()
     {
-        GameData gameData = GameManager.Instance.GameData;
+        return File.Exists(UserDataPath);
+    }
+
+    /// <summary>
+    /// 현재 플레이 세이브 파일이 존재하는지 확인
+    /// </summary>
+    public bool HasGameData()
+    {
+        return File.Exists(GameDataPath);
+    }
+
+    #endregion
+
+    #region GameData Save/Load
+    public void SaveGame()
+    {
+        GameData gameData = GameManager.Instance.MyGameData;
         if (gameData == null)
         {
             Debug.Log("SaveManager: GameData is null, cannot save.");
             return;
         }
 
-        // MemberManager ������ ����
-        gameData.MemberSaveDatas = MemberManager.Instance.GetPlayerSaveData();
-        gameData.HireResult = GameManager.Instance.IsRecruiting ? MemberManager.Instance.GetHireResult() : null;
-        gameData.GameDevProjectData = GameDevManager.Instance.GetGameDevProjectData();
+        // MemberManager 데이터 저장
+        gameData.CompanyData.MemberSaveDatas = MemberManager.Instance.GetPlayerSaveData();
+        gameData.NightData.HireResult = GameManager.Instance.IsRecruiting ? MemberManager.Instance.GetHireResult() : null;
+        gameData.NightData.GameDevProjectData = GameDevManager.Instance.GetGameDevProjectData();
 
         string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
-        File.WriteAllText(SavePath, json);
-        Debug.Log($"SaveManager: Game saved to {SavePath}");
+        File.WriteAllText(GameDataPath, json);
+
+        Debug.Log($"SaveManager: Game saved to {GameDataPath}");
     }
 
-    public void Load()
+    public void LoadGame()
     {
-        if (File.Exists(SavePath) == false)
+        if(!HasGameData())
         {
-            Debug.Log("SaveManager: No save file found. Starting with default data.");
-            Reset();
+            Debug.LogWarning("SaveManager: No save file found.");
             return;
         }
 
-        string json = File.ReadAllText(SavePath);
+        string json = File.ReadAllText(GameDataPath);
         GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
-        GameManager.Instance.GameData = gameData;
+        GameManager.Instance.MyGameData = gameData;
         
-        // MemberManager ������ �ε�
-        if (gameData.MemberSaveDatas != null && gameData.MemberSaveDatas.Count > 0)
+        // MemberManager 데이터 로드
+        if (gameData.CompanyData.MemberSaveDatas != null && gameData.CompanyData.MemberSaveDatas.Count > 0)
         {
             MemberManager.Instance.LoadFromSaveData();
         }
-        if (gameData.HireResult != null)
+        if (gameData.NightData.HireResult != null)
         {
-            MemberManager.Instance.LoadHireResult(gameData.HireResult);
-            MemberManager.Instance.StartHire(gameData.HireResult.HireMethod, true);
+            MemberManager.Instance.LoadHireResult(gameData.NightData.HireResult);
+            MemberManager.Instance.StartHire(gameData.NightData.HireResult.HireMethod, true);
         }
-        if(gameData.GameDevProjectData != null)
+        if(gameData.NightData.GameDevProjectData != null)
         {
-            GameDevManager.Instance.LoadFromSaveData(gameData.GameDevProjectData);
+            GameDevManager.Instance.LoadFromSaveData(gameData.NightData.GameDevProjectData);
         }
-        Debug.Log($"SaveManager: Game loaded from {SavePath}");
+        Debug.Log($"SaveManager: Game loaded from {GameDataPath}");
     }
     public GameData GetGameData()
     {
-        if (File.Exists(SavePath) == false)
+        if (!HasGameData())
         {
             Debug.Log("SaveManager: No save file found.");
             return null;
         }
 
-        string json = File.ReadAllText(SavePath);
+        string json = File.ReadAllText(GameDataPath);
         GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
         return gameData;
     }
+    #endregion
 
-    public void Reset()
+    #region UserData Save/Load
+
+    /// <summary>
+    /// 유저 데이터 저장 (UserData - 엔딩 기록, 설정 등)
+    /// </summary>
+    public void SaveUserData()
     {
-        GameData gameData = new GameData()
+        UserData userData = GameManager.Instance.UserData;
+        if (userData == null)
         {
-            Gold = DataManager.Instance.GameConfig.InitialGold,
-            Year = DataManager.Instance.GameConfig.InitialYear,
-            Food = DataManager.Instance.GameConfig.InitialFood,
-            AnnualProfit = DataManager.Instance.GameConfig.InitialAnnualProfit,
-            GameMode = DataManager.Instance.GameConfig.InitialGameMode,
-            CompanyName = DataManager.Instance.GameConfig.InitialCompanyName,
-            GameState = DataManager.Instance.GameConfig.InitialGameState,
-            IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting,
-            MemberSaveDatas = null,
-            GameDevProjectData = null,
-        };
-
-        MemberManager.Instance.InitBoss();
-        GameDevManager.Instance.InitNewProject();
-        GameManager.Instance.GameData = gameData;
-        Save();
-    }
-
-    public void Delete()
-    {
-        if (File.Exists(SavePath) == false)
-        {
-            Debug.LogWarning("SaveManager: No save file to delete.");
+            Debug.LogWarning("SaveManager: UserData is null, cannot save.");
             return;
         }
 
-        File.Delete(SavePath);
-        Debug.Log("SaveManager: Save file deleted.");
+        string json = JsonConvert.SerializeObject(userData, Formatting.Indented);
+        File.WriteAllText(UserDataPath, json);
+
+        Debug.Log($"SaveManager: UserData saved to {UserDataPath}");
     }
+
+    /// <summary>
+    /// 유저 데이터 불러오기 (UserData)
+    /// </summary>
+    public void LoadUserData()
+    {
+        if (!HasUserData())
+        {
+            Debug.Log("SaveManager: No UserData found. Creating new UserData.");
+            GameManager.Instance.UserData = new UserData();
+            SaveUserData();
+            return;
+        }
+
+        string json = File.ReadAllText(UserDataPath);
+        UserData userData = JsonConvert.DeserializeObject<UserData>(json);
+
+        if (userData.EndingRecords == null)
+        {
+            userData.EndingRecords = new Dictionary<EGameMode, EndingData[]>
+            {
+                [EGameMode.Purchase] = new EndingData[6],
+                [EGameMode.Extortion] = new EndingData[6]
+            };
+        }
+
+        GameManager.Instance.UserData = userData;
+
+        Debug.Log($"SaveManager: UserData loaded from {UserDataPath}");
+    }
+
+    #endregion
+
+    #region New Game / Reset
+
+    /// <summary>
+    /// 새 게임 시작 (기존 세이브 삭제 + 초기화)
+    /// </summary>
+    public void NewGame()
+    {
+        // 기존 세이브 파일 삭제
+        DeleteGameData();
+
+        // 새 GameData 생성
+        ResetGameData();
+
+        //// 멤버 초기화
+        //MemberManager.Instance.InitBoss();
+        //GameDevManager.Instance.InitNewProject();
+
+        // 즉시 저장
+        SaveGame();
+
+        Debug.Log("SaveManager: New game started.");
+    }
+
+    /// <summary>
+    /// GameData 초기화 (설정값 기반)
+    /// </summary>
+    private void ResetGameData()
+    {
+        GameData gameData = new GameData()
+        {
+            GameMode = DataManager.Instance.GameConfig.InitialGameMode,
+            GameState = DataManager.Instance.GameConfig.InitialGameState,
+        };
+
+        gameData.CompanyData.CompanyName = DataManager.Instance.GameConfig.InitialCompanyName;
+        gameData.CompanyData.Year = DataManager.Instance.GameConfig.InitialYear;
+        gameData.CompanyData.Gold = DataManager.Instance.GameConfig.InitialGold;
+        gameData.CompanyData.Food = DataManager.Instance.GameConfig.InitialFood;
+
+        gameData.NightData.AnnualProfit = DataManager.Instance.GameConfig.InitialAnnualProfit;
+        gameData.NightData.IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting;
+
+        GameManager.Instance.MyGameData = gameData;
+    }
+
+    #endregion
+
+    #region Delete
+
+    public void DeleteGameData()
+    {
+        if (!HasGameData())
+        {
+            Debug.LogWarning("SaveManager: No Game Data to delete.");
+            return;
+        }
+
+        File.Delete(GameDataPath);
+        Debug.Log("SaveManager: Game Data deleted.");
+    }
+    public void DeleteAllData()
+    {
+        if (HasGameData())
+        {
+            File.Delete(GameDataPath);
+            Debug.Log("SaveManager: Game Data deleted.");
+        }
+        if (HasUserData())
+        {
+            File.Delete(UserDataPath);
+            Debug.Log("SaveManager: User Data deleted.");
+        }
+    }
+
+    #endregion
 }

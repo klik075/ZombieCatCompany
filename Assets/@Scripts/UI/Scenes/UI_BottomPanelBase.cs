@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using static Define;
@@ -7,12 +7,12 @@ public abstract class UI_BottomPanelBase : UI_UGUI
 {
     protected enum MenuButtonState
     {
-        Menu,           // "¸Ş´º" Ç¥½Ã
-        Back,           // "µÚ·Î" Ç¥½Ã
-        Disabled        // ºñÈ°¼ºÈ­ (ÅØ½ºÆ® ¾øÀ½)
+        Menu,           // "ë©”ë‰´" í‘œì‹œ
+        Back,           // "ë’¤ë¡œ" í‘œì‹œ
+        Disabled        // ë¹„í™œì„±í™” (í…ìŠ¤íŠ¸ ì—†ìŒ)
     }
 
-    // °øÅë static class
+    // ê³µí†µ static class
     protected static class MenuButtonConfig
     {
         public static string GetText(MenuButtonState state)
@@ -20,9 +20,9 @@ public abstract class UI_BottomPanelBase : UI_UGUI
             switch (state)
             {
                 case MenuButtonState.Menu:
-                    return "@¸Ş´º"; // ³ªÁß¿¡ LocalizationManager·Î ´ëÃ¼ °¡´É
+                    return "@ë©”ë‰´"; // ë‚˜ì¤‘ì— LocalizationManagerë¡œ ëŒ€ì²´ ê°€ëŠ¥
                 case MenuButtonState.Back:
-                    return "@µÚ·Î";
+                    return "@ë’¤ë¡œ";
                 case MenuButtonState.Disabled:
                     return "";
                 default:
@@ -42,25 +42,25 @@ public abstract class UI_BottomPanelBase : UI_UGUI
     {
         base.Awake();
 
-        // ÆÄ»ı Å¬·¡½º¿¡¼­ ¸ğµç ¹ÙÀÎµù ¼öÇà
+        // íŒŒìƒ í´ë˜ìŠ¤ì—ì„œ ëª¨ë“  ë°”ì¸ë”© ìˆ˜í–‰
         PerformBinding();
 
-        // °øÅë ¹öÆ° ÀÌº¥Æ® µî·Ï (ºÎ¸ğ¿¡¼­ ÀÚµ¿ Ã³¸®)
+        // ê³µí†µ ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡ (ë¶€ëª¨ì—ì„œ ìë™ ì²˜ë¦¬)
         RegisterCommonButtonEvents();
 
-        // °øÅë UI ÀÌº¥Æ® ±¸µ¶
+        // ê³µí†µ UI ì´ë²¤íŠ¸ êµ¬ë…
         EventManager.Instance.AddEvent(EEventType.UI_LeftPanelStateChanged, UpdateUIStates);
         EventManager.Instance.AddEvent(EEventType.UI_PopupClosed, UpdateUIStates);
         EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, UpdateUIStates);
         EventManager.Instance.AddEvent(EEventType.GameStateChanged, OnGameStateChanged);
 
-        // ÆÄ»ı Å¬·¡½ºÀÇ °íÀ¯ ÀÌº¥Æ® ±¸µ¶
+        // íŒŒìƒ í´ë˜ìŠ¤ì˜ ê³ ìœ  ì´ë²¤íŠ¸ êµ¬ë…
         RegisterSpecificEvents();
 
         UpdateUIStates();
     }
 
-    // °øÅë ¹öÆ° ÀÌº¥Æ® µî·Ï (Save, Menu ¹öÆ°)
+    // ê³µí†µ ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡ (Save, Menu ë²„íŠ¼)
     private void RegisterCommonButtonEvents()
     {
         Button saveButton = GetSaveButton();
@@ -72,36 +72,36 @@ public abstract class UI_BottomPanelBase : UI_UGUI
             menuButton.onClick.AddListener(OnClickMenuButton);
     }
 
-    // LeftPanel ¼³Á¤
+    // LeftPanel ì„¤ì •
     public void SetInfo(UI_LeftPanelBase leftPanel)
     {
         _leftPanel = leftPanel;
     }
 
-    // °øÅë ¹öÆ° Å¬¸¯ Ã³¸®
+    // ê³µí†µ ë²„íŠ¼ í´ë¦­ ì²˜ë¦¬
     protected void OnClickSaveButton()
     {
-        SaveManager.Instance.Save();
+        SaveManager.Instance.SaveGame();
         Debug.Log("SaveButton Clicked");
     }
 
     protected void OnClickMenuButton()
     {
-        // 1¼øÀ§: ÆË¾÷ÀÌ ¿­·ÁÀÖÀ¸¸é ÆË¾÷ ´İ±â
+        // 1ìˆœìœ„: íŒì—…ì´ ì—´ë ¤ìˆìœ¼ë©´ íŒì—… ë‹«ê¸°
         if (UIManager.Instance.GetLastPopupUI<UI_Base>() != null)
         {
             UIManager.Instance.ClosePopupUI();
             return;
         }
 
-        // 2¼øÀ§: LeftPanelÀÇ OptionPanelÀÌ ¿­·ÁÀÖ´Â »óÅÂÀÌ¸é ´İ±â
+        // 2ìˆœìœ„: LeftPanelì˜ OptionPanelì´ ì—´ë ¤ìˆëŠ” ìƒíƒœì´ë©´ ë‹«ê¸°
         if (_leftPanel.HasActiveOptionPanel())
         {
             _leftPanel.CloseCurrentOptionPanel();
             return;
         }
 
-        // 3¼øÀ§: LeftPanelÀÌ ¿­·ÁÀÖ´Â »óÅÂÀÌ¸é ´İ±â
+        // 3ìˆœìœ„: LeftPanelì´ ì—´ë ¤ìˆëŠ” ìƒíƒœì´ë©´ ë‹«ê¸°
         if (_leftPanel.gameObject.activeSelf)
         {
             _leftPanel.IsActive = false;
@@ -109,11 +109,11 @@ public abstract class UI_BottomPanelBase : UI_UGUI
             return;
         }
 
-        // 4¼øÀ§: ¾Æ¹«°Íµµ ¿­·ÁÀÖÁö ¾ÊÀ¸¸é ¸Ş´º ¿­±â
+        // 4ìˆœìœ„: ì•„ë¬´ê²ƒë„ ì—´ë ¤ìˆì§€ ì•Šìœ¼ë©´ ë©”ë‰´ ì—´ê¸°
         EventManager.Instance.TriggerEvent(EEventType.UI_MenuButtonClicked);
     }
 
-    // SaveButton »óÅÂ È®ÀÎ (Left ÆĞ³ÎÀÌ³ª PopupÀÌ ¿­·ÁÀÖÀ¸¸é ºñÈ°¼ºÈ­)
+    // SaveButton ìƒíƒœ í™•ì¸ (Left íŒ¨ë„ì´ë‚˜ Popupì´ ì—´ë ¤ìˆìœ¼ë©´ ë¹„í™œì„±í™”)
     protected bool IsSaveButtonEnabled()
     {
         if (GameManager.Instance.GameState != EGameState.Night && GameManager.Instance.GameState != EGameState.Recruiting)
@@ -121,49 +121,49 @@ public abstract class UI_BottomPanelBase : UI_UGUI
             return false;
         }
 
-        // ÆË¾÷ÀÌ ¿­·ÁÀÖ´ÂÁö È®ÀÎ
+        // íŒì—…ì´ ì—´ë ¤ìˆëŠ”ì§€ í™•ì¸
         UI_Base lastPopupUI = UIManager.Instance.GetLastPopupUI<UI_Base>();
         if (lastPopupUI != null)
         {
-            return false; // ÆË¾÷ÀÌ ÀÖÀ¸¸é ºñÈ°¼ºÈ­
+            return false; // íŒì—…ì´ ìˆìœ¼ë©´ ë¹„í™œì„±í™”
         }
 
-        // LeftPanelÀÌ³ª OptionPanelÀÌ ¿­·ÁÀÖÀ¸¸é ºñÈ°¼ºÈ­
+        // LeftPanelì´ë‚˜ OptionPanelì´ ì—´ë ¤ìˆìœ¼ë©´ ë¹„í™œì„±í™”
         if (_leftPanel.gameObject.activeSelf || _leftPanel.HasActiveOptionPanel())
         {
             return false;
         }
 
-        // ¸ğµÎ ´İÇôÀÖÀ¸¸é È°¼ºÈ­
+        // ëª¨ë‘ ë‹«í˜€ìˆìœ¼ë©´ í™œì„±í™”
         return true;
     }
 
     protected MenuButtonState GetMenuButtonState()
     {
-        // ÆË¾÷ÀÌ ¿­·ÁÀÖ´ÂÁö È®ÀÎ
+        // íŒì—…ì´ ì—´ë ¤ìˆëŠ”ì§€ í™•ì¸
         UI_Base lastPopupUI = UIManager.Instance.GetLastPopupUI<UI_Base>();
         if (lastPopupUI != null)
         {
-            // IClickableUI ÆË¾÷ÀÌ¸é ºñÈ°¼ºÈ­
+            // IClickableUI íŒì—…ì´ë©´ ë¹„í™œì„±í™”
             if (lastPopupUI is IClickableUI)
             {
                 return MenuButtonState.Disabled;
             }
-            // ÀÏ¹İ ÆË¾÷ÀÌ¸é "µÚ·Î"
+            // ì¼ë°˜ íŒì—…ì´ë©´ "ë’¤ë¡œ"
             return MenuButtonState.Back;
         }
 
-        // LeftPanelÀÌ³ª OptionPanelÀÌ ¿­·ÁÀÖÀ¸¸é "µÚ·Î"
+        // LeftPanelì´ë‚˜ OptionPanelì´ ì—´ë ¤ìˆìœ¼ë©´ "ë’¤ë¡œ"
         if (_leftPanel.gameObject.activeSelf || _leftPanel.HasActiveOptionPanel())
         {
             return MenuButtonState.Back;
         }
 
-        // ¸ğµÎ ´İÇôÀÖÀ¸¸é "¸Ş´º"
+        // ëª¨ë‘ ë‹«í˜€ìˆìœ¼ë©´ "ë©”ë‰´"
         return MenuButtonState.Menu;
     }
 
-    // UI »óÅÂ ÅëÇÕ ¾÷µ¥ÀÌÆ® (MenuButton°ú SaveButton ¸ğµÎ Á¦¾î)
+    // UI ìƒíƒœ í†µí•© ì—…ë°ì´íŠ¸ (MenuButtonê³¼ SaveButton ëª¨ë‘ ì œì–´)
     protected void UpdateUIStates()
     {
         UpdateMenuButtonText();
@@ -186,7 +186,7 @@ public abstract class UI_BottomPanelBase : UI_UGUI
             saveButton.interactable = isEnabled;
 
         if (saveButtonText != null)
-            saveButtonText.text = isEnabled ? "@¼¼ÀÌºê" : "";
+            saveButtonText.text = isEnabled ? "@ì„¸ì´ë¸Œ" : "";
     }
 
     protected void ApplyMenuButtonState(MenuButtonState state)
@@ -201,13 +201,13 @@ public abstract class UI_BottomPanelBase : UI_UGUI
             menuButtonText.text = MenuButtonConfig.GetText(state);
     }
 
-    // GameState º¯°æ Ã³¸®
+    // GameState ë³€ê²½ ì²˜ë¦¬
     protected virtual void OnGameStateChanged()
     {
         UpdateSaveButtonState();
     }
 
-    // Ãß»ó ¸Ş¼­µå - ÆÄ»ı Å¬·¡½º¿¡¼­ ±¸Çö
+    // ì¶”ìƒ ë©”ì„œë“œ - íŒŒìƒ í´ë˜ìŠ¤ì—ì„œ êµ¬í˜„
     protected abstract void PerformBinding();
     protected abstract void RegisterSpecificEvents();
     protected abstract Button GetSaveButton();
@@ -218,7 +218,7 @@ public abstract class UI_BottomPanelBase : UI_UGUI
     public override void RefreshUI()
     {
         base.RefreshUI();
-        UpdateUIStates(); // MenuButton°ú SaveButton »óÅÂ ¸ğµÎ ¾÷µ¥ÀÌÆ®
+        UpdateUIStates(); // MenuButtonê³¼ SaveButton ìƒíƒœ ëª¨ë‘ ì—…ë°ì´íŠ¸
         //TODO: Localization
     }
 }

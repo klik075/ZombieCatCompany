@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+ï»¿using System.ComponentModel.Design;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,9 +56,9 @@ public class UI_BottomPanel : UI_UGUI
     }
     private enum MenuButtonState
     {
-        Menu,           // "¸Ş´º" Ç¥½Ã
-        Back,           // "µÚ·Î" Ç¥½Ã
-        Disabled        // ºñÈ°¼ºÈ­ (ÅØ½ºÆ® ¾øÀ½)
+        Menu,           // "ë©”ë‰´" í‘œì‹œ
+        Back,           // "ë’¤ë¡œ" í‘œì‹œ
+        Disabled        // ë¹„í™œì„±í™” (í…ìŠ¤íŠ¸ ì—†ìŒ)
     }
     private static class MenuButtonConfig
     {
@@ -67,9 +67,9 @@ public class UI_BottomPanel : UI_UGUI
             switch (state)
             {
                 case MenuButtonState.Menu:
-                    return "@¸Ş´º"; // ³ªÁß¿¡ LocalizationManager·Î ´ëÃ¼ °¡´É
+                    return "@ë©”ë‰´"; // ë‚˜ì¤‘ì— LocalizationManagerë¡œ ëŒ€ì²´ ê°€ëŠ¥
                 case MenuButtonState.Back:
-                    return "@µÚ·Î";
+                    return "@ë’¤ë¡œ";
                 case MenuButtonState.Disabled:
                     return "";
                 default:
@@ -96,12 +96,12 @@ public class UI_BottomPanel : UI_UGUI
         GetButton((int)Buttons.SaveButton).onClick.AddListener(OnClickSaveButton);
         GetButton((int)Buttons.MenuButton).onClick.AddListener(OnClickMenuButton);
 
-        // UI °ü·Ã ÀÌº¥Æ® ±¸µ¶
+        // UI ê´€ë ¨ ì´ë²¤íŠ¸ êµ¬ë…
         EventManager.Instance.AddEvent(EEventType.UI_LeftPanelStateChanged, UpdateUIStates);
         EventManager.Instance.AddEvent(EEventType.UI_PopupClosed, UpdateUIStates);
         EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, UpdateUIStates);
         
-        // °ÔÀÓ µ¥ÀÌÅÍ º¯°æ ÀÌº¥Æ® ±¸µ¶
+        // ê²Œì„ ë°ì´í„° ë³€ê²½ ì´ë²¤íŠ¸ êµ¬ë…
         EventManager.Instance.AddEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
         EventManager.Instance.AddEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
         EventManager.Instance.AddEvent(EEventType.QualityChanged, OnQualityChanged);
@@ -110,7 +110,7 @@ public class UI_BottomPanel : UI_UGUI
         EventManager.Instance.AddEvent(EEventType.GameStateChanged, OnGameStateChanged);
     }
 
-    // ºÎ¸ğ(UI_NightGame)·ÎºÎÅÍ LeftPanel ÂüÁ¶ ¹Ş±â
+    // ë¶€ëª¨(UI_NightGame)ë¡œë¶€í„° LeftPanel ì°¸ì¡° ë°›ê¸°
     public void SetInfo(UI_LeftPanelBase leftPanel)
     {
         _leftPanel = leftPanel;
@@ -172,7 +172,7 @@ public class UI_BottomPanel : UI_UGUI
                 GetText((int)Texts.NewWorkText).text = $"{GameDevManager.Instance.Progress}%";
                 break;
             case EGameDevType.Debug:
-                GetText((int)Texts.NewWorkText).text = "µğ¹ö±× Áß";
+                GetText((int)Texts.NewWorkText).text = "ë””ë²„ê·¸ ì¤‘";
                 break;
             default:
                 break;
@@ -185,10 +185,10 @@ public class UI_BottomPanel : UI_UGUI
         bool isNightPanel = (currentDevType == EGameDevType.None);
         bool isGameDevPanel = !isNightPanel;
         
-        // NightBottomPanel1 È°¼ºÈ­/ºñÈ°¼ºÈ­
+        // NightBottomPanel1 í™œì„±í™”/ë¹„í™œì„±í™”
         GetObject((int)GameObjects.NightBottomPanel1).SetActive(isNightPanel);
         
-        // GameDevBottomPanel1 È°¼ºÈ­/ºñÈ°¼ºÈ­
+        // GameDevBottomPanel1 í™œì„±í™”/ë¹„í™œì„±í™”
         GetObject((int)GameObjects.GameDevBottomPanel1).SetActive(isGameDevPanel);
     }
     private void UpdateBottomPanelBasedOnGameState()
@@ -205,10 +205,10 @@ public class UI_BottomPanel : UI_UGUI
 
     private void UpdateDevelopmentStatusUI(string newDevTitle)
     {
-        // NewDevTitleÀÌ ºñ¾îÀÖÀ¸¸é ±âº» ¸Ş½ÃÁö Ç¥½Ã
+        // NewDevTitleì´ ë¹„ì–´ìˆìœ¼ë©´ ê¸°ë³¸ ë©”ì‹œì§€ í‘œì‹œ
         if (string.IsNullOrEmpty(newDevTitle))
         {
-            GetText((int)Texts.DevelopmentStatusText).text = "@½Å±Ô °³¹ß ¾øÀ½";
+            GetText((int)Texts.DevelopmentStatusText).text = "@ì‹ ê·œ ê°œë°œ ì—†ìŒ";
         }
         else
         {
@@ -218,27 +218,27 @@ public class UI_BottomPanel : UI_UGUI
 
     private void OnClickSaveButton()
     {
-        SaveManager.Instance.Save();
+        SaveManager.Instance.SaveGame();
         Debug.Log("SaveButton Clicked");
     }
 
     private void OnClickMenuButton()
     {
-        // 1¼øÀ§: ÆË¾÷ÀÌ ¿­·ÁÀÖÀ¸¸é ÆË¾÷ ´İ±â
+        // 1ìˆœìœ„: íŒì—…ì´ ì—´ë ¤ìˆìœ¼ë©´ íŒì—… ë‹«ê¸°
         if (UIManager.Instance.GetLastPopupUI<UI_Base>() != null)
         {
             UIManager.Instance.ClosePopupUI();
             return;
         }
 
-        // 2¼øÀ§: LeftPanelÀÇ OptionPanelÀÌ ¿­·ÁÀÖ´Â »óÅÂÀÌ¸é ´İ±â
+        // 2ìˆœìœ„: LeftPanelì˜ OptionPanelì´ ì—´ë ¤ìˆëŠ” ìƒíƒœì´ë©´ ë‹«ê¸°
         if (_leftPanel.HasActiveOptionPanel())
         {
             _leftPanel.CloseCurrentOptionPanel();
             return;
         }
 
-        // 3¼øÀ§: LeftPanelÀÌ ¿­·ÁÀÖ´Â »óÅÂÀÌ¸é ´İ±â
+        // 3ìˆœìœ„: LeftPanelì´ ì—´ë ¤ìˆëŠ” ìƒíƒœì´ë©´ ë‹«ê¸°
         if (_leftPanel.gameObject.activeSelf)
         {
             _leftPanel.IsActive = false;
@@ -246,11 +246,11 @@ public class UI_BottomPanel : UI_UGUI
             return;
         }
 
-        // 4¼øÀ§: ¾Æ¹«°Íµµ ¿­·ÁÀÖÁö ¾ÊÀ¸¸é ¸Ş´º ¿­±â
+        // 4ìˆœìœ„: ì•„ë¬´ê²ƒë„ ì—´ë ¤ìˆì§€ ì•Šìœ¼ë©´ ë©”ë‰´ ì—´ê¸°
         EventManager.Instance.TriggerEvent(EEventType.UI_MenuButtonClicked);
     }
 
-    // SaveButton »óÅÂ È®ÀÎ (Left ÆĞ³ÎÀÌ³ª PopupÀÌ ¿­·ÁÀÖÀ¸¸é ºñÈ°¼ºÈ­)
+    // SaveButton ìƒíƒœ í™•ì¸ (Left íŒ¨ë„ì´ë‚˜ Popupì´ ì—´ë ¤ìˆìœ¼ë©´ ë¹„í™œì„±í™”)
     private bool IsSaveButtonEnabled()
     {
         if (GameManager.Instance.GameState != EGameState.Night && GameManager.Instance.GameState != EGameState.Recruiting)
@@ -258,47 +258,47 @@ public class UI_BottomPanel : UI_UGUI
             return false;
         }
 
-        // ÆË¾÷ÀÌ ¿­·ÁÀÖ´ÂÁö È®ÀÎ
+        // íŒì—…ì´ ì—´ë ¤ìˆëŠ”ì§€ í™•ì¸
         UI_Base lastPopupUI = UIManager.Instance.GetLastPopupUI<UI_Base>();
         if (lastPopupUI != null)
         {
-            return false; // ÆË¾÷ÀÌ ÀÖÀ¸¸é ºñÈ°¼ºÈ­
+            return false; // íŒì—…ì´ ìˆìœ¼ë©´ ë¹„í™œì„±í™”
         }
 
-        // LeftPanelÀÌ³ª OptionPanelÀÌ ¿­·ÁÀÖÀ¸¸é ºñÈ°¼ºÈ­
+        // LeftPanelì´ë‚˜ OptionPanelì´ ì—´ë ¤ìˆìœ¼ë©´ ë¹„í™œì„±í™”
         if (_leftPanel.gameObject.activeSelf || _leftPanel.HasActiveOptionPanel())
         {
             return false;
         }
 
-        // ¸ğµÎ ´İÇôÀÖÀ¸¸é È°¼ºÈ­
+        // ëª¨ë‘ ë‹«í˜€ìˆìœ¼ë©´ í™œì„±í™”
         return true;
     }
     private MenuButtonState GetMenuButtonState()
     {
-        // ÆË¾÷ÀÌ ¿­·ÁÀÖ´ÂÁö È®ÀÎ
+        // íŒì—…ì´ ì—´ë ¤ìˆëŠ”ì§€ í™•ì¸
         UI_Base lastPopupUI = UIManager.Instance.GetLastPopupUI<UI_Base>();
         if (lastPopupUI != null)
         {
-            // IClickableUI ÆË¾÷ÀÌ¸é ºñÈ°¼ºÈ­
+            // IClickableUI íŒì—…ì´ë©´ ë¹„í™œì„±í™”
             if (lastPopupUI is IClickableUI)
             {
                 return MenuButtonState.Disabled;
             }
-            // ÀÏ¹İ ÆË¾÷ÀÌ¸é "µÚ·Î"
+            // ì¼ë°˜ íŒì—…ì´ë©´ "ë’¤ë¡œ"
             return MenuButtonState.Back;
         }
 
-        // LeftPanelÀÌ³ª OptionPanelÀÌ ¿­·ÁÀÖÀ¸¸é "µÚ·Î"
+        // LeftPanelì´ë‚˜ OptionPanelì´ ì—´ë ¤ìˆìœ¼ë©´ "ë’¤ë¡œ"
         if (_leftPanel.gameObject.activeSelf || _leftPanel.HasActiveOptionPanel())
         {
             return MenuButtonState.Back;
         }
 
-        // ¸ğµÎ ´İÇôÀÖÀ¸¸é "¸Ş´º"
+        // ëª¨ë‘ ë‹«í˜€ìˆìœ¼ë©´ "ë©”ë‰´"
         return MenuButtonState.Menu;
     }
-    // UI »óÅÂ ÅëÇÕ ¾÷µ¥ÀÌÆ® (MenuButton°ú SaveButton ¸ğµÎ Á¦¾î)
+    // UI ìƒíƒœ í†µí•© ì—…ë°ì´íŠ¸ (MenuButtonê³¼ SaveButton ëª¨ë‘ ì œì–´)
     private void UpdateUIStates()
     {
         UpdateMenuButtonText();
@@ -315,7 +315,7 @@ public class UI_BottomPanel : UI_UGUI
     {
         bool isEnabled = IsSaveButtonEnabled();
         GetButton((int)Buttons.SaveButton).interactable = isEnabled;
-        GetText((int)Texts.SaveButtonText).text = isEnabled ? "@¼¼ÀÌºê" : "";
+        GetText((int)Texts.SaveButtonText).text = isEnabled ? "@ì„¸ì´ë¸Œ" : "";
 
         //Debug.Log($"SaveButton state changed: {(isEnabled ? "Enabled" : "Disabled")}");
     }
@@ -329,8 +329,8 @@ public class UI_BottomPanel : UI_UGUI
     public override void RefreshUI()
     {
         base.RefreshUI();
-        UpdateUIStates(); // MenuButton°ú SaveButton »óÅÂ ¸ğµÎ ¾÷µ¥ÀÌÆ®
-        UpdateBottomPanelBasedOnDevState(); // GameDev »óÅÂ¿¡ µû¸¥ ÆĞ³Î ÀüÈ¯
+        UpdateUIStates(); // MenuButtonê³¼ SaveButton ìƒíƒœ ëª¨ë‘ ì—…ë°ì´íŠ¸
+        UpdateBottomPanelBasedOnDevState(); // GameDev ìƒíƒœì— ë”°ë¥¸ íŒ¨ë„ ì „í™˜
         OnAnnualProfitChanged();
         OnNewDevTitleChanged();
         //TODO : Localization

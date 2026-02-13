@@ -15,32 +15,76 @@ public class MemberSaveData
     public bool AIEnabled;
 }
 [Serializable]
-public class GameData
+public class CompanyData
 {
+    public string CompanyName;//회사 명
     public int Year;//연차
     public int Gold;//자금
     public int Food;//식량
-    public EGameMode GameMode;//게임 모드
-    public string CompanyName;//회사 명
 
+    public List<MemberSaveData> MemberSaveDatas = new List<MemberSaveData>(); // 모든 멤버 상태
+}
+[Serializable]
+public class NightData
+{
+    public int AnnualProfit;//연간 이익
+    public bool IsRecruiting; //멤버 모집 중인지
+    public HireResult HireResult = null;
+    public GameDevProjectData GameDevProjectData = new GameDevProjectData();
+}
+[Serializable]
+public class MorningData
+{
+    //펜스 데이터
+}
+[Serializable]
+public class GameData
+{
+    public EGameMode GameMode;//게임 모드
     public EGameState GameState;//게임 상태
 
-    //Night
-    public int AnnualProfit;//연간 이익
+    public CompanyData CompanyData = new CompanyData();
+    public NightData NightData = new NightData();
+    public MorningData MorningData = new MorningData();
+    public GameData()
+    {
+        GameMode = EGameMode.Purchase;
+        GameState = EGameState.None;
 
-    public HireResult HireResult;
-    //Dev
-    public GameDevProjectData GameDevProjectData = new GameDevProjectData();
+        CompanyData.CompanyName = "";
+        CompanyData.Year = 0;
+        CompanyData.Gold = 0;
+        CompanyData.Food = 0;
 
-    //Morning
+        NightData.AnnualProfit = 0;
+        NightData.IsRecruiting = false;
+    }
+    public GameData(EGameMode eGameMode, EGameState eGameState, string companyName, int year, int gold, int food, int annualProfit, bool isRecruiting)
+    {
+        GameMode = eGameMode;
+        GameState = eGameState;
 
-    //etc
-    public bool IsRecruiting; //멤버 모집 중인지
+        CompanyData.CompanyName = companyName;
+        CompanyData.Year = year;
+        CompanyData.Gold = gold;
+        CompanyData.Food = food;
 
-    // 멤버 관련 데이터
-    public List<MemberSaveData> MemberSaveDatas = new List<MemberSaveData>(); // 모든 멤버 상태
+        NightData.AnnualProfit = annualProfit;
+        NightData.IsRecruiting = isRecruiting;
+    }
+}
+[Serializable]
+public class UserData
+{
+    public GameData MyGameData;
     
     public Dictionary<EGameMode, EndingData[]> EndingRecords = new Dictionary<EGameMode, EndingData[]>();//모드 별 엔딩 기록들 1~6
+
+    public UserData()
+    {
+        EndingRecords[EGameMode.Purchase] = new EndingData[6];
+        EndingRecords[EGameMode.Extortion] = new EndingData[6];
+    }
 }
 
 [Serializable]
@@ -59,30 +103,46 @@ public class EndingData
     public int DispatchedMembersCount;//파견 보낸 멤버 수
     public int TotalEnhancementLevel;//강화수치
     public int EnhancementFailCount;//강화 실패 횟수
-
 }
 
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
-    private GameData _gameData = new GameData();
-    public GameData GameData
+    private UserData _userData = new UserData();
+    public UserData UserData
     {
-        get { return _gameData; }
-        set
-        {
-            _gameData = value;
-        }
+        get { return _userData; }
+        set { _userData = value; }
+    }
+    public GameData MyGameData
+    {
+        get { return _userData.MyGameData; }
+        set { _userData.MyGameData = value; }
+    }
+    public CompanyData MyCompanyData
+    {
+        get { return _userData.MyGameData.CompanyData; }
+        set { _userData.MyGameData.CompanyData = value; }
+    }
+    public NightData MyNightData
+    {
+        get { return _userData.MyGameData.NightData; }
+        set { _userData.MyGameData.NightData = value; }
+    }
+    public MorningData MyMorningData
+    {
+        get { return _userData.MyGameData.MorningData; }
+        set { _userData.MyGameData.MorningData = value; }
     }
     public int Year
     {
-        get { return _gameData.Year; }
+        get { return _userData.MyGameData.CompanyData.Year; }
         set
         {
-            _gameData.Year = value;
+            _userData.MyGameData.CompanyData.Year = value;
 
-            if (_gameData.Year < 1)
-                _gameData.Year = 1;
+            if (_userData.MyGameData.CompanyData.Year < 1)
+                _userData.MyGameData.CompanyData.Year = 1;
 
             EventManager.Instance.TriggerEvent(Define.EEventType.YearChanged);
         }
@@ -90,64 +150,64 @@ public class GameManager : Singleton<GameManager>
 
     public int Gold
     {
-        get { return _gameData.Gold; }
+        get { return _userData.MyGameData.CompanyData.Gold; }
         set
         {
-            _gameData.Gold = value;
+            _userData.MyGameData.CompanyData.Gold = value;
 
-            if (_gameData.Gold < 0)
-                _gameData.Gold = 0;
+            if (_userData.MyGameData.CompanyData.Gold < 0)
+                _userData.MyGameData.CompanyData.Gold = 0;
 
             EventManager.Instance.TriggerEvent(Define.EEventType.GoldChanged);
         }
     }
     public int Food
     {
-        get { return _gameData.Food; }
+        get { return _userData.MyGameData.CompanyData.Food; }
         set
         {
-            _gameData.Food = value;
+            _userData.MyGameData.CompanyData.Food = value;
 
-            if (_gameData.Food < 0)
-                _gameData.Food = 0;
+            if (_userData.MyGameData.CompanyData.Food < 0)
+                _userData.MyGameData.CompanyData.Food = 0;
 
             EventManager.Instance.TriggerEvent(Define.EEventType.FoodChanged);
         }
     }
     public EGameMode GameMode
     {
-        get { return _gameData.GameMode; }
-        set { _gameData.GameMode = value; }
+        get { return _userData.MyGameData.GameMode; }
+        set { _userData.MyGameData.GameMode = value; }
     }
     public string CompanyName
     {
-        get { return _gameData.CompanyName; }
-        set { _gameData.CompanyName = value; }
+        get { return _userData.MyGameData.CompanyData.CompanyName; }
+        set { _userData.MyGameData.CompanyData.CompanyName = value; }
     }
     public EGameState GameState
     {
-        get { return _gameData.GameState; }
+        get { return _userData.MyGameData.GameState; }
         set 
         { 
-            _gameData.GameState = value; 
+            _userData.MyGameData.GameState = value; 
             EventManager.Instance.TriggerEvent(Define.EEventType.GameStateChanged);
         }
     }
     public int AnnualProfit
     {
-        get { return _gameData.AnnualProfit; }
-        set 
-        { 
-            _gameData.AnnualProfit = value;
+        get { return _userData.MyGameData.NightData.AnnualProfit; }
+        set
+        {
+            _userData.MyGameData.NightData.AnnualProfit = value;
             EventManager.Instance.TriggerEvent(Define.EEventType.AnnualProfitChanged);
         }
     }
     public bool IsRecruiting
     {
-        get { return _gameData.IsRecruiting; }
-        set 
-        { 
-            _gameData.IsRecruiting = value;
+        get { return _userData.MyGameData.NightData.IsRecruiting; }
+        set
+        {
+            _userData.MyGameData.NightData.IsRecruiting = value;
             GameState = value ? EGameState.Recruiting : EGameState.Night;
         }
     }

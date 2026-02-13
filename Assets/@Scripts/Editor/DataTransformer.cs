@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,8 @@ public class DataTransformer : EditorWindow
         ParseExcelDataToJson<EducationDataLoader, EducationData>("Education");
         ParseExcelDataToJson<GenreDataLoader, GenreData>("Genre");
         ParseExcelDataToJson<ContentDataLoader, ContentData>("Content");
-        ParseExcelDataToJson<SynergyDataLoader, List<SynergyData>>("Synergy");
+        ParseExcelDataToJson<SynergyDataLoader, SynergyData>("Synergy");
+        ParseExcelDataToJson<ModeDataLoader, ModeData>("Mode");
     }
 
     private static void ParseExcelDataToJson<Loader, LoaderData>(string filename) where Loader : new()

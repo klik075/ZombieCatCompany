@@ -1,3 +1,4 @@
+﻿using System;
 using UnityEngine;
 
 public class UI_LobbyGame : UI_UGUI, IUI_Scene
@@ -34,6 +35,18 @@ public class UI_LobbyGame : UI_UGUI, IUI_Scene
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
+
+        GetButton((int)Buttons.NewButton).onClick.AddListener(OnClickNewGame);
+
+        RefreshUI();
+    }
+
+    private void OnClickNewGame()
+    {
+        if (SaveManager.Instance.HasGameData())
+        {
+            UI_OverWritePopup popup = UIManager.Instance.ShowPopupUI<UI_OverWritePopup>();
+        }
     }
 
     public override void RefreshUI()

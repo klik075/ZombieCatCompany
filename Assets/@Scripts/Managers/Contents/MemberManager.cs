@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,9 +8,9 @@ using static Define;
 [System.Serializable]
 public class HireResult
 {
-    public List<MemberData> MemberDatas;//°í¿ëµÈ ¸â¹ö µ¥ÀÌÅÍµé
+    public List<MemberData> MemberDatas;//ê³ ìš©ëœ ë©¤ë²„ ë°ì´í„°ë“¤
     public string[] Messages;
-    public EHireMethodType HireMethod;//°í¿ë ¹æ¹ı
+    public EHireMethodType HireMethod;//ê³ ìš© ë°©ë²•
 
     public HireResult DeepCopy()
     {
@@ -32,7 +32,7 @@ public struct MemberSeatInfo
     public bool IsFlipped;
     public bool IsFacingForward;
 
-    // »ı¼ºÀÚ Ãß°¡ (¼±ÅÃ»çÇ×, ÃÊ±âÈ­ ÆíÀÇ)
+    // ìƒì„±ì ì¶”ê°€ (ì„ íƒì‚¬í•­, ì´ˆê¸°í™” í¸ì˜)
     public MemberSeatInfo(Vector2Int position, bool isFlipped = false, bool isFacingForward = true)
     {
         SeatPosition = position;
@@ -47,13 +47,13 @@ public class MemberManager : Singleton<MemberManager>
     private Member[] _members = new Member[MAX_MEMBERS];
     public Vector2Int DoorWay = new Vector2Int(-3, -8);
 
-    // PlayerµéÀÇ °³ÀÎ ÁöÁ¤ ÀÚ¸® (MapManager¿¡¼­ »ç¿ëÇÏ´Â ÁÂÇ¥)
+    // Playerë“¤ì˜ ê°œì¸ ì§€ì • ìë¦¬ (MapManagerì—ì„œ ì‚¬ìš©í•˜ëŠ” ì¢Œí‘œ)
     private MemberSeatInfo[] _memberNightSeat = new MemberSeatInfo[MAX_MEMBERS];
     private MemberSeatInfo[] _memberMorningSeat = new MemberSeatInfo[MAX_MEMBERS];
-    // ¼±ÅÃµÈ ÇÃ·¹ÀÌ¾î °ü¸®
+    // ì„ íƒëœ í”Œë ˆì´ì–´ ê´€ë¦¬
     private int _selectedMemberIndex = 0;
 
-    // ÇöÀç ¼±ÅÃµÈ ÇÃ·¹ÀÌ¾îÀÇ ÀÎµ¦½º
+    // í˜„ì¬ ì„ íƒëœ í”Œë ˆì´ì–´ì˜ ì¸ë±ìŠ¤
     public int SelectedMemberIndex
     {
         get { return _selectedMemberIndex; }
@@ -63,16 +63,16 @@ public class MemberManager : Singleton<MemberManager>
             EventManager.Instance.TriggerEvent(EEventType.SelectedMemberChanged);
         }
     }
-    // ÇöÀç ¼±ÅÃµÈ ÇÃ·¹ÀÌ¾î
+    // í˜„ì¬ ì„ íƒëœ í”Œë ˆì´ì–´
     public Member SelectedMember
     {
         get { return GetMember(_selectedMemberIndex); }
     }
-    // ÁÖÀÎ°ø(Ã¹ ¹øÂ° ±¸¼º¿ø)Àº ÇØ°í ºÒ°¡
+    // ì£¼ì¸ê³µ(ì²« ë²ˆì§¸ êµ¬ì„±ì›)ì€ í•´ê³  ë¶ˆê°€
     public Member MainCharacter => _members[0];
 
     private int memberCount = 0;
-    // ÇöÀç ±¸¼º¿ø ¼ö
+    // í˜„ì¬ êµ¬ì„±ì› ìˆ˜
     public int MemberCount 
     { 
         get { return memberCount; }
@@ -88,7 +88,7 @@ public class MemberManager : Singleton<MemberManager>
     #region Member Selection Management
 
     /// <summary>
-    /// Æ¯Á¤ ¸â¹ö¸¦ ¼±ÅÃÇÕ´Ï´Ù
+    /// íŠ¹ì • ë©¤ë²„ë¥¼ ì„ íƒí•©ë‹ˆë‹¤
     /// </summary>
     public void SelectMember(Member member)
     {
@@ -119,14 +119,14 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// ÀÎµ¦½º·Î ¸â¹ö¸¦ ¼±ÅÃÇÕ´Ï´Ù
+    /// ì¸ë±ìŠ¤ë¡œ ë©¤ë²„ë¥¼ ì„ íƒí•©ë‹ˆë‹¤
     /// </summary>
     public void SelectMemberByIndex(int index)
     {
         if (index >= 0 && index < MemberCount && _members[index] != null)
         {
             SelectedMemberIndex = index;
-            //OnSelectedMemberChanged?.Invoke(SelectedPlayer); ¼±ÅÃ Æ®¸®°Å ¹ßµ¿
+            //OnSelectedMemberChanged?.Invoke(SelectedPlayer); ì„ íƒ íŠ¸ë¦¬ê±° ë°œë™
             Debug.Log($"Selected member: {SelectedMember.CurrentMemberData?.Name} (Index: {index})");
         }
         else
@@ -136,7 +136,7 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// ´ÙÀ½ ¸â¹ö¸¦ ¼±ÅÃÇÕ´Ï´Ù (¼øÈ¯)
+    /// ë‹¤ìŒ ë©¤ë²„ë¥¼ ì„ íƒí•©ë‹ˆë‹¤ (ìˆœí™˜)
     /// </summary>
     public void SelectNextMember()
     {
@@ -147,7 +147,7 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// ÀÌÀü ¸â¹ö¸¦ ¼±ÅÃÇÕ´Ï´Ù (¼øÈ¯)
+    /// ì´ì „ ë©¤ë²„ë¥¼ ì„ íƒí•©ë‹ˆë‹¤ (ìˆœí™˜)
     /// </summary>
     public void SelectPreviousMember()
     {
@@ -158,7 +158,7 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// Ã¹ ¹øÂ° ¸â¹ö(»çÀå)¸¦ ¼±ÅÃÇÕ´Ï´Ù
+    /// ì²« ë²ˆì§¸ ë©¤ë²„(ì‚¬ì¥)ë¥¼ ì„ íƒí•©ë‹ˆë‹¤
     /// </summary>
     public void SelectMainCharacter()
     {
@@ -167,7 +167,7 @@ public class MemberManager : Singleton<MemberManager>
 
     #endregion
 
-    // °ÔÀÓ ½ÃÀÛ ½Ã ÁÖÀÎ°ø ÃÊ±âÈ­
+    // ê²Œì„ ì‹œì‘ ì‹œ ì£¼ì¸ê³µ ì´ˆê¸°í™”
     public void InitBoss()
     {
         if (_members[0] != null)
@@ -176,26 +176,26 @@ public class MemberManager : Singleton<MemberManager>
             return;
         }
 
-        // Player ÁöÁ¤ ÀÚ¸® ÃÊ±âÈ­
+        // Player ì§€ì • ìë¦¬ ì´ˆê¸°í™”
         InitializeMemberSeats();
 
-        // ÁÖÀÎ°ø ½ºÆù
+        // ì£¼ì¸ê³µ ìŠ¤í°
         Member mainCharacter = ObjectManager.Instance.SpawnPlayer("CatBlackZombie");
         mainCharacter.SetMemberData(MAIN_CHARACTER_ID);
         _members[0] = mainCharacter;
         MemberCount = 1;
 
-        // ÁÖÀÎ°øÀ» ±âº» ¼±ÅÃÀ¸·Î ¼³Á¤
+        // ì£¼ì¸ê³µì„ ê¸°ë³¸ ì„ íƒìœ¼ë¡œ ì„¤ì •
         SelectedMemberIndex = 0;
 
-        // ÁÖÀÎ°øÀ» ÁöÁ¤ ÀÚ¸®·Î ÀÌµ¿
+        // ì£¼ì¸ê³µì„ ì§€ì • ìë¦¬ë¡œ ì´ë™
         MoveMemberToSeat(0, true);
     }
 
-    //°í¿ë Á¾·ù¿¡ µû¶ó ·£´ıÇÑ Á÷¿ø ¸®½ºÆ® »ı¼º ÈÄ ¸Å°³ º¯¼ö·Î ¹ŞÀº ¾×¼Ç¿¡°Ô Result Àü´Ş Invoke
+    //ê³ ìš© ì¢…ë¥˜ì— ë”°ë¼ ëœë¤í•œ ì§ì› ë¦¬ìŠ¤íŠ¸ ìƒì„± í›„ ë§¤ê°œ ë³€ìˆ˜ë¡œ ë°›ì€ ì•¡ì…˜ì—ê²Œ Result ì „ë‹¬ Invoke
     public HireResult GenerateHireResult(EHireMethodType hireMethodType)
     {
-        //hireMethodType ¸¶´Ù ´Ù¸¥ ·ÎÁ÷
+        //hireMethodType ë§ˆë‹¤ ë‹¤ë¥¸ ë¡œì§
 
         HireResult result = new HireResult();
 
@@ -213,17 +213,17 @@ public class MemberManager : Singleton<MemberManager>
     {
         yield return CoroutineManager.Instance.Run(MemberManager.Instance.CoStartHiringProcess(hireMethodType, isLoad));
 
-        // ÆË¾÷ÀÌ ¸ğµÎ ´İÈú ¶§±îÁö ´ë±â
+        // íŒì—…ì´ ëª¨ë‘ ë‹«í ë•Œê¹Œì§€ ëŒ€ê¸°
         while (UIManager.Instance.PopupCount > 0)
         {
             yield return null;
         }
 
-        // ¸ğÁı ¿Ï·á ÆË¾÷
+        // ëª¨ì§‘ ì™„ë£Œ íŒì—…
         UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
         chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.CompleteRecruiting).Contents, MemberManager.Instance.CurrentHireResult.Messages, action: OpenMemberHirePopup);
 
-        // ¸ğÁı ¿Ï·á
+        // ëª¨ì§‘ ì™„ë£Œ
         GameManager.Instance.IsRecruiting = false;
     }
     public IEnumerator CoStartHiringProcess(EHireMethodType hireMethodType, bool isLoad)
@@ -240,7 +240,7 @@ public class MemberManager : Singleton<MemberManager>
         else
             CurrentHireResult = temp;
 
-        // ´ë±â ½Ã°£
+        // ëŒ€ê¸° ì‹œê°„
         float waitTime = GetHireWaitTime(hireMethodType);
         yield return new WaitForSeconds(waitTime);
     }
@@ -253,7 +253,7 @@ public class MemberManager : Singleton<MemberManager>
         switch (hireMethodType)
         {
             case EHireMethodType.Internet:
-                return 3f; // ÃßÈÄ¿¡ º¯°æ
+                return 3f; // ì¶”í›„ì— ë³€ê²½
             default:
                 return 1f;
         }
@@ -264,7 +264,7 @@ public class MemberManager : Singleton<MemberManager>
         
         for (int i = 0; i < count; i++)
         {
-            int randomID = UnityEngine.Random.Range(101, 104);// 101~103 »çÀÌÀÇ ·£´ıÇÑ Á÷¿ø ID »ı¼º
+            int randomID = UnityEngine.Random.Range(101, 104);// 101~103 ì‚¬ì´ì˜ ëœë¤í•œ ì§ì› ID ìƒì„±
             MemberData memberData = new MemberData();
             DataManager.Instance.MemberDict.TryGetValue(randomID, out memberData);
             memberDatas.Add(memberData);
@@ -274,7 +274,7 @@ public class MemberManager : Singleton<MemberManager>
     }
     public bool HireRandomMember(int start = 101, int end = 104)
     {
-        //³ªÁß¿¡ ¹üÀ§ Ã¼Å© ÇÒ °Í
+        //ë‚˜ì¤‘ì— ë²”ìœ„ ì²´í¬ í•  ê²ƒ
 
         UnityEngine.Random.InitState(System.DateTime.Now.Millisecond + MemberCount);
 
@@ -314,7 +314,7 @@ public class MemberManager : Singleton<MemberManager>
         if(CurrentHireResult != null)
             CurrentHireResult.MemberDatas.Remove(memberData);
 
-        // ÇöÀç MemberCount ÀÎµ¦½º¿¡ »õ ±¸¼º¿ø Ãß°¡
+        // í˜„ì¬ MemberCount ì¸ë±ìŠ¤ì— ìƒˆ êµ¬ì„±ì› ì¶”ê°€
         Member newPlayer = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(memberData.EmployeeID));
         MemberData newMemberData = InfectMemberData(memberData);
         newPlayer.SetMemberData(newMemberData);
@@ -351,22 +351,22 @@ public class MemberManager : Singleton<MemberManager>
     {
         MemberData infectedMemberData = memberData.DeepCopy();
         
-        // °¢ ´É·ÂÄ¡¿¡¼­ 0~ÇöÀç°ª »çÀÌÀÇ ·£´ıÇÑ °ªÀ» »©¼­ ÀüÅõ·ÂÀ¸·Î ÀüÈ¯
+        // ê° ëŠ¥ë ¥ì¹˜ì—ì„œ 0~í˜„ì¬ê°’ ì‚¬ì´ì˜ ëœë¤í•œ ê°’ì„ ë¹¼ì„œ ì „íˆ¬ë ¥ìœ¼ë¡œ ì „í™˜
         int totalTransferredPower = 0;
 
-        // Programming ´É·ÂÄ¡ Ã³¸®
+        // Programming ëŠ¥ë ¥ì¹˜ ì²˜ë¦¬
         totalTransferredPower += InfectAbility(ref infectedMemberData.Programming);
 
-        // Scenario ´É·ÂÄ¡ Ã³¸®
+        // Scenario ëŠ¥ë ¥ì¹˜ ì²˜ë¦¬
         totalTransferredPower += InfectAbility(ref infectedMemberData.Scenario);
 
-        // Graphics ´É·ÂÄ¡ Ã³¸®
+        // Graphics ëŠ¥ë ¥ì¹˜ ì²˜ë¦¬
         totalTransferredPower += InfectAbility(ref infectedMemberData.Graphics);
 
-        // Sound ´É·ÂÄ¡ Ã³¸®
+        // Sound ëŠ¥ë ¥ì¹˜ ì²˜ë¦¬
         totalTransferredPower += InfectAbility(ref infectedMemberData.Sound);
 
-        // ÀüÈ¯µÈ ´É·ÂÄ¡¸¦ ÀüÅõ·Â¿¡ Ãß°¡
+        // ì „í™˜ëœ ëŠ¥ë ¥ì¹˜ë¥¼ ì „íˆ¬ë ¥ì— ì¶”ê°€
         infectedMemberData.Power += totalTransferredPower;
 
         return infectedMemberData;
@@ -383,11 +383,11 @@ public class MemberManager : Singleton<MemberManager>
     }
     public bool CanFireMember(int memberIndex, bool ignoringStatus = false)
     {
-        // ÁÖÀÎ°øÀº ÇØ°í ºÒ°¡
+        // ì£¼ì¸ê³µì€ í•´ê³  ë¶ˆê°€
         if (memberIndex == 0)
             return false;
 
-        // À¯È¿¼º °Ë»ç
+        // ìœ íš¨ì„± ê²€ì‚¬
         if (memberIndex < 0 || memberIndex >= MemberCount)
             return false;
 
@@ -407,7 +407,7 @@ public class MemberManager : Singleton<MemberManager>
 
         return true;
     }
-    // ±¸¼º¿ø ÇØ°í
+    // êµ¬ì„±ì› í•´ê³ 
     public bool FireSelectedMember(bool ignoringStatus = false)
     {
         bool success = FireMember(SelectedMemberIndex, ignoringStatus);
@@ -427,14 +427,14 @@ public class MemberManager : Singleton<MemberManager>
             return false;
         }
 
-        // ¸Ê¿¡¼­ À§Ä¡ ÇØÁ¦
+        // ë§µì—ì„œ ìœ„ì¹˜ í•´ì œ
         MapManager.Instance.UnregisterCat(_members[memberIndex].CellPosition);
 
-        // ±¸¼º¿ø Á¦°Å
+        // êµ¬ì„±ì› ì œê±°
         ObjectManager.Instance.Despawn(_members[memberIndex]);
         _members[memberIndex] = null;
 
-        // µÚ¿¡ ÀÖ´Â ±¸¼º¿øµéÀ» ¾ÕÀ¸·Î ÇÑ Ä­¾¿ ÀÌµ¿
+        // ë’¤ì— ìˆëŠ” êµ¬ì„±ì›ë“¤ì„ ì•ìœ¼ë¡œ í•œ ì¹¸ì”© ì´ë™
         ShiftMembersForward(memberIndex);
         MemberCount--;
 
@@ -442,18 +442,18 @@ public class MemberManager : Singleton<MemberManager>
         return true;
     }
 
-    // ±¸¼º¿øµéÀ» ¾ÕÀ¸·Î ÇÑ Ä­¾¿ ÀÌµ¿
+    // êµ¬ì„±ì›ë“¤ì„ ì•ìœ¼ë¡œ í•œ ì¹¸ì”© ì´ë™
     private void ShiftMembersForward(int startIndex)
     {
         for (int i = startIndex; i < MemberCount - 1; i++)
         {
             _members[i] = _members[i + 1];
         }
-        // ¸¶Áö¸· ÀÚ¸®´Â null·Î ¼³Á¤
+        // ë§ˆì§€ë§‰ ìë¦¬ëŠ” nullë¡œ ì„¤ì •
         _members[MemberCount - 1] = null;
     }
 
-    // Æ¯Á¤ ÀÎµ¦½ºÀÇ ±¸¼º¿ø °¡Á®¿À±â
+    // íŠ¹ì • ì¸ë±ìŠ¤ì˜ êµ¬ì„±ì› ê°€ì ¸ì˜¤ê¸°
     public Member GetMember(int memberIndex)
     {
         if (memberIndex < 0 || memberIndex >= MemberCount)
@@ -461,7 +461,7 @@ public class MemberManager : Singleton<MemberManager>
         return _members[memberIndex];
     }
 
-    // Player °´Ã¼·Î ÀÎµ¦½º Ã£±â
+    // Player ê°ì²´ë¡œ ì¸ë±ìŠ¤ ì°¾ê¸°
     public int GetIndex(Member player)
     {
         if (player == null)
@@ -473,10 +473,10 @@ public class MemberManager : Singleton<MemberManager>
                 return i;
         }
 
-        return -1; // Ã£Áö ¸øÇÑ °æ¿ì
+        return -1; // ì°¾ì§€ ëª»í•œ ê²½ìš°
     }
 
-    // ¸ğµç ±¸¼º¿ø ÀúÀå µ¥ÀÌÅÍ »ı¼º
+    // ëª¨ë“  êµ¬ì„±ì› ì €ì¥ ë°ì´í„° ìƒì„±
     public List<MemberSaveData> GetPlayerSaveData()
     {
         List<MemberSaveData> saveDatas = new List<MemberSaveData>();
@@ -500,10 +500,10 @@ public class MemberManager : Singleton<MemberManager>
     {
         CurrentHireResult = hireResult.DeepCopy();
     }
-    // ÀúÀå µ¥ÀÌÅÍ¿¡¼­ ±¸¼º¿ø º¹¿ø
+    // ì €ì¥ ë°ì´í„°ì—ì„œ êµ¬ì„±ì› ë³µì›
     public void LoadFromSaveData()
     {
-        // ±âÁ¸ ¸â¹ö Á¤¸®
+        // ê¸°ì¡´ ë©¤ë²„ ì •ë¦¬
         ClearAllMembers();
         InitializeMemberSeats();
 
@@ -512,7 +512,7 @@ public class MemberManager : Singleton<MemberManager>
         bool isNight = SceneManager.Instance.CurrentSceneType == EScene.NightScene ? true : false;
 
         GameData gameData = SaveManager.Instance.GetGameData();
-        List<MemberSaveData> saveDatas = gameData.MemberSaveDatas;
+        List<MemberSaveData> saveDatas = gameData.CompanyData.MemberSaveDatas;
 
         for (int i = 0; i < saveDatas.Count && i < MAX_MEMBERS; i++)
         {
@@ -526,7 +526,7 @@ public class MemberManager : Singleton<MemberManager>
 
             _members[i] = member;
 
-            // ÀúÀåµÈ µ¥ÀÌÅÍ ·Îµå
+            // ì €ì¥ëœ ë°ì´í„° ë¡œë“œ
             if (isNight)
             {
                 member.AIEnabled = true;
@@ -548,13 +548,13 @@ public class MemberManager : Singleton<MemberManager>
         
         MemberCount = saveDatas.Count;
 
-        // Ã¹ ¹øÂ° ¸â¹ö¸¦ ±âº» ¼±ÅÃÀ¸·Î ¼³Á¤
+        // ì²« ë²ˆì§¸ ë©¤ë²„ë¥¼ ê¸°ë³¸ ì„ íƒìœ¼ë¡œ ì„¤ì •
         SelectedMemberIndex = 0;
         
         Debug.Log($"Loaded {MemberCount} members from save data");
     }
     
-    // ¸ğµç ±¸¼º¿ø Á¤¸®
+    // ëª¨ë“  êµ¬ì„±ì› ì •ë¦¬
     public void ClearAllMembers()
     {
         for (int i = 0; i < MAX_MEMBERS; i++)
@@ -570,7 +570,7 @@ public class MemberManager : Singleton<MemberManager>
         SelectedMemberIndex = 0;
     }
 
-    // ¸ğµç ±¸¼º¿ø °¡Á®¿À±â (null Á¦¿Ü)
+    // ëª¨ë“  êµ¬ì„±ì› ê°€ì ¸ì˜¤ê¸° (null ì œì™¸)
     public List<Member> GetAllMembers()
     {
         List<Member> members = new List<Member>();
@@ -582,25 +582,25 @@ public class MemberManager : Singleton<MemberManager>
         return members;
     }
 
-    // ºó ½½·Ô °³¼ö °¡Á®¿À±â
+    // ë¹ˆ ìŠ¬ë¡¯ ê°œìˆ˜ ê°€ì ¸ì˜¤ê¸°
     public int GetEmptySlotCount()
     {
         return MAX_MEMBERS - MemberCount;
     }
 
-    // ÆÀÀÌ °¡µæ Ã¡´ÂÁö È®ÀÎ
+    // íŒ€ì´ ê°€ë“ ì°¼ëŠ”ì§€ í™•ì¸
     public bool IsTeamFull()
     {
         return MemberCount >= MAX_MEMBERS;
     }
 
-    #region °ÔÀÓ °³¹ß °ü·Ã ¸â¹ö Á¶È¸
+    #region ê²Œì„ ê°œë°œ ê´€ë ¨ ë©¤ë²„ ì¡°íšŒ
 
     /// <summary>
-    /// Æ¯Á¤ °ÔÀÓ °³¹ß ´Ü°è¿¡ ÀûÇÕÇÑ ¸â¹öµéÀ» °¡Á®¿É´Ï´Ù
+    /// íŠ¹ì • ê²Œì„ ê°œë°œ ë‹¨ê³„ì— ì í•©í•œ ë©¤ë²„ë“¤ì„ ê°€ì ¸ì˜µë‹ˆë‹¤
     /// </summary>
-    /// <param name="gameDevType">°ÔÀÓ °³¹ß ´Ü°è</param>
-    /// <returns>ÀûÇÕÇÑ ¸â¹öµéÀÇ ¸®½ºÆ®</returns>
+    /// <param name="gameDevType">ê²Œì„ ê°œë°œ ë‹¨ê³„</param>
+    /// <returns>ì í•©í•œ ë©¤ë²„ë“¤ì˜ ë¦¬ìŠ¤íŠ¸</returns>
     public List<Member> GetMembersForGameDevType(EGameDevType gameDevType)
     {
         List<Member> suitableMembers = new List<Member>();
@@ -617,10 +617,10 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// Æ¯Á¤ °ÔÀÓ °³¹ß ´Ü°è¿¡ ÀûÇÕÇÑ ¸â¹ö ¼ö¸¦ ¹İÈ¯ÇÕ´Ï´Ù
+    /// íŠ¹ì • ê²Œì„ ê°œë°œ ë‹¨ê³„ì— ì í•©í•œ ë©¤ë²„ ìˆ˜ë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤
     /// </summary>
-    /// <param name="gameDevType">°ÔÀÓ °³¹ß ´Ü°è</param>
-    /// <returns>ÀûÇÕÇÑ ¸â¹ö ¼ö</returns>
+    /// <param name="gameDevType">ê²Œì„ ê°œë°œ ë‹¨ê³„</param>
+    /// <returns>ì í•©í•œ ë©¤ë²„ ìˆ˜</returns>
     public int GetSuitableMemberCount(EGameDevType gameDevType)
     {
         int count = 0;
@@ -637,11 +637,11 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// Æ¯Á¤ °ÔÀÓ °³¹ß ´Ü°è¿¡ ÀûÇÕÇÑ ¸â¹ö¸¦ ÀÎµ¦½º·Î °¡Á®¿É´Ï´Ù
+    /// íŠ¹ì • ê²Œì„ ê°œë°œ ë‹¨ê³„ì— ì í•©í•œ ë©¤ë²„ë¥¼ ì¸ë±ìŠ¤ë¡œ ê°€ì ¸ì˜µë‹ˆë‹¤
     /// </summary>
-    /// <param name="gameDevType">°ÔÀÓ °³¹ß ´Ü°è</param>
-    /// <param name="index">ÀûÇÕÇÑ ¸â¹öµé ÁßÀÇ ÀÎµ¦½º (0ºÎÅÍ ½ÃÀÛ)</param>
-    /// <returns>ÇØ´ç ÀÎµ¦½ºÀÇ ¸â¹ö ¶Ç´Â null</returns>
+    /// <param name="gameDevType">ê²Œì„ ê°œë°œ ë‹¨ê³„</param>
+    /// <param name="index">ì í•©í•œ ë©¤ë²„ë“¤ ì¤‘ì˜ ì¸ë±ìŠ¤ (0ë¶€í„° ì‹œì‘)</param>
+    /// <returns>í•´ë‹¹ ì¸ë±ìŠ¤ì˜ ë©¤ë²„ ë˜ëŠ” null</returns>
     public Member GetSuitableMemberByIndex(EGameDevType gameDevType, int index)
     {
         List<Member> suitableMembers = GetMembersForGameDevType(gameDevType);
@@ -655,11 +655,11 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// ¸â¹ö°¡ Æ¯Á¤ °ÔÀÓ °³¹ß ´Ü°è¿¡ ÀûÇÕÇÑÁö È®ÀÎÇÕ´Ï´Ù
+    /// ë©¤ë²„ê°€ íŠ¹ì • ê²Œì„ ê°œë°œ ë‹¨ê³„ì— ì í•©í•œì§€ í™•ì¸í•©ë‹ˆë‹¤
     /// </summary>
-    /// <param name="member">È®ÀÎÇÒ ¸â¹ö</param>
-    /// <param name="gameDevType">°ÔÀÓ °³¹ß ´Ü°è</param>
-    /// <returns>ÀûÇÕÇÏ¸é true</returns>
+    /// <param name="member">í™•ì¸í•  ë©¤ë²„</param>
+    /// <param name="gameDevType">ê²Œì„ ê°œë°œ ë‹¨ê³„</param>
+    /// <returns>ì í•©í•˜ë©´ true</returns>
     private bool IsMemberSuitableForDevType(Member member, EGameDevType gameDevType)
     {
         if (member?.CurrentMemberData == null)
@@ -667,11 +667,11 @@ public class MemberManager : Singleton<MemberManager>
 
         ERoleType role = member.CurrentMemberData.Role;
         
-        // Boss´Â Ç×»ó Æ÷ÇÔ
+        // BossëŠ” í•­ìƒ í¬í•¨
         if (role == ERoleType.Boss)
             return true;
             
-        // °³¹ß Å¸ÀÔ¿¡ µû¸¥ ÀûÇÕÇÑ ¿ªÇÒ È®ÀÎ
+        // ê°œë°œ íƒ€ì…ì— ë”°ë¥¸ ì í•©í•œ ì—­í•  í™•ì¸
         switch (gameDevType)
         {
             case EGameDevType.Scenario:
@@ -681,7 +681,7 @@ public class MemberManager : Singleton<MemberManager>
             case EGameDevType.Sound:
                 return role == ERoleType.SoundWriter;
             case EGameDevType.Debug:
-                // µğ¹ö±× ´Ü°è¿¡¼­´Â ¸ğµç ¿ªÇÒÀÌ Âü¿© °¡´É
+                // ë””ë²„ê·¸ ë‹¨ê³„ì—ì„œëŠ” ëª¨ë“  ì—­í• ì´ ì°¸ì—¬ ê°€ëŠ¥
                 return true;
             default:
                 return false;
@@ -692,24 +692,24 @@ public class MemberManager : Singleton<MemberManager>
 
     #region Player Seat Management
 
-    // ±âÁ¸ class¸¦ struct·Î º¯°æ
+    // ê¸°ì¡´ classë¥¼ structë¡œ ë³€ê²½
     
 
     /// <summary>
-    /// PlayerµéÀÇ °³ÀÎ ÁöÁ¤ ÀÚ¸® ÃÊ±âÈ­
-    /// _players ¹è¿­ÀÇ ¼ø¼­´ë·Î ÁöÁ¤µÈ ÀÚ¸® ÇÒ´ç
+    /// Playerë“¤ì˜ ê°œì¸ ì§€ì • ìë¦¬ ì´ˆê¸°í™”
+    /// _players ë°°ì—´ì˜ ìˆœì„œëŒ€ë¡œ ì§€ì •ëœ ìë¦¬ í• ë‹¹
     /// </summary>
     private void InitializeMemberSeats()
     {
-        _memberNightSeat[0] = new MemberSeatInfo(new Vector2Int(-3, 0), false, true);//»çÀå ÀÚ¸®
-        _memberNightSeat[1] = new MemberSeatInfo(new Vector2Int(0, 0), false, true);//Á÷¿ø 1
-        _memberNightSeat[2] = new MemberSeatInfo(new Vector2Int(-4, -4), true, false);//Á÷¿ø 2
-        _memberNightSeat[3] = new MemberSeatInfo(new Vector2Int(-1, -4), true, false);//Á÷¿ø 3
+        _memberNightSeat[0] = new MemberSeatInfo(new Vector2Int(-3, 0), false, true);//ì‚¬ì¥ ìë¦¬
+        _memberNightSeat[1] = new MemberSeatInfo(new Vector2Int(0, 0), false, true);//ì§ì› 1
+        _memberNightSeat[2] = new MemberSeatInfo(new Vector2Int(-4, -4), true, false);//ì§ì› 2
+        _memberNightSeat[3] = new MemberSeatInfo(new Vector2Int(-1, -4), true, false);//ì§ì› 3
 
-        _memberMorningSeat[0] = new MemberSeatInfo(new Vector2Int(-4, -2), false, true);//»çÀå ÀÚ¸®
-        _memberMorningSeat[1] = new MemberSeatInfo(new Vector2Int(-3, -2), false, true);//Á÷¿ø 1
-        _memberMorningSeat[2] = new MemberSeatInfo(new Vector2Int(-2, -2), false, true);//Á÷¿ø 2
-        _memberMorningSeat[3] = new MemberSeatInfo(new Vector2Int(-1, -2), false, true);//Á÷¿ø 3
+        _memberMorningSeat[0] = new MemberSeatInfo(new Vector2Int(-4, -2), false, true);//ì‚¬ì¥ ìë¦¬
+        _memberMorningSeat[1] = new MemberSeatInfo(new Vector2Int(-3, -2), false, true);//ì§ì› 1
+        _memberMorningSeat[2] = new MemberSeatInfo(new Vector2Int(-2, -2), false, true);//ì§ì› 2
+        _memberMorningSeat[3] = new MemberSeatInfo(new Vector2Int(-1, -2), false, true);//ì§ì› 3
     }
 
     public MemberSeatInfo GetMemberSeatInfo(Member member, bool isNight = true)
@@ -727,20 +727,20 @@ public class MemberManager : Singleton<MemberManager>
         return isNight ? _memberNightSeat[memberIndex] : _memberMorningSeat[memberIndex];
     }
     /// <summary>
-    /// Æ¯Á¤ PlayerÀÇ ÁöÁ¤ ÀÚ¸® °¡Á®¿À±â
+    /// íŠ¹ì • Playerì˜ ì§€ì • ìë¦¬ ê°€ì ¸ì˜¤ê¸°
     /// </summary>
-    /// <param name="memberIndex">PlayerÀÇ ÀÎµ¦½º</param>
-    /// <returns>ÇØ´ç PlayerÀÇ ÁöÁ¤ ÀÚ¸® ÁÂÇ¥</returns>
+    /// <param name="memberIndex">Playerì˜ ì¸ë±ìŠ¤</param>
+    /// <returns>í•´ë‹¹ Playerì˜ ì§€ì • ìë¦¬ ì¢Œí‘œ</returns>
     public Vector2Int GetMemberSeat(int memberIndex, bool isNight = true)
     {
         return GetMemberSeatInfo(memberIndex, isNight).SeatPosition;
     }
 
     /// <summary>
-    /// Æ¯Á¤ Player °´Ã¼ÀÇ ÁöÁ¤ ÀÚ¸® °¡Á®¿À±â
+    /// íŠ¹ì • Player ê°ì²´ì˜ ì§€ì • ìë¦¬ ê°€ì ¸ì˜¤ê¸°
     /// </summary>
-    /// <param name="member">Player °´Ã¼</param>
-    /// <returns>ÇØ´ç PlayerÀÇ ÁöÁ¤ ÀÚ¸® ÁÂÇ¥</returns>
+    /// <param name="member">Player ê°ì²´</param>
+    /// <returns>í•´ë‹¹ Playerì˜ ì§€ì • ìë¦¬ ì¢Œí‘œ</returns>
     public Vector2Int GetMemberSeat(Member member, bool isNight = true)
     {
         int index = GetIndex(member);
@@ -754,10 +754,10 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// Æ¯Á¤ PlayerÀÇ ÁöÁ¤ ÀÚ¸® º¯°æ
+    /// íŠ¹ì • Playerì˜ ì§€ì • ìë¦¬ ë³€ê²½
     /// </summary>
-    /// <param name="memberIndex">PlayerÀÇ ÀÎµ¦½º</param>
-    /// <param name="newSeat">»õ·Î¿î ÁöÁ¤ ÀÚ¸® ÁÂÇ¥</param>
+    /// <param name="memberIndex">Playerì˜ ì¸ë±ìŠ¤</param>
+    /// <param name="newSeat">ìƒˆë¡œìš´ ì§€ì • ìë¦¬ ì¢Œí‘œ</param>
     public void SetMemberSeat(int memberIndex, Vector2Int newSeat, bool isNight = true)
     {
         if (memberIndex < 0 || memberIndex >= MAX_MEMBERS)
@@ -777,10 +777,10 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// Æ¯Á¤ Player °´Ã¼ÀÇ ÁöÁ¤ ÀÚ¸® º¯°æ
+    /// íŠ¹ì • Player ê°ì²´ì˜ ì§€ì • ìë¦¬ ë³€ê²½
     /// </summary>
-    /// <param name="player">Player °´Ã¼</param>
-    /// <param name="newSeat">»õ·Î¿î ÁöÁ¤ ÀÚ¸® ÁÂÇ¥</param>
+    /// <param name="player">Player ê°ì²´</param>
+    /// <param name="newSeat">ìƒˆë¡œìš´ ì§€ì • ìë¦¬ ì¢Œí‘œ</param>
     public void SetMemberSeat(Member player, Vector2Int newSeat, bool isNight = true)
     {
         int index = GetIndex(player);
@@ -793,10 +793,10 @@ public class MemberManager : Singleton<MemberManager>
         SetMemberSeat(index, newSeat, isNight);
     }
     /// <summary>
-    /// Player¸¦ ÀÚ½ÅÀÇ ÁöÁ¤ ÀÚ¸®·Î ÀÌµ¿½ÃÅ°±â
+    /// Playerë¥¼ ìì‹ ì˜ ì§€ì • ìë¦¬ë¡œ ì´ë™ì‹œí‚¤ê¸°
     /// </summary>
-    /// <param name="memberIndex">PlayerÀÇ ÀÎµ¦½º</param>
-    /// <param name="immediate">Áï½Ã ÀÌµ¿ ¿©ºÎ</param>
+    /// <param name="memberIndex">Playerì˜ ì¸ë±ìŠ¤</param>
+    /// <param name="immediate">ì¦‰ì‹œ ì´ë™ ì—¬ë¶€</param>
     public void MoveMemberToSeat(int memberIndex, bool immediate = false)
     {
         if (memberIndex < 0 || memberIndex >= MemberCount || _members[memberIndex] == null)
@@ -813,10 +813,10 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// Æ¯Á¤ Player °´Ã¼¸¦ ÀÚ½ÅÀÇ ÁöÁ¤ ÀÚ¸®·Î ÀÌµ¿½ÃÅ°±â
+    /// íŠ¹ì • Player ê°ì²´ë¥¼ ìì‹ ì˜ ì§€ì • ìë¦¬ë¡œ ì´ë™ì‹œí‚¤ê¸°
     /// </summary>
-    /// <param name="member">Player °´Ã¼</param>
-    /// <param name="immediate">Áï½Ã ÀÌµ¿ ¿©ºÎ</param>
+    /// <param name="member">Player ê°ì²´</param>
+    /// <param name="immediate">ì¦‰ì‹œ ì´ë™ ì—¬ë¶€</param>
     public void MoveMemberToSeat(Member member, bool immediate = false)
     {
         int index = GetIndex(member);
@@ -830,9 +830,9 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     /// <summary>
-    /// ¸ğµç PlayerµéÀ» °¢ÀÚÀÇ ÁöÁ¤ ÀÚ¸®·Î ÀÌµ¿½ÃÅ°±â
+    /// ëª¨ë“  Playerë“¤ì„ ê°ìì˜ ì§€ì • ìë¦¬ë¡œ ì´ë™ì‹œí‚¤ê¸°
     /// </summary>
-    /// <param name="immediate">Áï½Ã ÀÌµ¿ ¿©ºÎ</param>
+    /// <param name="immediate">ì¦‰ì‹œ ì´ë™ ì—¬ë¶€</param>
     public void MoveAllMembersToSeats()
     {
         for (int i = 0; i < MemberCount; i++)

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using static Define;
 public class MorningScene : BaseScene
 {
@@ -10,7 +10,7 @@ public class MorningScene : BaseScene
 
         ResourceManager.Instance.LoadAll();
         DataManager.Instance.LoadData();
-        SaveManager.Instance.Load();
+        SaveManager.Instance.LoadGame();
 
         UIManager.Instance.ShowSceneUI<UI_MorningGame>();
     }

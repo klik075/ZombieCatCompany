@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +27,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, GenreData> GenreDict { get; private set; } = new Dictionary<int, GenreData>();
     public Dictionary<int, ContentData> ContentDict { get; private set; } = new Dictionary<int, ContentData>();
     public Dictionary<int, List<SynergyData>> SynergyDict { get; private set; } = new Dictionary<int, List<SynergyData>>();
+    public Dictionary<int, ModeData> ModeDict { get; private set; } = new Dictionary<int, ModeData>();
 
     public void LoadData()
     {
@@ -41,6 +42,7 @@ public class DataManager : Singleton<DataManager>
         GenreDict = LoadJson<GenreDataLoader, int, GenreData>("GenreData").MakeDict();
         ContentDict = LoadJson<ContentDataLoader, int, ContentData>("ContentData").MakeDict();
         SynergyDict = LoadJson<SynergyDataLoader, int, List<SynergyData>>("SynergyData").MakeDict();
+        ModeDict = LoadJson<ModeDataLoader, int, ModeData>("ModeData").MakeDict();
 
         Validate();
     }

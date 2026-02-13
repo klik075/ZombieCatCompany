@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class UI_OverWritePopup : UI_UGUI, IUI_Popup
 {
@@ -33,6 +33,15 @@ public class UI_OverWritePopup : UI_UGUI, IUI_Popup
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
+    }
+    private void OnClickOkayButton()
+    {
+        OnClickNoButton();
+        UI_ModeSelectionPopup popup = UIManager.Instance.ShowPopupUI<UI_ModeSelectionPopup>();
+    }
+    private void OnClickNoButton()
+    {
+        UIManager.Instance.ClosePopupUI();
     }
 
     public override void RefreshUI()
