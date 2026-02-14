@@ -16,7 +16,7 @@ public class ModeData
         switch (gameMode)
         {
             case EGameMode.Purchase:
-                return "구매모드(봏통)";
+                return "구매모드(보통)";
             case EGameMode.Extortion:
                 return "강탈모드(어려움)";
             default:

@@ -1,18 +1,17 @@
 ﻿using UnityEngine;
-using static Define;
-public class MorningScene : BaseScene
+
+public class LobbyScene : BaseScene
 {
     protected override void Awake()
     {
         base.Awake();
 
-        SceneType = EScene.MorningScene;
+        SceneType = Define.EScene.LobbyScene;
 
         ResourceManager.Instance.LoadAll();
         DataManager.Instance.LoadData();
-        SaveManager.Instance.LoadGameData();
 
-        UIManager.Instance.ShowSceneUI<UI_MorningGame>();
+        SaveManager.Instance.LoadUserData();
     }
     void OnApplicationQuit()
     {

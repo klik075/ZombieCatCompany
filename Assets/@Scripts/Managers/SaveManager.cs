@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEditor.Overlays;
 using UnityEngine;
 using static Define;
 public class SaveManager : Singleton<SaveManager>
@@ -43,7 +42,7 @@ public class SaveManager : Singleton<SaveManager>
 
         while (true)
         {
-            SaveGame();
+            SaveGameData();
             yield return wait;
         }
     }
@@ -70,7 +69,7 @@ public class SaveManager : Singleton<SaveManager>
     #endregion
 
     #region GameData Save/Load
-    public void SaveGame()
+    public void SaveGameData()
     {
         GameData gameData = GameManager.Instance.MyGameData;
         if (gameData == null)
@@ -90,28 +89,40 @@ public class SaveManager : Singleton<SaveManager>
         Debug.Log($"SaveManager: Game saved to {GameDataPath}");
     }
 
-    public void LoadGame()
+    public void LoadGameData()
     {
+        if (GameManager.Instance.UserData == null)
+        {
+            Debug.LogWarning("SaveManager: UserData is null. loading UserData first.");
+            LoadUserData();
+        }
+
         if(!HasGameData())
         {
-            Debug.LogWarning("SaveManager: No save file found.");
-            return;
+            Debug.LogWarning("SaveManager: No GameData File found.");
+            NewGame();
         }
 
         string json = File.ReadAllText(GameDataPath);
         GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
         GameManager.Instance.MyGameData = gameData;
-        
-        // MemberManager 데이터 로드
+
+        if (gameData.CompanyData.MemberSaveDatas != null && gameData.CompanyData.MemberSaveDatas.Count == 0)
+        {
+            MemberManager.Instance.InitBoss();
+        }
+
         if (gameData.CompanyData.MemberSaveDatas != null && gameData.CompanyData.MemberSaveDatas.Count > 0)
         {
             MemberManager.Instance.LoadFromSaveData();
         }
+
         if (gameData.NightData.HireResult != null)
         {
             MemberManager.Instance.LoadHireResult(gameData.NightData.HireResult);
             MemberManager.Instance.StartHire(gameData.NightData.HireResult.HireMethod, true);
         }
+
         if(gameData.NightData.GameDevProjectData != null)
         {
             GameDevManager.Instance.LoadFromSaveData(gameData.NightData.GameDevProjectData);
@@ -142,7 +153,7 @@ public class SaveManager : Singleton<SaveManager>
         UserData userData = GameManager.Instance.UserData;
         if (userData == null)
         {
-            Debug.LogWarning("SaveManager: UserData is null, cannot save.");
+            Debug.LogWarning("SaveManager: UserData is null, cannot save UserData.");
             return;
         }
 
@@ -167,16 +178,6 @@ public class SaveManager : Singleton<SaveManager>
 
         string json = File.ReadAllText(UserDataPath);
         UserData userData = JsonConvert.DeserializeObject<UserData>(json);
-
-        if (userData.EndingRecords == null)
-        {
-            userData.EndingRecords = new Dictionary<EGameMode, EndingData[]>
-            {
-                [EGameMode.Purchase] = new EndingData[6],
-                [EGameMode.Extortion] = new EndingData[6]
-            };
-        }
-
         GameManager.Instance.UserData = userData;
 
         Debug.Log($"SaveManager: UserData loaded from {UserDataPath}");
@@ -202,7 +203,8 @@ public class SaveManager : Singleton<SaveManager>
         //GameDevManager.Instance.InitNewProject();
 
         // 즉시 저장
-        SaveGame();
+        SaveGameData();
+        SaveUserData();
 
         Debug.Log("SaveManager: New game started.");
     }

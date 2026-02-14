@@ -57,33 +57,30 @@ public class DataTransformer : EditorWindow
             return;
         }
 
-        // CSV 파일 읽기
-        string[] lines = File.ReadAllLines(excelPath, Encoding.UTF8);
+        // CSV 파일 읽기 (인코딩 자동 감지)
+        string csvContent = ReadCSVWithCorrectEncoding(excelPath);
+        List<string[]> rows = ParseCSV(csvContent);
         
-        if (lines.Length < 2)
+        if (rows.Count < 2)
         {
             Debug.LogError("CSV file must have at least a header row and one data row");
             return;
         }
 
         // 헤더 파싱 (첫 번째 줄)
-        string[] headers = lines[0].Split(',');
+        string[] headers = rows[0];
         
         // LoaderData의 필드 정보 가져오기
         FieldInfo[] fields = typeof(LoaderData).GetFields(BindingFlags.Public | BindingFlags.Instance);
         
         // 데이터 파싱 (두 번째 줄부터)
-        for (int i = 1; i < lines.Length; i++)
+        for (int i = 1; i < rows.Count; i++)
         {
-            string line = lines[i].Trim();
-            if (string.IsNullOrEmpty(line))
-                continue;
-
-            string[] values = line.Split(',');
+            string[] values = rows[i];
             
             if (values.Length != headers.Length)
             {
-                Debug.LogWarning($"Line {i + 1} has mismatched column count. Skipping.");
+                Debug.LogWarning($"Row {i + 1} has mismatched column count. Expected {headers.Length}, got {values.Length}. Skipping.");
                 continue;
             }
 
@@ -109,7 +106,7 @@ public class DataTransformer : EditorWindow
                     }
                     catch (Exception ex)
                     {
-                        Debug.LogError($"Error converting field '{headerName}' at line {i + 1}: {ex.Message}");
+                        Debug.LogError($"Error converting field '{headerName}' at row {i + 1}: {ex.Message}");
                     }
                 }
             }
@@ -160,6 +157,126 @@ public class DataTransformer : EditorWindow
             return Enum.Parse(targetType, value);
         else
             return Convert.ChangeType(value, targetType);
+    }
+
+    // RFC 4180 표준을 따르는 CSV 파서
+    private static List<string[]> ParseCSV(string csvContent)
+    {
+        List<string[]> rows = new List<string[]>();
+        List<string> currentRow = new List<string>();
+        StringBuilder currentField = new StringBuilder();
+        bool inQuotes = false;
+        
+        for (int i = 0; i < csvContent.Length; i++)
+        {
+            char c = csvContent[i];
+            char nextChar = (i + 1 < csvContent.Length) ? csvContent[i + 1] : '\0';
+            
+            if (inQuotes)
+            {
+                if (c == '"')
+                {
+                    if (nextChar == '"')
+                    {
+                        // 연속된 따옴표는 이스케이프된 따옴표
+                        currentField.Append('"');
+                        i++; // 다음 따옴표 건너뛰기
+                    }
+                    else
+                    {
+                        // 따옴표 종료
+                        inQuotes = false;
+                    }
+                }
+                else
+                {
+                    currentField.Append(c);
+                }
+            }
+            else
+            {
+                if (c == '"')
+                {
+                    inQuotes = true;
+                }
+                else if (c == ',')
+                {
+                    currentRow.Add(currentField.ToString());
+                    currentField.Clear();
+                }
+                else if (c == '\r' && nextChar == '\n')
+                {
+                    // Windows 줄바꿈 (\r\n)
+                    currentRow.Add(currentField.ToString());
+                    rows.Add(currentRow.ToArray());
+                    currentRow.Clear();
+                    currentField.Clear();
+                    i++; // \n 건너뛰기
+                }
+                else if (c == '\n')
+                {
+                    // Unix 줄바꿈 (\n)
+                    currentRow.Add(currentField.ToString());
+                    rows.Add(currentRow.ToArray());
+                    currentRow.Clear();
+                    currentField.Clear();
+                }
+                else if (c != '\r')
+                {
+                    currentField.Append(c);
+                }
+            }
+        }
+        
+        // 마지막 필드와 행 추가
+        if (currentField.Length > 0 || currentRow.Count > 0)
+        {
+            currentRow.Add(currentField.ToString());
+            rows.Add(currentRow.ToArray());
+        }
+        
+        return rows;
+    }
+
+    // 올바른 인코딩으로 CSV 파일 읽기
+    private static string ReadCSVWithCorrectEncoding(string filePath)
+    {
+        // BOM 확인을 위해 바이트로 읽기
+        byte[] bytes = File.ReadAllBytes(filePath);
+        
+        // UTF-8 BOM 확인
+        if (bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
+        {
+            Debug.Log("Detected UTF-8 with BOM encoding");
+            return Encoding.UTF8.GetString(bytes, 3, bytes.Length - 3);
+        }
+        
+        // UTF-8 시도 (BOM 없음)
+        try
+        {
+            string utf8Content = Encoding.UTF8.GetString(bytes);
+            // UTF-8로 디코딩 후 재인코딩해서 같으면 유효한 UTF-8
+            if (Encoding.UTF8.GetBytes(utf8Content).SequenceEqual(bytes))
+            {
+                Debug.Log("Detected UTF-8 (no BOM) encoding");
+                return utf8Content;
+            }
+        }
+        catch { }
+        
+        // EUC-KR(CP949) 시도
+        try
+        {
+            Encoding euckr = Encoding.GetEncoding("EUC-KR");
+            Debug.Log("Using EUC-KR encoding");
+            return euckr.GetString(bytes);
+        }
+        catch
+        {
+            // 기본값으로 UTF-8 사용
+            Debug.LogWarning("Failed to detect encoding, using UTF-8 as fallback");
+            return Encoding.UTF8.GetString(bytes);
+        }
     }
 
 #endif

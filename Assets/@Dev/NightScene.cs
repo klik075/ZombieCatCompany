@@ -19,7 +19,7 @@ public class NightScene : BaseScene
         DataManager.Instance.LoadData();
         //IAPManager.Instance.Init();
 
-        SaveManager.Instance.LoadGame();
+        SaveManager.Instance.LoadGameData();
         UIManager.Instance.ShowSceneUI<UI_NightGame>();
 	}
     void OnApplicationQuit()

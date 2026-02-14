@@ -6,8 +6,8 @@ public class SaveManagerEditor : EditorWindow
 {
 #if UNITY_EDITOR
 
-    [MenuItem("Tools/DeleteSaveFile %#L")] // Ctrl+Shift+L
-    public static void DeleteSaveFile()
+    [MenuItem("Tools/DeleteGameData")]
+    public static void DeleteGameData()
     {
         if (File.Exists(SaveManager.GameDataPath))
         {
@@ -16,7 +16,22 @@ public class SaveManagerEditor : EditorWindow
         }
         else
         {
-            Debug.Log("No Save File Found");
+            Debug.Log("No Game Data File Found");
+        }
+    }
+    // Delete User Data
+    [MenuItem("Tools/DeleteUserData")]
+    public static void DeleteUserData()
+    {
+        if (File.Exists(SaveManager.UserDataPath))
+        {
+            File.Delete(SaveManager.UserDataPath);
+            Debug.Log($"User Data File Deleted : {SaveManager.UserDataPath}");
+            DeleteGameData();
+        }
+        else
+        {
+            Debug.Log("No User Data File Found");
         }
     }
 #endif

@@ -59,19 +59,6 @@ public class GameData
         NightData.AnnualProfit = 0;
         NightData.IsRecruiting = false;
     }
-    public GameData(EGameMode eGameMode, EGameState eGameState, string companyName, int year, int gold, int food, int annualProfit, bool isRecruiting)
-    {
-        GameMode = eGameMode;
-        GameState = eGameState;
-
-        CompanyData.CompanyName = companyName;
-        CompanyData.Year = year;
-        CompanyData.Gold = gold;
-        CompanyData.Food = food;
-
-        NightData.AnnualProfit = annualProfit;
-        NightData.IsRecruiting = isRecruiting;
-    }
 }
 [Serializable]
 public class UserData
@@ -108,7 +95,7 @@ public class EndingData
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
-    private UserData _userData = new UserData();
+    private UserData _userData;
     public UserData UserData
     {
         get { return _userData; }

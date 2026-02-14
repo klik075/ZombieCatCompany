@@ -81,7 +81,7 @@ public abstract class UI_BottomPanelBase : UI_UGUI
     // 공통 버튼 클릭 처리
     protected void OnClickSaveButton()
     {
-        SaveManager.Instance.SaveGame();
+        SaveManager.Instance.SaveGameData();
         Debug.Log("SaveButton Clicked");
     }
 

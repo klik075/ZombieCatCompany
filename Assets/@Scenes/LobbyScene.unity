@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 18645573}
   - component: {fileID: 18645574}
   m_Layer: 0
-  m_Name: '@LoadingScene'
+  m_Name: '@LobbyScene'
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -160,9 +160,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 18645571}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9687150bc67d77d4f97f56e4929a4da1, type: 3}
+  m_Script: {fileID: 11500000, guid: c94d10caea05ed446a0918423be0799b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LoadingScene
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyScene
 --- !u!1 &961739749
 GameObject:
   m_ObjectHideFlags: 0

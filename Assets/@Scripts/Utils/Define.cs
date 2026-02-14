@@ -1,3 +1,4 @@
+ï»¿using System;
 using UnityEngine;
 
 public static class Define
@@ -6,6 +7,7 @@ public static class Define
     {
         Unknown,
         LoadingScene,
+        LobbyScene,
         NightScene,
         MorningScene,
     }
@@ -14,27 +16,27 @@ public static class Define
     {
         None,
 
-        Event,//ÀÌº¥Æ®
-        DispatchResult,//ÆÄ°ß °á°ú
-        Dispatch,//ÆÄ°ß ¼±ÅÃ
-        FoodRationing,//½Ä·® ¹è±Ş
+        Event,//ì´ë²¤íŠ¸
+        DispatchResult,//íŒŒê²¬ ê²°ê³¼
+        Dispatch,//íŒŒê²¬ ì„ íƒ
+        FoodRationing,//ì‹ëŸ‰ ë°°ê¸‰
 
-        Night,//°ÔÀÓ °³¹ß Àü
-        Recruiting,//°í¿ë Áß
-        Dev,//°ÔÀÓ °³¹ß Áß
+        Night,//ê²Œì„ ê°œë°œ ì „
+        Recruiting,//ê³ ìš© ì¤‘
+        Dev,//ê²Œì„ ê°œë°œ ì¤‘
 
-        FoodPurchase,//½Ä·® ±¸¸Å
+        FoodPurchase,//ì‹ëŸ‰ êµ¬ë§¤
 
-        Morning,//¾ÆÄ§
-        Defence,//¹æ¾î
+        Morning,//ì•„ì¹¨
+        Defence,//ë°©ì–´
 
-        Ending,//¿£µù
+        Ending,//ì—”ë”©
     }
     public enum EEventType
     {
         //=======General=============
-        Event,//ÀÌº¥Æ®
-        Dispatch,//ÆÄ°ß
+        Event,//ì´ë²¤íŠ¸
+        Dispatch,//íŒŒê²¬
 
         //===========================
         //=======Trigger Events======
@@ -80,8 +82,8 @@ public static class Define
     }
     public enum  EEventRewardType
     {
-        Item,//¾ÆÀÌÅÛ
-        Ending,//Ç÷Ã» ¿£µù
+        Item,//ì•„ì´í…œ
+        Ending,//í˜ˆì²­ ì—”ë”©
     }
     public enum ESound
     {
@@ -98,134 +100,134 @@ public static class Define
     }
     public enum ERoleType
     {
-        Boss,//»çÀå
-        Planner,//±âÈ¹ÀÚ
-        Designer,//µğÀÚÀÌ³Ê
-        SoundWriter,//»ç¿îµå ÀÛ°¡
-        Merchant,//»óÀÎ
+        Boss,//ì‚¬ì¥
+        Planner,//ê¸°íšì
+        Designer,//ë””ìì´ë„ˆ
+        SoundWriter,//ì‚¬ìš´ë“œ ì‘ê°€
+        Merchant,//ìƒì¸
     }
     public enum EMemberStateType
     {
-        Full,//¹èºÎ¸§
-        Hunger1,//¾à°£ ¹è°íÇÄ
-        Hunger2,//¹è°íÇÄ
-        Starvation,//±¾ÁÖ¸²
-        Soon,//°ğ Á×À½
+        Full,//ë°°ë¶€ë¦„
+        Hunger1,//ì•½ê°„ ë°°ê³ í””
+        Hunger2,//ë°°ê³ í””
+        Starvation,//êµ¶ì£¼ë¦¼
+        Soon,//ê³§ ì£½ìŒ
 
-        Dispatch,//ÆÄ°ß Áß
+        Dispatch,//íŒŒê²¬ ì¤‘
     }
     public enum EAbilityType
     {
-        Programming,//ÇÁ·Î±×·¡¹Ö
-        Scenario,//½Ã³ª¸®¿À
-        Graphics,//±×·¡ÇÈ
-        Sound,//»ç¿îµå
-        Power//ÀüÅõ·Â
+        Programming,//í”„ë¡œê·¸ë˜ë°
+        Scenario,//ì‹œë‚˜ë¦¬ì˜¤
+        Graphics,//ê·¸ë˜í”½
+        Sound,//ì‚¬ìš´ë“œ
+        Power//ì „íˆ¬ë ¥
     }
     public enum EQualityType
     {
-        Fun,//Àç¹Ì
-        Nyang,//³É·Â
-        Graphics,//±×·¡ÇÈ
-        Sound,//»ç¿îµå
-        Bug,//¹ö±×
+        Fun,//ì¬ë¯¸
+        Nyang,//ëƒ¥ë ¥
+        Graphics,//ê·¸ë˜í”½
+        Sound,//ì‚¬ìš´ë“œ
+        Bug,//ë²„ê·¸
     }
     public enum EGameMode
     {
-        Purchase, //±¸¸Å ¸ğµå
-        Extortion, //°­Å» ¸ğµå
+        Purchase, //êµ¬ë§¤ ëª¨ë“œ
+        Extortion, //ê°•íƒˆ ëª¨ë“œ
     }
     public enum EEndingType
     {
-        Starved,//±¾¾î Á×À½
-        Detection,//Á¤Ã¼ ¹ß°¢
-        Serum,//Ç÷Ã» Åõ¿©
+        Starved,//êµ¶ì–´ ì£½ìŒ
+        Detection,//ì •ì²´ ë°œê°
+        Serum,//í˜ˆì²­ íˆ¬ì—¬
     }
     public enum EHireMethodType
     {
-        Internet,//ÀÎÅÍ³İ
+        Internet,//ì¸í„°ë„·
     }
     public enum EMemberSelectionType
     {
-        Education,//±³À°
-        Dispatch,//ÆÄ°ß
+        Education,//êµìœ¡
+        Dispatch,//íŒŒê²¬
     }
     public enum ESalaryType
     {
-        Salary,//¿¬ºÀ
-        Food,//½Äºñ
-        Deposit,//°è¾à±İ
+        Salary,//ì—°ë´‰
+        Food,//ì‹ë¹„
+        Deposit,//ê³„ì•½ê¸ˆ
     }
     
     public enum EMessageType
     {
-        // ÀçÁ¤ °ü·Ã
-        MoneyLow,          // ÀÚ±İ ºÎÁ·
+        // ì¬ì • ê´€ë ¨
+        MoneyLow,          // ìê¸ˆ ë¶€ì¡±
 
-        // °í¿ë °ü·Ã
-        AlreadyRecruiting,     // ÀÌ¹Ì ¸ğÁı Áß
-        StartRecruiting,       // ¸ğÁı ½ÃÀÛ
-        CompleteRecruiting,    // ¸ğÁı ¿Ï·á
-        MembersFull,          // ¸â¹ö°¡ °¡µæ Âü
-        MemberFired,           // ¸â¹ö ÇØ°í
-        MemberSwapped,          // ¸â¹ö ÇØ°í ÈÄ °í¿ë
-        MemberHired,          // ¸â¹ö °í¿ë
-        MemberFiredConfirm,   //¸â¹ö ÇØ°í È®ÀÎ
-        NoRecruiting,         //¸ğÁı ºÒ°¡
-        NoFire,              //ÇØ°í ºÒ°¡
+        // ê³ ìš© ê´€ë ¨
+        AlreadyRecruiting,     // ì´ë¯¸ ëª¨ì§‘ ì¤‘
+        StartRecruiting,       // ëª¨ì§‘ ì‹œì‘
+        CompleteRecruiting,    // ëª¨ì§‘ ì™„ë£Œ
+        MembersFull,          // ë©¤ë²„ê°€ ê°€ë“ ì°¸
+        MemberFired,           // ë©¤ë²„ í•´ê³ 
+        MemberSwapped,          // ë©¤ë²„ í•´ê³  í›„ ê³ ìš©
+        MemberHired,          // ë©¤ë²„ ê³ ìš©
+        MemberFiredConfirm,   //ë©¤ë²„ í•´ê³  í™•ì¸
+        NoRecruiting,         //ëª¨ì§‘ ë¶ˆê°€
+        NoFire,              //í•´ê³  ë¶ˆê°€
 
-        // °³¹ß °ü·Ã
-        NoDev,              // °³¹ß ºÒ°¡. ¸ğÁı Áß
-        AlreadyDev,         // ÀÌ¹Ì °³¹ß Áß
-        SelectPlanner,       // ±âÈ¹ÀÚ ¼±ÅÃ
-        SelectDesigner,      // ¿øÈ­ ¼±ÅÃ
-        SelectSoundWriter,   // »ç¿îµå ÀÛ¾÷ ¼±ÅÃ
-        StartDebugging,     // µğ¹ö±ë ½ÃÀÛ
-        CompleteGameDev,    // °ÔÀÓ °³¹ß ¿Ï·á
+        // ê°œë°œ ê´€ë ¨
+        NoDev,              // ê°œë°œ ë¶ˆê°€. ëª¨ì§‘ ì¤‘
+        AlreadyDev,         // ì´ë¯¸ ê°œë°œ ì¤‘
+        SelectPlanner,       // ê¸°íšì ì„ íƒ
+        SelectDesigner,      // ì›í™” ì„ íƒ
+        SelectSoundWriter,   // ì‚¬ìš´ë“œ ì‘ì—… ì„ íƒ
+        StartDebugging,     // ë””ë²„ê¹… ì‹œì‘
+        CompleteGameDev,    // ê²Œì„ ê°œë°œ ì™„ë£Œ
 
-        // ÅëÁ¶¸² ±¸¸Å °ü·Ã
-        MerchantHello,        // ¾Ï»óÀÎ ÀÎ»ç
-        PurchaseMessage,      // ÅëÁ¶¸² ±¸¸Å ¸Ş½ÃÁö
-        MerchantBye,          // ±¸¸Å ¿Ï·á
+        // í†µì¡°ë¦¼ êµ¬ë§¤ ê´€ë ¨
+        MerchantHello,        // ì•”ìƒì¸ ì¸ì‚¬
+        PurchaseMessage,      // í†µì¡°ë¦¼ êµ¬ë§¤ ë©”ì‹œì§€
+        MerchantBye,          // êµ¬ë§¤ ì™„ë£Œ
     }
 
     public enum EChatType
     {
-        // ¸â¹ö °£ ´ëÈ­
-        MemberToMember,    // ¸â¹ö³¢¸® ´ëÈ­
-        MemberToBoss,      // ¸â¹ö°¡ »çÀå¿¡°Ô
-        BossToMember,      // »çÀåÀÌ ¸â¹ö¿¡°Ô
+        // ë©¤ë²„ ê°„ ëŒ€í™”
+        MemberToMember,    // ë©¤ë²„ë¼ë¦¬ ëŒ€í™”
+        MemberToBoss,      // ë©¤ë²„ê°€ ì‚¬ì¥ì—ê²Œ
+        BossToMember,      // ì‚¬ì¥ì´ ë©¤ë²„ì—ê²Œ
         
-        // ¾÷¹« °ü·Ã
-        WorkRequest,       // ¾÷¹« ¿äÃ»
-        WorkComplete,      // ¾÷¹« ¿Ï·á
-        WorkProgress,      // ¾÷¹« ÁøÇà »óÈ²
+        // ì—…ë¬´ ê´€ë ¨
+        WorkRequest,       // ì—…ë¬´ ìš”ì²­
+        WorkComplete,      // ì—…ë¬´ ì™„ë£Œ
+        WorkProgress,      // ì—…ë¬´ ì§„í–‰ ìƒí™©
         
-        // »óÅÂ °ü·Ã
-        StatusReport,      // »óÅÂ º¸°í
-        ComplaintHungry,   // ¹è°íÇÄ ºÒ¸¸
-        ComplaintTired,    // ÇÇ·Î ºÒ¸¸
+        // ìƒíƒœ ê´€ë ¨
+        StatusReport,      // ìƒíƒœ ë³´ê³ 
+        ComplaintHungry,   // ë°°ê³ í”” ë¶ˆë§Œ
+        ComplaintTired,    // í”¼ë¡œ ë¶ˆë§Œ
         
-        // °¨Á¤ Ç¥Çö
-        Happy,             // ±â»İ
-        Sad,               // ½½ÇÄ
-        Angry,             // È­³²
-        Surprised,         // ³î¶÷
+        // ê°ì • í‘œí˜„
+        Happy,             // ê¸°ì¨
+        Sad,               // ìŠ¬í””
+        Angry,             // í™”ë‚¨
+        Surprised,         // ë†€ëŒ
         
-        // ½Ã½ºÅÛ
-        System,            // ½Ã½ºÅÛ ¸Ş½ÃÁö
-        Narration,         // ³ª·¹ÀÌ¼Ç
+        // ì‹œìŠ¤í…œ
+        System,            // ì‹œìŠ¤í…œ ë©”ì‹œì§€
+        Narration,         // ë‚˜ë ˆì´ì…˜
         
-        // ÀÌº¥Æ®
-        EventMessage,      // ÀÌº¥Æ® ¹ß»ı ½Ã
+        // ì´ë²¤íŠ¸
+        EventMessage,      // ì´ë²¤íŠ¸ ë°œìƒ ì‹œ
         
-        // ·£´ı ´ëÈ­
-        RandomChat,        // ÀÏ»ó ´ëÈ­
+        // ëœë¤ ëŒ€í™”
+        RandomChat,        // ì¼ìƒ ëŒ€í™”
     }
     public enum EFireType
     {
-        Normal,//ÀÏ¹İ ÇØ°í
-        Swap,//±³Ã¼ ÇØ°í
+        Normal,//ì¼ë°˜ í•´ê³ 
+        Swap,//êµì²´ í•´ê³ 
     }
     public enum EGenreType
     {
@@ -270,9 +272,9 @@ public static class Define
     }
     public enum ESynergyType
     {
-        Good,//°ÉÀÛ
-        Normal,//Æò¹ü
-        Bad,//¶Ë°ÔÀÓ
+        Good,//ê±¸ì‘
+        Normal,//í‰ë²”
+        Bad,//ë˜¥ê²Œì„
     }
     public enum EProposalType
     {
@@ -297,7 +299,8 @@ public static class Define
     public enum EInputFieldType
     {
         None,
-        ChangeGameTitle,    // °ÔÀÓ Å¸ÀÌÆ² º¯°æ
-        PurchaseFood        // ÅëÁ¶¸² ±¸¸Å
+        CompanyName,        // íšŒì‚¬ ì´ë¦„
+        ChangeGameTitle,    // ê²Œì„ íƒ€ì´í‹€ ë³€ê²½
+        PurchaseFood        // í†µì¡°ë¦¼ êµ¬ë§¤
     }
 }

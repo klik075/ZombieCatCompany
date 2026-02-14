@@ -218,7 +218,7 @@ public class UI_BottomPanel : UI_UGUI
 
     private void OnClickSaveButton()
     {
-        SaveManager.Instance.SaveGame();
+        SaveManager.Instance.SaveGameData();
         Debug.Log("SaveButton Clicked");
     }
 

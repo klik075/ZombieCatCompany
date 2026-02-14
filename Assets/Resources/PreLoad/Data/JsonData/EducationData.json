@@ -1,0 +1,84 @@
+﻿{
+  "educations": [
+    {
+      "EducationId": 200,
+      "Name": "박스 탐색",
+      "Cost": 1000,
+      "Programming": 0,
+      "Scenario": 0,
+      "Graphics": 0,
+      "Sound": 3,
+      "Power": 3
+    },
+    {
+      "EducationId": 201,
+      "Name": "레이저 잡기",
+      "Cost": 1000,
+      "Programming": 0,
+      "Scenario": 0,
+      "Graphics": 0,
+      "Sound": 3,
+      "Power": 3
+    },
+    {
+      "EducationId": 202,
+      "Name": "실타래 퍼즐",
+      "Cost": 1000,
+      "Programming": 0,
+      "Scenario": 0,
+      "Graphics": 3,
+      "Sound": 3,
+      "Power": 0
+    },
+    {
+      "EducationId": 203,
+      "Name": "그림자 추적",
+      "Cost": 1000,
+      "Programming": 0,
+      "Scenario": 0,
+      "Graphics": 3,
+      "Sound": 3,
+      "Power": 0
+    },
+    {
+      "EducationId": 204,
+      "Name": "발톱 관리",
+      "Cost": 1000,
+      "Programming": 0,
+      "Scenario": 3,
+      "Graphics": 3,
+      "Sound": 0,
+      "Power": 0
+    },
+    {
+      "EducationId": 205,
+      "Name": "캣타워 등반",
+      "Cost": 1000,
+      "Programming": 0,
+      "Scenario": 3,
+      "Graphics": 3,
+      "Sound": 0,
+      "Power": 0
+    },
+    {
+      "EducationId": 206,
+      "Name": "창가 관찰",
+      "Cost": 1000,
+      "Programming": 3,
+      "Scenario": 3,
+      "Graphics": 0,
+      "Sound": 0,
+      "Power": 0
+    },
+    {
+      "EducationId": 207,
+      "Name": "방울 놀이",
+      "Cost": 1000,
+      "Programming": 3,
+      "Scenario": 3,
+      "Graphics": 0,
+      "Sound": 0,
+      "Power": 0
+    }
+  ]
+}

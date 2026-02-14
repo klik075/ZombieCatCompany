@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 using UnityEngine;
-
+using static Define;
 public interface IValidate
 {
     bool Validate();

@@ -1,0 +1,60 @@
+﻿{
+  "members": [
+    {
+      "EmployeeID": 100,
+      "NormalImagePath": "ZCC_BC",
+      "ZombieImagePath": "ZCC_ZBC",
+      "Name": "나비",
+      "Role": 0,
+      "Salary": 25,
+      "State": 0,
+      "Programming": 10,
+      "Scenario": 10,
+      "Graphics": 10,
+      "Sound": 10,
+      "Power": 10
+    },
+    {
+      "EmployeeID": 101,
+      "NormalImagePath": "ZCC_GC",
+      "ZombieImagePath": "ZCC_ZGC",
+      "Name": "코코",
+      "Role": 1,
+      "Salary": 25,
+      "State": 0,
+      "Programming": 10,
+      "Scenario": 10,
+      "Graphics": 10,
+      "Sound": 10,
+      "Power": 10
+    },
+    {
+      "EmployeeID": 102,
+      "NormalImagePath": "ZCC_OC",
+      "ZombieImagePath": "ZCC_ZOC",
+      "Name": "치즈",
+      "Role": 2,
+      "Salary": 25,
+      "State": 0,
+      "Programming": 10,
+      "Scenario": 10,
+      "Graphics": 10,
+      "Sound": 10,
+      "Power": 10
+    },
+    {
+      "EmployeeID": 103,
+      "NormalImagePath": "ZCC_WC",
+      "ZombieImagePath": "ZCC_ZWC",
+      "Name": "유미",
+      "Role": 3,
+      "Salary": 25,
+      "State": 0,
+      "Programming": 10,
+      "Scenario": 10,
+      "Graphics": 10,
+      "Sound": 10,
+      "Power": 10
+    }
+  ]
+}

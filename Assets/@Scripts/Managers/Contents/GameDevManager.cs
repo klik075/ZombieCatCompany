@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using static Define;
@@ -14,7 +14,7 @@ public class GameDevProjectData
     public EContentType selectedContent;
     public int EvaluationScore;
 
-    // Ç°Áú Á¡¼öµé
+    // í’ˆì§ˆ ì ìˆ˜ë“¤
     public int funScore;
     public int nyangScore;
     public int graphicsScore;
@@ -46,15 +46,15 @@ public class WorkResult
     public int tries;
     public EQualityType mainQuality;
     public Dictionary<EQualityType, int> gainedScores = new Dictionary<EQualityType, int>();
-    public List<EQualityType> qualitySequence = new List<EQualityType>(); // Ç°ÁúÀÌ È¹µæµÈ ¼ø¼­
+    public List<EQualityType> qualitySequence = new List<EQualityType>(); // í’ˆì§ˆì´ íšë“ëœ ìˆœì„œ
 }
 public class GameDevManager : Singleton<GameDevManager>
 {
-    // ÇöÀç ÇÁ·ÎÁ§Æ® - ¸ğµç °ÔÀÓ °³¹ß »óÅÂ¸¦ ¿©±â¼­ °ü¸®
+    // í˜„ì¬ í”„ë¡œì íŠ¸ - ëª¨ë“  ê²Œì„ ê°œë°œ ìƒíƒœë¥¼ ì—¬ê¸°ì„œ ê´€ë¦¬
     private GameDevProjectData _currentProject;
     public GameDevProjectData CurrentProject => _currentProject;
 
-    // GameDevProjectData¸¦ ÅëÇÑ ÅëÇÕ Á¢±Ù
+    // GameDevProjectDataë¥¼ í†µí•œ í†µí•© ì ‘ê·¼
     public EGameDevType CurrentGameDevType 
     { 
         get => _currentProject?.gameDevType ?? EGameDevType.None;
@@ -89,9 +89,9 @@ public class GameDevManager : Singleton<GameDevManager>
         get
         {
             if (GameManager.Instance.GameState == EGameState.Night)
-                return "½Å±Ô °³¹ß ¾øÀ½";
+                return "ì‹ ê·œ ê°œë°œ ì—†ìŒ";
 
-            return _currentProject?.gameTitle ?? $"{GameManager.Instance.Year}¹øÂ° °ÔÀÓ";
+            return _currentProject?.gameTitle ?? $"{GameManager.Instance.Year}ë²ˆì§¸ ê²Œì„";
         }
         set 
         {
@@ -103,7 +103,7 @@ public class GameDevManager : Singleton<GameDevManager>
         }
     }
 
-    // ÇöÀç ¼±ÅÃµÈ Àå¸£¿Í ÄÜÅÙÃ÷´Â ÇÁ·ÎÁ§Æ®¿¡¼­ °¡Á®¿ÀµÇ, Ä³½ÃµÈ µ¥ÀÌÅÍ·Î ¹İÈ¯
+    // í˜„ì¬ ì„ íƒëœ ì¥ë¥´ì™€ ì½˜í…ì¸ ëŠ” í”„ë¡œì íŠ¸ì—ì„œ ê°€ì ¸ì˜¤ë˜, ìºì‹œëœ ë°ì´í„°ë¡œ ë°˜í™˜
     public GenreData CurrentGenreData 
     {
         get 
@@ -111,7 +111,7 @@ public class GameDevManager : Singleton<GameDevManager>
             if (_currentProject != null)
                 return GetGenreData(_currentProject.selectedGenre);
             
-            // ÇÁ·ÎÁ§Æ®°¡ ¾øÀ» ¶§ ±âº»°ª
+            // í”„ë¡œì íŠ¸ê°€ ì—†ì„ ë•Œ ê¸°ë³¸ê°’
             return GetGenreData(EGenreType.ActionGame);
         }
     }
@@ -123,7 +123,7 @@ public class GameDevManager : Singleton<GameDevManager>
             if (_currentProject != null)
                 return GetContentData(_currentProject.selectedContent);
             
-            // ÇÁ·ÎÁ§Æ®°¡ ¾øÀ» ¶§ ±âº»°ª
+            // í”„ë¡œì íŠ¸ê°€ ì—†ì„ ë•Œ ê¸°ë³¸ê°’
             return GetContentData(EContentType.Box);
         }
     }
@@ -144,14 +144,14 @@ public class GameDevManager : Singleton<GameDevManager>
             }
         }
     }
-    // ¼±ÅÃµÈ Àå¸£¿Í ÄÜÅÙÃ÷ ±â¹İ ½Ã³ÊÁö
+    // ì„ íƒëœ ì¥ë¥´ì™€ ì½˜í…ì¸  ê¸°ë°˜ ì‹œë„ˆì§€
     public ESynergyType CurrentSynergy { get { return GetSynergyType(CurrentGenreData.GenreType, CurrentContentData.ContentType); } }
 
-    // Ä³½ÃµÈ µ¥ÀÌÅÍ
+    // ìºì‹œëœ ë°ì´í„°
     private Dictionary<int, GenreData> _genreDataCache;
     private Dictionary<int, ContentData> _contentDataCache;
     private Dictionary<int, List<SynergyData>> _synergyDataCache;
-    private float _progressIncreaseDuration = 4.0f; // Progress Áõ°¡ Áö¼Ó ½Ã°£
+    private float _progressIncreaseDuration = 4.0f; // Progress ì¦ê°€ ì§€ì† ì‹œê°„
 
     private void Awake()
     {
@@ -161,10 +161,10 @@ public class GameDevManager : Singleton<GameDevManager>
         EventManager.Instance.AddEvent(EEventType.WorkCompleted, OnMainWorkCompleted);
     }
 
-    #region µ¥ÀÌÅÍ Ä³½Ì
+    #region ë°ì´í„° ìºì‹±
 
     /// <summary>
-    /// DataManager¿¡¼­ Àå¸£, ÄÜÅÙÃ÷, ½Ã³ÊÁö µ¥ÀÌÅÍ Ä³½Ì
+    /// DataManagerì—ì„œ ì¥ë¥´, ì½˜í…ì¸ , ì‹œë„ˆì§€ ë°ì´í„° ìºì‹±
     /// </summary>
     private void CacheGameDevData()
     {
@@ -175,12 +175,12 @@ public class GameDevManager : Singleton<GameDevManager>
 
     #endregion
 
-    #region Àå¸£ °ü¸®
+    #region ì¥ë¥´ ê´€ë¦¬
 
     /// <summary>
-    /// Àå¸£ ¼±ÅÃ
+    /// ì¥ë¥´ ì„ íƒ
     /// </summary>
-    /// <param name="genreType">¼±ÅÃÇÒ Àå¸£ Å¸ÀÔ</param>
+    /// <param name="genreType">ì„ íƒí•  ì¥ë¥´ íƒ€ì…</param>
     public void SelectGenre(EGenreType genreType)
     {
         if (_currentProject != null)
@@ -191,10 +191,10 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// Àå¸£ Å¸ÀÔÀ¸·Î Àå¸£ µ¥ÀÌÅÍ °¡Á®¿À±â
+    /// ì¥ë¥´ íƒ€ì…ìœ¼ë¡œ ì¥ë¥´ ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
     /// </summary>
-    /// <param name="genreType">Àå¸£ Å¸ÀÔ</param>
-    /// <returns>Àå¸£ µ¥ÀÌÅÍ ¶Ç´Â null</returns>
+    /// <param name="genreType">ì¥ë¥´ íƒ€ì…</param>
+    /// <returns>ì¥ë¥´ ë°ì´í„° ë˜ëŠ” null</returns>
     public GenreData GetGenreData(EGenreType genreType)
     {
         if (_genreDataCache == null) 
@@ -212,12 +212,12 @@ public class GameDevManager : Singleton<GameDevManager>
 
     #endregion
 
-    #region ÄÜÅÙÃ÷ °ü¸®
+    #region ì½˜í…ì¸  ê´€ë¦¬
 
     /// <summary>
-    /// ÄÜÅÙÃ÷ ¼±ÅÃ
+    /// ì½˜í…ì¸  ì„ íƒ
     /// </summary>
-    /// <param name="contentType">¼±ÅÃÇÒ ÄÜÅÙÃ÷ Å¸ÀÔ</param>
+    /// <param name="contentType">ì„ íƒí•  ì½˜í…ì¸  íƒ€ì…</param>
     public void SelectContent(EContentType contentType)
     {
         if (_currentProject != null)
@@ -228,10 +228,10 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// ÄÜÅÙÃ÷ Å¸ÀÔÀ¸·Î ÄÜÅÙÃ÷ µ¥ÀÌÅÍ °¡Á®¿À±â
+    /// ì½˜í…ì¸  íƒ€ì…ìœ¼ë¡œ ì½˜í…ì¸  ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
     /// </summary>
-    /// <param name="contentType">ÄÜÅÙÃ÷ Å¸ÀÔ</param>
-    /// <returns>ÄÜÅÙÃ÷ µ¥ÀÌÅÍ ¶Ç´Â null</returns>
+    /// <param name="contentType">ì½˜í…ì¸  íƒ€ì…</param>
+    /// <returns>ì½˜í…ì¸  ë°ì´í„° ë˜ëŠ” null</returns>
     public ContentData GetContentData(EContentType contentType)
     {
         if (_contentDataCache == null) 
@@ -249,9 +249,9 @@ public class GameDevManager : Singleton<GameDevManager>
 
     #endregion
 
-    #region ½Ã³ÊÁö °ü¸®
+    #region ì‹œë„ˆì§€ ê´€ë¦¬
     /// <summary>
-    /// Àå¸£¿Í ÄÜÅÙÃ÷ Á¶ÇÕÀÇ ½Ã³ÊÁö Å¸ÀÔ °¡Á®¿À±â
+    /// ì¥ë¥´ì™€ ì½˜í…ì¸  ì¡°í•©ì˜ ì‹œë„ˆì§€ íƒ€ì… ê°€ì ¸ì˜¤ê¸°
     /// </summary>
     public ESynergyType GetSynergyType(EGenreType genreType, EContentType contentType)
     {
@@ -261,7 +261,7 @@ public class GameDevManager : Singleton<GameDevManager>
         if (genreData == null || contentData == null)
             return ESynergyType.Normal;
 
-        // Àå¸£ ID·Î ½Ã³ÊÁö µ¥ÀÌÅÍ Ã£±â
+        // ì¥ë¥´ IDë¡œ ì‹œë„ˆì§€ ë°ì´í„° ì°¾ê¸°
         if (_synergyDataCache != null && _synergyDataCache.TryGetValue(genreData.GenreId, out List<SynergyData> synergyList))
         {
             foreach (SynergyData synergy in synergyList)
@@ -273,7 +273,7 @@ public class GameDevManager : Singleton<GameDevManager>
             }
         }
 
-        return ESynergyType.Normal; // ±âº»°ª
+        return ESynergyType.Normal; // ê¸°ë³¸ê°’
     }
     public SynergyData GetSynergyData(EGenreType genreType, EContentType contentType)
     {
@@ -281,7 +281,7 @@ public class GameDevManager : Singleton<GameDevManager>
         ContentData contentData = GetContentData(contentType);
         if (genreData == null || contentData == null)
             return null;
-        // Àå¸£ ID·Î ½Ã³ÊÁö µ¥ÀÌÅÍ Ã£±â
+        // ì¥ë¥´ IDë¡œ ì‹œë„ˆì§€ ë°ì´í„° ì°¾ê¸°
         if (_synergyDataCache != null && _synergyDataCache.TryGetValue(genreData.GenreId, out List<SynergyData> synergyList))
         {
             foreach (SynergyData synergy in synergyList)
@@ -293,17 +293,17 @@ public class GameDevManager : Singleton<GameDevManager>
             }
         }
 
-        return new SynergyData { GenreId = genreData.GenreId, ContentId = contentData.ContentId, SynergyType = ESynergyType.Normal }; // ±âº»°ª
+        return new SynergyData { GenreId = genreData.GenreId, ContentId = contentData.ContentId, SynergyType = ESynergyType.Normal }; // ê¸°ë³¸ê°’
     }
 
     #endregion
 
-    #region ºñ¿ë °è»ê
+    #region ë¹„ìš© ê³„ì‚°
 
     /// <summary>
-    /// ÇöÀç ¼±ÅÃµÈ Àå¸£¿Í ÄÜÅÙÃ÷ÀÇ ÃÑ °³¹ß ºñ¿ë °è»ê
+    /// í˜„ì¬ ì„ íƒëœ ì¥ë¥´ì™€ ì½˜í…ì¸ ì˜ ì´ ê°œë°œ ë¹„ìš© ê³„ì‚°
     /// </summary>
-    /// <returns>ÃÑ °³¹ß ºñ¿ë</returns>
+    /// <returns>ì´ ê°œë°œ ë¹„ìš©</returns>
     public int GetTotalDevelopmentCost()
     {
         int genreCost = CurrentGenreData?.Cost ?? 0;
@@ -313,9 +313,9 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// °³¹ß °¡´ÉÇÑÁö ÀÚ±İ È®ÀÎ
+    /// ê°œë°œ ê°€ëŠ¥í•œì§€ ìê¸ˆ í™•ì¸
     /// </summary>
-    /// <returns>°³¹ß °¡´ÉÇÏ¸é true</returns>
+    /// <returns>ê°œë°œ ê°€ëŠ¥í•˜ë©´ true</returns>
     public bool CanAffordDevelopment()
     {
         int totalCost = GetTotalDevelopmentCost();
@@ -323,12 +323,15 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     #endregion
-    #region ÀúÀå ¹× º¹¿ø
+    #region ì €ì¥ ë° ë³µì›
     /// <summary>
-    /// °ÔÀÓ °³¹ß °ü·Ã ÀúÀå µ¥ÀÌÅÍ »ı¼º
+    /// ê²Œì„ ê°œë°œ ê´€ë ¨ ì €ì¥ ë°ì´í„° ìƒì„±
     /// </summary>
     public GameDevProjectData GetGameDevProjectData()
     {
+        if (_currentProject == null)
+            return new GameDevProjectData();
+
         GameDevProjectData saveData = new GameDevProjectData()
         {
             gameTitle = _currentProject.gameTitle,
@@ -348,7 +351,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// ÀúÀåµÈ µ¥ÀÌÅÍ·ÎºÎÅÍ °ÔÀÓ °³¹ß »óÅÂ º¹¿ø
+    /// ì €ì¥ëœ ë°ì´í„°ë¡œë¶€í„° ê²Œì„ ê°œë°œ ìƒíƒœ ë³µì›
     /// </summary>
     public void LoadFromSaveData(GameDevProjectData saveData)
     {
@@ -362,10 +365,10 @@ public class GameDevManager : Singleton<GameDevManager>
     }
     #endregion
 
-    #region ÆäÀÌÂ¡ µ¥ÀÌÅÍ Á¦°ø
+    #region í˜ì´ì§• ë°ì´í„° ì œê³µ
 
     /// <summary>
-    /// Àå¸£ µ¥ÀÌÅÍÀÇ ÃÑ °³¼ö ¹İÈ¯
+    /// ì¥ë¥´ ë°ì´í„°ì˜ ì´ ê°œìˆ˜ ë°˜í™˜
     /// </summary>
     public int GetGenreDataCount()
     {
@@ -373,7 +376,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// ÄÜÅÙÃ÷ µ¥ÀÌÅÍÀÇ ÃÑ °³¼ö ¹İÈ¯
+    /// ì½˜í…ì¸  ë°ì´í„°ì˜ ì´ ê°œìˆ˜ ë°˜í™˜
     /// </summary>
     public int GetContentDataCount()
     {
@@ -381,7 +384,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// ÆäÀÌÁöº° Àå¸£ µ¥ÀÌÅÍ °¡Á®¿À±â
+    /// í˜ì´ì§€ë³„ ì¥ë¥´ ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
     /// </summary>
     public List<GenreData> GetGenreDataByPage(int page, int itemsPerPage)
     {
@@ -403,7 +406,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// ÆäÀÌÁöº° ÄÜÅÙÃ÷ µ¥ÀÌÅÍ °¡Á®¿À±â
+    /// í˜ì´ì§€ë³„ ì½˜í…ì¸  ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
     /// </summary>
     public List<ContentData> GetContentDataByPage(int page, int itemsPerPage)
     {
@@ -426,13 +429,13 @@ public class GameDevManager : Singleton<GameDevManager>
 
     #endregion
 
-    #region ÇÁ·ÎÁ§Æ® °ü¸®
+    #region í”„ë¡œì íŠ¸ ê´€ë¦¬
     public void InitNewProject()
     {
         _currentProject = new GameDevProjectData();
     }
     /// <summary>
-    /// »õ ÇÁ·ÎÁ§Æ® ½ÃÀÛ
+    /// ìƒˆ í”„ë¡œì íŠ¸ ì‹œì‘
     /// </summary>
     public void StartNewProject()
     {
@@ -509,7 +512,7 @@ public class GameDevManager : Singleton<GameDevManager>
         QualityManager.Instance.StartIndividualWork();
     }
     /// <summary>
-    /// ÀÛ¾÷ °á°ú °è»ê (UI¿¡¼­ »ç¿ë)
+    /// ì‘ì—… ê²°ê³¼ ê³„ì‚° (UIì—ì„œ ì‚¬ìš©)
     /// </summary>
     public WorkResult CalculateWorkResult(MemberData worker)
     {
@@ -532,7 +535,7 @@ public class GameDevManager : Singleton<GameDevManager>
                 break;
         }
 
-        // ½Ãµµ È½¼ö °è»ê
+        // ì‹œë„ íšŸìˆ˜ ê³„ì‚°
         int mainAbility = GetAbilityByQuality(worker, mainQuality);
         int minTries = 1 + (mainAbility / 5);
         int offset = GetOffset(worker, mainQuality);
@@ -541,12 +544,12 @@ public class GameDevManager : Singleton<GameDevManager>
         result.tries = tries;
         result.mainQuality = mainQuality;
 
-        // °¢ ½Ãµµ¿¡ ´ëÇØ Á¡¼ö °è»ê
+        // ê° ì‹œë„ì— ëŒ€í•´ ì ìˆ˜ ê³„ì‚°
         for (int i = 0; i < tries; i++)
         {
             var (quality, score) = RollOneScore(mainQuality);
             
-            // Bug´Â Á¡¼ö È¹µæ ºÒ°¡
+            // BugëŠ” ì ìˆ˜ íšë“ ë¶ˆê°€
             if (quality == EQualityType.Bug)
                 continue;
 
@@ -554,18 +557,18 @@ public class GameDevManager : Singleton<GameDevManager>
                 result.gainedScores[quality] = 0;
             
             result.gainedScores[quality] += score;
-            result.qualitySequence.Add(quality); // ¼ø¼­ ±â·Ï
+            result.qualitySequence.Add(quality); // ìˆœì„œ ê¸°ë¡
         }
 
         return result;
     }
     /// <summary>
-    /// °³ÀÎ ÀÛ¾÷ °á°ú °è»ê
+    /// ê°œì¸ ì‘ì—… ê²°ê³¼ ê³„ì‚°
     /// </summary>
     public WorkResult CalculateIndividualWorkResult(MemberData worker)
     {
         var result = new WorkResult();
-        int tries = UnityEngine.Random.Range(1, 7);//¼öÄ¡ µû·Î »¬ °Í, ¹ë·±½º Á¶Á¤ ÇÊ¿ä
+        int tries = UnityEngine.Random.Range(1, 7);//ìˆ˜ì¹˜ ë”°ë¡œ ëº„ ê²ƒ, ë°¸ëŸ°ìŠ¤ ì¡°ì • í•„ìš”
 
         if (CurrentGameDevType == EGameDevType.Debug)
         {
@@ -583,7 +586,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
     private EQualityType GetMainQualityByRole(MemberData worker)
     {
-        // Á÷¾÷¿¡ µû¶ó ¸ŞÀÎ Ç°Áú °áÁ¤
+        // ì§ì—…ì— ë”°ë¼ ë©”ì¸ í’ˆì§ˆ ê²°ì •
         switch (worker.Role)
         {
             case ERoleType.Boss:
@@ -599,22 +602,22 @@ public class GameDevManager : Singleton<GameDevManager>
         }
     }
     /// <summary>
-    /// ÇÑ ¹øÀÇ ½Ãµµ¿¡¼­ Ç°Áú°ú Á¡¼ö °áÁ¤
+    /// í•œ ë²ˆì˜ ì‹œë„ì—ì„œ í’ˆì§ˆê³¼ ì ìˆ˜ ê²°ì •
     /// </summary>
     public (EQualityType quality, int score) RollOneScore(EQualityType mainQuality, bool isIndividual = false)
     {
-        // È®·ü ±â¹İÀ¸·Î Ç°Áú ¼±ÅÃ
+        // í™•ë¥  ê¸°ë°˜ìœ¼ë¡œ í’ˆì§ˆ ì„ íƒ
         EQualityType selectedQuality = SelectQualityByProbability(mainQuality, isIndividual);
 
-        // Á¡¼ö´Â Ç×»ó 1Á¡
+        // ì ìˆ˜ëŠ” í•­ìƒ 1ì 
         int score = 1;
         
         return (selectedQuality, score);
     }
 
     /// <summary>
-    /// È®·ü¿¡ µû¸¥ Ç°Áú ¼±ÅÃ
-    /// Fun: 20%, Main: 70%, ³ª¸ÓÁö ¼­ºê Ç°Áúµé: °¢°¢ 5%
+    /// í™•ë¥ ì— ë”°ë¥¸ í’ˆì§ˆ ì„ íƒ
+    /// Fun: 20%, Main: 70%, ë‚˜ë¨¸ì§€ ì„œë¸Œ í’ˆì§ˆë“¤: ê°ê° 5%
     /// </summary>
     private EQualityType SelectQualityByProbability(EQualityType mainQuality, bool isIndividual = false)
     {
@@ -637,20 +640,20 @@ public class GameDevManager : Singleton<GameDevManager>
             return mainQuality;
         }
         
-        // ³ª¸ÓÁö 10%¸¦ ¼­ºê Ç°Áúµé·Î ºĞ¹è (°¢°¢ 5%)
+        // ë‚˜ë¨¸ì§€ 10%ë¥¼ ì„œë¸Œ í’ˆì§ˆë“¤ë¡œ ë¶„ë°° (ê°ê° 5%)
         var (sub1, sub2) = GetSubQualityTypes(mainQuality);
         
-        // Ã¹ ¹øÂ° ¼­ºê: 5% (0.9 ~ 0.95)
+        // ì²« ë²ˆì§¸ ì„œë¸Œ: 5% (0.9 ~ 0.95)
         if (randomValue < 0.95f)
         {
             return sub1;
         }
         
-        // µÎ ¹øÂ° ¼­ºê: 5% (0.95 ~ 1.0)
+        // ë‘ ë²ˆì§¸ ì„œë¸Œ: 5% (0.95 ~ 1.0)
         return sub2;
     }
     /// <summary>
-    /// Ç°Áú Å¸ÀÔ¿¡ ÇØ´çÇÏ´Â ´É·ÂÄ¡ ¹İÈ¯
+    /// í’ˆì§ˆ íƒ€ì…ì— í•´ë‹¹í•˜ëŠ” ëŠ¥ë ¥ì¹˜ ë°˜í™˜
     /// </summary>
     public int GetAbilityByQuality(MemberData worker, EQualityType quality)
     {
@@ -671,14 +674,14 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// ¿ÀÇÁ¼Â °è»ê: (¸ŞÀÎ, ÀüÅõ·ÂÀ» Á¦¿ÜÇÑ ´É·ÂÄ¡ÀÇ ÇÕ) / 20
+    /// ì˜¤í”„ì…‹ ê³„ì‚°: (ë©”ì¸, ì „íˆ¬ë ¥ì„ ì œì™¸í•œ ëŠ¥ë ¥ì¹˜ì˜ í•©) / 20
     /// </summary>
     public int GetOffset(MemberData worker, EQualityType mainQuality)
     {
-        // ÀüÅõ·ÂÀ» Á¦¿ÜÇÑ ¸ğµç ´É·ÂÄ¡ ÇÕ
+        // ì „íˆ¬ë ¥ì„ ì œì™¸í•œ ëª¨ë“  ëŠ¥ë ¥ì¹˜ í•©
         int total = worker.Programming + worker.Scenario + worker.Graphics + worker.Sound;
         
-        // ¸ŞÀÎ ´É·ÂÄ¡ Á¦¿Ü
+        // ë©”ì¸ ëŠ¥ë ¥ì¹˜ ì œì™¸
         int mainAbility = GetAbilityByQuality(worker, mainQuality);
         total -= mainAbility;
         
@@ -686,7 +689,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// ¸ŞÀÎ Ç°Áú¿¡ µû¸¥ ¼­ºê Ç°Áú 2°³ ¹İÈ¯
+    /// ë©”ì¸ í’ˆì§ˆì— ë”°ë¥¸ ì„œë¸Œ í’ˆì§ˆ 2ê°œ ë°˜í™˜
     /// </summary>
     public (EQualityType sub1, EQualityType sub2) GetSubQualityTypes(EQualityType mainQuality)
     {
@@ -708,7 +711,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// Ç°Áú Á¡¼ö Ãß°¡
+    /// í’ˆì§ˆ ì ìˆ˜ ì¶”ê°€
     /// </summary>
     public void AddQualityScore(EQualityType qualityType, int score)
     {
@@ -745,7 +748,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// Ç°Áú Á¡¼ö °¡Á®¿À±â
+    /// í’ˆì§ˆ ì ìˆ˜ ê°€ì ¸ì˜¤ê¸°
     /// </summary>
     public int GetQualityScore(EQualityType qualityType)
     {
@@ -765,10 +768,10 @@ public class GameDevManager : Singleton<GameDevManager>
 
     #endregion
 
-    #region Progress °ü¸®
+    #region Progress ê´€ë¦¬
 
     /// <summary>
-    /// ÀÛ¾÷ ¿Ï·á ÀÌº¥Æ® ÇÚµé·¯
+    /// ì‘ì—… ì™„ë£Œ ì´ë²¤íŠ¸ í•¸ë“¤ëŸ¬
     /// </summary>
     private void OnMainWorkCompleted()
     {
@@ -783,12 +786,12 @@ public class GameDevManager : Singleton<GameDevManager>
         if (CurrentGameDevType == EGameDevType.Scenario)
             MemberManager.Instance.MoveAllMembersToSeats();
 
-        // ÇöÀç ´Ü°è¿¡ µû¸¥ Progress Áõ°¡ ½ÃÀÛ
+        // í˜„ì¬ ë‹¨ê³„ì— ë”°ë¥¸ Progress ì¦ê°€ ì‹œì‘
         CoroutineManager.Instance.StartCoroutine(CoIncreaseProgressForCurrentStage());
     }
 
     /// <summary>
-    /// ÇöÀç ´Ü°è¿¡ µû¶ó Progress¸¦ Áõ°¡½ÃÅ°´Â ÄÚ·çÆ¾
+    /// í˜„ì¬ ë‹¨ê³„ì— ë”°ë¼ Progressë¥¼ ì¦ê°€ì‹œí‚¤ëŠ” ì½”ë£¨í‹´
     /// </summary>
     private IEnumerator CoIncreaseProgressForCurrentStage()
     {
@@ -800,7 +803,7 @@ public class GameDevManager : Singleton<GameDevManager>
         float baseDuration = _progressIncreaseDuration;
         bool startIndividualWork = false;
         
-        float acceleratedTime = 0f; // °¡¼ÓµÈ ½Ã°£ ´©Àû
+        float acceleratedTime = 0f; // ê°€ì†ëœ ì‹œê°„ ëˆ„ì 
         
         while (Progress < targetProgress)
         {
@@ -812,14 +815,14 @@ public class GameDevManager : Singleton<GameDevManager>
                 startIndividualWork = true;
             }
 
-            // ¸â¹ö ¼ö¿¡ µû¶ó °¡¼ÓµÈ ½Ã°£ ´©Àû (¸â¹ö°¡ ¸¹À»¼ö·Ï ºü¸£°Ô Áõ°¡)
+            // ë©¤ë²„ ìˆ˜ì— ë”°ë¼ ê°€ì†ëœ ì‹œê°„ ëˆ„ì  (ë©¤ë²„ê°€ ë§ì„ìˆ˜ë¡ ë¹ ë¥´ê²Œ ì¦ê°€)
             float memberRatio = MemberManager.Instance.HowManyMemberSitting() / (float)MemberManager.MAX_MEMBERS;
             acceleratedTime += Time.deltaTime * memberRatio;
             
-            // duration ±âÁØÀ¸·Î ÁøÇàµµ °è»ê
+            // duration ê¸°ì¤€ìœ¼ë¡œ ì§„í–‰ë„ ê³„ì‚°
             float t = Mathf.Clamp01(acceleratedTime / baseDuration);
             
-            // ¼±Çü º¸°£À¸·Î Progress Áõ°¡
+            // ì„ í˜• ë³´ê°„ìœ¼ë¡œ Progress ì¦ê°€
             int newProgress = Mathf.RoundToInt(Mathf.Lerp(startProgress, targetProgress, t));
             Progress = newProgress;
             
@@ -831,14 +834,14 @@ public class GameDevManager : Singleton<GameDevManager>
             yield return null;
         }
 
-        // ÃÖÁ¾ ¸ñÇ¥ Progress ¼³Á¤
+        // ìµœì¢… ëª©í‘œ Progress ì„¤ì •
         Progress = targetProgress;
         Debug.Log($"Progress increase completed: {Progress}% for {CurrentGameDevType}");
         AdvanceToNextStage();
     }
 
     /// <summary>
-    /// ÇöÀç ´Ü°è¿¡ µû¸¥ ¸ñÇ¥ Progress ¹İÈ¯
+    /// í˜„ì¬ ë‹¨ê³„ì— ë”°ë¥¸ ëª©í‘œ Progress ë°˜í™˜
     /// </summary>
     private int GetTargetProgressForStage(EGameDevType stage)
     {
@@ -847,12 +850,12 @@ public class GameDevManager : Singleton<GameDevManager>
             EGameDevType.Scenario => 33,
             EGameDevType.Graphics => 66,
             EGameDevType.Sound => 100,
-            _ => Progress // ´Ù¸¥ ´Ü°èµéÀº ÇöÀç Progress À¯Áö
+            _ => Progress // ë‹¤ë¥¸ ë‹¨ê³„ë“¤ì€ í˜„ì¬ Progress ìœ ì§€
         };
     }
 
     /// <summary>
-    /// ´ÙÀ½ ´Ü°è·Î ÀüÈ¯
+    /// ë‹¤ìŒ ë‹¨ê³„ë¡œ ì „í™˜
     /// </summary>
     public void AdvanceToNextStage()
     {
@@ -866,7 +869,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     /// <summary>
-    /// ÇöÀç ´Ü°èÀÇ ´ÙÀ½ ´Ü°è ¹İÈ¯
+    /// í˜„ì¬ ë‹¨ê³„ì˜ ë‹¤ìŒ ë‹¨ê³„ ë°˜í™˜
     /// </summary>
     private EGameDevType GetNextStage(EGameDevType currentStage)
     {

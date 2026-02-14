@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using TMPro;
 using UnityEngine;
 using static Define;
@@ -57,8 +57,8 @@ public class UI_InputFieldPopup : UI_UGUI, IUI_Popup, IClickableUI
     public void UpdateContent()
     {
         UpdateUIByType();
-        GetText((int)Texts.NoButtonText).text = "µÚ·Î";
-        GetText((int)Texts.OkayButtonText).text = "°áÁ¤";
+        GetText((int)Texts.NoButtonText).text = "ë’¤ë¡œ";
+        GetText((int)Texts.OkayButtonText).text = "ê²°ì •";
     }
     private void UpdateUIByType()
     {
@@ -68,12 +68,16 @@ public class UI_InputFieldPopup : UI_UGUI, IUI_Popup, IClickableUI
         switch (_currentType)
         {
             case EInputFieldType.ChangeGameTitle:
-                mainTitle = "°ÔÀÓ Å¸ÀÌÆ²";
-                placeholder = "°ÔÀÓ ÀÌ¸§ ÀÔ·Â";
+                mainTitle = "ê²Œì„ íƒ€ì´í‹€";
+                placeholder = "ê²Œì„ ì´ë¦„ ì…ë ¥";
                 break;
             case EInputFieldType.PurchaseFood:
-                mainTitle = "ÅëÁ¶¸² °³¼ö";
-                placeholder = "ÅëÁ¶¸² °³¼ö ÀÔ·Â";
+                mainTitle = "í†µì¡°ë¦¼ ê°œìˆ˜";
+                placeholder = "í†µì¡°ë¦¼ ê°œìˆ˜ ì…ë ¥";
+                break;
+            case EInputFieldType.CompanyName:
+                mainTitle = "íšŒì‚¬ ëª…";
+                placeholder = "íšŒì‚¬ ì´ë¦„ ì…ë ¥";
                 break;
             default:
                 break;

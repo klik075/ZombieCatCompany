@@ -1,0 +1,304 @@
+﻿{
+  "synergies": [
+    {
+      "GenreId": 300,
+      "ContentId": 400,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 300,
+      "ContentId": 401,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 300,
+      "ContentId": 402,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 300,
+      "ContentId": 403,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 301,
+      "ContentId": 404,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 301,
+      "ContentId": 405,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 301,
+      "ContentId": 406,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 301,
+      "ContentId": 407,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 302,
+      "ContentId": 406,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 302,
+      "ContentId": 407,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 302,
+      "ContentId": 408,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 302,
+      "ContentId": 409,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 303,
+      "ContentId": 410,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 303,
+      "ContentId": 411,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 303,
+      "ContentId": 400,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 303,
+      "ContentId": 401,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 304,
+      "ContentId": 404,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 304,
+      "ContentId": 412,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 304,
+      "ContentId": 413,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 304,
+      "ContentId": 409,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 305,
+      "ContentId": 414,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 305,
+      "ContentId": 406,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 305,
+      "ContentId": 410,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 305,
+      "ContentId": 401,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 306,
+      "ContentId": 401,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 306,
+      "ContentId": 410,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 306,
+      "ContentId": 414,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 306,
+      "ContentId": 415,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 307,
+      "ContentId": 413,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 307,
+      "ContentId": 416,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 307,
+      "ContentId": 402,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 307,
+      "ContentId": 412,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 308,
+      "ContentId": 402,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 308,
+      "ContentId": 415,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 308,
+      "ContentId": 400,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 308,
+      "ContentId": 418,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 309,
+      "ContentId": 417,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 309,
+      "ContentId": 418,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 309,
+      "ContentId": 401,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 309,
+      "ContentId": 407,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 310,
+      "ContentId": 419,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 310,
+      "ContentId": 401,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 310,
+      "ContentId": 414,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 310,
+      "ContentId": 404,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 311,
+      "ContentId": 406,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 311,
+      "ContentId": 419,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 311,
+      "ContentId": 403,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 311,
+      "ContentId": 408,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 312,
+      "ContentId": 404,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 312,
+      "ContentId": 407,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 312,
+      "ContentId": 409,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 312,
+      "ContentId": 401,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 313,
+      "ContentId": 411,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 313,
+      "ContentId": 410,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 313,
+      "ContentId": 409,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 313,
+      "ContentId": 406,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 314,
+      "ContentId": 412,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 314,
+      "ContentId": 404,
+      "SynergyType": 0
+    },
+    {
+      "GenreId": 314,
+      "ContentId": 406,
+      "SynergyType": 2
+    },
+    {
+      "GenreId": 314,
+      "ContentId": 400,
+      "SynergyType": 2
+    }
+  ]
+}

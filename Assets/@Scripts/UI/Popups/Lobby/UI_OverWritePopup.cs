@@ -33,6 +33,9 @@ public class UI_OverWritePopup : UI_UGUI, IUI_Popup
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
+
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(OnClickOkayButton);
+        GetButton((int)Buttons.NoButton).onClick.AddListener(OnClickNoButton);
     }
     private void OnClickOkayButton()
     {
