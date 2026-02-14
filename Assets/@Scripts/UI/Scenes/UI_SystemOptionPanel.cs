@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 
 public class UI_SystemOptionPanel : UI_UGUI
@@ -8,13 +8,13 @@ public class UI_SystemOptionPanel : UI_UGUI
     }
     enum Buttons
     {
-        //¹ã, ³· °ø¿ë
+        //ë°¤, ë‚® ê³µìš©
         SystemSettingButton,
         SystemHowToPlayButton,
     }
     enum Texts
     {
-        //¹ã, ³· °ø¿ë
+        //ë°¤, ë‚® ê³µìš©
         SystemSettingButtonText,
         SystemHowToPlayButtonText,
     }
@@ -27,8 +27,8 @@ public class UI_SystemOptionPanel : UI_UGUI
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        GetButton((int)Buttons.SystemSettingButton)?.onClick.AddListener(() => OpenPopup(Buttons.SystemSettingButton));
-        GetButton((int)Buttons.SystemHowToPlayButton)?.onClick.AddListener(() => OpenPopup(Buttons.SystemHowToPlayButton));
+        GetButton((int)Buttons.SystemSettingButton).onClick.AddListener(() => OpenPopup(Buttons.SystemSettingButton));
+        GetButton((int)Buttons.SystemHowToPlayButton).onClick.AddListener(() => OpenPopup(Buttons.SystemHowToPlayButton));
 
         gameObject.SetActive(false);
     }

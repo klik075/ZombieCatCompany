@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
@@ -19,7 +19,7 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
     
     enum Texts
     {
-        // °øÅë
+        // ê³µí†µ
         SaveButtonText,
         MenuButtonText,
 
@@ -57,20 +57,29 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
 
     protected override void RegisterSpecificEvents()
     {
-        // ¹ã Àü¿ë °ÔÀÓ µ¥ÀÌÅÍ º¯°æ ÀÌº¥Æ® ±¸µ¶
+        // ë°¤ ì „ìš© ê²Œì„ ë°ì´í„° ë³€ê²½ ì´ë²¤íŠ¸ êµ¬ë…
         EventManager.Instance.AddEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
         EventManager.Instance.AddEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
         EventManager.Instance.AddEvent(EEventType.QualityChanged, OnQualityChanged);
         EventManager.Instance.AddEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
         EventManager.Instance.AddEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
     }
-
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        // ì´ë²¤íŠ¸ êµ¬ë… í•´ì œ
+        EventManager.Instance.RemoveEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
+        EventManager.Instance.RemoveEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
+        EventManager.Instance.RemoveEvent(EEventType.QualityChanged, OnQualityChanged);
+        EventManager.Instance.RemoveEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
+        EventManager.Instance.RemoveEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
+    }
     protected override Button GetSaveButton() => GetButton((int)Buttons.SaveButton);
     protected override Button GetMenuButton() => GetButton((int)Buttons.MenuButton);
     protected override TMP_Text GetSaveButtonText() => GetText((int)Texts.SaveButtonText);
     protected override TMP_Text GetMenuButtonText() => GetText((int)Texts.MenuButtonText);
 
-    // ¹ã Àü¿ë ÀÌº¥Æ® Ã³¸®
+    // ë°¤ ì „ìš© ì´ë²¤íŠ¸ ì²˜ë¦¬
     private void OnAnnualProfitChanged()
     {
         UpdateAnnualProfitUI(GameManager.Instance.AnnualProfit);
@@ -103,7 +112,7 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
         UpdateBottomPanelBasedOnDevState();
     }
 
-    // ¹ã Àü¿ë UI ¾÷µ¥ÀÌÆ® ¸Ş¼­µåµé
+    // ë°¤ ì „ìš© UI ì—…ë°ì´íŠ¸ ë©”ì„œë“œë“¤
     private void UpdateQualityText()
     {
         if (GetObject((int)GameObjects.GameDevBottomPanel1).activeSelf == false)
@@ -133,7 +142,7 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
                 GetText((int)Texts.NewWorkText).text = $"{GameDevManager.Instance.Progress}%";
                 break;
             case EGameDevType.Debug:
-                GetText((int)Texts.NewWorkText).text = "µğ¹ö±× Áß";
+                GetText((int)Texts.NewWorkText).text = "ë””ë²„ê·¸ ì¤‘";
                 break;
             default:
                 break;
@@ -160,7 +169,7 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
     {
         if (string.IsNullOrEmpty(newDevTitle))
         {
-            GetText((int)Texts.DevelopmentStatusText).text = "@½Å±Ô °³¹ß ¾øÀ½";
+            GetText((int)Texts.DevelopmentStatusText).text = "@ì‹ ê·œ ê°œë°œ ì—†ìŒ";
         }
         else
         {

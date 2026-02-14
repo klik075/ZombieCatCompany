@@ -522,22 +522,24 @@ public class MemberManager : Singleton<MemberManager>
 
             Member member = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
 
-            member.LoadFromSaveDataNoCellpos(saveData);
-
             _members[i] = member;
 
             // 저장된 데이터 로드
             if (isNight)
             {
+                member.LoadFromSaveData(saveData);
                 member.AIEnabled = true;
+
+                //임시 - 자기 자리로 가기
                 MemberSeatInfo seatInfo = GetMemberSeatInfo(i, isNight: true);
                 member.MoveToSeat(seatInfo.SeatPosition);
             }
             else
             {
+                member.LoadFromSaveDataNoCellpos(saveData);
                 member.AIEnabled = false;
-                MemberSeatInfo seatInfo = GetMemberSeatInfo(i, isNight: false);
 
+                MemberSeatInfo seatInfo = GetMemberSeatInfo(i, isNight: false);
                 MapManager.Instance.MoveTo(member, seatInfo.SeatPosition, true);
 
                 member.IsFlipped = seatInfo.IsFlipped;

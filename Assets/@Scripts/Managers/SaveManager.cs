@@ -93,7 +93,7 @@ public class SaveManager : Singleton<SaveManager>
     {
         if (GameManager.Instance.UserData == null)
         {
-            Debug.LogWarning("SaveManager: UserData is null. loading UserData first.");
+            Debug.LogWarning("SaveManager: UserData Instance is null. loading UserData first.");
             LoadUserData();
         }
 
@@ -170,7 +170,7 @@ public class SaveManager : Singleton<SaveManager>
     {
         if (!HasUserData())
         {
-            Debug.Log("SaveManager: No UserData found. Creating new UserData.");
+            Debug.LogWarning("SaveManager: No UserData found. Creating new UserData.");
             GameManager.Instance.UserData = new UserData();
             SaveUserData();
             return;
@@ -199,8 +199,9 @@ public class SaveManager : Singleton<SaveManager>
         ResetGameData();
 
         //// 멤버 초기화
-        //MemberManager.Instance.InitBoss();
-        //GameDevManager.Instance.InitNewProject();
+        CreateBossData();
+
+        GameDevManager.Instance.InitNewProject();
 
         // 즉시 저장
         SaveGameData();
@@ -229,6 +230,43 @@ public class SaveManager : Singleton<SaveManager>
         gameData.NightData.IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting;
 
         GameManager.Instance.MyGameData = gameData;
+    }
+
+    #endregion
+
+    #region Create Boss
+
+    private void CreateBossData()
+    {
+        if (GameManager.Instance.MyGameData == null)
+        {
+            Debug.LogError("GameData is null!");
+            return;
+        }
+
+        // Boss 멤버 데이터 생성
+        MemberData bossData = DataManager.Instance.MemberDict[MemberManager.MAIN_CHARACTER_ID];
+        if (bossData == null)
+        {
+            Debug.LogError("Boss MemberData not found in DataManager!");
+            return;
+        }
+
+        // Boss 저장 데이터 생성
+        MemberSaveData bossSaveData = new MemberSaveData
+        {
+            State = Cat.ECatState.Idle,
+            IsFacingForward = true,
+            IsFlipped = false,
+            CellPosition = new Vector2Int(0, 2), // 기본 스폰 위치
+            CurrentMemberData = bossData,
+            AIEnabled = false // Boss는 AI 비활성화
+        };
+
+        // GameData에 추가
+        GameManager.Instance.MyCompanyData.MemberSaveDatas.Add(bossSaveData);
+
+        Debug.Log("Boss data created and added to GameData");
     }
 
     #endregion

@@ -245,15 +245,23 @@ public class GameManager : Singleton<GameManager>
     }
     public void PauseGame()
     {
+        if (SceneManager.Instance.CurrentSceneType == Define.EScene.LobbyScene)
+            return;
+
         Time.timeScale = 0f;
+        Debug.Log("게임 정지");
     }
 
     // 게임 시간 재개
     public void ResumeGame()
     {
+        if (SceneManager.Instance.CurrentSceneType == Define.EScene.LobbyScene)
+            return;
+
         if (UIManager.Instance.PopupCount != 0)
             return;
 
         Time.timeScale = 1f;
+        Debug.Log("게임 재개");
     }
 }

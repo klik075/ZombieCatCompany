@@ -1,13 +1,13 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static Define;
 
 public abstract class UI_LeftPanelBase : UI_UGUI
 {
-    // °øÅë 2Â÷ ÆĞ³Îµé
+    // ê³µí†µ 2ì°¨ íŒ¨ë„ë“¤
     protected UI_MemberOptionPanel _memberOptionPanel;
     protected UI_SystemOptionPanel _systemOptionPanel;
 
-    // ÇöÀç È°¼ºÈ­µÈ 2Â÷ ÆĞ³Î
+    // í˜„ì¬ í™œì„±í™”ëœ 2ì°¨ íŒ¨ë„
     private GameObject _currentActiveOptionPanel;
     protected GameObject CurrentActiveOptionPanel
     {
@@ -25,7 +25,7 @@ public abstract class UI_LeftPanelBase : UI_UGUI
         }
     }
 
-    // LeftPanel È°¼ºÈ­ »óÅÂ
+    // LeftPanel í™œì„±í™” ìƒíƒœ
     public bool IsActive
     {
         get => gameObject.activeSelf;
@@ -47,25 +47,29 @@ public abstract class UI_LeftPanelBase : UI_UGUI
     {
         base.Awake();
 
-        // ¹ÙÀÎµùÀº ÆÄ»ı Å¬·¡½º¿¡¼­ ¼öÇà
+        // ë°”ì¸ë”©ì€ íŒŒìƒ í´ë˜ìŠ¤ì—ì„œ ìˆ˜í–‰
         PerformBinding();
 
-        // °øÅë ¿É¼Ç ÆĞ³Î ÃÊ±âÈ­
+        // ê³µí†µ ì˜µì…˜ íŒ¨ë„ ì´ˆê¸°í™”
         InitializeCommonPanels();
 
-        // °øÅë ¹öÆ° ÀÌº¥Æ® µî·Ï (ºÎ¸ğ¿¡¼­ ÀÚµ¿ Ã³¸®)
+        // ê³µí†µ ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡ (ë¶€ëª¨ì—ì„œ ìë™ ì²˜ë¦¬)
         RegisterCommonButtonEvents();
 
-        // ÆÄ»ı Å¬·¡½ºÀÇ °íÀ¯ ÀÌº¥Æ® µî·Ï
+        // íŒŒìƒ í´ë˜ìŠ¤ì˜ ê³ ìœ  ì´ë²¤íŠ¸ ë“±ë¡
         RegisterSpecificEvents();
 
-        // ÀÌº¥Æ® µî·Ï
+        // ì´ë²¤íŠ¸ ë“±ë¡
         EventManager.Instance.AddEvent(EEventType.UI_MenuButtonClicked, OnMenuButtonClicked);
 
         gameObject.SetActive(false);
     }
+    protected virtual void OnDestroy()
+    {
+        EventManager.Instance.RemoveEvent(EEventType.UI_MenuButtonClicked, OnMenuButtonClicked);
+    }
 
-    // °øÅë ¹öÆ° ÀÌº¥Æ® µî·Ï (Member, System ¹öÆ°)
+    // ê³µí†µ ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡ (Member, System ë²„íŠ¼)
     private void RegisterCommonButtonEvents()
     {
         UnityEngine.UI.Button memberButton = GetMemberButton();
@@ -77,13 +81,13 @@ public abstract class UI_LeftPanelBase : UI_UGUI
             systemButton.onClick.AddListener(OnClickSystemButton);
     }
 
-    // Ãß»ó ¸Ş¼­µå - ÆÄ»ı Å¬·¡½º¿¡¼­ ±¸Çö
-    protected abstract void PerformBinding(); // ¹ÙÀÎµù¸¸ ¼öÇà
-    protected abstract void RegisterSpecificEvents(); // °íÀ¯ ÀÌº¥Æ® µî·Ï
-    protected abstract UnityEngine.UI.Button GetMemberButton(); // Member ¹öÆ° ¹İÈ¯
-    protected abstract UnityEngine.UI.Button GetSystemButton(); // System ¹öÆ° ¹İÈ¯
+    // ì¶”ìƒ ë©”ì„œë“œ - íŒŒìƒ í´ë˜ìŠ¤ì—ì„œ êµ¬í˜„
+    protected abstract void PerformBinding(); // ë°”ì¸ë”©ë§Œ ìˆ˜í–‰
+    protected abstract void RegisterSpecificEvents(); // ê³ ìœ  ì´ë²¤íŠ¸ ë“±ë¡
+    protected abstract UnityEngine.UI.Button GetMemberButton(); // Member ë²„íŠ¼ ë°˜í™˜
+    protected abstract UnityEngine.UI.Button GetSystemButton(); // System ë²„íŠ¼ ë°˜í™˜
 
-    // °øÅë ¿É¼Ç ÆĞ³Î ÃÊ±âÈ­
+    // ê³µí†µ ì˜µì…˜ íŒ¨ë„ ì´ˆê¸°í™”
     private void InitializeCommonPanels()
     {
         _memberOptionPanel = Utils.FindChildComponent<UI_MemberOptionPanel>(gameObject, recursive: true);
@@ -95,7 +99,7 @@ public abstract class UI_LeftPanelBase : UI_UGUI
             _systemOptionPanel.SetInfo(this);
     }
 
-    // °øÅë ¹öÆ° Å¬¸¯ Ã³¸®
+    // ê³µí†µ ë²„íŠ¼ í´ë¦­ ì²˜ë¦¬
     protected void OnClickMemberButton()
     {
         OpenOptionPanel(_memberOptionPanel.gameObject);
@@ -106,7 +110,7 @@ public abstract class UI_LeftPanelBase : UI_UGUI
         OpenOptionPanel(_systemOptionPanel.gameObject);
     }
 
-    // ¿É¼Ç ÆĞ³Î ¿­±â (°øÅë)
+    // ì˜µì…˜ íŒ¨ë„ ì—´ê¸° (ê³µí†µ)
     protected void OpenOptionPanel(GameObject optionPanel)
     {
         if (optionPanel == null)
@@ -119,7 +123,7 @@ public abstract class UI_LeftPanelBase : UI_UGUI
         CurrentActiveOptionPanel = optionPanel;
     }
 
-    // ¸Ş´º ¹öÆ° Å¬¸¯ (°øÅë)
+    // ë©”ë‰´ ë²„íŠ¼ í´ë¦­ (ê³µí†µ)
     public void OnMenuButtonClicked()
     {
         bool wasActive = gameObject.activeSelf;
@@ -133,19 +137,19 @@ public abstract class UI_LeftPanelBase : UI_UGUI
         IsActive = newState;
     }
 
-    // ¿É¼Ç ÆĞ³Î È°¼º ¿©ºÎ È®ÀÎ (°øÅë)
+    // ì˜µì…˜ íŒ¨ë„ í™œì„± ì—¬ë¶€ í™•ì¸ (ê³µí†µ)
     public bool HasActiveOptionPanel()
     {
         return _currentActiveOptionPanel != null && _currentActiveOptionPanel.activeSelf;
     }
 
-    // ÇöÀç ¿É¼Ç ÆĞ³Î ´İ±â (°øÅë)
+    // í˜„ì¬ ì˜µì…˜ íŒ¨ë„ ë‹«ê¸° (ê³µí†µ)
     public void CloseCurrentOptionPanel()
     {
         CurrentActiveOptionPanel = null;
     }
 
-    // »óÅÂ º¯°æ ¾Ë¸² (°øÅë)
+    // ìƒíƒœ ë³€ê²½ ì•Œë¦¼ (ê³µí†µ)
     protected void NotifyStateChanged()
     {
         if(IsActive == false)

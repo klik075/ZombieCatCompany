@@ -1,49 +1,53 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static Define;
 
 public class UI_MorningLeftPanel : UI_LeftPanelBase
 {
     enum Buttons
     {
-        // °øÅë ¹öÆ°
+        // ê³µí†µ ë²„íŠ¼
         MemberButton,
         SystemButton,
         
-        // ³· Àü¿ë ¹öÆ°
+        // ë‚® ì „ìš© ë²„íŠ¼
         FenceButton,
         DefenseStartButton,
     }
     
     enum Texts
     {
-        // °øÅë ÅØ½ºÆ®
+        // ê³µí†µ í…ìŠ¤íŠ¸
         MemberButtonText,
         SystemButtonText,
         
-        // ³· Àü¿ë ÅØ½ºÆ®
+        // ë‚® ì „ìš© í…ìŠ¤íŠ¸
         FenceButtonText,
         DefenseStartButtonText,
     }
 
-    // ¹ÙÀÎµù¸¸ ¼öÇà
+    // ë°”ì¸ë”©ë§Œ ìˆ˜í–‰
     protected override void PerformBinding()
     {
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
     }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
 
-    // °øÅë ¹öÆ° ¹İÈ¯ (ºÎ¸ğ¿¡¼­ ÀÚµ¿ µî·Ï¿¡ »ç¿ë)
+    }
+    // ê³µí†µ ë²„íŠ¼ ë°˜í™˜ (ë¶€ëª¨ì—ì„œ ìë™ ë“±ë¡ì— ì‚¬ìš©)
     protected override UnityEngine.UI.Button GetMemberButton() => GetButton((int)Buttons.MemberButton);
     protected override UnityEngine.UI.Button GetSystemButton() => GetButton((int)Buttons.SystemButton);
 
-    // ³· Àü¿ë ¹öÆ° ÀÌº¥Æ® µî·Ï
+    // ë‚® ì „ìš© ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡
     protected override void RegisterSpecificEvents()
     {
         GetButton((int)Buttons.FenceButton).onClick.AddListener(OnClickFenceButton);
         GetButton((int)Buttons.DefenseStartButton).onClick.AddListener(OnClickDefenseStartButton);
     }
 
-    // ³· Àü¿ë ¹öÆ° Ã³¸®
+    // ë‚® ì „ìš© ë²„íŠ¼ ì²˜ë¦¬
     private void OnClickFenceButton()
     {
         UI_FenceStatePopup fenceStatePopup = UIManager.Instance.ShowPopupUI<UI_FenceStatePopup>();
@@ -54,13 +58,13 @@ public class UI_MorningLeftPanel : UI_LeftPanelBase
 
     private void OnClickDefenseStartButton()
     {
-        // ¹æ¾î ½ÃÀÛ ·ÎÁ÷
-        //TODO: ¹æ¾î ½ÃÀÛ Ã³¸®
+        // ë°©ì–´ ì‹œì‘ ë¡œì§
+        //TODO: ë°©ì–´ ì‹œì‘ ì²˜ë¦¬
     }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
-        //TODO: Morning Àü¿ë Localization
+        //TODO: Morning ì „ìš© Localization
     }
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -33,11 +33,19 @@ public class MapManager : Singleton<MapManager>
     public void Init()
     {
         _tilemap = FindFirstObjectByType<Tilemap>();
-        InitializeWalkableMap();
+
+        if(_tilemap != null)
+            InitializeWalkableMap();
     }
 
     private void InitializeWalkableMap()
     {
+        if (_tilemap == null)
+        {
+            Debug.LogWarning("MapManager: Cannot initialize walkable map - Tilemap is null");
+            return;
+        }
+
         BoundsInt bounds = _tilemap.cellBounds;
         int width = bounds.size.x;
         int height = bounds.size.y;

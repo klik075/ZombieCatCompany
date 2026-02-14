@@ -1,4 +1,4 @@
-using TMPro;
+ï»¿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
@@ -18,7 +18,7 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
     
     enum Texts
     {
-        // °øÅë
+        // ê³µí†µ
         SaveButtonText,
         MenuButtonText,
 
@@ -39,8 +39,12 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
 
     protected override void RegisterSpecificEvents()
     {
-        // ³· Àü¿ë °ÔÀÓ µ¥ÀÌÅÍ º¯°æ ÀÌº¥Æ® ±¸µ¶
-        // ¿¹: ¿ïÅ¸¸® HP º¯°æ, ³»±¸µµ º¯°æ µî
+        // ë‚® ì „ìš© ê²Œìž„ ë°ì´í„° ë³€ê²½ ì´ë²¤íŠ¸ êµ¬ë…
+        // ì˜ˆ: ìš¸íƒ€ë¦¬ HP ë³€ê²½, ë‚´êµ¬ë„ ë³€ê²½ ë“±
+    }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
     }
 
     protected override Button GetSaveButton() => GetButton((int)Buttons.SaveButton);
@@ -48,13 +52,13 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
     protected override TMP_Text GetSaveButtonText() => GetText((int)Texts.SaveButtonText);
     protected override TMP_Text GetMenuButtonText() => GetText((int)Texts.MenuButtonText);
 
-    // ³· Àü¿ë UI ¾÷µ¥ÀÌÆ® ¸Þ¼­µåµé
-    //TODO: ¿ïÅ¸¸® HP, ³»±¸µµ ¾÷µ¥ÀÌÆ® ¸Þ¼­µå Ãß°¡
+    // ë‚® ì „ìš© UI ì—…ë°ì´íŠ¸ ë©”ì„œë“œë“¤
+    //TODO: ìš¸íƒ€ë¦¬ HP, ë‚´êµ¬ë„ ì—…ë°ì´íŠ¸ ë©”ì„œë“œ ì¶”ê°€
 
     public override void RefreshUI()
     {
         base.RefreshUI();
-        //TODO: ³· Àü¿ë UI ¾÷µ¥ÀÌÆ®
+        //TODO: ë‚® ì „ìš© UI ì—…ë°ì´íŠ¸
         //TODO: Localization
     }
 }

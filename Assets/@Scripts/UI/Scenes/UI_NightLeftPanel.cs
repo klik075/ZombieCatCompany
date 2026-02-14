@@ -1,15 +1,15 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static Define;
 
 public class UI_NightLeftPanel : UI_LeftPanelBase
 {
     enum Buttons
     {
-        // °øÅë ¹öÆ°
+        // ê³µí†µ ë²„íŠ¼
         MemberButton,
         SystemButton,
         
-        // ¹ã Àü¿ë ¹öÆ°
+        // ë°¤ ì „ìš© ë²„íŠ¼
         GameDevButton,
         DiaryButton,
         DispatchResultButton,
@@ -17,36 +17,36 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
     
     enum Texts
     {
-        // °øÅë ÅØ½ºÆ®
+        // ê³µí†µ í…ìŠ¤íŠ¸
         MemberButtonText,
         SystemButtonText,
         
-        // ¹ã Àü¿ë ÅØ½ºÆ®
+        // ë°¤ ì „ìš© í…ìŠ¤íŠ¸
         GameDevButtonText,
         DiaryButtonText,
         DispatchResultButtonText,
     }
 
-    // ¹ÙÀÎµù¸¸ ¼öÇà
+    // ë°”ì¸ë”©ë§Œ ìˆ˜í–‰
     protected override void PerformBinding()
     {
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
     }
 
-    // °øÅë ¹öÆ° ¹İÈ¯ (ºÎ¸ğ¿¡¼­ ÀÚµ¿ µî·Ï¿¡ »ç¿ë)
+    // ê³µí†µ ë²„íŠ¼ ë°˜í™˜ (ë¶€ëª¨ì—ì„œ ìë™ ë“±ë¡ì— ì‚¬ìš©)
     protected override UnityEngine.UI.Button GetMemberButton() => GetButton((int)Buttons.MemberButton);
     protected override UnityEngine.UI.Button GetSystemButton() => GetButton((int)Buttons.SystemButton);
 
-    // ¹ã Àü¿ë ¹öÆ° ÀÌº¥Æ® µî·Ï
+    // ë°¤ ì „ìš© ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡
     protected override void RegisterSpecificEvents()
     {
-        GetButton((int)Buttons.GameDevButton)?.onClick.AddListener(OnClickGameDevButton);
-        GetButton((int)Buttons.DiaryButton)?.onClick.AddListener(OnClickDiaryButton);
-        GetButton((int)Buttons.DispatchResultButton)?.onClick.AddListener(OnClickDispatchResultButton);
+        GetButton((int)Buttons.GameDevButton).onClick.AddListener(OnClickGameDevButton);
+        GetButton((int)Buttons.DiaryButton).onClick.AddListener(OnClickDiaryButton);
+        GetButton((int)Buttons.DispatchResultButton).onClick.AddListener(OnClickDispatchResultButton);
     }
 
-    // ¹ã Àü¿ë ¹öÆ° Ã³¸®
+    // ë°¤ ì „ìš© ë²„íŠ¼ ì²˜ë¦¬
     private void OnClickGameDevButton()
     {
         if (GameManager.Instance.GameState == EGameState.Night)
@@ -75,7 +75,7 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
 
     private void OnClickDispatchResultButton()
     {
-        //TODO: ÆÄ°ß °á°ú ÆË¾÷ ¿­±â, ÆÄ°ßÀ» º¸³»Áö ¾Ê¾ÒÀ¸¸é UI_ChatPopupÀ» ¿­°í "ÆÄ°ßÀ» º¸³»Áö ¾Ê¾Ò´Ù³É." text ¼³Á¤
+        //TODO: íŒŒê²¬ ê²°ê³¼ íŒì—… ì—´ê¸°, íŒŒê²¬ì„ ë³´ë‚´ì§€ ì•Šì•˜ìœ¼ë©´ UI_ChatPopupì„ ì—´ê³  "íŒŒê²¬ì„ ë³´ë‚´ì§€ ì•Šì•˜ë‹¤ëƒ¥." text ì„¤ì •
         UI_EventPopup dispatchResultPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
         dispatchResultPopup.SetInfo();
         
@@ -85,6 +85,6 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
     public override void RefreshUI()
     {
         base.RefreshUI();
-        //TODO: Night Àü¿ë Localization
+        //TODO: Night ì „ìš© Localization
     }
 }

@@ -1,14 +1,17 @@
-using UnityEngine;
-
+﻿using UnityEngine;
+using static Define;
 public class UI_LoadGamePopup : UI_UGUI, IUI_Popup
 {
     enum GameObjects
     {
-        //BG
-        BG,
+        
     }
     enum Buttons
     {
+        //BG
+        BG,
+
+        ContentFrame
     }
     enum Texts
     {
@@ -27,6 +30,8 @@ public class UI_LoadGamePopup : UI_UGUI, IUI_Popup
 
     }
 
+    private bool _hasGameData;
+
     protected override void Awake()
     {
         base.Awake();
@@ -35,11 +40,58 @@ public class UI_LoadGamePopup : UI_UGUI, IUI_Popup
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
+
+        GetButton((int)Buttons.BG).onClick.AddListener(() => UIManager.Instance.ClosePopupUI());
+        GetButton((int)Buttons.ContentFrame).onClick.AddListener(() => LoadGame());
+
+        UpdateUI();
     }
 
+    private void LoadGame()
+    {
+        UIManager.Instance.ClosePopupUI();
+        SceneManager.Instance.LoadScene(Define.EScene.NightScene);
+    }
+    private void UpdateUI()
+    {
+        _hasGameData = SaveManager.Instance.HasGameData();
+
+        UpdateContent();
+        UpdateButton();
+    }
+    private void UpdateContent()
+    {
+        if (!_hasGameData)
+        {
+            // 저장된 데이터가 없는 경우
+            GetText((int)Texts.LoadGameText).text = "저장된 데이터가 없습니다.";
+            return;
+        }
+
+        GameData gameData = SaveManager.Instance.GetGameData();
+
+        // UI 업데이트
+        GetText((int)Texts.LoadGameText).text = "중단된 데이터에서 재개";
+
+        // 게임 모드
+        GetText((int)Texts.ModeText).text = ModeData.GetModeName(gameData.GameMode);
+
+        // 회사 이름
+        GetText((int)Texts.CompanyText).text = gameData.CompanyData.CompanyName;
+
+        // 연차
+        GetText((int)Texts.YearText).text = $"연차: {gameData.CompanyData.Year}년";
+
+        // 자금
+        GetText((int)Texts.FundsText).text = $"자금: {gameData.CompanyData.Gold:N0}원";
+    }
+    private void UpdateButton()
+    {
+        GetButton((int)Buttons.ContentFrame).interactable = _hasGameData;
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();
-
+        UpdateContent();
     }
 }

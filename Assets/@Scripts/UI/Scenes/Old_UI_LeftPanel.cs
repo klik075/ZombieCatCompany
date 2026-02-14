@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static Define;
 
 public class Old_UI_LeftPanel : UI_UGUI
@@ -9,44 +9,44 @@ public class Old_UI_LeftPanel : UI_UGUI
     }
     enum Buttons
     {
-        //¹ã, ³· °ø¿ë 1Â÷ ÆĞ³Î
+        //ë°¤, ë‚® ê³µìš© 1ì°¨ íŒ¨ë„
         MemberButton,
         SystemButton,
 
-        //NightMenu - 1Â÷ ÆĞ³Î
+        //NightMenu - 1ì°¨ íŒ¨ë„
         GameDevButton,
         DiaryButton,
         DispatchResultButton,
 
-        //MorningMenu - 1Â÷ ÆĞ³Î
+        //MorningMenu - 1ì°¨ íŒ¨ë„
         FenceButton,
 
-        //Morning 0Â÷ ¹öÆ°
+        //Morning 0ì°¨ ë²„íŠ¼
         DefenseStartButton,
     }
     enum Texts
     {
-        //¹ã, ³· °ø¿ë 1Â÷ ÆĞ³Î
+        //ë°¤, ë‚® ê³µìš© 1ì°¨ íŒ¨ë„
         MemberButtonText,
         SystemButtonText,
 
-        //NightMenu - 1Â÷ ÆĞ³Î
+        //NightMenu - 1ì°¨ íŒ¨ë„
         GameDevButtonText,
         DiaryButtonText,
         DispatchResultButtonText,
 
-        //MorningMenu - 1Â÷ ÆĞ³Î
+        //MorningMenu - 1ì°¨ íŒ¨ë„
         FenceButtonText,
 
-        //Morning 0Â÷ ¹öÆ°
+        //Morning 0ì°¨ ë²„íŠ¼
         DefenseStartButtonText,
     }
 
-    //2Â÷ ÆĞ³Îµé (LeftPanel ³»ºÎ)
+    //2ì°¨ íŒ¨ë„ë“¤ (LeftPanel ë‚´ë¶€)
     private UI_MemberOptionPanel _memberOptionPanel;
     private UI_SystemOptionPanel _systemOptionPanel;
 
-    // ÇöÀç È°¼ºÈ­µÈ 2Â÷ ÆĞ³Î - ÇÁ·ÎÆÛÆ¼·Î ÀÚµ¿ ÀÌº¥Æ® ¹ß»ı
+    // í˜„ì¬ í™œì„±í™”ëœ 2ì°¨ íŒ¨ë„ - í”„ë¡œí¼í‹°ë¡œ ìë™ ì´ë²¤íŠ¸ ë°œìƒ
     private GameObject _currentActiveOptionPanel;
     private GameObject CurrentActiveOptionPanel
     {
@@ -55,7 +55,7 @@ public class Old_UI_LeftPanel : UI_UGUI
         {
             if (_currentActiveOptionPanel != value)
             {
-                // ±âÁ¸ ÆĞ³Î ´İ±â
+                // ê¸°ì¡´ íŒ¨ë„ ë‹«ê¸°
                 if (_currentActiveOptionPanel != null)
                     _currentActiveOptionPanel.SetActive(false);
                 
@@ -65,7 +65,7 @@ public class Old_UI_LeftPanel : UI_UGUI
         }
     }
 
-    // LeftPanel È°¼ºÈ­ »óÅÂ - ÇÁ·ÎÆÛÆ¼·Î ÀÚµ¿ ÀÌº¥Æ® ¹ß»ı
+    // LeftPanel í™œì„±í™” ìƒíƒœ - í”„ë¡œí¼í‹°ë¡œ ìë™ ì´ë²¤íŠ¸ ë°œìƒ
     public bool IsActive
     {
         get => gameObject.activeSelf;
@@ -100,16 +100,16 @@ public class Old_UI_LeftPanel : UI_UGUI
         //if (_systemOptionPanel != null)
         //    _systemOptionPanel.SetInfo(this);
 
-        // ¹öÆ° ÀÌº¥Æ® µî·Ï - °øÅë
+        // ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡ - ê³µí†µ
         GetButton((int)Buttons.MemberButton)?.onClick.AddListener(() => OnClickMenuButton(Buttons.MemberButton));
         GetButton((int)Buttons.SystemButton)?.onClick.AddListener(() => OnClickMenuButton(Buttons.SystemButton));
 
-        // ¹öÆ° ÀÌº¥Æ® µî·Ï - ¹ã ¸Ş´º
+        // ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡ - ë°¤ ë©”ë‰´
         GetButton((int)Buttons.GameDevButton)?.onClick.AddListener(() => OnClickMenuButton(Buttons.GameDevButton));
         GetButton((int)Buttons.DiaryButton)?.onClick.AddListener(() => OnClickMenuButton(Buttons.DiaryButton));
         GetButton((int)Buttons.DispatchResultButton)?.onClick.AddListener(() => OnClickMenuButton(Buttons.DispatchResultButton));
 
-        // ¹öÆ° ÀÌº¥Æ® µî·Ï - ³· ¸Ş´º
+        // ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡ - ë‚® ë©”ë‰´
         GetButton((int)Buttons.FenceButton)?.onClick.AddListener(() => OnClickMenuButton(Buttons.FenceButton));
 
         
@@ -119,7 +119,7 @@ public class Old_UI_LeftPanel : UI_UGUI
         gameObject.SetActive(false);
     }
 
-    // ÅëÇÕµÈ ¸Ş´º ¹öÆ° Å¬¸¯ Ã³¸®
+    // í†µí•©ëœ ë©”ë‰´ ë²„íŠ¼ í´ë¦­ ì²˜ë¦¬
     private void OnClickMenuButton(Buttons buttonType)
     {
         switch (buttonType)
@@ -145,7 +145,7 @@ public class Old_UI_LeftPanel : UI_UGUI
         }
     }
 
-    // ¿É¼Ç ÆĞ³Î ¿­±â (Member, System µî)
+    // ì˜µì…˜ íŒ¨ë„ ì—´ê¸° (Member, System ë“±)
     private void OpenOptionPanel(GameObject optionPanel)
     {
         if (optionPanel == null)
@@ -154,26 +154,26 @@ public class Old_UI_LeftPanel : UI_UGUI
         if (_currentActiveOptionPanel == optionPanel)
             return;
 
-        // ÇÁ·ÎÆÛÆ¼ setter¿¡¼­ ÀÚµ¿À¸·Î ±âÁ¸ ÆĞ³Î ´İ°í »õ ÆĞ³Î ¼³Á¤
+        // í”„ë¡œí¼í‹° setterì—ì„œ ìë™ìœ¼ë¡œ ê¸°ì¡´ íŒ¨ë„ ë‹«ê³  ìƒˆ íŒ¨ë„ ì„¤ì •
         optionPanel.SetActive(true);
         CurrentActiveOptionPanel = optionPanel;
     }
 
-    public void OnMenuButtonClicked()//¸Ş´º ¹öÆ° Å¬¸¯ ½Ã¸¸, µÚ·Î´Â x
+    public void OnMenuButtonClicked()//ë©”ë‰´ ë²„íŠ¼ í´ë¦­ ì‹œë§Œ, ë’¤ë¡œëŠ” x
     {
         bool wasActive = gameObject.activeSelf;
         bool newState = !wasActive;
         
-        // LeftPanelÀ» ¿­ ¶§ + ½ÇÁ¦·Î ¿É¼Ç ÆĞ³ÎÀÌ ¿­·ÁÀÖÀ» ¶§¸¸ ´İ±â
+        // LeftPanelì„ ì—´ ë•Œ + ì‹¤ì œë¡œ ì˜µì…˜ íŒ¨ë„ì´ ì—´ë ¤ìˆì„ ë•Œë§Œ ë‹«ê¸°
         if (newState && HasActiveOptionPanel())
         {
-            CurrentActiveOptionPanel = null; // ÇÁ·ÎÆÛÆ¼ »ç¿ë - ÀÚµ¿À¸·Î ÆĞ³Î ´İÈû
+            CurrentActiveOptionPanel = null; // í”„ë¡œí¼í‹° ì‚¬ìš© - ìë™ìœ¼ë¡œ íŒ¨ë„ ë‹«í˜
         }
         
         IsActive = newState;
     }
 
-    // ÆË¾÷ UI ¿­±â Àü ÇöÀç »óÅÂ ÀúÀå ¹× LeftPanel ¼û±è
+    // íŒì—… UI ì—´ê¸° ì „ í˜„ì¬ ìƒíƒœ ì €ì¥ ë° LeftPanel ìˆ¨ê¹€
     private void OpenPopup(Buttons buttonType)
     {
         switch (buttonType)
@@ -203,8 +203,8 @@ public class Old_UI_LeftPanel : UI_UGUI
                 diaryPopup.SetInfo();
                 break;
             case Buttons.DispatchResultButton:
-                //TODO: ÆÄ°ß °á°ú ÆË¾÷ ¿­±â, ÆÄ°ßÀ» º¸³»Áö ¾Ê¾ÒÀ¸¸é UI_ChatPopupÀ» ¿­°í "ÆÄ°ßÀ» º¸³»Áö ¾Ê¾Ò´Ù³É." text ¼³Á¤
-                //UI_EventPopupÀº ÀÏ±âÀå°ú ÆÄ°ß °á°ú°¡ µ¿ÀÏÇÑ ÆË¾÷À» »ç¿ëÇÏ°í ³»¿ëÀº DiaryÀÎÁö, DispatchResultÀÎÁö¿¡ µû¶ó ´Ù¸£°Ô ¼³Á¤
+                //TODO: íŒŒê²¬ ê²°ê³¼ íŒì—… ì—´ê¸°, íŒŒê²¬ì„ ë³´ë‚´ì§€ ì•Šì•˜ìœ¼ë©´ UI_ChatPopupì„ ì—´ê³  "íŒŒê²¬ì„ ë³´ë‚´ì§€ ì•Šì•˜ë‹¤ëƒ¥." text ì„¤ì •
+                //UI_EventPopupì€ ì¼ê¸°ì¥ê³¼ íŒŒê²¬ ê²°ê³¼ê°€ ë™ì¼í•œ íŒì—…ì„ ì‚¬ìš©í•˜ê³  ë‚´ìš©ì€ Diaryì¸ì§€, DispatchResultì¸ì§€ì— ë”°ë¼ ë‹¤ë¥´ê²Œ ì„¤ì •
                 UI_EventPopup dispatchResultPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
                 dispatchResultPopup.SetInfo();
                 break;
@@ -213,18 +213,18 @@ public class Old_UI_LeftPanel : UI_UGUI
                 fenceStatePopup.SetInfo();
                 break;
         }
-        // LeftPanel ¼û±è
+        // LeftPanel ìˆ¨ê¹€
         IsActive = false;
     }
 
-    public bool HasActiveOptionPanel()//ÇöÀç ¿É¼Ç ÆĞ³ÎÀÌ ¿­·ÁÀÖ´ÂÁö ¿©ºÎ ¹İÈ¯
+    public bool HasActiveOptionPanel()//í˜„ì¬ ì˜µì…˜ íŒ¨ë„ì´ ì—´ë ¤ìˆëŠ”ì§€ ì—¬ë¶€ ë°˜í™˜
     {
         return _currentActiveOptionPanel != null && _currentActiveOptionPanel.activeSelf;
     }
 
     public void CloseCurrentOptionPanel()
     {
-        CurrentActiveOptionPanel = null; // ÇÁ·ÎÆÛÆ¼ »ç¿ë - ÀÚµ¿À¸·Î ÆĞ³Î ´İÈû
+        CurrentActiveOptionPanel = null; // í”„ë¡œí¼í‹° ì‚¬ìš© - ìë™ìœ¼ë¡œ íŒ¨ë„ ë‹«í˜
     }
 
     private void NotifyStateChanged()
@@ -234,7 +234,7 @@ public class Old_UI_LeftPanel : UI_UGUI
         else
             EventManager.Instance.TriggerEvent(EEventType.UI_LeftPanelOpened);
 
-        EventManager.Instance.TriggerEvent(EEventType.UI_LeftPanelStateChanged);//BottomPanel¿¡¼­ °¨Áö
+        EventManager.Instance.TriggerEvent(EEventType.UI_LeftPanelStateChanged);//BottomPanelì—ì„œ ê°ì§€
     }
 
     public override void RefreshUI()

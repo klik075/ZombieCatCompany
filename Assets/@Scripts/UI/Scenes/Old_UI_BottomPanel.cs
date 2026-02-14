@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static Define;
-public class UI_BottomPanel : UI_UGUI
+public class Old_UI_BottomPanel : UI_UGUI
 {
     enum GameObjects
     {

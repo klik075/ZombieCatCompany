@@ -59,6 +59,13 @@ public abstract class UI_BottomPanelBase : UI_UGUI
 
         UpdateUIStates();
     }
+    protected virtual void OnDestroy()
+    {
+        EventManager.Instance.RemoveEvent(EEventType.UI_LeftPanelStateChanged, UpdateUIStates);
+        EventManager.Instance.RemoveEvent(EEventType.UI_PopupClosed, UpdateUIStates);
+        EventManager.Instance.RemoveEvent(EEventType.UI_PopupOpened, UpdateUIStates);
+        EventManager.Instance.RemoveEvent(EEventType.GameStateChanged, OnGameStateChanged);
+    }
 
     // 공통 버튼 이벤트 등록 (Save, Menu 버튼)
     private void RegisterCommonButtonEvents()
@@ -82,6 +89,7 @@ public abstract class UI_BottomPanelBase : UI_UGUI
     protected void OnClickSaveButton()
     {
         SaveManager.Instance.SaveGameData();
+        SaveManager.Instance.SaveUserData();
         Debug.Log("SaveButton Clicked");
     }
 
