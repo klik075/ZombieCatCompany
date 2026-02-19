@@ -73,9 +73,9 @@ public static class Define
         UI_LeftPanelClosed,
 
         UI_MenuButtonClicked,
-        UI_SystemButtonClicked,
+        UI_BackButtonClicked,
 
-         //Popup
+        //Popup
         UI_PopupClosed,
         UI_PopupOpened,
         //===========================
@@ -189,6 +189,14 @@ public static class Define
         MerchantHello,        // 암상인 인사
         PurchaseMessage,      // 통조림 구매 메시지
         MerchantBye,          // 구매 완료
+
+        // 팬스 관련
+        TryRepairFence,       // 수리 시도
+        RepairSuccess,       // 수리 성공
+
+        TryEnhanceFence,      // 강화 시도
+        EnhanceSuccess,       // 강화 성공
+        EnhanceFail,          // 강화 실패
     }
 
     public enum EChatType

@@ -1,9 +1,9 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 using static Define;
 
 /// <summary>
-/// ±¸¸Å ÇÁ·Î¼¼½º Èå¸§ Á¦¾î (UI °ü¸® Ã¥ÀÓ)
+/// êµ¬ë§¤ í”„ë¡œì„¸ìŠ¤ íë¦„ ì œì–´ (UI ê´€ë¦¬ ì±…ì„)
 /// </summary>
 public class PurchaseFlowController : IPurchaseFlow
 {
@@ -31,11 +31,11 @@ public class PurchaseFlowController : IPurchaseFlow
         _onComplete = onComplete;
         _currentState = FlowState.WaitingForArrival;
 
-        // Merchant ÀÌº¥Æ® ±¸µ¶ (´À½¼ÇÑ °áÇÕ)
+        // Merchant ì´ë²¤íŠ¸ êµ¬ë… (ëŠìŠ¨í•œ ê²°í•©)
         _merchant.OnArrivedAtBoss += OnMerchantArrived;
         _merchant.OnArrivedAtDoor += OnMerchantLeft;
 
-        // Merchant¿¡°Ô ÀÌµ¿¸¸ Áö½Ã
+        // Merchantì—ê²Œ ì´ë™ë§Œ ì§€ì‹œ
         _merchant.MoveToBossNearPosition();
     }
 
@@ -46,7 +46,7 @@ public class PurchaseFlowController : IPurchaseFlow
     }
 
     /// <summary>
-    /// Merchant°¡ º¸½º ±ÙÃ³ µµÂø ½Ã
+    /// Merchantê°€ ë³´ìŠ¤ ê·¼ì²˜ ë„ì°© ì‹œ
     /// </summary>
     private void OnMerchantArrived()
     {
@@ -55,7 +55,7 @@ public class PurchaseFlowController : IPurchaseFlow
     }
 
     /// <summary>
-    /// 1´Ü°è: ÀÎ»ç ÆË¾÷
+    /// 1ë‹¨ê³„: ì¸ì‚¬ íŒì—…
     /// </summary>
     private void ShowGreeting()
     {
@@ -74,7 +74,7 @@ public class PurchaseFlowController : IPurchaseFlow
     }
 
     /// <summary>
-    /// 2´Ü°è: ±¸¸Å Á¦¾È
+    /// 2ë‹¨ê³„: êµ¬ë§¤ ì œì•ˆ
     /// </summary>
     private void ShowPurchaseOffer()
     {
@@ -99,14 +99,14 @@ public class PurchaseFlowController : IPurchaseFlow
     }
 
     /// <summary>
-    /// 3´Ü°è: ±¸¸Å ÆË¾÷
+    /// 3ë‹¨ê³„: êµ¬ë§¤ íŒì—…
     /// </summary>
     private void ShowPurchasePopup()
     {
         UI_PurchaseFoodPopup purchasePopup = UIManager.Instance.ShowPopupUI<UI_PurchaseFoodPopup>();
         purchasePopup.SetInfo();
 
-        purchasePopup.OnClosed += OnPurchaseCompleted;
+        purchasePopup.OnClosed(OnPurchaseCompleted);
     }
 
     private void OnPurchaseCompleted()
@@ -116,7 +116,7 @@ public class PurchaseFlowController : IPurchaseFlow
     }
 
     /// <summary>
-    /// 4´Ü°è: ÀÛº° ÀÎ»ç
+    /// 4ë‹¨ê³„: ì‘ë³„ ì¸ì‚¬
     /// </summary>
     private void ShowFarewell()
     {
@@ -135,11 +135,11 @@ public class PurchaseFlowController : IPurchaseFlow
     }
 
     /// <summary>
-    /// Merchant°¡ ¹®¿¡ µµÂøÇÏ¿© ÅğÀå
+    /// Merchantê°€ ë¬¸ì— ë„ì°©í•˜ì—¬ í‡´ì¥
     /// </summary>
     private void OnMerchantLeft()
     {
-        Cancel(); // ÀÌº¥Æ® ±¸µ¶ ÇØÁ¦
+        Cancel(); // ì´ë²¤íŠ¸ êµ¬ë… í•´ì œ
         _onComplete?.Invoke();
     }
 }

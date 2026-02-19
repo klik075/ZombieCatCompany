@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 using static Define;
 
@@ -61,8 +61,18 @@ public class UI_GameDevCompletionPopup : UI_UGUI, IUI_Popup, IClickableUI
         
         GetButton((int)Buttons.GameTitleChangeButton).onClick.AddListener(() => OpenInputFieldPopup());
         GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OpenMagazineReviewPopup());
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
 
         EventManager.Instance.AddEvent(EEventType.NewDevTitleChanged, UpdateGameTitle);
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        EventManager.Instance.RemoveEvent(EEventType.NewDevTitleChanged, UpdateGameTitle);
     }
     public void SetInfo()
     {
@@ -70,12 +80,12 @@ public class UI_GameDevCompletionPopup : UI_UGUI, IUI_Popup, IClickableUI
     }
     private void UpdateContent()
     {
-        GetText((int)Texts.MainTitleText).text = "°ÔÀÓ °³¹ß ¿Ï¼º";
+        GetText((int)Texts.MainTitleText).text = "ê²Œì„ ê°œë°œ ì™„ì„±";
 
         UpdateGameTitle();
 
-        GetText((int)Texts.GameTitleChangeButtonText).text = "Å¸ÀÌÆ² º¯°æ";
-        GetText((int)Texts.OkayButtonText).text = "ÃâÇÏÇÑ´Ù";
+        GetText((int)Texts.GameTitleChangeButtonText).text = "íƒ€ì´í‹€ ë³€ê²½";
+        GetText((int)Texts.OkayButtonText).text = "ì¶œí•˜í•œë‹¤";
 
         GetText((int)Texts.GenreText).text = GenreData.GenreToString(GameDevManager.Instance.CurrentGenreData.GenreType);
         GetText((int)Texts.ContentText).text = ContentData.ContentToString(GameDevManager.Instance.CurrentContentData.ContentType);

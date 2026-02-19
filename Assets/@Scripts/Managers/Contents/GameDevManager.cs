@@ -358,10 +358,13 @@ public class GameDevManager : Singleton<GameDevManager>
         if (saveData == null)
         {
             Debug.LogWarning("GameDevSaveData is null! Using default values.");
+            InitNewProject();
             return;
         }
 
         _currentProject = saveData;
+        EventManager.Instance.TriggerEvent(EEventType.GameDevStateChanged);
+        Debug.Log($"GameDevData : gameDevType = {_currentProject.gameDevType}");
     }
     #endregion
 
@@ -473,7 +476,6 @@ public class GameDevManager : Singleton<GameDevManager>
                 if (GameManager.Instance.GameMode == EGameMode.Purchase)
                 { 
                     GameManager.Instance.GameState = EGameState.FoodPurchase;
-                    PurchaseManager.Instance.StartPurchase();
                 }
                 else
                 {

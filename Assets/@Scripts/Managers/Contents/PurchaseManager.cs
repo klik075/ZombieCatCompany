@@ -1,9 +1,9 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using static Define;
     
 /// <summary>
-/// ±¸¸Å ½Ã½ºÅÛ ÃÑ°ı (Orchestrator)
+/// êµ¬ë§¤ ì‹œìŠ¤í…œ ì´ê´„ (Orchestrator)
 /// </summary>
 public class PurchaseManager : Singleton<PurchaseManager>
 {
@@ -34,27 +34,28 @@ public class PurchaseManager : Singleton<PurchaseManager>
     }
     
     /// <summary>
-    /// ±¸¸Å ÇÁ·Î¼¼½º ¿Ï·á
+    /// êµ¬ë§¤ í”„ë¡œì„¸ìŠ¤ ì™„ë£Œ
     /// </summary>
     private void OnPurchaseFlowCompleted()
     {
-        // Member ÅğÀå °ü¸®ÀÚ »ı¼º
+        // Member í‡´ì¥ ê´€ë¦¬ì ìƒì„±
         _exitController = new MemberExitController(
             MemberManager.Instance.GetAllMembers(),
             MemberManager.Instance.DoorWay
         );
         
-        // ÅğÀå ½ÃÀÛ (¸ğµÎ ÅğÀåÇÏ¸é OnAllMembersExited È£Ãâ)
+        // í‡´ì¥ ì‹œì‘ (ëª¨ë‘ í‡´ì¥í•˜ë©´ OnAllMembersExited í˜¸ì¶œ)
         _exitController.StartExit(onAllMembersExited: OnAllMembersExited);
         
-        // Merchant Á¦°Å
+        // Merchant ì œê±°
         ObjectManager.Instance.Despawn(_merchant);
         _merchant = null;
         _currentFlow = null;
+
     }
     
     /// <summary>
-    /// ¸ğµç Member ÅğÀå ¿Ï·á
+    /// ëª¨ë“  Member í‡´ì¥ ì™„ë£Œ
     /// </summary>
     private void OnAllMembersExited()
     {
@@ -63,7 +64,7 @@ public class PurchaseManager : Singleton<PurchaseManager>
         _exitController.Cancel();
         _exitController = null;
         
-        // ¾ÆÄ§À¸·Î ÀüÈ¯
+        // ì•„ì¹¨ìœ¼ë¡œ ì „í™˜
         GameManager.Instance.GameState = EGameState.Morning;
     }
 }

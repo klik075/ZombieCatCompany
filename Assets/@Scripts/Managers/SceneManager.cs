@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SceneManager : Singleton<SceneManager>
 {
@@ -27,6 +27,8 @@ public class SceneManager : Singleton<SceneManager>
 
     public void LoadScene(Define.EScene sceneType)
     {
+        UIManager.Instance.CloseAllPopupUI();
+
         string sceneName = sceneType.ToString();
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
         _currentScene = null;

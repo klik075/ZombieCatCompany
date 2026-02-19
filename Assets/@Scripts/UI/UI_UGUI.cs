@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -9,11 +9,26 @@ using Object = UnityEngine.Object;
 public class UI_UGUI : UI_Base
 {
     protected Dictionary<Type, Object[]> _objects = new Dictionary<Type, Object[]>();
-
+    protected Action onClosedCallback;
+    protected bool isTransitioning;
     protected override void Awake()
     {
         if (Object.FindAnyObjectByType<EventSystem>() == null)
             ResourceManager.Instance.Instantiate("EventSystem");
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        isTransitioning = false;
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        if (!isTransitioning)
+        {
+            onClosedCallback?.Invoke();
+        }
     }
 
     protected void BindObjects(Type type) { Bind<GameObject>(type); }
@@ -51,5 +66,10 @@ public class UI_UGUI : UI_Base
             return null;
 
         return objects[idx] as T;
+    }
+    public UI_UGUI OnClosed(Action callback)
+    {
+        onClosedCallback = callback;
+        return this;
     }
 }

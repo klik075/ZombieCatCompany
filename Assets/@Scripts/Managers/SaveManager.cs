@@ -78,10 +78,27 @@ public class SaveManager : Singleton<SaveManager>
             return;
         }
 
-        // MemberManager 데이터 저장
-        gameData.CompanyData.MemberSaveDatas = MemberManager.Instance.GetPlayerSaveData();
+        // 런타임 멤버가 있으면 런타임 상태로 저장
+        var runtimeSaves = MemberManager.Instance.GetPlayerSaveData();
+        if (runtimeSaves != null && runtimeSaves.Count > 0)
+        {
+            gameData.CompanyData.MemberSaveDatas = runtimeSaves;
+        }
+        else
+        {
+            // 런타임 멤버가 없을 때는 기존 GameData의 MemberSaveDatas를 유지.
+            // 만약 GameData에 멤버 정보가 전혀 없다면 보스 SaveData를 생성하여 최소한의 데이터 보존
+            if (gameData.CompanyData.MemberSaveDatas == null || gameData.CompanyData.MemberSaveDatas.Count == 0)
+            {
+                CreateBossData();
+            }
+        }
+
         gameData.NightData.HireResult = GameManager.Instance.IsRecruiting ? MemberManager.Instance.GetHireResult() : null;
         gameData.NightData.GameDevProjectData = GameDevManager.Instance.GetGameDevProjectData();
+
+        gameData.MorningData.FenceSaveData = FenceManager.Instance.GetSaveData();
+
 
         string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         File.WriteAllText(GameDataPath, json);
@@ -89,7 +106,7 @@ public class SaveManager : Singleton<SaveManager>
         Debug.Log($"SaveManager: Game saved to {GameDataPath}");
     }
 
-    public void LoadGameData()
+    private void LoadGameData()
     {
         if (GameManager.Instance.UserData == null)
         {
@@ -107,27 +124,80 @@ public class SaveManager : Singleton<SaveManager>
         GameData gameData = JsonConvert.DeserializeObject<GameData>(json);
         GameManager.Instance.MyGameData = gameData;
 
-        if (gameData.CompanyData.MemberSaveDatas != null && gameData.CompanyData.MemberSaveDatas.Count == 0)
+        Debug.Log($"SaveManager: Game loaded from {GameDataPath}");
+    }
+    /// <summary>
+    /// 모든 씬에서 공통으로 필요한 데이터 복원 (내부 메서드)
+    /// </summary>
+    private void LoadCommonData()
+    {
+        GameData gameData = GameManager.Instance.MyGameData;
+        if (gameData == null)
         {
-            MemberManager.Instance.InitBoss();
+            Debug.LogWarning("SaveManager: GameData is null!");
+            return;
         }
 
+        Debug.Log("Loading common data...");
+
+        // 멤버 데이터 복원
         if (gameData.CompanyData.MemberSaveDatas != null && gameData.CompanyData.MemberSaveDatas.Count > 0)
         {
             MemberManager.Instance.LoadFromSaveData();
         }
+    }
+    public void LoadNightSceneData()
+    {
+        // 1. GameData 파일 로드
+        LoadGameData();
 
+        // 2. 공통 데이터 복원
+        LoadCommonData();
+
+        // 3. NightScene 전용 데이터 복원
+        GameData gameData = GameManager.Instance.MyGameData;
+        if (gameData == null)
+        {
+            Debug.LogWarning("SaveManager: GameData is null!");
+            return;
+        }
+
+        Debug.Log("Loading NightScene-specific data...");
+
+        // 모집 데이터
         if (gameData.NightData.HireResult != null)
         {
             MemberManager.Instance.LoadHireResult(gameData.NightData.HireResult);
             MemberManager.Instance.StartHire(gameData.NightData.HireResult.HireMethod, true);
         }
 
-        if(gameData.NightData.GameDevProjectData != null)
+        // 게임 개발 데이터
+        GameDevManager.Instance.LoadFromSaveData(gameData.NightData.GameDevProjectData);
+        Debug.Log($"GameData : GameState = {gameData.GameState}");
+    }
+    /// <summary>
+    /// MorningScene 데이터 로드 (공개 메서드 - 씬에서 호출)
+    /// </summary>
+    public void LoadMorningSceneData()
+    {
+        // 1. GameData 파일 로드
+        LoadGameData();
+
+        // 2. 공통 데이터 복원
+        LoadCommonData();
+
+        // 3. MorningScene 전용 데이터 복원
+        GameData gameData = GameManager.Instance.MyGameData;
+        if (gameData == null)
         {
-            GameDevManager.Instance.LoadFromSaveData(gameData.NightData.GameDevProjectData);
+            Debug.LogWarning("SaveManager: GameData is null!");
+            return;
         }
-        Debug.Log($"SaveManager: Game loaded from {GameDataPath}");
+
+        Debug.Log("Loading MorningScene-specific data...");
+
+        // Fence 데이터
+        FenceManager.Instance.LoadFromSaveData(gameData.MorningData.FenceSaveData);
     }
     public GameData GetGameData()
     {
@@ -189,6 +259,8 @@ public class SaveManager : Singleton<SaveManager>
 
     /// <summary>
     /// 새 게임 시작 (기존 세이브 삭제 + 초기화)
+    /// Lobby같이 타일맵이 없는 씬에서도 호출될 수 있으므로 런타임 오브젝트는 생성하지 않고
+    /// GameData에 보스의 SaveData만 생성합니다.
     /// </summary>
     public void NewGame()
     {
@@ -198,10 +270,12 @@ public class SaveManager : Singleton<SaveManager>
         // 새 GameData 생성
         ResetGameData();
 
-        //// 멤버 초기화
+        // 보스 SaveData만 GameData에 생성 (런타임 소환이 불가능한 Lobby에서도 안전)
         CreateBossData();
 
         GameDevManager.Instance.InitNewProject();
+
+        CreateFenceData();
 
         // 즉시 저장
         SaveGameData();
@@ -230,6 +304,7 @@ public class SaveManager : Singleton<SaveManager>
         gameData.NightData.IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting;
 
         GameManager.Instance.MyGameData = gameData;
+        Debug.Log("SaveManager: GameData reset to initial values.");
     }
 
     #endregion
@@ -242,6 +317,17 @@ public class SaveManager : Singleton<SaveManager>
         {
             Debug.LogError("GameData is null!");
             return;
+        }
+
+        // 이미 보스 SaveData가 존재하면 추가하지 않음 (중복 방지)
+        var existing = GameManager.Instance.MyCompanyData.MemberSaveDatas;
+        if (existing != null)
+        {
+            foreach (var msd in existing)
+            {
+                if (msd?.CurrentMemberData != null && msd.CurrentMemberData.EmployeeID == MemberManager.MAIN_CHARACTER_ID)
+                    return;
+            }
         }
 
         // Boss 멤버 데이터 생성
@@ -266,7 +352,46 @@ public class SaveManager : Singleton<SaveManager>
         // GameData에 추가
         GameManager.Instance.MyCompanyData.MemberSaveDatas.Add(bossSaveData);
 
-        Debug.Log("Boss data created and added to GameData");
+        Debug.Log("Boss save-data created and added to GameData");
+    }
+
+    #endregion
+
+    #region Create Fence
+
+    /// <summary>
+    /// Fence 초기 데이터 생성
+    /// </summary>
+    private void CreateFenceData()
+    {
+        if (GameManager.Instance.MyGameData == null)
+        {
+            Debug.LogError("GameData is null!");
+            return;
+        }
+
+        // Fence 데이터가 없는지 확인
+        if (!DataManager.Instance.FenceDict.ContainsKey(1))
+        {
+            Debug.LogError("Fence Level 1 data not found in DataManager!");
+            return;
+        }
+
+        // 레벨 1 Fence 데이터 가져오기
+        FenceData level1FenceData = DataManager.Instance.FenceDict[1];
+
+        // Fence 저장 데이터 생성
+        FenceSaveData fenceSaveData = new FenceSaveData
+        {
+            EnhanceLevel = level1FenceData.Enhance,
+            CurrentHp = level1FenceData.MaxHp,
+            CurrentDurability = level1FenceData.Durability
+        };
+
+        // GameData에 추가
+        GameManager.Instance.MyGameData.MorningData.FenceSaveData = fenceSaveData;
+
+        Debug.Log("Fence data created and added to GameData");
     }
 
     #endregion

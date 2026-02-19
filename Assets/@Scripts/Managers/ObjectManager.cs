@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -68,6 +68,22 @@ public class ObjectManager : Singleton<ObjectManager>
 
         return merchant;
     }
+    public Fence SpawnFence(string prefab = "Fence", bool pooling = false)
+    {
+        GameObject go = null;
+        if (pooling)
+            go = PoolManager.Instance.Pop(prefab);
+        else
+            go = ResourceManager.Instance.Instantiate(prefab);
+        go.name = prefab;
+        go.transform.parent = NpcRoot;
+
+        Fence fence = go.GetOrAddComponent<Fence>();
+        _objects.Add(fence);
+
+        fence.Pooling = pooling;
+        return fence;
+    }
 
     public void Despawn(ObjectBase obj)
     {
@@ -78,6 +94,9 @@ public class ObjectManager : Singleton<ObjectManager>
 
         if (obj is Member player)
             _players.Remove(player);
+
+        if (obj is Merchant merchant)
+            _merchants.Remove(merchant);
 
         if (obj.Pooling)
         {

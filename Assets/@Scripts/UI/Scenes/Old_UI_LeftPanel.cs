@@ -210,7 +210,6 @@ public class Old_UI_LeftPanel : UI_UGUI
                 break;
             case Buttons.FenceButton:
                 UI_FenceStatePopup fenceStatePopup = UIManager.Instance.ShowPopupUI<UI_FenceStatePopup>();
-                fenceStatePopup.SetInfo();
                 break;
         }
         // LeftPanel 숨김

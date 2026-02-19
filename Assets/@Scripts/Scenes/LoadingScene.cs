@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LoadingScene : BaseScene
@@ -21,6 +21,5 @@ public class LoadingScene : BaseScene
     {
 		Debug.Log($"Loading Complete");
         DataManager.Instance.LoadData();
-        SceneManager.Instance.LoadScene(Define.EScene.NightScene);
 	}
 }

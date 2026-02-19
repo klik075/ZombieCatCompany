@@ -21,6 +21,7 @@ public class DataTransformer : EditorWindow
         ParseExcelDataToJson<ContentDataLoader, ContentData>("Content");
         ParseExcelDataToJson<SynergyDataLoader, SynergyData>("Synergy");
         ParseExcelDataToJson<ModeDataLoader, ModeData>("Mode");
+        ParseExcelDataToJson<FenceDataLoader, FenceData>("Fence");
     }
 
     private static void ParseExcelDataToJson<Loader, LoaderData>(string filename) where Loader : new()

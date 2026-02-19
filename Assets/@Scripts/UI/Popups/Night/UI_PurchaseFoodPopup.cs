@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 using static Define;
 
@@ -40,10 +40,7 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
         FoodImage,
     }
     
-    // ÆË¾÷ ´İÈû ÀÌº¥Æ®
-    public event Action OnClosed;
-    
-    private int _purchaseAmount;  // ±¸¸Å Èñ¸Á °³¼ö
+    private int _purchaseAmount;  // êµ¬ë§¤ í¬ë§ ê°œìˆ˜
     private const int MIN_PURCHASE_AMOUNT = 1;
 
     protected override void Awake()
@@ -71,51 +68,49 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
         base.OnDisable();
         
         EventManager.Instance.RemoveEvent(EEventType.FoodChanged, UpdatePossesionFood);
-        OnClosed?.Invoke();
     }
     
     public void SetInfo()
     {
-        OnClosed = null;
         _purchaseAmount = MIN_PURCHASE_AMOUNT;
         UpdateContent();
     }
     
     /// <summary>
-    /// UI ³»¿ë ¾÷µ¥ÀÌÆ®
+    /// UI ë‚´ìš© ì—…ë°ì´íŠ¸
     /// </summary>
     private void UpdateContent()
     {
-        // Å¸ÀÌÆ²
-        GetText((int)Texts.MainTitleText).text = "ÅëÁ¶¸² ±¸¸Å";
-        GetText((int)Texts.SubMiddleNameText).text = "³É³É ÅëÁ¶¸²";
+        // íƒ€ì´í‹€
+        GetText((int)Texts.MainTitleText).text = "í†µì¡°ë¦¼ êµ¬ë§¤";
+        GetText((int)Texts.SubMiddleNameText).text = "ëƒ¥ëƒ¥ í†µì¡°ë¦¼";
         
-        // º¸À¯ ÅëÁ¶¸²
-        GetText((int)Texts.PossessionNameText).text = "º¸À¯";
+        // ë³´ìœ  í†µì¡°ë¦¼
+        GetText((int)Texts.PossessionNameText).text = "ë³´ìœ ";
         GetText((int)Texts.PossessionText).text = $"{GameManager.Instance.Food}";
         
-        // ¼³¸í
-        GetText((int)Texts.DescriptionText).text = "¸ÔÀ» ¸¸ÇÑ ÅëÁ¶¸².";
+        // ì„¤ëª…
+        GetText((int)Texts.DescriptionText).text = "ë¨¹ì„ ë§Œí•œ í†µì¡°ë¦¼.";
 
         UpdateFoodText();
 
-        // ¹öÆ° ÅØ½ºÆ®
-        GetText((int)Texts.InputButtonText).text = "°³¼ö ÀÔ·Â";
-        GetText((int)Texts.OkayButtonText).text = "±¸¸Å";
+        // ë²„íŠ¼ í…ìŠ¤íŠ¸
+        GetText((int)Texts.InputButtonText).text = "ê°œìˆ˜ ì…ë ¥";
+        GetText((int)Texts.OkayButtonText).text = "êµ¬ë§¤";
     }
     private void UpdateFoodText()
     {
-        // ±¸¸Å Èñ¸Á °³¼ö
-        GetText((int)Texts.InputFoodNameText).text = "±¸¸Å Èñ¸Á";
-        GetText((int)Texts.InputFoodText).text = $"{_purchaseAmount}°³";
+        // êµ¬ë§¤ í¬ë§ ê°œìˆ˜
+        GetText((int)Texts.InputFoodNameText).text = "êµ¬ë§¤ í¬ë§";
+        GetText((int)Texts.InputFoodText).text = $"{_purchaseAmount}ê°œ";
 
-        // °³´ç °¡°İ
-        GetText((int)Texts.CostNameText).text = "°³´ç °¡°İ";
+        // ê°œë‹¹ ê°€ê²©
+        GetText((int)Texts.CostNameText).text = "ê°œë‹¹ ê°€ê²©";
         GetText((int)Texts.CostText).text = $"{GameManager.FOOD_PRICE_PER_UNIT:N0}G";
 
-        // ÃÑ °¡°İ
+        // ì´ ê°€ê²©
         int totalCost = _purchaseAmount * GameManager.FOOD_PRICE_PER_UNIT;
-        GetText((int)Texts.TotalCostNameText).text = "ÃÑ °¡°İ";
+        GetText((int)Texts.TotalCostNameText).text = "ì´ ê°€ê²©";
         GetText((int)Texts.TotalCostText).text = $"{totalCost:N0}G";
     }
     private void UpdatePossesionFood()
@@ -124,7 +119,7 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
     }
 
     /// <summary>
-    /// ¼ö·® ÀÔ·Â ¹öÆ° Å¬¸¯
+    /// ìˆ˜ëŸ‰ ì…ë ¥ ë²„íŠ¼ í´ë¦­
     /// </summary>
     private void OnClickInputButton()
     {
@@ -133,7 +128,7 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
     }
     
     /// <summary>
-    /// ¼ö·® ÀÔ·Â ¿Ï·á
+    /// ìˆ˜ëŸ‰ ì…ë ¥ ì™„ë£Œ
     /// </summary>
     private void OnInputCompleted(string input)
     {
@@ -145,7 +140,7 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
     }
     
     /// <summary>
-    /// ±¸¸Å ¹öÆ° Å¬¸¯
+    /// êµ¬ë§¤ ë²„íŠ¼ í´ë¦­
     /// </summary>
     private void OnClickOkayButton()
     {
@@ -161,7 +156,7 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
         }
         else
         {
-            //±¸¸Å »ç¿îµå
+            //êµ¬ë§¤ ì‚¬ìš´ë“œ
         }
     }
 

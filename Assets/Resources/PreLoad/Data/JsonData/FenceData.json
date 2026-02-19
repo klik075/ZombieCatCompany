@@ -1,0 +1,114 @@
+﻿{
+  "datas": [
+    {
+      "Enhance": 1,
+      "MaxHp": 100,
+      "Defense": 1,
+      "Durability": 100,
+      "Damage": 1,
+      "RepairCost": 1000,
+      "EnhanceCost": 1000,
+      "Probability": 0.9,
+      "ReducedDurability": 5
+    },
+    {
+      "Enhance": 2,
+      "MaxHp": 200,
+      "Defense": 2,
+      "Durability": 100,
+      "Damage": 2,
+      "RepairCost": 1100,
+      "EnhanceCost": 1000,
+      "Probability": 0.85,
+      "ReducedDurability": 5
+    },
+    {
+      "Enhance": 3,
+      "MaxHp": 300,
+      "Defense": 3,
+      "Durability": 100,
+      "Damage": 3,
+      "RepairCost": 1200,
+      "EnhanceCost": 1000,
+      "Probability": 0.75,
+      "ReducedDurability": 5
+    },
+    {
+      "Enhance": 4,
+      "MaxHp": 400,
+      "Defense": 4,
+      "Durability": 100,
+      "Damage": 4,
+      "RepairCost": 1300,
+      "EnhanceCost": 1000,
+      "Probability": 0.65,
+      "ReducedDurability": 5
+    },
+    {
+      "Enhance": 5,
+      "MaxHp": 500,
+      "Defense": 5,
+      "Durability": 100,
+      "Damage": 5,
+      "RepairCost": 1400,
+      "EnhanceCost": 1000,
+      "Probability": 0.55,
+      "ReducedDurability": 5
+    },
+    {
+      "Enhance": 6,
+      "MaxHp": 600,
+      "Defense": 6,
+      "Durability": 100,
+      "Damage": 6,
+      "RepairCost": 1500,
+      "EnhanceCost": 1000,
+      "Probability": 0.45,
+      "ReducedDurability": 5
+    },
+    {
+      "Enhance": 7,
+      "MaxHp": 700,
+      "Defense": 7,
+      "Durability": 100,
+      "Damage": 7,
+      "RepairCost": 1600,
+      "EnhanceCost": 1000,
+      "Probability": 0.35,
+      "ReducedDurability": 5
+    },
+    {
+      "Enhance": 8,
+      "MaxHp": 800,
+      "Defense": 8,
+      "Durability": 100,
+      "Damage": 8,
+      "RepairCost": 1700,
+      "EnhanceCost": 1000,
+      "Probability": 0.25,
+      "ReducedDurability": 5
+    },
+    {
+      "Enhance": 9,
+      "MaxHp": 900,
+      "Defense": 9,
+      "Durability": 100,
+      "Damage": 9,
+      "RepairCost": 1800,
+      "EnhanceCost": 1000,
+      "Probability": 0.15,
+      "ReducedDurability": 5
+    },
+    {
+      "Enhance": 10,
+      "MaxHp": 1000,
+      "Defense": 10,
+      "Durability": 100,
+      "Damage": 10,
+      "RepairCost": 1900,
+      "EnhanceCost": 1000,
+      "Probability": 0.05,
+      "ReducedDurability": 5
+    }
+  ]
+}

@@ -1,15 +1,15 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
 /// <summary>
-/// UI_ChatPopup°ú UI_MessagePopupÀÇ ¸Ş½ÃÁö ½ºÅ©¸³Æ®¸¦ °ü¸®ÇÏ´Â ¸Å´ÏÀú
-/// ¸Ş½ÃÁö Á¾·ù¿¡ µû¶ó Á¤ÇØÁø ´ë»ç/½ºÅ©¸³Æ®¸¦ ¹İÈ¯
+/// UI_ChatPopupê³¼ UI_MessagePopupì˜ ë©”ì‹œì§€ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ê´€ë¦¬í•˜ëŠ” ë§¤ë‹ˆì €
+/// ë©”ì‹œì§€ ì¢…ë¥˜ì— ë”°ë¼ ì •í•´ì§„ ëŒ€ì‚¬/ìŠ¤í¬ë¦½íŠ¸ë¥¼ ë°˜í™˜
 /// </summary>
 public class MessageManager : Singleton<MessageManager>
 {
-    // ¸Ş½ÃÁö µ¥ÀÌÅÍ ÀúÀå¼Ò
+    // ë©”ì‹œì§€ ë°ì´í„° ì €ì¥ì†Œ
     private Dictionary<EMessageType, MessageScript> _messageScripts = new Dictionary<EMessageType, MessageScript>();
     //private Dictionary<EChatType, List<ChatScript>> _chatScripts = new Dictionary<EChatType, List<ChatScript>>();
 
@@ -19,10 +19,10 @@ public class MessageManager : Singleton<MessageManager>
         //InitializeChatScripts();
     }
 
-    #region Message Scripts (UI_MessagePopup¿ë)
+    #region Message Scripts (UI_MessagePopupìš©)
 
     /// <summary>
-    /// ¸Ş½ÃÁö Å¸ÀÔ¿¡ ÇØ´çÇÏ´Â ½ºÅ©¸³Æ® ¹İÈ¯
+    /// ë©”ì‹œì§€ íƒ€ì…ì— í•´ë‹¹í•˜ëŠ” ìŠ¤í¬ë¦½íŠ¸ ë°˜í™˜
     /// </summary>
     public MessageScript GetMessageScript(EMessageType messageType)
     {
@@ -34,7 +34,7 @@ public class MessageManager : Singleton<MessageManager>
     }
 
     /// <summary>
-    /// Ä¿½ºÅÒ ¸Ş½ÃÁö ½ºÅ©¸³Æ® »ı¼º
+    /// ì»¤ìŠ¤í…€ ë©”ì‹œì§€ ìŠ¤í¬ë¦½íŠ¸ ìƒì„±
     /// </summary>
     public MessageScript CreateCustomMessage(string[] contents)
     {
@@ -48,10 +48,10 @@ public class MessageManager : Singleton<MessageManager>
 
     #endregion
 
-    #region Chat Scripts (UI_ChatPopup¿ë)
+    #region Chat Scripts (UI_ChatPopupìš©)
 
     /// <summary>
-    /// Ã¤ÆÃ Å¸ÀÔ¿¡ ÇØ´çÇÏ´Â ·£´ı ´ë»ç ¹İÈ¯
+    /// ì±„íŒ… íƒ€ì…ì— í•´ë‹¹í•˜ëŠ” ëœë¤ ëŒ€ì‚¬ ë°˜í™˜
     /// </summary>
     //public ChatScript GetRandomChatScript(EChatType chatType)
     //{
@@ -67,7 +67,7 @@ public class MessageManager : Singleton<MessageManager>
     //}
 
     /// <summary>
-    /// Æ¯Á¤ ¸â¹öÀÇ ´ë»ç ¹İÈ¯
+    /// íŠ¹ì • ë©¤ë²„ì˜ ëŒ€ì‚¬ ë°˜í™˜
     /// </summary>
     //public ChatScript GetMemberChat(EChatType chatType, string memberName, string targetName = "")
     //{
@@ -82,13 +82,13 @@ public class MessageManager : Singleton<MessageManager>
     //}
 
     /// <summary>
-    /// ½Ã½ºÅÛ ¸Ş½ÃÁö »ı¼º
+    /// ì‹œìŠ¤í…œ ë©”ì‹œì§€ ìƒì„±
     /// </summary>
     public ChatScript CreateSystemMessage(string message)
     {
         var systemScript = new ChatScript
         {
-            SpeakerName = "½Ã½ºÅÛ",
+            SpeakerName = "ì‹œìŠ¤í…œ",
             Message = message,
             ChatType = EChatType.System
         };
@@ -104,138 +104,158 @@ public class MessageManager : Singleton<MessageManager>
     {
         _messageScripts[EMessageType.MoneyLow] = new MessageScript
         {
-            Contents = new string[] { "@ÀÚ±İÀÌ ºÎÁ·ÇÏ´Ù³É" }
+            Contents = new string[] { "@ìê¸ˆì´ ë¶€ì¡±í•˜ë‹¤ëƒ¥" }
         };
 
         _messageScripts[EMessageType.AlreadyRecruiting] = new MessageScript
         {
-            Contents = new string[] { "@ÀÌ¹Ì ¸ğÁı ÁßÀÌ´Ù³É" }
+            Contents = new string[] { "@ì´ë¯¸ ëª¨ì§‘ ì¤‘ì´ë‹¤ëƒ¥" }
         };
 
         _messageScripts[EMessageType.StartRecruiting] = new MessageScript
         {
-            Contents = new string[] { "@±¸ÀÎ »çÀÌÆ®¿¡ ±¤°í¸¦ °ÔÀçÇß´Ù³É.\r\n°ğ ÀÖÀ¸¸é °á°ú°¡ ³ª¿À°ÚÁö³É." }
+            Contents = new string[] { "@êµ¬ì¸ ì‚¬ì´íŠ¸ì— ê´‘ê³ ë¥¼ ê²Œì¬í–ˆë‹¤ëƒ¥.\r\nê³§ ìˆìœ¼ë©´ ê²°ê³¼ê°€ ë‚˜ì˜¤ê² ì§€ëƒ¥." }
         };
         _messageScripts[EMessageType.CompleteRecruiting] = new MessageScript
         {
-            Contents = new string[] { "@¸ğÁıÇß´ø °á°ú°¡ ³ª¿Ô´Ù³É.\r\n°í¾çÀÌ ","¸¶¸®°¡ Áö¿øÇß´Ù³É.\r\n´©±¸¸¦ Ã¤¿ëÇÒ±î³É?" }
+            Contents = new string[] { "@ëª¨ì§‘í–ˆë˜ ê²°ê³¼ê°€ ë‚˜ì™”ë‹¤ëƒ¥.\r\nê³ ì–‘ì´ ","ë§ˆë¦¬ê°€ ì§€ì›í–ˆë‹¤ëƒ¥.\r\nëˆ„êµ¬ë¥¼ ì±„ìš©í• ê¹Œëƒ¥?" }
         };
         _messageScripts[EMessageType.MembersFull] = new MessageScript
         {
-            Contents = new string[] { "@ÀÚ¸®°¡ ¾ø´Ù³É.\r\n´©±¸¸¦ ÇØ°íÇÒ±î³É?" }
+            Contents = new string[] { "@ìë¦¬ê°€ ì—†ë‹¤ëƒ¥.\r\nëˆ„êµ¬ë¥¼ í•´ê³ í• ê¹Œëƒ¥?" }
         };
         _messageScripts[EMessageType.MemberFired] = new MessageScript
         {
-            Contents = new string[] { "", "(À»)¸¦\r\nÇØ°íÇÏ½Ã°Ú½À´Ï±î?" }
+            Contents = new string[] { "", "(ì„)ë¥¼\r\ní•´ê³ í•˜ì‹œê² ìŠµë‹ˆê¹Œ?" }
         };
         _messageScripts[EMessageType.MemberSwapped] = new MessageScript
         {
-            Contents = new string[] { "", "(À»)¸¦ ÇØ°íÇÏ°í\r\n","(À»)¸¦ ½Å±Ô °í¿ëÇß´Ù³É." }
+            Contents = new string[] { "", "(ì„)ë¥¼ í•´ê³ í•˜ê³ \r\n","(ì„)ë¥¼ ì‹ ê·œ ê³ ìš©í–ˆë‹¤ëƒ¥." }
         };
         _messageScripts[EMessageType.MemberHired] = new MessageScript
         {
-            Contents = new string[] { "", "(À»)¸¦ °¨¿°½ÃÄ×´Ù³É.\r\n±âÁ¸ ´É·ÂÄ¡ÀÇ ÀÏºÎ°¡ ÀüÅõ·ÂÀ¸·Î ÀüÈ¯µÆ´Ù³É." }
+            Contents = new string[] { "", "(ì„)ë¥¼ ê°ì—¼ì‹œì¼°ë‹¤ëƒ¥.\r\nê¸°ì¡´ ëŠ¥ë ¥ì¹˜ì˜ ì¼ë¶€ê°€ ì „íˆ¬ë ¥ìœ¼ë¡œ ì „í™˜ëë‹¤ëƒ¥." }
         };
         _messageScripts[EMessageType.MemberFiredConfirm] = new MessageScript
         {
-            Contents = new string[] { "", "(À»)¸¦ ÇØ°íÇß´Ù³É." }
+            Contents = new string[] { "", "(ì„)ë¥¼ í•´ê³ í–ˆë‹¤ëƒ¥." }
         };
         _messageScripts[EMessageType.SelectPlanner] = new MessageScript
         {
-            Contents = new string[] { "", "¹øÂ° ÀÛÇ°Àº ","¿¡ ","ÀÎ °ÔÀÓÀÌ´Ù³É.","\r\n´©±¸¿¡ ±âÈ¹À» ¸Ã±æ±î³É?" }
+            Contents = new string[] { "", "ë²ˆì§¸ ì‘í’ˆì€ ","ì— ","ì¸ ê²Œì„ì´ë‹¤ëƒ¥.","\r\nëˆ„êµ¬ì— ê¸°íšì„ ë§¡ê¸¸ê¹Œëƒ¥?" }
         };
         _messageScripts[EMessageType.SelectDesigner] = new MessageScript
         {
-            Contents = new string[] { "´©±¸¿¡°Ô µğÀÚÀÎÀ» ¸Ã±æ±î³É ?" }
+            Contents = new string[] { "ëˆ„êµ¬ì—ê²Œ ë””ìì¸ì„ ë§¡ê¸¸ê¹Œëƒ¥ ?" }
         };
         _messageScripts[EMessageType.SelectSoundWriter] = new MessageScript
         {
-            Contents = new string[] { "¸¶Áö¸·À¸·Î ´©±¸¿¡°Ô »ç¿îµå¸¦ ¸Ã±æ±î³É?" }
+            Contents = new string[] { "ë§ˆì§€ë§‰ìœ¼ë¡œ ëˆ„êµ¬ì—ê²Œ ì‚¬ìš´ë“œë¥¼ ë§¡ê¸¸ê¹Œëƒ¥?" }
         };
         _messageScripts[EMessageType.StartDebugging] = new MessageScript
         {
-            Contents = new string[] { "¹ö±× Á¦°Å¸¦ ½ÃÀÛÇÏÀÚ³É!" }
+            Contents = new string[] { "ë²„ê·¸ ì œê±°ë¥¼ ì‹œì‘í•˜ìëƒ¥!" }
         };
         _messageScripts[EMessageType.CompleteGameDev] = new MessageScript
         {
-            Contents = new string[] { "","¹øÂ° °ÔÀÓÀÌ ¿Ï¼ºµÇ¾ú´Ù³É." }
+            Contents = new string[] { "","ë²ˆì§¸ ê²Œì„ì´ ì™„ì„±ë˜ì—ˆë‹¤ëƒ¥." }
         };
         _messageScripts[EMessageType.NoRecruiting] = new MessageScript
         {
-            Contents = new string[] { "Áö±İÀº ¸ğÁıÇÒ ¼ö ¾ø´Ù³É." }
+            Contents = new string[] { "ì§€ê¸ˆì€ ëª¨ì§‘í•  ìˆ˜ ì—†ë‹¤ëƒ¥." }
         };
         _messageScripts[EMessageType.NoFire] = new MessageScript
         {
-            Contents = new string[] { "Áö±İÀº ÇØ°íÇÒ ¼ö ¾ø´Ù³É." }
+            Contents = new string[] { "ì§€ê¸ˆì€ í•´ê³ í•  ìˆ˜ ì—†ë‹¤ëƒ¥." }
         };
         _messageScripts[EMessageType.NoDev] = new MessageScript
         {
-            Contents = new string[] { "Áö±İÀº °³¹ßÇÒ ¼ö ¾ø´Ù³É." }
+            Contents = new string[] { "ì§€ê¸ˆì€ ê°œë°œí•  ìˆ˜ ì—†ë‹¤ëƒ¥." }
         };
         _messageScripts[EMessageType.MerchantHello] = new MessageScript
         {
-            Contents = new string[] { "¹İ°©´Ù³É.\r\nÅëÁ¶¸²À» ±¸¸ÅÇÒ °Å³É?" }
+            Contents = new string[] { "ë°˜ê°‘ë‹¤ëƒ¥.\r\ní†µì¡°ë¦¼ì„ êµ¬ë§¤í•  ê±°ëƒ¥?" }
         };
         _messageScripts[EMessageType.PurchaseMessage] = new MessageScript
         {
-            Contents = new string[] { "ÅëÁ¶¸²À» ±¸¸ÅÇÒ±î?" }
+            Contents = new string[] { "í†µì¡°ë¦¼ì„ êµ¬ë§¤í• ê¹Œ?" }
         };
         _messageScripts[EMessageType.MerchantBye] = new MessageScript
         {
-            Contents = new string[] { "´ÙÀ½¿¡ ¶Ç ¿À°Ú´Ù³É." }
+            Contents = new string[] { "ë‹¤ìŒì— ë˜ ì˜¤ê² ë‹¤ëƒ¥." }
+        };
+        _messageScripts[EMessageType.TryEnhanceFence] = new MessageScript
+        {
+            Contents = new string[] { "íœìŠ¤ë¥¼ ê°•í™”í• ê¹Œ?\r\nì„±ê³µ í™•ë¥  ","\r\në¹„ìš© " }
+        };
+        _messageScripts[EMessageType.EnhanceSuccess] = new MessageScript
+        {
+            Contents = new string[] { "ì„±ê³µì ìœ¼ë¡œ ê°•í™”í–ˆë‹¤ëƒ¥." }
+        };
+        _messageScripts[EMessageType.EnhanceFail] = new MessageScript
+        {
+            Contents = new string[] { "ê°•í™”ì— ì‹¤íŒ¨í–ˆë‹¤ëƒ¥.\r\në‚´êµ¬ë„ê°€ ë–¨ì–´ì¡Œë‹¤ëƒ¥." }
+        };
+        _messageScripts[EMessageType.TryRepairFence] = new MessageScript
+        {
+            Contents = new string[] { "íœìŠ¤ì˜ ì²´ë ¥ê³¼ ë‚´êµ¬ë„ë¥¼ ìˆ˜ë¦¬í• ê¹Œ?\r\në¹„ìš© " }
+        };
+        _messageScripts[EMessageType.RepairSuccess] = new MessageScript
+        {
+            Contents = new string[] { "íœìŠ¤ë¥¼ ì„±ê³µì ìœ¼ë¡œ ìˆ˜ë¦¬í–ˆë‹¤ëƒ¥." }
         };
     }
 
     //private void InitializeChatScripts()
     //{
-    //    // ¸â¹ö °£ ´ëÈ­
+    //    // ë©¤ë²„ ê°„ ëŒ€í™”
     //    _chatScripts[EChatType.MemberToMember] = new List<ChatScript>
     //    {
-    //        new ChatScript { SpeakerName = "", Message = "¿À´Ã ÀÛ¾÷Àº ¾î¶»°Ô ÁøÇàµÇ°í ÀÖ³ª¿ä³É?", ChatType = EChatType.MemberToMember },
-    //        new ChatScript { SpeakerName = "", Message = "Á¡½ÉÀº ¹» ¸ÔÀ»±î¿ä³É?", ChatType = EChatType.MemberToMember },
-    //        new ChatScript { SpeakerName = "", Message = "ÀÌ¹ø ÇÁ·ÎÁ§Æ® Àç¹ÌÀÖ³×¿ä³É!", ChatType = EChatType.MemberToMember },
-    //        new ChatScript { SpeakerName = "", Message = "°°ÀÌ ¿­½ÉÈ÷ ÇØºÁ¿ä³É!", ChatType = EChatType.MemberToMember }
+    //        new ChatScript { SpeakerName = "", Message = "ì˜¤ëŠ˜ ì‘ì—…ì€ ì–´ë–»ê²Œ ì§„í–‰ë˜ê³  ìˆë‚˜ìš”ëƒ¥?", ChatType = EChatType.MemberToMember },
+    //        new ChatScript { SpeakerName = "", Message = "ì ì‹¬ì€ ë­˜ ë¨¹ì„ê¹Œìš”ëƒ¥?", ChatType = EChatType.MemberToMember },
+    //        new ChatScript { SpeakerName = "", Message = "ì´ë²ˆ í”„ë¡œì íŠ¸ ì¬ë¯¸ìˆë„¤ìš”ëƒ¥!", ChatType = EChatType.MemberToMember },
+    //        new ChatScript { SpeakerName = "", Message = "ê°™ì´ ì—´ì‹¬íˆ í•´ë´ìš”ëƒ¥!", ChatType = EChatType.MemberToMember }
     //    };
 
-    //    // ¾÷¹« ¿Ï·á
+    //    // ì—…ë¬´ ì™„ë£Œ
     //    _chatScripts[EChatType.WorkComplete] = new List<ChatScript>
     //    {
-    //        new ChatScript { SpeakerName = "", Message = "¾÷¹« ¿Ï·áÇß½À´Ï´Ù³É!", ChatType = EChatType.WorkComplete },
-    //        new ChatScript { SpeakerName = "", Message = "ÀÛ¾÷ÀÌ ³¡³µ¾î¿ä³É!", ChatType = EChatType.WorkComplete },
-    //        new ChatScript { SpeakerName = "", Message = "µåµğ¾î ¿Ï¼ºÇß½À´Ï´Ù³É!", ChatType = EChatType.WorkComplete }
+    //        new ChatScript { SpeakerName = "", Message = "ì—…ë¬´ ì™„ë£Œí–ˆìŠµë‹ˆë‹¤ëƒ¥!", ChatType = EChatType.WorkComplete },
+    //        new ChatScript { SpeakerName = "", Message = "ì‘ì—…ì´ ëë‚¬ì–´ìš”ëƒ¥!", ChatType = EChatType.WorkComplete },
+    //        new ChatScript { SpeakerName = "", Message = "ë“œë””ì–´ ì™„ì„±í–ˆìŠµë‹ˆë‹¤ëƒ¥!", ChatType = EChatType.WorkComplete }
     //    };
 
-    //    // ¹è°íÇÄ ºÒ¸¸
+    //    // ë°°ê³ í”” ë¶ˆë§Œ
     //    _chatScripts[EChatType.ComplaintHungry] = new List<ChatScript>
     //    {
-    //        new ChatScript { SpeakerName = "", Message = "¹è°¡ °íÆÄ¿ä³É... »ç·á Á» ÁÖ¼¼¿ä³É...", ChatType = EChatType.ComplaintHungry },
-    //        new ChatScript { SpeakerName = "", Message = "¾ğÁ¦ ¹äÀ» ¸ÔÀ» ¼ö ÀÖ³ª¿ä³É?", ChatType = EChatType.ComplaintHungry },
-    //        new ChatScript { SpeakerName = "", Message = "±¾¾î Á×À» °Í °°¾Æ¿ä³É...", ChatType = EChatType.ComplaintHungry }
+    //        new ChatScript { SpeakerName = "", Message = "ë°°ê°€ ê³ íŒŒìš”ëƒ¥... ì‚¬ë£Œ ì¢€ ì£¼ì„¸ìš”ëƒ¥...", ChatType = EChatType.ComplaintHungry },
+    //        new ChatScript { SpeakerName = "", Message = "ì–¸ì œ ë°¥ì„ ë¨¹ì„ ìˆ˜ ìˆë‚˜ìš”ëƒ¥?", ChatType = EChatType.ComplaintHungry },
+    //        new ChatScript { SpeakerName = "", Message = "êµ¶ì–´ ì£½ì„ ê²ƒ ê°™ì•„ìš”ëƒ¥...", ChatType = EChatType.ComplaintHungry }
     //    };
 
-    //    // ±â»İ Ç¥Çö
+    //    // ê¸°ì¨ í‘œí˜„
     //    _chatScripts[EChatType.Happy] = new List<ChatScript>
     //    {
-    //        new ChatScript { SpeakerName = "", Message = "¿À´Ã ±âºĞÀÌ ÁÁ³×¿ä³É!", ChatType = EChatType.Happy },
-    //        new ChatScript { SpeakerName = "", Message = "¾ßÈ£! ½Å³ª¿ä³É!", ChatType = EChatType.Happy },
-    //        new ChatScript { SpeakerName = "", Message = "Çàº¹ÇÕ´Ï´Ù³É~", ChatType = EChatType.Happy }
+    //        new ChatScript { SpeakerName = "", Message = "ì˜¤ëŠ˜ ê¸°ë¶„ì´ ì¢‹ë„¤ìš”ëƒ¥!", ChatType = EChatType.Happy },
+    //        new ChatScript { SpeakerName = "", Message = "ì•¼í˜¸! ì‹ ë‚˜ìš”ëƒ¥!", ChatType = EChatType.Happy },
+    //        new ChatScript { SpeakerName = "", Message = "í–‰ë³µí•©ë‹ˆë‹¤ëƒ¥~", ChatType = EChatType.Happy }
     //    };
 
-    //    // È­³² Ç¥Çö
+    //    // í™”ë‚¨ í‘œí˜„
     //    _chatScripts[EChatType.Angry] = new List<ChatScript>
     //    {
-    //        new ChatScript { SpeakerName = "", Message = "È­°¡ ³ª¿ä³É!", ChatType = EChatType.Angry },
-    //        new ChatScript { SpeakerName = "", Message = "ÀÌ°Ç ³Ê¹«ÇÏÀİ¾Æ¿ä³É!", ChatType = EChatType.Angry },
-    //        new ChatScript { SpeakerName = "", Message = "ÂüÀ» ¼ö ¾ø¾î¿ä³É!", ChatType = EChatType.Angry }
+    //        new ChatScript { SpeakerName = "", Message = "í™”ê°€ ë‚˜ìš”ëƒ¥!", ChatType = EChatType.Angry },
+    //        new ChatScript { SpeakerName = "", Message = "ì´ê±´ ë„ˆë¬´í•˜ì–ì•„ìš”ëƒ¥!", ChatType = EChatType.Angry },
+    //        new ChatScript { SpeakerName = "", Message = "ì°¸ì„ ìˆ˜ ì—†ì–´ìš”ëƒ¥!", ChatType = EChatType.Angry }
     //    };
 
-    //    // ·£´ı ´ëÈ­
+    //    // ëœë¤ ëŒ€í™”
     //    _chatScripts[EChatType.RandomChat] = new List<ChatScript>
     //    {
-    //        new ChatScript { SpeakerName = "", Message = "³¯¾¾°¡ ÁÁ³×¿ä³É!", ChatType = EChatType.RandomChat },
-    //        new ChatScript { SpeakerName = "", Message = "¿À´Ãµµ È­ÀÌÆÃÀÌ¿¡¿ä³É!", ChatType = EChatType.RandomChat },
-    //        new ChatScript { SpeakerName = "", Message = "°ÔÀÓ °³¹ßÀÌ Àç¹ÌÀÖ¾î¿ä³É!", ChatType = EChatType.RandomChat },
-    //        new ChatScript { SpeakerName = "", Message = "¿ì¸® È¸»ç ÃÖ°í¿¹¿ä³É!", ChatType = EChatType.RandomChat }
+    //        new ChatScript { SpeakerName = "", Message = "ë‚ ì”¨ê°€ ì¢‹ë„¤ìš”ëƒ¥!", ChatType = EChatType.RandomChat },
+    //        new ChatScript { SpeakerName = "", Message = "ì˜¤ëŠ˜ë„ í™”ì´íŒ…ì´ì—ìš”ëƒ¥!", ChatType = EChatType.RandomChat },
+    //        new ChatScript { SpeakerName = "", Message = "ê²Œì„ ê°œë°œì´ ì¬ë¯¸ìˆì–´ìš”ëƒ¥!", ChatType = EChatType.RandomChat },
+    //        new ChatScript { SpeakerName = "", Message = "ìš°ë¦¬ íšŒì‚¬ ìµœê³ ì˜ˆìš”ëƒ¥!", ChatType = EChatType.RandomChat }
     //    };
     //}
 
@@ -244,18 +264,18 @@ public class MessageManager : Singleton<MessageManager>
     #region Helper Methods
 
     /// <summary>
-    /// ±âº» ¸Ş½ÃÁö ½ºÅ©¸³Æ® ¹İÈ¯
+    /// ê¸°ë³¸ ë©”ì‹œì§€ ìŠ¤í¬ë¦½íŠ¸ ë°˜í™˜
     /// </summary>
     private MessageScript GetDefaultMessageScript()
     {
         return new MessageScript
         {
-            Contents = new string[] { "¸Ş½ÃÁö¸¦ ºÒ·¯¿Ã ¼ö ¾ø´Ù³É!" }
+            Contents = new string[] { "ë©”ì‹œì§€ë¥¼ ë¶ˆëŸ¬ì˜¬ ìˆ˜ ì—†ë‹¤ëƒ¥!" }
         };
     }
 
     /// <summary>
-    /// ±âº» Ã¤ÆÃ ½ºÅ©¸³Æ® ¹İÈ¯
+    /// ê¸°ë³¸ ì±„íŒ… ìŠ¤í¬ë¦½íŠ¸ ë°˜í™˜
     /// </summary>
     private ChatScript GetDefaultChatScript()
     {
@@ -268,7 +288,7 @@ public class MessageManager : Singleton<MessageManager>
     }
 
     /// <summary>
-    /// Æ¯Á¤ Å¸ÀÔÀÇ Ã¤ÆÃ ½ºÅ©¸³Æ® Ãß°¡
+    /// íŠ¹ì • íƒ€ì…ì˜ ì±„íŒ… ìŠ¤í¬ë¦½íŠ¸ ì¶”ê°€
     /// </summary>
     //public void AddChatScript(EChatType chatType, ChatScript script)
     //{
@@ -281,7 +301,7 @@ public class MessageManager : Singleton<MessageManager>
     //}
 
     /// <summary>
-    /// ¸Ş½ÃÁö ½ºÅ©¸³Æ® Ãß°¡/¼öÁ¤
+    /// ë©”ì‹œì§€ ìŠ¤í¬ë¦½íŠ¸ ì¶”ê°€/ìˆ˜ì •
     /// </summary>
     public void SetMessageScript(EMessageType messageType, MessageScript script)
     {
@@ -293,7 +313,7 @@ public class MessageManager : Singleton<MessageManager>
     #region Debug Methods
 
     /// <summary>
-    /// ¸ğµç ¸Ş½ÃÁö ½ºÅ©¸³Æ® ·Î±× Ãâ·Â (¿¡µğÅÍ Àü¿ë)
+    /// ëª¨ë“  ë©”ì‹œì§€ ìŠ¤í¬ë¦½íŠ¸ ë¡œê·¸ ì¶œë ¥ (ì—ë””í„° ì „ìš©)
     /// </summary>
     [System.Diagnostics.Conditional("UNITY_EDITOR")]
     public void LogAllMessageScripts()
@@ -306,7 +326,7 @@ public class MessageManager : Singleton<MessageManager>
     }
 
     /// <summary>
-    /// ¸ğµç Ã¤ÆÃ ½ºÅ©¸³Æ® ·Î±× Ãâ·Â (¿¡µğÅÍ Àü¿ë)
+    /// ëª¨ë“  ì±„íŒ… ìŠ¤í¬ë¦½íŠ¸ ë¡œê·¸ ì¶œë ¥ (ì—ë””í„° ì „ìš©)
     /// </summary>
     //[System.Diagnostics.Conditional("UNITY_EDITOR")]
     //public void LogAllChatScripts()
@@ -328,12 +348,12 @@ public class MessageManager : Singleton<MessageManager>
 #region Data Classes
 
 /// <summary>
-/// UI_MessagePopup¿ë ¸Ş½ÃÁö ½ºÅ©¸³Æ® µ¥ÀÌÅÍ
+/// UI_MessagePopupìš© ë©”ì‹œì§€ ìŠ¤í¬ë¦½íŠ¸ ë°ì´í„°
 /// </summary>
 [System.Serializable]
 public class MessageScript
 {
-    public string[] Contents;    // ¸Ş½ÃÁö ³»¿ë
+    public string[] Contents;    // ë©”ì‹œì§€ ë‚´ìš©
     
     public MessageScript() { }
     
@@ -344,14 +364,14 @@ public class MessageScript
 }
 
 /// <summary>
-/// UI_ChatPopup¿ë Ã¤ÆÃ ½ºÅ©¸³Æ® µ¥ÀÌÅÍ
+/// UI_ChatPopupìš© ì±„íŒ… ìŠ¤í¬ë¦½íŠ¸ ë°ì´í„°
 /// </summary>
 [System.Serializable]
 public class ChatScript
 {
-    public string SpeakerName; // ¹ßÈ­ÀÚ ÀÌ¸§
-    public string Message;     // ¸Ş½ÃÁö ³»¿ë
-    public EChatType ChatType; // Ã¤ÆÃ Å¸ÀÔ
+    public string SpeakerName; // ë°œí™”ì ì´ë¦„
+    public string Message;     // ë©”ì‹œì§€ ë‚´ìš©
+    public EChatType ChatType; // ì±„íŒ… íƒ€ì…
     
     public ChatScript() { }
     

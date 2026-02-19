@@ -35,7 +35,7 @@ public class NightData
 [Serializable]
 public class MorningData
 {
-    //펜스 데이터
+    public FenceSaveData FenceSaveData = new FenceSaveData();
 }
 [Serializable]
 public class GameData
@@ -211,7 +211,13 @@ public class GameManager : Singleton<GameManager>
     {
         switch (GameState)
         {
+            case EGameState.FoodPurchase:
+                SaveManager.Instance.SaveGameData();
+                PurchaseManager.Instance.StartPurchase();
+                break;
             case EGameState.Morning:
+                GameDevManager.Instance.InitNewProject();
+                SaveManager.Instance.SaveGameData();
                 SceneManager.Instance.LoadScene(EScene.MorningScene);
                 break;
             case EGameState.Defence:

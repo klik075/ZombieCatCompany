@@ -49,8 +49,28 @@ public class UI_LoadGamePopup : UI_UGUI, IUI_Popup
 
     private void LoadGame()
     {
-        UIManager.Instance.ClosePopupUI();
-        SceneManager.Instance.LoadScene(Define.EScene.NightScene);
+        Define.EScene targetScene = Define.EScene.NightScene; // 기본값
+
+        if (SaveManager.Instance.HasGameData())
+        {
+            GameData gameData = SaveManager.Instance.GetGameData();
+
+            if (gameData != null && gameData.GameState == Define.EGameState.Morning)
+            {
+                targetScene = Define.EScene.MorningScene;
+                Debug.Log("Loading MorningScene from saved game state");
+            }
+            else
+            {
+                Debug.Log("Loading NightScene from saved game state");
+            }
+        }
+        else
+        {
+            Debug.Log("No saved game data found. Loading NightScene as default");
+        }
+
+        SceneManager.Instance.LoadScene(targetScene);
     }
     private void UpdateUI()
     {

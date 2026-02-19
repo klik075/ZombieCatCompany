@@ -51,7 +51,6 @@ public class UI_MorningLeftPanel : UI_LeftPanelBase
     private void OnClickFenceButton()
     {
         UI_FenceStatePopup fenceStatePopup = UIManager.Instance.ShowPopupUI<UI_FenceStatePopup>();
-        fenceStatePopup.SetInfo();
         
         IsActive = false;
     }

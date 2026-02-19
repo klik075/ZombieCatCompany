@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Define;
@@ -75,7 +75,18 @@ public class UIManager : Singleton<UIManager>
         if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
 
-        if (_popups.TryGetValue(name, out UI_Base popup) == false)
+        if (_popups.TryGetValue(name, out UI_Base popup))
+        {
+            // 파괴된 객체인지 체크
+            if (popup == null || popup.gameObject == null)
+            {
+                // 파괴된 참조 제거
+                _popups.Remove(name);
+                popup = null;
+            }
+        }
+
+        if (popup == null)
         {
             GameObject go = ResourceManager.Instance.Instantiate(name);
             popup = Utils.GetOrAddComponent<T>(go);

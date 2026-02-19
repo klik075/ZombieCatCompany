@@ -503,11 +503,11 @@ public class MemberManager : Singleton<MemberManager>
     // 저장 데이터에서 구성원 복원
     public void LoadFromSaveData()
     {
+        MapManager.Instance.InitForScene();
+
         // 기존 멤버 정리
         ClearAllMembers();
         InitializeMemberSeats();
-
-        MapManager.Instance.InitForScene();
 
         bool isNight = SceneManager.Instance.CurrentSceneType == EScene.NightScene ? true : false;
 
