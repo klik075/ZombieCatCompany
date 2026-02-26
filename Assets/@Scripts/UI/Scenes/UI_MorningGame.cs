@@ -1,4 +1,5 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
+using static Define;
 
 public class UI_MorningGame : UI_UGUI, IUI_Scene
 {
@@ -8,11 +9,11 @@ public class UI_MorningGame : UI_UGUI, IUI_Scene
     }
     enum Buttons
     {
-
+        DefenseStartButton
     }
     enum Texts
     {
-
+        DefenseStartButtonText
     }
     private UI_TopPanel _topPanel;
     private UI_MorningLeftPanel _leftPanel;
@@ -28,13 +29,39 @@ public class UI_MorningGame : UI_UGUI, IUI_Scene
         _bottomPanel = Utils.FindChildComponent<UI_MorningBottomPanel>(gameObject, recursive: true);
         _defensePanel = Utils.FindChildComponent<UI_DefensePanel>(gameObject, recursive: true);
 
-        _bottomPanel.SetInfo(_leftPanel);// BottomPanelø° LeftPanel ¬¸¡∂ ¿¸¥ﬁ
+        _bottomPanel.SetInfo(_leftPanel);// BottomPanelÏóê LeftPanel Ï∞∏Ï°∞ Ï†ÑÎã¨
 
         BindObjects(typeof(GameObjects));
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
-    }
 
+        GetButton((int)Buttons.DefenseStartButton).onClick.AddListener(OnClickedStartButton);
+
+        EventManager.Instance.AddEvent(EEventType.UI_LeftPanelStateChanged, UpdateDefenseStartButton);
+        EventManager.Instance.AddEvent(EEventType.UI_PopupClosed, UpdateDefenseStartButton);
+        EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, UpdateDefenseStartButton);
+    }
+    protected void OnDestroy()
+    {
+        EventManager.Instance.RemoveEvent(EEventType.UI_LeftPanelStateChanged, UpdateDefenseStartButton);
+        EventManager.Instance.RemoveEvent(EEventType.UI_PopupClosed, UpdateDefenseStartButton);
+        EventManager.Instance.RemoveEvent(EEventType.UI_PopupOpened, UpdateDefenseStartButton);
+    }
+    public void OnClickedStartButton()
+    {
+        GetButton((int)Buttons.DefenseStartButton).gameObject.SetActive(false);
+        _defensePanel.gameObject.SetActive(true);
+        _defensePanel.Init();
+    }
+    private void UpdateDefenseStartButton()
+    {
+        bool isActive = false;
+
+        if (!_leftPanel.IsActive && UIManager.Instance.PopupCount == 0)
+            isActive = true;
+
+        GetButton((int)Buttons.DefenseStartButton).gameObject.SetActive(isActive);
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

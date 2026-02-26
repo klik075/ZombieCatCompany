@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class UI_DefensePanel : UI_UGUI
 {
@@ -32,10 +32,14 @@ public class UI_DefensePanel : UI_UGUI
 
         gameObject.SetActive(false);
     }
+    public void Init()
+    {
+        //물량 설정.
+        DefenseManager.Instance.StartDefense();
+    }
     protected override void Start()
     {
         base.Start();
-
     }
     public override void RefreshUI()
     {

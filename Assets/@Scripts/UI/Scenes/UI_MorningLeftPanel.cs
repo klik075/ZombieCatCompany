@@ -11,7 +11,6 @@ public class UI_MorningLeftPanel : UI_LeftPanelBase
         
         // 낮 전용 버튼
         FenceButton,
-        DefenseStartButton,
     }
     
     enum Texts
@@ -22,7 +21,6 @@ public class UI_MorningLeftPanel : UI_LeftPanelBase
         
         // 낮 전용 텍스트
         FenceButtonText,
-        DefenseStartButtonText,
     }
 
     // 바인딩만 수행
@@ -44,7 +42,6 @@ public class UI_MorningLeftPanel : UI_LeftPanelBase
     protected override void RegisterSpecificEvents()
     {
         GetButton((int)Buttons.FenceButton).onClick.AddListener(OnClickFenceButton);
-        GetButton((int)Buttons.DefenseStartButton).onClick.AddListener(OnClickDefenseStartButton);
     }
 
     // 낮 전용 버튼 처리
@@ -54,13 +51,6 @@ public class UI_MorningLeftPanel : UI_LeftPanelBase
         
         IsActive = false;
     }
-
-    private void OnClickDefenseStartButton()
-    {
-        // 방어 시작 로직
-        //TODO: 방어 시작 처리
-    }
-
     public override void RefreshUI()
     {
         base.RefreshUI();

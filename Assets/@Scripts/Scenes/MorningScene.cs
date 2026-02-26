@@ -12,8 +12,6 @@ public class MorningScene : BaseScene
         DataManager.Instance.LoadData();
 
         SaveManager.Instance.LoadMorningSceneData();
-
-        UIManager.Instance.ShowSceneUI<UI_MorningGame>();
     }
     void OnApplicationQuit()
     {

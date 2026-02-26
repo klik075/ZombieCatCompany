@@ -174,6 +174,9 @@ public class SaveManager : Singleton<SaveManager>
         // 게임 개발 데이터
         GameDevManager.Instance.LoadFromSaveData(gameData.NightData.GameDevProjectData);
         Debug.Log($"GameData : GameState = {gameData.GameState}");
+
+        UIManager.Instance.ShowSceneUI<UI_NightGame>();
+        EventManager.Instance.TriggerEvent(EEventType.LoadCompleted);
     }
     /// <summary>
     /// MorningScene 데이터 로드 (공개 메서드 - 씬에서 호출)
@@ -198,6 +201,9 @@ public class SaveManager : Singleton<SaveManager>
 
         // Fence 데이터
         FenceManager.Instance.LoadFromSaveData(gameData.MorningData.FenceSaveData);
+
+        UIManager.Instance.ShowSceneUI<UI_MorningGame>();
+        EventManager.Instance.TriggerEvent(EEventType.LoadCompleted);
     }
     public GameData GetGameData()
     {

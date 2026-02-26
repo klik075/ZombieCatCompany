@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using Spine.Unity;
 
 [RequireComponent(typeof(SkeletonAnimation))]
@@ -9,19 +9,22 @@ public class Cat : ObjectBase
         b_wait,
         b_walk,
         b_work,
+        b_attack,
         f_wait,
         f_walk,
         f_work,
+        f_attack,
     }
 
     public enum ECatState
     {
         Idle,
         Move,
-        Work
+        Work,
+        Attack
     }
 
-    //¾Ö´Ï¸ŞÀÌ¼Ç ¹× »óÅÂ
+    //ì• ë‹ˆë©”ì´ì…˜ ë° ìƒíƒœ
     private SkeletonAnimation _skeletonAnimation;
     private ECatState _state;
     private bool _isFacingForward = true;
@@ -29,7 +32,7 @@ public class Cat : ObjectBase
 
     public Vector2Int CellPosition { get; set; }
 
-    // ÀÌµ¿ ½Ã½ºÅÛ (ÄÄÆ÷Áö¼Ç)
+    // ì´ë™ ì‹œìŠ¤í…œ (ì „ëµíŒ¨í„´)
     protected CatMover _mover;
     protected IGridManager _gridManager;
     public IGridManager GridManager { get { return _gridManager; } }
@@ -93,13 +96,13 @@ public class Cat : ObjectBase
             }
         }
 
-        // ÀÌµ¿ Ã³¸®
+        // ì´ë™ ì²˜ë¦¬
         _mover?.Update();
     }
 
-    #region ÀÌµ¿ Ã³¸®
+    #region ì´ë™ ì²˜ë¦¬
     /// <summary>
-    /// ´ÜÀÏ ¼¿·Î ÀÌµ¿ (Àç»ç¿ë °¡´ÉÇÑ ±âº» ¸Ş¼­µå)
+    /// íŠ¹ì • ì…€ë¡œ ì´ë™ (ì™¸ë¶€ ì»¨íŠ¸ë¡¤ ê¸°ë³¸ ë©”ì„œë“œ)
     /// </summary>
     public void MoveTo(Vector2Int targetCell)
     {
@@ -107,7 +110,7 @@ public class Cat : ObjectBase
     }
 
     /// <summary>
-    /// ÀÌµ¿ Àü·« ¼³Á¤
+    /// ì´ë™ ì „ëµ ì„¤ì •
     /// </summary>
     public void SetMovementStrategy(IMovementStrategy strategy)
     {
@@ -115,7 +118,7 @@ public class Cat : ObjectBase
     }
 
     /// <summary>
-    /// ÀÌµ¿ Àü·« Á¦°Å
+    /// ì´ë™ ì „ëµ í•´ì œ
     /// </summary>
     public void ClearMovementStrategy()
     {
@@ -123,7 +126,7 @@ public class Cat : ObjectBase
     }
     #endregion
 
-    #region ¾Ö´Ï¸ŞÀÌ¼Ç Ã³¸®
+    #region ì• ë‹ˆë©”ì´ì…˜ ì²˜ë¦¬
     private void UpdateAnimation()
     {
         EAnimation animation;
@@ -139,6 +142,9 @@ public class Cat : ObjectBase
             case ECatState.Work:
                 animation = _isFacingForward ? EAnimation.f_work : EAnimation.b_work;
                 break;
+            case ECatState.Attack:
+                animation = _isFacingForward ? EAnimation.f_attack : EAnimation.b_attack;
+                break;
             default:
                 animation = EAnimation.f_wait;
                 break;
@@ -153,18 +159,29 @@ public class Cat : ObjectBase
             _skeletonAnimation.AnimationState.SetAnimation(0, animation.ToString(), true);
         }
     }
+
+    /// <summary>
+    /// ì• ë‹ˆë©”ì´ì…˜ ì†ë„ ì„¤ì •
+    /// </summary>
+    public void SetAnimationSpeed(float speed)
+    {
+        if (_skeletonAnimation != null)
+        {
+            _skeletonAnimation.AnimationState.TimeScale = speed;
+        }
+    }
     #endregion
 
-    #region °æ·Î ½Ã°¢È­ (µğ¹ö±×¿ë)
+    #region ê²½ë¡œ ì‹œê°í™” (ê¸°ì¦ˆëª¨)
     /// <summary>
-    /// ¿¡µğÅÍ¿¡¼­ ¼±ÅÃÇßÀ» ¶§ °æ·Î ½Ã°¢È­ (µğ¹ö±×¿ë)
+    /// ì—ë””í„°ì—ì„œ ì„ íƒí–ˆì„ ë•Œ ê²½ë¡œ ì‹œê°í™” (ê¸°ì¦ˆëª¨)
     /// </summary>
     private void OnDrawGizmosSelected()
     {
         if (_mover == null) 
             return;
         
-        // ÇöÀç ÀÌµ¿ Àü·«¿¡¼­ °æ·Î Á¤º¸ °¡Á®¿À±â
+        // í˜„ì¬ ì´ë™ ì „ëµì—ì„œ ê²½ë¡œ ì •ë³´ ê°€ì ¸ì˜¤ê¸°
         var strategy = GetCurrentStrategy();
         if (strategy == null) 
             return;
@@ -173,16 +190,16 @@ public class Cat : ObjectBase
         if (path == null || path.Count == 0) 
             return;
         
-        // °æ·Î ±×¸®±â
+        // ê²½ë¡œ ê·¸ë¦¬ê¸°
         Gizmos.color = Color.green;
         for (int i = 0; i < path.Count; i++)
         {
             Vector3 worldPos = _gridManager.CellToWorld(path[i]);
             
-            // °æ·Î Á¡ ±×¸®±â
+            // ê²½ë¡œ ì  ê·¸ë¦¬ê¸°
             Gizmos.DrawSphere(worldPos, 0.1f);
             
-            // °æ·Î ¶óÀÎ ±×¸®±â
+            // ê²½ë¡œ ì„  ê·¸ë¦¬ê¸°
             if (i < path.Count - 1)
             {
                 Vector3 nextWorldPos = _gridManager.CellToWorld(path[i + 1]);
@@ -190,7 +207,7 @@ public class Cat : ObjectBase
             }
         }
         
-        // ½ÃÀÛÁ¡ Ç¥½Ã (»¡°£»ö)
+        // ì‹œì‘ì  í‘œì‹œ (ë¹¨ê°„ìƒ‰)
         if (path.Count > 0)
         {
             Gizmos.color = Color.red;
@@ -198,7 +215,7 @@ public class Cat : ObjectBase
             Gizmos.DrawWireSphere(startPos, 0.15f);
         }
         
-        // ¸ñÇ¥Á¡ Ç¥½Ã (ÆÄ¶õ»ö)
+        // ëª©í‘œì  í‘œì‹œ (íŒŒë€ìƒ‰)
         if (path.Count > 0)
         {
             Gizmos.color = Color.blue;
@@ -208,14 +225,14 @@ public class Cat : ObjectBase
     }
     
     /// <summary>
-    /// ÇöÀç ÀÌµ¿ Àü·« °¡Á®¿À±â (¸®ÇÃ·º¼Ç »ç¿ë)
+    /// í˜„ì¬ ì´ë™ ì „ëµ ê°€ì ¸ì˜¤ê¸° (ë¦¬í”Œë ‰ì…˜ ì‚¬ìš©)
     /// </summary>
     private IMovementStrategy GetCurrentStrategy()
     {
         if (_mover == null) 
             return null;
         
-        // CatMoverÀÇ private ÇÊµå¿¡ Á¢±Ù
+        // CatMoverì˜ private í•„ë“œì— ì ‘ê·¼
         var field = typeof(CatMover).GetField("_currentStrategy", 
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
         

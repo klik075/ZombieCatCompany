@@ -1,9 +1,9 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using static Define;
 
 /// <summary>
-/// MemberÀÇ AI ·ÎÁ÷ (ÇÁ·ÎÁ§Æ® Æ¯Á¤)
+/// Memberì˜ AI ë¡œì§ (í”„ë¡œì íŠ¸ íŠ¹ì •)
 /// </summary>
 public class MemberAI
 {
@@ -11,10 +11,10 @@ public class MemberAI
     private IGridManager _gridManager;
     private bool _isEnabled = true;
     
-    // Çàµ¿ È®·ü ¼³Á¤
-    private const float MOVE_PROBABILITY = 0.5f;  // 50% È®·ü·Î ÀÌµ¿
-    private const float MIN_WAIT_TIME = 1f;       // ÃÖ¼Ò ´ë±â ½Ã°£
-    private const float MAX_WAIT_TIME = 2f;       // ÃÖ´ë ´ë±â ½Ã°£
+    // í–‰ë™ í™•ë¥  ì„¤ì •
+    private const float MOVE_PROBABILITY = 0.5f;  // 50% í™•ë¥ ë¡œ ì´ë™
+    private const float MIN_WAIT_TIME = 1f;       // ìµœì†Œ ëŒ€ê¸° ì‹œê°„
+    private const float MAX_WAIT_TIME = 2f;       // ìµœëŒ€ ëŒ€ê¸° ì‹œê°„
     
     public bool IsEnabled
     {
@@ -33,14 +33,14 @@ public class MemberAI
         if (!_isEnabled) 
             return;
         
-        // °ÔÀÓ °³¹ß ÁßÀÌ ¾Æ´Ò ¶§¸¸ µ¿ÀÛ
+        // ê²Œì„ ê°œë°œ ì¤‘ì´ ì•„ë‹ ë•Œë§Œ ë™ì‘
         if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.None)
         {
-            // À½½Ä ±¸¸Å Áß¿¡´Â ÀÌµ¿ÇÏÁö ¾ÊÀ½
-            if (GameManager.Instance.GameState == EGameState.FoodPurchase)
+            // ìŒì‹ êµ¬ë§¤ ì¤‘ì—ëŠ” ì´ë™í•˜ì§€ ì•ŠìŒ
+            if (GameManager.Instance.GameState == EGameState.FoodPurchase || GameManager.Instance.GameState == EGameState.Morning)
                 return;
             
-            // ·£´ıÀ¸·Î ÀÌµ¿ ¶Ç´Â ´ë±â ¼±ÅÃ
+            // ëœë¤ìœ¼ë¡œ ì´ë™ ë˜ëŠ” ëŒ€ê¸° ì„ íƒ
             if (Random.value < MOVE_PROBABILITY)
             {
                 TryRandomMove();
@@ -53,7 +53,7 @@ public class MemberAI
     }
     
     /// <summary>
-    /// ·£´ı À§Ä¡·Î ÀÌµ¿ ½Ãµµ
+    /// ëœë¤ ìœ„ì¹˜ë¡œ ì´ë™ ì‹œë„
     /// </summary>
     private void TryRandomMove()
     {
@@ -71,7 +71,7 @@ public class MemberAI
         List<Vector2Int> path = _gridManager.FindPath(_owner.CellPosition, randomTarget);
         if (path.Count > 0)
         {
-            // Ç®¿¡¼­ °¡Á®¿Í¼­ ÃÊ±âÈ­
+            // í’€ì—ì„œ ê°€ì ¸ì™€ì„œ ì´ˆê¸°í™”
             var movement = MovementPoolManager.Instance.Get<PathMovement>()
                 .Initialize(path, _gridManager);
             _owner.SetMovementStrategy(movement);
@@ -79,13 +79,13 @@ public class MemberAI
     }
     
     /// <summary>
-    /// ÇöÀç À§Ä¡¿¡¼­ ´ë±â
+    /// í˜„ì¬ ìœ„ì¹˜ì—ì„œ ëŒ€ê¸°
     /// </summary>
     private void TryWait()
     {
         float waitTime = Random.Range(MIN_WAIT_TIME, MAX_WAIT_TIME);
         
-        // Ç®¿¡¼­ °¡Á®¿Í¼­ ÃÊ±âÈ­
+        // í’€ì—ì„œ ê°€ì ¸ì™€ì„œ ì´ˆê¸°í™”
         var movement = MovementPoolManager.Instance.Get<WaitMovement>()
             .Initialize(waitTime);
         _owner.SetMovementStrategy(movement);
@@ -93,6 +93,6 @@ public class MemberAI
     
     public void OnMoveCompleted()
     {
-        // ÀÌµ¿ ¿Ï·á ½Ã Ã³¸® (ÇÊ¿ä½Ã È®Àå)
+        // ì´ë™ ì™„ë£Œ ì‹œ ì²˜ë¦¬ (í•„ìš”ì‹œ í™•ì¥)
     }
 }

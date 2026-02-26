@@ -122,16 +122,17 @@ public class FenceManager : Singleton<FenceManager>
         {
             // 강화 성공
             _currentFence.ExecuteEnhanceSuccess();
-            //EventManager.Instance.TriggerEvent(EEventType.FenceEnhanceSuccess);
+            EventManager.Instance.TriggerEvent(EEventType.FenceStateChanged);
             return true;
         }
         else
         {
             // 강화 실패
             _currentFence.ExecuteEnhanceFailed();
-            //EventManager.Instance.TriggerEvent(EEventType.FenceEnhanceFailed);
+            EventManager.Instance.TriggerEvent(EEventType.FenceStateChanged);
             return false;
         }
+        
     }
 
     #endregion
@@ -148,7 +149,7 @@ public class FenceManager : Singleton<FenceManager>
 
         int actualDamage = _currentFence.TakeDamage(damage);
 
-        //EventManager.Instance.TriggerEvent(EEventType.FenceDamaged);
+        EventManager.Instance.TriggerEvent(EEventType.FenceDamaged);
 
         // 펜스 파괴 체크
         if (_currentFence.IsDestroyed())

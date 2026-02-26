@@ -180,7 +180,7 @@ public class MemberManager : Singleton<MemberManager>
         InitializeMemberSeats();
 
         // 주인공 스폰
-        Member mainCharacter = ObjectManager.Instance.SpawnPlayer("CatBlackZombie");
+        Member mainCharacter = ObjectManager.Instance.SpawnMember("CatBlackZombie");
         mainCharacter.SetMemberData(MAIN_CHARACTER_ID);
         _members[0] = mainCharacter;
         MemberCount = 1;
@@ -315,7 +315,7 @@ public class MemberManager : Singleton<MemberManager>
             CurrentHireResult.MemberDatas.Remove(memberData);
 
         // 현재 MemberCount 인덱스에 새 구성원 추가
-        Member newPlayer = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(memberData.EmployeeID));
+        Member newPlayer = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(memberData.EmployeeID));
         MemberData newMemberData = InfectMemberData(memberData);
         newPlayer.SetMemberData(newMemberData);
         _members[MemberCount] = newPlayer;
@@ -520,7 +520,7 @@ public class MemberManager : Singleton<MemberManager>
             if(saveData == null)
                 continue;
 
-            Member member = ObjectManager.Instance.SpawnPlayer(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
+            Member member = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
 
             _members[i] = member;
 

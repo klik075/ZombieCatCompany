@@ -39,21 +39,38 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
 
     protected override void RegisterSpecificEvents()
     {
-        // 낮 전용 게임 데이터 변경 이벤트 구독
-        // 예: 울타리 HP 변경, 내구도 변경 등
+        EventManager.Instance.AddEvent(EEventType.FenceStateChanged, UpdateFenceText);
+        EventManager.Instance.AddEvent(EEventType.LoadCompleted, UpdateCompanyText);
+        EventManager.Instance.AddEvent(EEventType.FenceDamaged, UpdateFenceText);
     }
     protected override void OnDestroy()
     {
         base.OnDestroy();
+        EventManager.Instance.RemoveEvent(EEventType.FenceStateChanged, UpdateFenceText);
+        EventManager.Instance.RemoveEvent(EEventType.LoadCompleted, UpdateCompanyText);
+        EventManager.Instance.RemoveEvent(EEventType.FenceDamaged, UpdateFenceText);
+
+    }
+    private void UpdateFenceText()
+    {
+        if (FenceManager.Instance.CurrentFence == null)
+            return;
+
+        // 울타리 HP 업데이트
+        GetText((int)Texts.FenceHpText).text = FenceManager.Instance.CurrentFence.CurrentHp.ToString();
+
+        // 울타리 내구도 업데이트
+        GetText((int)Texts.FenceDurabilityText).text = FenceManager.Instance.CurrentFence.CurrentDurability.ToString();
+    }
+    private void UpdateCompanyText()
+    {
+        GetText((int)Texts.CompanyText).text = GameManager.Instance.CompanyName ?? "";
     }
 
     protected override Button GetSaveButton() => GetButton((int)Buttons.SaveButton);
     protected override Button GetMenuButton() => GetButton((int)Buttons.MenuButton);
     protected override TMP_Text GetSaveButtonText() => GetText((int)Texts.SaveButtonText);
     protected override TMP_Text GetMenuButtonText() => GetText((int)Texts.MenuButtonText);
-
-    // 낮 전용 UI 업데이트 메서드들
-    //TODO: 울타리 HP, 내구도 업데이트 메서드 추가
 
     public override void RefreshUI()
     {

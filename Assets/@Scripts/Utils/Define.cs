@@ -64,6 +64,10 @@ public static class Define
         EducationCompleted,
         MemberSwapped,
 
+        //Fence Events
+        FenceStateChanged,
+        FenceDamaged,
+
         //Lion
         LanguageChanged,
 
@@ -78,6 +82,9 @@ public static class Define
         //Popup
         UI_PopupClosed,
         UI_PopupOpened,
+
+        //Load
+        LoadCompleted,
         //===========================
     }
     public enum  EEventRewardType
