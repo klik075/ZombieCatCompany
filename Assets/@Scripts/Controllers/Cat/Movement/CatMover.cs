@@ -1,14 +1,14 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 /// <summary>
-/// Ä³¸¯ÅÍ ÀÌµ¿À» ´ã´çÇÏ´Â Àç»ç¿ë °¡´ÉÇÑ ÄÄÆ÷³ÍÆ®
+/// ìºë¦­í„° ì´ë™ì„ ë‹´ë‹¹í•˜ëŠ” ì¬ì‚¬ìš© ê°€ëŠ¥í•œ ì»´í¬ë„ŒíŠ¸
 /// </summary>
 public class CatMover
 {
     private Cat _owner;
     private IGridManager _gridManager;
     
-    // ÀÌµ¿ »óÅÂ
+    // ì´ë™ ìƒíƒœ
     private bool _isMoving = false;
     private Vector3 _moveStart;
     private Vector3 _moveEnd;
@@ -16,7 +16,7 @@ public class CatMover
     private float _moveElapsed = 0f;
     private float _moveDuration = 0.3f;
     
-    // ÇöÀç ÀÌµ¿ Àü·«
+    // í˜„ì¬ ì´ë™ ì „ëµ
     private IMovementStrategy _currentStrategy;
     
     public bool IsMoving => _isMoving;
@@ -29,7 +29,7 @@ public class CatMover
     }
     
     /// <summary>
-    /// ´ÜÀÏ ¼¿·Î Áï½Ã ÀÌµ¿
+    /// ë‹¨ì¼ ì…€ë¡œ ì¦‰ì‹œ ì´ë™
     /// </summary>
     public void MoveTo(Vector2Int nextCell)
     {
@@ -43,7 +43,7 @@ public class CatMover
     }
     
     /// <summary>
-    /// ÀÌµ¿ Àü·« ¼³Á¤ (°æ·Î ÀÌµ¿, AI ÀÌµ¿ µî)
+    /// ì´ë™ ì „ëµ ì„¤ì • (ê²½ë¡œ ì´ë™, AI ì´ë™ ë“±)
     /// </summary>
     public void SetMovementStrategy(IMovementStrategy strategy)
     {
@@ -51,11 +51,18 @@ public class CatMover
     }
     
     /// <summary>
-    /// ÇöÀç Àü·« Á¦°Å
+    /// í˜„ì¬ ì „ëµ ì œê±°
     /// </summary>
     public void ClearStrategy()
     {
         _currentStrategy = null;
+        
+        // ì´ë™ ì¤‘ì´ë©´ ì¤‘ì§€
+        if (_isMoving)
+        {
+            _isMoving = false;
+            _owner.SetStateIdle(); // State ëŒ€ì‹  ë‚´ë¶€ ë©”ì„œë“œ ì‚¬ìš©
+        }
     }
     
     public void Update()
@@ -64,7 +71,7 @@ public class CatMover
         {
             UpdateMovement();
         }
-        else if (_currentStrategy != null && !_currentStrategy.IsComplete)//°æ·Î ³²À½
+        else if (_currentStrategy != null && !_currentStrategy.IsComplete)//ê²½ë¡œ ë‚¨ìŒ
         {
             _currentStrategy.Execute(_owner);
         }
@@ -73,9 +80,9 @@ public class CatMover
     private void StartMove(Vector2Int nextCell)
     {
         _isMoving = true;
-        _owner.State = Cat.ECatState.Move;
+        _owner.SetStateMove(); // State ëŒ€ì‹  ë‚´ë¶€ ë©”ì„œë“œ ì‚¬ìš©
         
-        // ±âÁ¸ À§Ä¡ ÇØÁ¦
+        // ê¸°ì¡´ ìœ„ì¹˜ í•´ì œ
         if (_gridManager.CanMoveTo(_owner.CellPosition) || _owner.CellPosition != nextCell)
         {
             _gridManager.Release(_owner.CellPosition);
@@ -87,7 +94,7 @@ public class CatMover
         _nextCell = nextCell;
         _moveElapsed = 0f;
         
-        // ¹æÇâ ¼³Á¤
+        // ë°©í–¥ ì„¤ì •
         Vector3 direction = (_moveEnd - _moveStart).normalized;
         _owner.IsFacingForward = direction.y <= 0;
         _owner.IsFlipped = direction.x < 0;
@@ -104,7 +111,7 @@ public class CatMover
             _owner.transform.position = _moveEnd;
             _owner.CellPosition = _nextCell;
             _isMoving = false;
-            _owner.State = Cat.ECatState.Idle;
+            _owner.SetStateIdle(); // State ëŒ€ì‹  ë‚´ë¶€ ë©”ì„œë“œ ì‚¬ìš©
             
             OnMoveCompleted?.Invoke();
         }

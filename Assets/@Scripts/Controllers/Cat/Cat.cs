@@ -37,10 +37,13 @@ public class Cat : ObjectBase
     protected IGridManager _gridManager;
     public IGridManager GridManager { get { return _gridManager; } }
 
+    // 공격 시스템 (전략패턴)
+    protected IAttackStrategy _attackStrategy;
+    
     public ECatState State
     {
         get { return _state; }
-        set { _state = value; UpdateAnimation(); }
+        private set { _state = value; UpdateAnimation(); } // private set으로 변경
     }
 
     public bool IsFacingForward
@@ -64,6 +67,7 @@ public class Cat : ObjectBase
     }
 
     public bool IsMoving => _mover != null && _mover.IsMoving;
+    public bool IsAttacking => _attackStrategy != null && _attackStrategy.IsAttacking;
 
     protected override void Awake()
     {
@@ -96,9 +100,65 @@ public class Cat : ObjectBase
             }
         }
 
-        // 이동 처리
-        _mover?.Update();
+        // 공격이 활성화되어 있으면 공격만 처리 (이동 중지)
+        if (IsAttacking)
+        {
+            _attackStrategy?.Update();
+        }
+        // 공격 중이 아닐 때만 이동 처리
+        else if (!IsAttacking)
+        {
+            _mover?.Update();
+        }
     }
+
+    #region 상태 관리 (내부 전용)
+    /// <summary>
+    /// 상태를 Move로 전환 (CatMover 전용)
+    /// </summary>
+    internal void SetStateMove()
+    {
+        if (!IsAttacking) // 공격 중이 아닐 때만
+        {
+            State = ECatState.Move;
+        }
+    }
+
+    /// <summary>
+    /// 상태를 Idle로 전환 (CatMover 전용)
+    /// </summary>
+    internal void SetStateIdle()
+    {
+        if (!IsAttacking) // 공격 중이 아닐 때만
+        {
+            State = ECatState.Idle;
+        }
+    }
+
+    /// <summary>
+    /// 상태를 Attack으로 전환 (IAttackStrategy 전용)
+    /// </summary>
+    internal void SetStateAttack()
+    {
+        State = ECatState.Attack;
+    }
+
+    /// <summary>
+    /// 상태를 Work로 전환
+    /// </summary>
+    internal void SetStateWork()
+    {
+        State = ECatState.Work;
+    }
+
+    /// <summary>
+    /// 강제로 상태 설정 (세이브 로드용)
+    /// </summary>
+    internal void SetStateForced(ECatState state)
+    {
+        State = state;
+    }
+    #endregion
 
     #region 이동 처리
     /// <summary>
@@ -106,6 +166,13 @@ public class Cat : ObjectBase
     /// </summary>
     public void MoveTo(Vector2Int targetCell)
     {
+        // 공격 중이면 이동 불가
+        if (IsAttacking)
+        {
+            Debug.LogWarning($"[Cat] {name} is attacking, cannot move");
+            return;
+        }
+
         _mover?.MoveTo(targetCell);
     }
 
@@ -114,6 +181,13 @@ public class Cat : ObjectBase
     /// </summary>
     public void SetMovementStrategy(IMovementStrategy strategy)
     {
+        // 공격 중이면 이동 전략 설정 불가
+        if (IsAttacking)
+        {
+            Debug.LogWarning($"[Cat] {name} is attacking, cannot set movement strategy");
+            return;
+        }
+
         _mover?.SetMovementStrategy(strategy);
     }
 
@@ -130,6 +204,7 @@ public class Cat : ObjectBase
     private void UpdateAnimation()
     {
         EAnimation animation;
+        bool loop = true; // 기본값: 반복 재생
 
         switch (_state)
         {
@@ -144,19 +219,21 @@ public class Cat : ObjectBase
                 break;
             case ECatState.Attack:
                 animation = _isFacingForward ? EAnimation.f_attack : EAnimation.b_attack;
+                loop = false; // Attack은 반복 안 함
                 break;
             default:
                 animation = EAnimation.f_wait;
                 break;
         }
 
-        PlayAnimation(animation);
+        PlayAnimation(animation, loop);
     }
-    public void PlayAnimation(EAnimation animation)
+    
+    public void PlayAnimation(EAnimation animation, bool loop = true)
     {
         if (_skeletonAnimation != null)
         {
-            _skeletonAnimation.AnimationState.SetAnimation(0, animation.ToString(), true);
+            _skeletonAnimation.AnimationState.SetAnimation(0, animation.ToString(), loop);
         }
     }
 
@@ -169,6 +246,52 @@ public class Cat : ObjectBase
         {
             _skeletonAnimation.AnimationState.TimeScale = speed;
         }
+    }
+
+    /// <summary>
+    /// 현재 애니메이션 길이 가져오기
+    /// </summary>
+    public float GetCurrentAnimationDuration()
+    {
+        if (_skeletonAnimation != null && _skeletonAnimation.AnimationState.GetCurrent(0) != null)
+        {
+            return _skeletonAnimation.AnimationState.GetCurrent(0).Animation.Duration;
+        }
+        return 0f;
+    }
+    #endregion
+
+    #region 공격 처리
+    /// <summary>
+    /// 공격 전략 설정
+    /// </summary>
+    public void SetAttackStrategy(IAttackStrategy strategy)
+    {
+        _attackStrategy?.StopAttack();
+        _attackStrategy = strategy;
+    }
+    
+    /// <summary>
+    /// 공격 시작
+    /// </summary>
+    public void StartAttack()
+    {
+        // 이동 중이면 이동 중지
+        if (IsMoving)
+        {
+            _mover?.ClearStrategy();
+            Debug.Log($"[Cat] {name} stopped moving to start attack");
+        }
+
+        _attackStrategy?.StartAttack();
+    }
+    
+    /// <summary>
+    /// 공격 중지
+    /// </summary>
+    public void StopAttack()
+    {
+        _attackStrategy?.StopAttack();
     }
     #endregion
 

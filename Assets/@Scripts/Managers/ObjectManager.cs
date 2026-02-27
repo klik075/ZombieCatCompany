@@ -23,12 +23,19 @@ public class ObjectManager : Singleton<ObjectManager>
     {
         get { return Utils.GetRootTransform(ref _npcRoot, "@Npcs"); }
     }
+
+    private Transform _projectileRoot;
+    public Transform ProjectileRoot
+    {
+        get { return Utils.GetRootTransform(ref _projectileRoot, "@Projectiles"); }
+    }
     #endregion
 
     private HashSet<ObjectBase> _objects = new HashSet<ObjectBase>();
     private HashSet<Member> _members = new HashSet<Member>();
     private HashSet<Merchant> _merchants = new HashSet<Merchant>();
-    private HashSet<NormalCat> _normalCats = new HashSet<NormalCat>(); // 추가
+    private HashSet<NormalCat> _normalCats = new HashSet<NormalCat>();
+    private HashSet<Projectile> _projectiles = new HashSet<Projectile>();
 
     public Member SpawnMember(string prefab = "Member", bool pooling = false)
     {
@@ -50,7 +57,6 @@ public class ObjectManager : Singleton<ObjectManager>
         return member;
     }
 
-    // 추가: 일반 고양이 소환
     public NormalCat SpawnNormalCat(string prefab = "NormalCat", bool pooling = false)
     {
         GameObject go = null;
@@ -91,6 +97,7 @@ public class ObjectManager : Singleton<ObjectManager>
 
         return merchant;
     }
+
     public Fence SpawnFence(string prefab = "Fence", bool pooling = false)
     {
         GameObject go = null;
@@ -108,6 +115,29 @@ public class ObjectManager : Singleton<ObjectManager>
         return fence;
     }
 
+    /// <summary>
+    /// 발사체 생성 (풀링 지원)
+    /// </summary>
+    public Projectile SpawnProjectile(string prefab = "Projectile", bool pooling = true)
+    {
+        GameObject go = null;
+        if (pooling)
+            go = PoolManager.Instance.Pop(prefab);
+        else
+            go = ResourceManager.Instance.Instantiate(prefab);
+
+        go.name = prefab;
+        go.transform.parent = ProjectileRoot;
+
+        Projectile projectile = go.GetOrAddComponent<Projectile>();
+        _objects.Add(projectile);
+        _projectiles.Add(projectile);
+
+        projectile.Pooling = pooling;
+
+        return projectile;
+    }
+
     public void Despawn(ObjectBase obj)
     {
         if (obj == null)
@@ -121,8 +151,11 @@ public class ObjectManager : Singleton<ObjectManager>
         if (obj is Merchant merchant)
             _merchants.Remove(merchant);
 
-        if (obj is NormalCat normalCat) // 추가
+        if (obj is NormalCat normalCat)
             _normalCats.Remove(normalCat);
+
+        if (obj is Projectile projectile)
+            _projectiles.Remove(projectile);
 
         if (obj.Pooling)
         {

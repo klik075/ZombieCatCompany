@@ -544,7 +544,7 @@ public class MemberManager : Singleton<MemberManager>
 
                 member.IsFlipped = seatInfo.IsFlipped;
                 member.IsFacingForward = seatInfo.IsFacingForward;
-                member.State = ECatState.Idle;
+                member.SetStateIdle(); // State 직접 설정 대신 내부 메서드 사용
             }
         }
         

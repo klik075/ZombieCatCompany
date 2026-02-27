@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using static Define;
 
 public class Member : Cat
@@ -6,6 +6,11 @@ public class Member : Cat
     public MemberData CurrentMemberData { get; private set; }
     
     private MemberAI _ai;
+
+    [SerializeField] private string _projectilePrefabName = "Projectile";
+    [SerializeField] private float _detectionRange = 5f;
+    [SerializeField] private int _attackDamage = 3;
+    [SerializeField] private float _attackSpeed = 0.5f;
     
     public bool AIEnabled
     {
@@ -14,6 +19,17 @@ public class Member : Cat
         { 
             if (_ai != null) 
                 _ai.IsEnabled = value; 
+        }
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        // 원거리 공격 전략 설정
+        if (!string.IsNullOrEmpty(_projectilePrefabName))
+        {
+            SetAttackStrategy(new RangedAttackStrategy(this, _attackDamage, _attackSpeed, _detectionRange, _projectilePrefabName));
         }
     }
     
@@ -28,6 +44,7 @@ public class Member : Cat
     public override void Update()
     {
         base.Update();
+
         if (!_mover.IsMoving && !_mover.HasStrategy)
             _ai?.Update();
     }
@@ -49,7 +66,6 @@ public class Member : Cat
     
     public void MoveToSeat(Vector2Int seatPosition)
     {
-        // Ǯ���� �����ͼ� �ʱ�ȭ
         var seatMovement = MovementPoolManager.Instance.Get<SeatMovement>()
             .Initialize(seatPosition, _gridManager);
         
@@ -63,8 +79,36 @@ public class Member : Cat
         SetMovementStrategy(seatMovement);
     }
     
-    public void DoWork() { State = ECatState.Work; }
-    public void FinishWork() { State = ECatState.Idle; }
+    public void DoWork() { SetStateWork(); }
+    public void FinishWork() { SetStateIdle(); }
+
+    /// <summary>
+    /// 발사체 프리팹 이름 설정
+    /// </summary>
+    public void SetProjectilePrefabName(string prefabName)
+    {
+        _projectilePrefabName = prefabName;
+
+        if (!string.IsNullOrEmpty(_projectilePrefabName))
+        {
+            SetAttackStrategy(new RangedAttackStrategy(this, _attackDamage, _attackSpeed, _detectionRange, _projectilePrefabName));
+        }
+    }
+
+    /// <summary>
+    /// 공격 설정 변경
+    /// </summary>
+    public void SetAttackSettings(int damage, float attackSpeed, float detectionRange)
+    {
+        _attackDamage = damage;
+        _attackSpeed = attackSpeed;
+        _detectionRange = detectionRange;
+
+        if (!string.IsNullOrEmpty(_projectilePrefabName))
+        {
+            SetAttackStrategy(new RangedAttackStrategy(this, _attackDamage, _attackSpeed, _detectionRange, _projectilePrefabName));
+        }
+    }
     
     public MemberSaveData GetSaveData()
     {
@@ -85,7 +129,7 @@ public class Member : Cat
             return;
 
         SetMemberData(saveData.CurrentMemberData);
-        State = saveData.State;
+        SetStateForced(saveData.State);
         IsFacingForward = saveData.IsFacingForward;
         IsFlipped = saveData.IsFlipped;
         CellPosition = saveData.CellPosition;
@@ -101,7 +145,7 @@ public class Member : Cat
             return;
 
         SetMemberData(saveData.CurrentMemberData);
-        State = saveData.State;
+        SetStateForced(saveData.State);
         IsFacingForward = saveData.IsFacingForward;
         IsFlipped = saveData.IsFlipped;
         AIEnabled = saveData.AIEnabled;

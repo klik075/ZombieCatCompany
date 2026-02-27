@@ -76,6 +76,9 @@ public class DefenseManager : Singleton<DefenseManager>
 
         Debug.Log($"Defense started! Wave {_currentWave}");
 
+        // 모든 Member 공격 모드 활성화
+        EnableAllMembersAttack();
+
         if (_spawnCoroutine != null)
             StopCoroutine(_spawnCoroutine);
         
@@ -91,6 +94,9 @@ public class DefenseManager : Singleton<DefenseManager>
             StopCoroutine(_spawnCoroutine);
             _spawnCoroutine = null;
         }
+
+        // 모든 Member 공격 모드 비활성화
+        DisableAllMembersAttack();
 
         ClearAllCats();
 
@@ -109,6 +115,40 @@ public class DefenseManager : Singleton<DefenseManager>
             StopCoroutine(_spawnCoroutine);
         
         _spawnCoroutine = StartCoroutine(CoSpawnCats());
+    }
+
+    /// <summary>
+    /// 모든 Member의 공격 활성화
+    /// </summary>
+    private void EnableAllMembersAttack()
+    {
+        List<Member> members = MemberManager.Instance.GetAllMembers();
+        
+        foreach (var member in members)
+        {
+            if (member != null)
+            {
+                member.StartAttack();
+                Debug.Log($"[DefenseManager] {member.name} attack enabled");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 모든 Member의 공격 비활성화
+    /// </summary>
+    private void DisableAllMembersAttack()
+    {
+        List<Member> members = MemberManager.Instance.GetAllMembers();
+        
+        foreach (var member in members)
+        {
+            if (member != null)
+            {
+                member.StopAttack();
+                Debug.Log($"[DefenseManager] {member.name} attack disabled");
+            }
+        }
     }
 
     #endregion
@@ -464,6 +504,24 @@ public class DefenseManager : Singleton<DefenseManager>
         _assignedTargets.Clear();
         _waitingPositions.Clear();
         Debug.Log("All defense cats cleared");
+    }
+
+    /// <summary>
+    /// 살아있는 NormalCat 목록 가져오기
+    /// </summary>
+    public List<NormalCat> GetAliveCats()
+    {
+        List<NormalCat> aliveCats = new List<NormalCat>();
+        
+        foreach (var cat in _spawnedCats)
+        {
+            if (cat != null && cat.IsAlive)
+            {
+                aliveCats.Add(cat);
+            }
+        }
+
+        return aliveCats;
     }
 
     public void RemoveCat(NormalCat cat)
