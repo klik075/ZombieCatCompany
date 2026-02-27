@@ -33,6 +33,10 @@ public class MeleeAttackStrategy : IAttackStrategy
         {
             _attackCoroutine = _owner.StartCoroutine(CoAttackFence());
         }
+        else
+        {
+            Debug.LogWarning($"[MeleeAttack] Attack already in progress for {_owner.name}");
+        }
     }
 
     public void StopAttack()
@@ -43,7 +47,7 @@ public class MeleeAttackStrategy : IAttackStrategy
             _attackCoroutine = null;
         }
 
-        _owner.SetStateIdle(); // State 대신 내부 메서드 사용
+        _owner.SetStateIdle();
         _owner.SetAnimationSpeed(1f);
     }
 
@@ -59,39 +63,97 @@ public class MeleeAttackStrategy : IAttackStrategy
         if (fence == null)
         {
             Debug.LogError("[MeleeAttack] No fence found!");
+            _attackCoroutine = null;
             yield break;
         }
 
         Debug.Log($"[MeleeAttack] {_owner.name} starts attacking fence!");
 
-        _owner.SetStateAttack(); // State 대신 내부 메서드 사용
-        _owner.SetAnimationSpeed(_attackSpeed);
+        // 울타리 방향으로 캐릭터 회전
+        SetDirectionToFence(fence);
 
         while (_owner.IsAlive && fence != null && !fence.IsDestroyed())
         {
             if (CanAttack())
             {
+                // 각 공격마다 애니메이션 재생
+                yield return _owner.StartCoroutine(CoPerformSingleAttack(fence));
+                
                 _lastAttackTime = Time.time;
-
-                FenceManager.Instance.TakeDamage(_damage);
-                Debug.Log($"[MeleeAttack] Dealt {_damage} damage to fence");
-
-                int counterDamage = fence.Damage;
-                _owner.TakeDamage(counterDamage);
-
-                if (!_owner.IsAlive)
-                {
-                    break;
-                }
             }
 
             yield return null;
         }
 
         _attackCoroutine = null;
-        _owner.SetStateIdle(); // State 대신 내부 메서드 사용
+        _owner.SetStateIdle();
         _owner.SetAnimationSpeed(1f);
 
         Debug.Log($"[MeleeAttack] {_owner.name} stopped attacking");
+    }
+
+    /// <summary>
+    /// 단일 공격 수행 (애니메이션 동기화)
+    /// </summary>
+    private IEnumerator CoPerformSingleAttack(Fence fence)
+    {
+        // Attack 상태로 전환 (애니메이션 재시작)
+        _owner.SetStateAttack();
+        _owner.SetAnimationSpeed(_attackSpeed);
+        
+        Debug.Log($"[MeleeAttack] Attack animation started");
+
+        // 애니메이션 길이 가져오기
+        float animDuration = _owner.GetCurrentAnimationDuration();
+        
+        // 애니메이션 속도 보정
+        float adjustedDuration = animDuration / _attackSpeed;
+        
+        // 애니메이션 중간 지점에서 데미지 (약 50% 지점)
+        float damageDelay = adjustedDuration * 0.5f;
+        
+        yield return new WaitForSeconds(damageDelay);
+        
+        // 데미지 적용
+        if (_owner.IsAlive && fence != null && !fence.IsDestroyed())
+        {
+            FenceManager.Instance.TakeDamage(_damage);
+            Debug.Log($"[MeleeAttack] Dealt {_damage} damage to fence");
+
+            // 울타리 반격
+            int counterDamage = fence.Damage;
+            _owner.TakeDamage(counterDamage);
+        }
+        
+        // 애니메이션 나머지 부분 대기
+        float remainingTime = adjustedDuration - damageDelay;
+        if (remainingTime > 0)
+        {
+            yield return new WaitForSeconds(remainingTime);
+        }
+        
+        // 짧은 Idle 상태 (다음 공격 전 대기)
+        _owner.SetStateIdle();
+        yield return new WaitForSeconds(0.1f);
+    }
+
+    /// <summary>
+    /// 울타리 방향으로 캐릭터 회전
+    /// </summary>
+    private void SetDirectionToFence(Fence fence)
+    {
+        Vector3 ownerPos = _owner.transform.position;
+        Vector3 fencePos = fence.transform.position;
+        
+        // 방향 벡터 계산
+        Vector3 direction = fencePos - ownerPos;
+        
+        // Y축 기준으로 앞/뒤 결정
+        _owner.IsFacingForward = direction.y <= 0;
+        
+        // X축 기준으로 좌우 반전 결정
+        _owner.IsFlipped = direction.x < 0;
+        
+        Debug.Log($"[MeleeAttack] Direction to fence - IsFacingForward: {_owner.IsFacingForward}, IsFlipped: {_owner.IsFlipped}");
     }
 }

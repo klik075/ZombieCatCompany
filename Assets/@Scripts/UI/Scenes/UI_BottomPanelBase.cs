@@ -146,7 +146,7 @@ public abstract class UI_BottomPanelBase : UI_UGUI
         return true;
     }
 
-    protected MenuButtonState GetMenuButtonState()
+    protected virtual MenuButtonState GetMenuButtonState()
     {
         // 팝업이 열려있는지 확인
         UI_Base lastPopupUI = UIManager.Instance.GetLastPopupUI<UI_Base>();

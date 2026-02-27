@@ -30,6 +30,7 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
         CompanyText
     }
 
+    private bool _isDefenseActive = false;
     protected override void PerformBinding()
     {
         BindObjects(typeof(GameObjects));
@@ -42,14 +43,36 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
         EventManager.Instance.AddEvent(EEventType.FenceStateChanged, UpdateFenceText);
         EventManager.Instance.AddEvent(EEventType.LoadCompleted, UpdateCompanyText);
         EventManager.Instance.AddEvent(EEventType.FenceDamaged, UpdateFenceText);
+
+        EventManager.Instance.AddEvent(EEventType.DefenseStarted, OnDefenseStarted);
     }
     protected override void OnDestroy()
     {
         base.OnDestroy();
+
         EventManager.Instance.RemoveEvent(EEventType.FenceStateChanged, UpdateFenceText);
         EventManager.Instance.RemoveEvent(EEventType.LoadCompleted, UpdateCompanyText);
         EventManager.Instance.RemoveEvent(EEventType.FenceDamaged, UpdateFenceText);
 
+        EventManager.Instance.RemoveEvent(EEventType.DefenseStarted, OnDefenseStarted);
+
+    }
+    private void OnDefenseStarted()
+    {
+        _isDefenseActive = true;
+        UpdateMenuButtonText(); // MenuButton 상태 업데이트
+        Debug.Log("[UI_BottomPanel_Morning] Defense started - MenuButton disabled");
+    }
+    protected override MenuButtonState GetMenuButtonState()
+    {
+        // 디펜스 활성 시 무조건 비활성화
+        if (_isDefenseActive)
+        {
+            return MenuButtonState.Disabled;
+        }
+
+        // 나머지는 부모 클래스 로직 사용
+        return base.GetMenuButtonState();
     }
     private void UpdateFenceText()
     {

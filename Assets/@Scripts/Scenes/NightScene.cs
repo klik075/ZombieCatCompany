@@ -18,9 +18,6 @@ public class NightScene : BaseScene
         ResourceManager.Instance.LoadAll();
         DataManager.Instance.LoadData();
 
-        // MapManager 씬 초기화 (Tilemap 재설정)
-        //MapManager.Instance.InitForScene();
-
         SaveManager.Instance.LoadNightSceneData();
 
     }

@@ -68,6 +68,11 @@ public static class Define
         FenceStateChanged,
         FenceDamaged,
 
+        //Defense Events
+        DefenseStarted,
+        DefenseProgressChanged,
+        DefenseStopped,
+
         //Lion
         LanguageChanged,
 
@@ -317,5 +322,11 @@ public static class Define
         CompanyName,        // 회사 이름
         ChangeGameTitle,    // 게임 타이틀 변경
         PurchaseFood        // 통조림 구매
+    }
+    public enum EResultsReportType
+    {
+        None,
+        GameSales,          // 게임 판매 결과
+        Defense             // 디펜스 결과
     }
 }

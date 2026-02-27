@@ -460,20 +460,20 @@ public class MemberManager : Singleton<MemberManager>
             return null;
         return _members[memberIndex];
     }
-
-    // Player 객체로 인덱스 찾기
-    public int GetIndex(Member player)
+    /// <summary>
+    /// 멤버의 인덱스 가져오기
+    /// </summary>
+    public int GetIndex(Member member)
     {
-        if (player == null)
-            return -1;
-
-        for (int i = 0; i < MemberCount; i++)
+        for (int i = 0; i < MAX_MEMBERS; i++)
         {
-            if (_members[i] == player)
+            if (_members[i] == member)
+            {
                 return i;
+            }
         }
-
-        return -1; // 찾지 못한 경우
+        
+        return -1;
     }
 
     // 모든 구성원 저장 데이터 생성
