@@ -430,4 +430,81 @@ public class SaveManager : Singleton<SaveManager>
     }
 
     #endregion
+
+    #region Scene Transition
+
+    /// <summary>
+    /// MorningScene에서 NightScene으로 전환 (디펜스 완료 후)
+    /// GameState를 Night으로 변경하고, 멤버 위치를 NightScene 자리로 초기화하고 GameDevType을 None으로 리셋한 후 저장
+    /// </summary>
+    public void SaveAndLoadNightScene()
+    {
+        Debug.Log("[SaveManager] Preparing to transition from MorningScene to NightScene...");
+
+        try
+        {
+            // 1. GameState를 Night으로 변경
+            GameManager.Instance.GameState = EGameState.Night;
+            Debug.Log("[SaveManager] GameState changed to Night");
+            
+            // 2. 멤버 위치를 NightScene 자리로 초기화
+            MemberManager.Instance.ResetMembersToSeats(isNight: true);
+            
+            // 3. GameDevType을 None으로 초기화 (새로운 밤 시작)
+            GameDevManager.Instance.ResetGameDevType();
+
+            PoolManager.Instance.Clear();
+
+            // 4. 모든 게임 데이터 저장
+            SaveGameData();
+            
+            Debug.Log("[SaveManager] All data saved successfully");
+            
+            // 데이터 확인 로그
+            LogSavedData();
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[SaveManager] Failed to save game data: {e.Message}\n{e.StackTrace}");
+            return;
+        }
+
+        // 5. NightScene으로 전환
+        Debug.Log("[SaveManager] Loading NightScene...");
+        SceneManager.Instance.LoadScene(EScene.NightScene);
+    }
+
+    /// <summary>
+    /// 저장된 데이터 확인 로그
+    /// </summary>
+    private void LogSavedData()
+    {
+        var gameData = GameManager.Instance.MyGameData;
+        if (gameData == null)
+        {
+            Debug.LogWarning("[SaveManager] GameData is null!");
+            return;
+        }
+
+        Debug.Log($"[SaveManager] Saved Data Summary:");
+        Debug.Log($"  - GameState: {gameData.GameState}"); // ✅ GameState 로그 추가
+        Debug.Log($"  - Company: {gameData.CompanyData.CompanyName}");
+        Debug.Log($"  - Year: {gameData.CompanyData.Year}");
+        Debug.Log($"  - Gold: {gameData.CompanyData.Gold}");
+        Debug.Log($"  - Food: {gameData.CompanyData.Food}");
+        Debug.Log($"  - Members: {gameData.CompanyData.MemberSaveDatas?.Count ?? 0}");
+        
+        if (gameData.NightData.GameDevProjectData != null)
+        {
+            Debug.Log($"  - GameDevType: {gameData.NightData.GameDevProjectData.gameDevType}");
+        }
+        
+        if (gameData.MorningData.FenceSaveData != null)
+        {
+            Debug.Log($"  - Fence HP: {gameData.MorningData.FenceSaveData.CurrentHp}");
+            Debug.Log($"  - Fence Level: {gameData.MorningData.FenceSaveData.EnhanceLevel}");
+        }
+    }
+
+    #endregion
 }

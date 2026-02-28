@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
@@ -44,7 +44,17 @@ public class Pool
     {
         return _objectPool.Get();
     }
+    public void Clear()
+    {
+        _objectPool.Clear();
 
+        // Root 트랜스폼 제거
+        if (_root != null)
+        {
+            Object.Destroy(_root.gameObject);
+            _root = null;
+        }
+    }
     #region Funcs
     private GameObject OnCreate()
     {
@@ -112,7 +122,15 @@ public class PoolManager : Singleton<PoolManager>
         _pools[go.name].Push(go);
         return true;
     }
-
+    public void ClearPool(string poolName)
+    {
+        if (_pools.ContainsKey(poolName))
+        {
+            _pools[poolName].Clear(); // Pool.Clear() 메서드 추가 필요
+            _pools.Remove(poolName);
+            Debug.Log($"[PoolManager] Pool '{poolName}' cleared");
+        }
+    }
     public void Clear()
     {
         _pools.Clear();

@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +8,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
 {
     enum GameObjects
     {
-        //BG - »óÈ£ÀÛ¿ë x
+        //BG - ìƒí˜¸ì‘ìš© x
         BG,
     }
     enum Buttons
@@ -92,21 +92,28 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.NextButton).onClick.AddListener(NextPage);
         GetButton((int)Buttons.PreviousButton).onClick.AddListener(PreviousPage);
 
-        EventManager.Instance.AddEvent(EEventType.EducationCompleted, SetInfo);
+        
 
-        // ±³À° ¹æ¹ı ¹öÆ°µé Å¬¸¯ ÀÌº¥Æ® µî·Ï
+        // êµìœ¡ ë°©ë²• ë²„íŠ¼ë“¤ í´ë¦­ ì´ë²¤íŠ¸ ë“±ë¡
         for (int i = 0; i < EDUCATION_METHODS_PER_PAGE; i++)
         {
-            int index = i; // Å¬·ÎÀú¸¦ À§ÇÑ Áö¿ª º¯¼ö
+            int index = i; // í´ë¡œì €ë¥¼ ìœ„í•œ ì§€ì—­ ë³€ìˆ˜
             GetButton((int)Buttons.EducationMethodButton1 + i).onClick.AddListener(() => OnClickEducationMethodButton(index));
         }
     }
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        EventManager.Instance.AddEvent(EEventType.EducationCompleted, SetInfo);
+
         SetInfo();
     }
-
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        EventManager.Instance.RemoveEvent(EEventType.EducationCompleted, SetInfo);
+    }
     public void SetInfo()
     {
         currentPageIndex = 0;
@@ -115,7 +122,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
 
     public void UpdateContent()
     {
-        // MemberManager¿¡¼­ ÇöÀç ¼±ÅÃµÈ ¸â¹ö °¡Á®¿À±â
+        // MemberManagerì—ì„œ í˜„ì¬ ì„ íƒëœ ë©¤ë²„ ê°€ì ¸ì˜¤ê¸°
         Member player = MemberManager.Instance.SelectedMember;
         
         if (player == null || player?.CurrentMemberData == null)
@@ -126,28 +133,28 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
 
         MemberData memberData = player.CurrentMemberData;
 
-        // Á¦¸ñ ¾÷µ¥ÀÌÆ®
+        // ì œëª© ì—…ë°ì´íŠ¸
         int totalPages = EducationManager.Instance.GetTotalPages(EDUCATION_METHODS_PER_PAGE); ;
-        GetText((int)Texts.MainTitleText).text = $"@±³À° ¹æ¹ı ¼±ÅÃ ({currentPageIndex + 1}/{Math.Max(1, totalPages)})";
+        GetText((int)Texts.MainTitleText).text = $"@êµìœ¡ ë°©ë²• ì„ íƒ ({currentPageIndex + 1}/{Math.Max(1, totalPages)})";
 
-        // ¸â¹ö ÀÌ¸§ Ç¥½Ã
+        // ë©¤ë²„ ì´ë¦„ í‘œì‹œ
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
-        // ÇöÀç ÆäÀÌÁöÀÇ ±³À° µ¥ÀÌÅÍ °¡Á®¿À±â
+        // í˜„ì¬ í˜ì´ì§€ì˜ êµìœ¡ ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
         List<EducationData> currentPageEducations = GetCurrentPageEducations();
 
-        // UI ¿ä¼Ò ¾÷µ¥ÀÌÆ®
+        // UI ìš”ì†Œ ì—…ë°ì´íŠ¸
         for (int i = 0; i < EDUCATION_METHODS_PER_PAGE; i++)
         {
             EducationData educationData = i < currentPageEducations.Count ? currentPageEducations[i] : null;
             UpdateEducationSlot(i, educationData, memberData);
         }
 
-        // ³×ºñ°ÔÀÌ¼Ç ¹öÆ° »óÅÂ ¾÷µ¥ÀÌÆ®
+        // ë„¤ë¹„ê²Œì´ì…˜ ë²„íŠ¼ ìƒíƒœ ì—…ë°ì´íŠ¸
         UpdateNavigationButtons();
         
-        // ±âº» ¼³¸í ÅØ½ºÆ® ¼³Á¤
-        GetText((int)Texts.DescriptionText).text = "@¾î¶² ±³À°À» ÇÏ½Ã°Ú½À´Ï±î?";
+        // ê¸°ë³¸ ì„¤ëª… í…ìŠ¤íŠ¸ ì„¤ì •
+        GetText((int)Texts.DescriptionText).text = "@ì–´ë–¤ êµìœ¡ì„ í•˜ì‹œê² ìŠµë‹ˆê¹Œ?";
     }
 
     private List<EducationData> GetCurrentPageEducations()
@@ -157,7 +164,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
 
     private void UpdateEducationSlot(int slotIndex, EducationData educationData, MemberData memberData)
     {
-        // ¹öÆ°°ú UI ¿ä¼Òµé °¡Á®¿À±â
+        // ë²„íŠ¼ê³¼ UI ìš”ì†Œë“¤ ê°€ì ¸ì˜¤ê¸°
         var methodButton = GetButton((int)Buttons.EducationMethodButton1 + slotIndex);
         var methodText = GetText((int)Texts.EducationMethod1 + slotIndex);
         var costText = GetText((int)Texts.EducationMethodCost1 + slotIndex);
@@ -165,18 +172,18 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
 
         if (educationData == null)
         {
-            // ºó ½½·Ô - ºñÈ°¼ºÈ­
+            // ë¹ˆ ìŠ¬ë¡¯ - ë¹„í™œì„±í™”
             methodButton.gameObject.SetActive(false);
             return;
         }
 
-        // ½½·Ô È°¼ºÈ­ ¹× µ¥ÀÌÅÍ ¼³Á¤
+        // ìŠ¬ë¡¯ í™œì„±í™” ë° ë°ì´í„° ì„¤ì •
         methodButton.gameObject.SetActive(true);
         
         methodText.text = $"@{educationData.Name}";
         costText.text = $"{educationData.Cost:N0}G";
         
-        // ¸â¹ö ÇöÀç ´É·ÂÄ¡ Á¤º¸ ¼³Á¤
+        // ë©¤ë²„ í˜„ì¬ ëŠ¥ë ¥ì¹˜ ì •ë³´ ì„¤ì •
         abilityText.text = memberData.GetAbilityValue((EAbilityType)slotIndex).ToString();
     }
 
@@ -223,7 +230,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         if (!EducationManager.Instance.CanExecuteEducation())
         {
             EducationManager.Instance.SelectedEducation = null;
-            // ÀÚ±İ ºÎÁ· ÆË¾÷
+            // ìê¸ˆ ë¶€ì¡± íŒì—…
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents);
             return;

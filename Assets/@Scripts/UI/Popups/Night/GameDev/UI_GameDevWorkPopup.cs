@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,7 +46,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
         QualityImage3,
         QualityImage4,
     }
-    // ¾Ö´Ï¸ŞÀÌ¼Ç °ü·Ã »ó¼ö
+    // ì• ë‹ˆë©”ì´ì…˜ ê´€ë ¨ ìƒìˆ˜
     private const float QUALITY_SPAWN_INTERVAL = 0.3f;
     
     private int _currentWorkCount = 0;
@@ -61,8 +61,17 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindImages(typeof(Images));
 
         GetButton((int)Buttons.Click).onClick.AddListener(OnClickButton);
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
 
         EventManager.Instance.AddEvent(Define.EEventType.QualityChanged, UpdateQuality);
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        EventManager.Instance.RemoveEvent(Define.EEventType.QualityChanged, UpdateQuality);
     }
     private void SetInteractable(bool interactable)
     {
@@ -79,7 +88,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
 
     private IEnumerator CoWorkProcess()
     {
-        // ¸ŞÀÎ Canvas ÁØºñ
+        // ë©”ì¸ Canvas ì¤€ë¹„
         Canvas mainCanvas = GetComponentInParent<Canvas>();
         if (mainCanvas == null)
         {
@@ -88,7 +97,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
             yield break;
         }
 
-        // ·¹ÀÌ¾Æ¿ô °­Á¦ ¾÷µ¥ÀÌÆ® ÈÄ À§Ä¡ °è»ê
+        // ë ˆì´ì•„ì›ƒ ê°•ì œ ì—…ë°ì´íŠ¸ í›„ ìœ„ì¹˜ ê³„ì‚°
         yield return ForceUpdateLayout(mainCanvas);
         
         RectTransform canvasRect = mainCanvas.GetComponent<RectTransform>();
@@ -106,7 +115,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
         );
     }
 
-    // ·¹ÀÌ¾Æ¿ô °­Á¦ ¾÷µ¥ÀÌÆ®
+    // ë ˆì´ì•„ì›ƒ ê°•ì œ ì—…ë°ì´íŠ¸
     private IEnumerator ForceUpdateLayout(Canvas mainCanvas)
     {
         Canvas.ForceUpdateCanvases();
@@ -114,7 +123,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
         yield return null;
     }
 
-    // Ç°Áú ÀÌ¹ÌÁöµéÀÇ À§Ä¡ °è»ê
+    // í’ˆì§ˆ ì´ë¯¸ì§€ë“¤ì˜ ìœ„ì¹˜ ê³„ì‚°
     private Dictionary<EQualityType, Vector2> GetQualityPositions(RectTransform animCanvas, Camera uiCamera)
     {
         var qualityImages = new (EQualityType type, Images image)[]
@@ -134,7 +143,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
         return positions;
     }
 
-    // UI ÁÂÇ¥ º¯È¯
+    // UI ì¢Œí‘œ ë³€í™˜
     private Vector2 GetUIPosition(RectTransform target, RectTransform animCanvas, Camera uiCamera)
     {
         Vector2 screenPoint = RectTransformUtility.WorldToScreenPoint(uiCamera, target.position);
@@ -148,7 +157,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
         return Vector2.zero;
     }
 
-    // QualityManager Äİ¹é
+    // QualityManager ì½œë°±
     private void OnQualityComplete(EQualityType quality)
     {
         _currentWorkCount++;
@@ -174,7 +183,7 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
                 GetImage((int)Images.MemberImage).sprite = memberSprite;
         }
 
-        GetText((int)Texts.DialogueText).text = "¿ì¾î¾î...¿ö¾î¾î¾î..";
+        GetText((int)Texts.DialogueText).text = "ìš°ì–´ì–´...ì›Œì–´ì–´ì–´..";
         UpdateQuality();
     }
 
@@ -189,20 +198,20 @@ public class UI_GameDevWorkPopup : UI_UGUI, IUI_Popup, IClickableUI
             GetText((int)Texts.ScoreText4).text = project.soundScore.ToString();
         }
 
-        GetText((int)Texts.WorkText).text = $"{_currentWorkCount}¹ø ÀÛ¾÷";
+        GetText((int)Texts.WorkText).text = $"{_currentWorkCount}ë²ˆ ì‘ì—…";
     }
     private string GetGameDevStageText(EGameDevType devType)
     {
         switch (devType)
         {
             case EGameDevType.Scenario:
-                return "±âÈ¹À» Á¤¸® Áß";
+                return "ê¸°íšì„ ì •ë¦¬ ì¤‘";
             case EGameDevType.Graphics:
-                return "¿øÈ­ µğÀÚÀÎ Áß";
+                return "ì›í™” ë””ìì¸ ì¤‘";
             case EGameDevType.Sound:
-                return "»ç¿îµå Á¦ÀÛ Áß";
+                return "ì‚¬ìš´ë“œ ì œì‘ ì¤‘";
             default:
-                return "³Ê´Â ´©±¸³Ä!";
+                return "ë„ˆëŠ” ëˆ„êµ¬ëƒ!";
         }
     }
     public void OnClickButton()

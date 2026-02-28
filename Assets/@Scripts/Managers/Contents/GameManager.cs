@@ -207,6 +207,14 @@ public class GameManager : Singleton<GameManager>
         EventManager.Instance.AddEvent(EEventType.UI_LeftPanelClosed, ResumeGame);
         EventManager.Instance.AddEvent(EEventType.GameStateChanged, OnChangedGameState);
     }
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveEvent(EEventType.UI_PopupOpened, PauseGame);
+        EventManager.Instance.RemoveEvent(EEventType.UI_PopupClosed, ResumeGame);
+        EventManager.Instance.RemoveEvent(EEventType.UI_LeftPanelOpened, PauseGame);
+        EventManager.Instance.RemoveEvent(EEventType.UI_LeftPanelClosed, ResumeGame);
+        EventManager.Instance.RemoveEvent(EEventType.GameStateChanged, OnChangedGameState);
+    }
     private void OnChangedGameState()
     {
         switch (GameState)

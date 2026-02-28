@@ -160,6 +160,11 @@ public class GameDevManager : Singleton<GameDevManager>
         EventManager.Instance.AddEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
         EventManager.Instance.AddEvent(EEventType.WorkCompleted, OnMainWorkCompleted);
     }
+    private void OnDestroy()
+    {
+        EventManager.Instance.RemoveEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
+        EventManager.Instance.RemoveEvent(EEventType.WorkCompleted, OnMainWorkCompleted);
+    }
 
     #region 데이터 캐싱
 
@@ -887,5 +892,17 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     #endregion
+
+    /// <summary>
+    /// 게임 개발 타입을 None으로 초기화 (씬 전환 시 사용)
+    /// </summary>
+    public void ResetGameDevType()
+    {
+        if (_currentProject != null)
+        {
+            CurrentGameDevType = EGameDevType.None;
+            Debug.Log("[GameDevManager] GameDevType reset to None");
+        }
+    }
 }
 

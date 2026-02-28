@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+ï»¿using JetBrains.Annotations;
 using System;
 using UnityEngine;
 using static Define;
@@ -7,7 +7,7 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
 {
     enum GameObjects
     {
-        //BG - »óÈ£ÀÛ¿ë x
+        //BG - ìƒí˜¸ì‘ìš© x
         BG,
     }
     enum Buttons
@@ -64,18 +64,24 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        // ¹öÆ° ÀÌº¥Æ® µî·Ï
+        // ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡
         GetButton((int)Buttons.NextButton).onClick.AddListener(() => NextMemberInfoUpdate());
         GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => PreviousMemberInfoUpdate());
         GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnOkayButtonClicked());
-
-        EventManager.Instance.AddEvent(EEventType.MemberSwapped, CheckUpdate);
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        EventManager.Instance.AddEvent(EEventType.MemberSwapped, CheckUpdate);
+
         SetInfo();
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        EventManager.Instance.RemoveEvent(EEventType.MemberSwapped, CheckUpdate);
     }
     public void SetInfo()
     {
@@ -116,36 +122,36 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
 
         _currentIndex = index;
 
-        // Å¸ÀÌÆ² ÅØ½ºÆ® (ÇöÀç ¸â¹ö / ÀüÃ¼ ¸â¹ö ¼ö)
-        GetText((int)Texts.MainTitleText).text = $"@½Å±Ô °í¿ë {_currentIndex + 1}/{hireResult.MemberDatas.Count}";
+        // íƒ€ì´í‹€ í…ìŠ¤íŠ¸ (í˜„ì¬ ë©¤ë²„ / ì „ì²´ ë©¤ë²„ ìˆ˜)
+        GetText((int)Texts.MainTitleText).text = $"@ì‹ ê·œ ê³ ìš© {_currentIndex + 1}/{hireResult.MemberDatas.Count}";
 
-        // ÀÌ¸§ Ç¥½Ã
+        // ì´ë¦„ í‘œì‹œ
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
-        // ±Ş¿© Ç¥½Ã
-        GetText((int)Texts.SubMiddleSalaryNameText).text = "@¿¬ºÀ";
+        // ê¸‰ì—¬ í‘œì‹œ
+        GetText((int)Texts.SubMiddleSalaryNameText).text = "@ì—°ë´‰";
         GetText((int)Texts.SubMiddleSalaryText).text = $"{memberData.SalaryToString(ESalaryType.Salary)}";
 
-        // ¿ªÇÒ Ç¥½Ã
+        // ì—­í•  í‘œì‹œ
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
 
-        // ÁöºÒ ±İ¾× Ç¥½Ã
-        GetText((int)Texts.PaymentNameText).text = "@°è¾à±İ";
+        // ì§€ë¶ˆ ê¸ˆì•¡ í‘œì‹œ
+        GetText((int)Texts.PaymentNameText).text = "@ê³„ì•½ê¸ˆ";
         GetText((int)Texts.PaymentText).text = $"{memberData.SalaryToString(ESalaryType.Deposit)}";
 
-        // ´É·ÂÄ¡ ÀÌ¸§ ¼³Á¤
+        // ëŠ¥ë ¥ì¹˜ ì´ë¦„ ì„¤ì •
         GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);
         GetText((int)Texts.AbilityNameText2).text = MemberData.AbilityToString(EAbilityType.Scenario);
         GetText((int)Texts.AbilityNameText3).text = MemberData.AbilityToString(EAbilityType.Graphics);
         GetText((int)Texts.AbilityNameText4).text = MemberData.AbilityToString(EAbilityType.Sound);
 
-        // ´É·ÂÄ¡ Á¡¼ö ¼³Á¤
+        // ëŠ¥ë ¥ì¹˜ ì ìˆ˜ ì„¤ì •
         GetText((int)Texts.AbilityScoreText1).text = memberData.Programming.ToString();
         GetText((int)Texts.AbilityScoreText2).text = memberData.Scenario.ToString();
         GetText((int)Texts.AbilityScoreText3).text = memberData.Graphics.ToString();
         GetText((int)Texts.AbilityScoreText4).text = memberData.Sound.ToString();
 
-        // ¸â¹ö ÀÌ¹ÌÁö ¼³Á¤
+        // ë©¤ë²„ ì´ë¯¸ì§€ ì„¤ì •
         string imagePath = memberData.NormalImagePath;
         
         if (!string.IsNullOrEmpty(imagePath))
@@ -161,8 +167,8 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
             }
         }
 
-        // È®ÀÎ ¹öÆ° ÅØ½ºÆ®
-        GetText((int)Texts.OkayButtonText).text = "@°í¿ë";
+        // í™•ì¸ ë²„íŠ¼ í…ìŠ¤íŠ¸
+        GetText((int)Texts.OkayButtonText).text = "@ê³ ìš©";
     }
     
     private void NextMemberInfoUpdate()
@@ -197,29 +203,29 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
             return;
         }
 
-        // ÀÚ±İÀÌ ÃæºĞÇÑÁö È®ÀÎ
+        // ìê¸ˆì´ ì¶©ë¶„í•œì§€ í™•ì¸
         int hireCost = selectedHireMember.SalaryToValue(ESalaryType.Deposit);
         if (GameManager.Instance.Gold < hireCost)
         {
-            //ÀÚ±İ ºÎÁ· ÆË¾÷
+            //ìê¸ˆ ë¶€ì¡± íŒì—…
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents);
             return;
         }
 
-        // ÆÀÀÌ °¡µæ Ã¡´ÂÁö È®ÀÎ
+        // íŒ€ì´ ê°€ë“ ì°¼ëŠ”ì§€ í™•ì¸
         if (MemberManager.Instance.IsTeamFull())
         {
-            //¸â¹ö ²ËÂü ÆË¾÷
+            //ë©¤ë²„ ê½‰ì°¸ íŒì—…
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MembersFull).Contents, action : OnClickMembersFullChatPopup);
             return;
         }
 
-        // ½ÇÁ¦ ¸â¹ö °í¿ë
+        // ì‹¤ì œ ë©¤ë²„ ê³ ìš©
         if (MemberManager.Instance.HireMember(selectedHireMember))
         {
-            //°í¿ë ÆË¾÷
+            //ê³ ìš© íŒì—…
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MemberHired).Contents, new string[] { selectedHireMember.Name }, action : OnClickMemberHiredChatPopup);
         }

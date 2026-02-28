@@ -866,4 +866,47 @@ public class MemberManager : Singleton<MemberManager>
         return HowManyMemberSitting() > 0;
     }
     #endregion
+
+    /// <summary>
+    /// 모든 멤버를 지정된 씬의 자리로 초기화
+    /// </summary>
+    /// <param name="isNight">NightScene 자리인지 여부</param>
+    public void ResetMembersToSeats(bool isNight)
+    {
+        List<Member> members = GetAllMembers();
+        
+        Debug.Log($"[MemberManager] Resetting {members.Count} members to {(isNight ? "NightScene" : "MorningScene")} seats...");
+        
+        foreach (var member in members)
+        {
+            if (member == null)
+                continue;
+            
+            // 멤버의 인덱스 가져오기
+            int memberIndex = GetIndex(member);
+            
+            if (memberIndex == -1)
+            {
+                Debug.LogWarning($"[MemberManager] Member {member.name} not found in member array");
+                continue;
+            }
+            
+            // 멤버의 씬별 자리 정보 가져오기
+            MemberSeatInfo seatInfo = GetMemberSeatInfo(memberIndex, isNight);
+            
+            // CellPosition을 자리로 설정
+            member.CellPosition = seatInfo.SeatPosition;
+            
+            // 이동 전략 초기화
+            member.ClearMovementStrategy();
+            
+            // 공격 중지
+            member.StopAttack();
+            
+            // 상태를 Idle로 변경
+            member.SetStateForced(Cat.ECatState.Idle);
+        }
+        
+        Debug.Log($"[MemberManager] All members reset to their seats");
+    }
 }

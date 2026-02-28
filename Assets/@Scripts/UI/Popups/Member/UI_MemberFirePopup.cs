@@ -1,11 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static Define;
 
 public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
 {
     enum GameObjects
     {
-        //BG - »óÈ£ÀÛ¿ë x
+        //BG - ìƒí˜¸ì‘ìš© x
         BG,
     }
     enum Buttons
@@ -65,14 +65,21 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.NextButton).onClick.AddListener(() => MemberManager.Instance.SelectNextMember());
         GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => MemberManager.Instance.SelectPreviousMember());
         GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnClickOkayButton());
-
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
         EventManager.Instance.AddEvent(EEventType.SelectedMemberChanged, UpdateContent);
     }
-
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        EventManager.Instance.RemoveEvent(EEventType.SelectedMemberChanged, UpdateContent);
+    }
     public void SetInfo(EFireType eFireType, int index = 0)
     {
         _eFireType = eFireType;
-        MemberManager.Instance.SelectMemberByIndex(index);//ÇöÀç ¼±ÅÃµÈ ¸â¹ö ¼³Á¤
+        MemberManager.Instance.SelectMemberByIndex(index);//í˜„ì¬ ì„ íƒëœ ë©¤ë²„ ì„¤ì •
     }
 
     public void UpdateContent()
@@ -86,35 +93,35 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         }
 
         MemberData memberData = player.CurrentMemberData;
-        // ÀÌ¸§ Ç¥½Ã
+        // ì´ë¦„ í‘œì‹œ
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
-        // ±Ş¿© Ç¥½Ã
-        GetText((int)Texts.SubMiddleSalaryNameText).text = "@½Äºñ";
+        // ê¸‰ì—¬ í‘œì‹œ
+        GetText((int)Texts.SubMiddleSalaryNameText).text = "@ì‹ë¹„";
         GetText((int)Texts.SubMiddleSalaryText).text = memberData.SalaryToString(ESalaryType.Food);
 
-        // ¿ªÇÒ Ç¥½Ã
+        // ì—­í•  í‘œì‹œ
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
 
-        // »óÅÂ Ç¥½Ã
-        GetText((int)Texts.StateNameText).text = "@»óÅÂ";
+        // ìƒíƒœ í‘œì‹œ
+        GetText((int)Texts.StateNameText).text = "@ìƒíƒœ";
         GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State);
 
-        // ´É·ÂÄ¡ ÀÌ¸§ ¼³Á¤
+        // ëŠ¥ë ¥ì¹˜ ì´ë¦„ ì„¤ì •
         GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);
         GetText((int)Texts.AbilityNameText2).text = MemberData.AbilityToString(EAbilityType.Scenario);
         GetText((int)Texts.AbilityNameText3).text = MemberData.AbilityToString(EAbilityType.Graphics);
         GetText((int)Texts.AbilityNameText4).text = MemberData.AbilityToString(EAbilityType.Sound);
         GetText((int)Texts.AbilityNameText5).text = MemberData.AbilityToString(EAbilityType.Power);
 
-        // ´É·ÂÄ¡ Á¡¼ö ¼³Á¤
+        // ëŠ¥ë ¥ì¹˜ ì ìˆ˜ ì„¤ì •
         GetText((int)Texts.AbilityScoreText1).text = memberData.Programming.ToString();
         GetText((int)Texts.AbilityScoreText2).text = memberData.Scenario.ToString();
         GetText((int)Texts.AbilityScoreText3).text = memberData.Graphics.ToString();
         GetText((int)Texts.AbilityScoreText4).text = memberData.Sound.ToString();
         GetText((int)Texts.AbilityScoreText5).text = memberData.Power.ToString();
 
-        // ¸â¹ö ÀÌ¹ÌÁö ¼³Á¤ (»óÅÂ¿¡ µû¶ó normal/zombie ÀÌ¹ÌÁö ¼±ÅÃ)
+        // ë©¤ë²„ ì´ë¯¸ì§€ ì„¤ì • (ìƒíƒœì— ë”°ë¼ normal/zombie ì´ë¯¸ì§€ ì„ íƒ)
         string imagePath = memberData.ZombieImagePath;
         
         if (!string.IsNullOrEmpty(imagePath))
@@ -125,14 +132,14 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
                 GetImage((int)Images.MemberImage).sprite = memberSprite;
         }
 
-        // È®ÀÎ ¹öÆ° ÅØ½ºÆ®
-        GetText((int)Texts.OkayButtonText).text = "@ÇØ°í";
+        // í™•ì¸ ë²„íŠ¼ í…ìŠ¤íŠ¸
+        GetText((int)Texts.OkayButtonText).text = "@í•´ê³ ";
         
         int currentIndex = MemberManager.Instance.SelectedMemberIndex;
         int order = currentIndex + 1;
-        GetText((int)Texts.MainTitleText).text = $"@±¸¼º¿ø ÇØ°í {order}/{MemberManager.Instance.MemberCount}";
+        GetText((int)Texts.MainTitleText).text = $"@êµ¬ì„±ì› í•´ê³  {order}/{MemberManager.Instance.MemberCount}";
         
-        // ÇØ°í ¹öÆ° È°¼ºÈ­/ºñÈ°¼ºÈ­ Ã³¸®
+        // í•´ê³  ë²„íŠ¼ í™œì„±í™”/ë¹„í™œì„±í™” ì²˜ë¦¬
         bool canFire = MemberManager.Instance.CanFireMember(currentIndex);
         GetButton((int)Buttons.OkayButton).interactable = canFire;
     }
@@ -148,7 +155,7 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         }
 
         MemberData memberData = player.CurrentMemberData;
-        //¸â¹ö ÇØ°í ÆË¾÷
+        //ë©¤ë²„ í•´ê³  íŒì—…
         UI_MessagePopup messagePopup = UIManager.Instance.ShowPopupUI<UI_MessagePopup>();
         messagePopup.SetInfo(MessageManager.Instance.GetMessageScript(EMessageType.MemberFired).Contents, new string[] {memberData.Name}, FireSelectedMember);
     }
@@ -168,14 +175,14 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
 
         if (_eFireType == EFireType.Normal)
         {
-            //¸â¹ö ÇØ°í ¿Ï·á ÆË¾÷
+            //ë©¤ë²„ í•´ê³  ì™„ë£Œ íŒì—…
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MemberFiredConfirm).Contents, new string[] { memberData.Name });
         }
         else if(_eFireType == EFireType.Swap)
         {
 
-            //¸â¹ö ±³Ã¼ ÆË¾÷
+            //ë©¤ë²„ êµì²´ íŒì—…
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MemberSwapped).Contents, new string[] { memberData.Name, MemberManager.Instance.SelectedHireMemberData.Name }, OnStartSwap);
         }

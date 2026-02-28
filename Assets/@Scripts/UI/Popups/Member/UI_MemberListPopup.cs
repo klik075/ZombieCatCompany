@@ -1,11 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static Define;
 
 public class UI_MemberListPopup : UI_UGUI, IUI_Popup
 {
     enum GameObjects
     {
-        //BG - »óÈ£ÀÛ¿ë x
+        //BG - ìƒí˜¸ì‘ìš© x
         BG,
     }
     public enum Buttons
@@ -62,20 +62,27 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.EmployeeFrame2).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame2));
         GetButton((int)Buttons.EmployeeFrame3).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame3));
         GetButton((int)Buttons.EmployeeFrame4).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame4));
-
-        EventManager.Instance.AddEvent(EEventType.MemberListChanged, UpdateContent);
     }
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        EventManager.Instance.AddEvent(EEventType.MemberListChanged, UpdateContent);
+
         UpdateContent();
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        EventManager.Instance.RemoveEvent(EEventType.MemberListChanged, UpdateContent);
     }
     public void OpenNextUI(Buttons buttonType)
     {
-        // ¹öÆ° Å¸ÀÔ¿¡¼­ ¸â¹ö ÀÎµ¦½º °è»ê
+        // ë²„íŠ¼ íƒ€ì…ì—ì„œ ë©¤ë²„ ì¸ë±ìŠ¤ ê³„ì‚°
         int slot = (int)buttonType - (int)Buttons.EmployeeFrame1;
         
-        // À¯È¿¼º °Ë»ç
+        // ìœ íš¨ì„± ê²€ì‚¬
         if (slot < 0 || slot >= MemberManager.MAX_MEMBERS)
         {
             Debug.LogWarning($"Invalid member index: {slot}");
@@ -89,10 +96,10 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
             return;
         }
 
-        UIManager.Instance.ClosePopupUI();//ÇöÀç ÆË¾÷ ´İ±â
+        UIManager.Instance.ClosePopupUI();//í˜„ì¬ íŒì—… ë‹«ê¸°
 
         UI_MemberSelectionPopup selectionPopup = UIManager.Instance.ShowPopupUI<UI_MemberSelectionPopup>();
-        selectionPopup.SetInfo(EMemberSelectionType.Education, actualIndex); // ±âº»ÀûÀ¸·Î ±³À°À¸·Î ¼³Á¤
+        selectionPopup.SetInfo(EMemberSelectionType.Education, actualIndex); // ê¸°ë³¸ì ìœ¼ë¡œ êµìœ¡ìœ¼ë¡œ ì„¤ì •
     }
     public void UpdateContent()
     {
@@ -106,13 +113,13 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
             var frameButton = GetButton((int)Buttons.EmployeeFrame1 + slot);
             if (slot < memberCount)
             {
-                // ±¸¼º¿ø Á¤º¸ Ç¥½Ã
+                // êµ¬ì„±ì› ì •ë³´ í‘œì‹œ
                 nameText.gameObject.SetActive(true);
                 roleText.gameObject.SetActive(true);
                 salaryText.gameObject.SetActive(true);
                 frameButton.gameObject.SetActive(true);
 
-                _displayedMemberIndices[slot] = slot; // ÇöÀç UI´Â °£´ÜÇÑ 1:1 ¸ÅÇÎ
+                _displayedMemberIndices[slot] = slot; // í˜„ì¬ UIëŠ” ê°„ë‹¨í•œ 1:1 ë§¤í•‘
 
                 MemberData memberData = MemberManager.Instance.GetMember(slot).CurrentMemberData;
                 if (memberData != null)
@@ -137,8 +144,8 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
             }
         }
 
-        GetText((int)Texts.SubBottomSumMemberText).text = $"@{memberCount}¸¶¸®";
-        GetText((int)Texts.SubBottomSumSalaryText).text = $"@{totalSalary}°³";
+        GetText((int)Texts.SubBottomSumMemberText).text = $"@{memberCount}ë§ˆë¦¬";
+        GetText((int)Texts.SubBottomSumSalaryText).text = $"@{totalSalary}ê°œ";
     }
     public override void RefreshUI()
     {

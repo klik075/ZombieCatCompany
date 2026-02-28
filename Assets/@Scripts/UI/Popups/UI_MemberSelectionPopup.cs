@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 using static Define;
 
@@ -72,15 +72,25 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.NextButton).onClick.AddListener(() => MemberManager.Instance.SelectNextMember());
         GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => MemberManager.Instance.SelectPreviousMember());
         GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnOkayButtonClicked());
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
 
         EventManager.Instance.AddEvent(EEventType.SelectedMemberChanged, UpdateContent);
         EventManager.Instance.AddEvent(EEventType.EducationCompleted, UpdateContent);
     }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
 
+        EventManager.Instance.RemoveEvent(EEventType.SelectedMemberChanged, UpdateContent);
+        EventManager.Instance.RemoveEvent(EEventType.EducationCompleted, UpdateContent);
+    }
     public void SetInfo(EMemberSelectionType selectionType, int index = 0)
     {
         _selectionType = selectionType;
-        MemberManager.Instance.SelectMemberByIndex(index);//ÇöÀç ¼±ÅÃµÈ ¸â¹ö ¼³Á¤
+        MemberManager.Instance.SelectMemberByIndex(index);//í˜„ì¬ ì„ íƒëœ ë©¤ë²„ ì„¤ì •
     }
 
     public void UpdateContent()
@@ -95,41 +105,41 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
 
         MemberData memberData = selectedPlayer.CurrentMemberData;
 
-        // Á¦¸ñ Ç¥½Ã (ÇöÀç ¼±ÅÃµÈ ¸â¹öÀÇ ¼ø¼­)
+        // ì œëª© í‘œì‹œ (í˜„ì¬ ì„ íƒëœ ë©¤ë²„ì˜ ìˆœì„œ)
         int currentOrder = MemberManager.Instance.SelectedMemberIndex + 1;
         int totalMembers = MemberManager.Instance.MemberCount;
-        string mainTitlePrefix = _selectionType == EMemberSelectionType.Education ? "@±¸¼º¿ø ¼±ÅÃ" : "@ÆÄ°ß ¼±ÅÃ";
+        string mainTitlePrefix = _selectionType == EMemberSelectionType.Education ? "@êµ¬ì„±ì› ì„ íƒ" : "@íŒŒê²¬ ì„ íƒ";
         GetText((int)Texts.MainTitleText).text = $"{mainTitlePrefix} {currentOrder}/{totalMembers}";
 
-        // ÀÌ¸§ Ç¥½Ã
+        // ì´ë¦„ í‘œì‹œ
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
-        // ±Ş¿© Ç¥½Ã
-        GetText((int)Texts.SubMiddleSalaryNameText).text = "@½Äºñ";
+        // ê¸‰ì—¬ í‘œì‹œ
+        GetText((int)Texts.SubMiddleSalaryNameText).text = "@ì‹ë¹„";
         GetText((int)Texts.SubMiddleSalaryText).text = $"{memberData.SalaryToString(ESalaryType.Food)}";
 
-        // ¿ªÇÒ Ç¥½Ã
+        // ì—­í•  í‘œì‹œ
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
 
-        // »óÅÂ Ç¥½Ã
-        GetText((int)Texts.StateNameText).text = "@»óÅÂ";
+        // ìƒíƒœ í‘œì‹œ
+        GetText((int)Texts.StateNameText).text = "@ìƒíƒœ";
         GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State);
 
-        // ´É·ÂÄ¡ ÀÌ¸§ ¼³Á¤
+        // ëŠ¥ë ¥ì¹˜ ì´ë¦„ ì„¤ì •
         GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);
         GetText((int)Texts.AbilityNameText2).text = MemberData.AbilityToString(EAbilityType.Scenario);
         GetText((int)Texts.AbilityNameText3).text = MemberData.AbilityToString(EAbilityType.Graphics);
         GetText((int)Texts.AbilityNameText4).text = MemberData.AbilityToString(EAbilityType.Sound);
         GetText((int)Texts.AbilityNameText5).text = MemberData.AbilityToString(EAbilityType.Power);
 
-        // ´É·ÂÄ¡ Á¡¼ö ¼³Á¤
+        // ëŠ¥ë ¥ì¹˜ ì ìˆ˜ ì„¤ì •
         GetText((int)Texts.AbilityScoreText1).text = memberData.Programming.ToString();
         GetText((int)Texts.AbilityScoreText2).text = memberData.Scenario.ToString();
         GetText((int)Texts.AbilityScoreText3).text = memberData.Graphics.ToString();
         GetText((int)Texts.AbilityScoreText4).text = memberData.Sound.ToString();
         GetText((int)Texts.AbilityScoreText5).text = memberData.Power.ToString();
 
-        // ¸â¹ö ÀÌ¹ÌÁö ¼³Á¤ (»óÅÂ¿¡ µû¶ó normal/zombie ÀÌ¹ÌÁö ¼±ÅÃ)
+        // ë©¤ë²„ ì´ë¯¸ì§€ ì„¤ì • (ìƒíƒœì— ë”°ë¼ normal/zombie ì´ë¯¸ì§€ ì„ íƒ)
         string imagePath = memberData.ZombieImagePath;
         
         if (!string.IsNullOrEmpty(imagePath))
@@ -141,8 +151,8 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
             }
         }
 
-        // È®ÀÎ ¹öÆ° ÅØ½ºÆ®
-        GetText((int)Texts.OkayButtonText).text = _selectionType == EMemberSelectionType.Education ? "@±³À°" : "@ÆÄ°ß";
+        // í™•ì¸ ë²„íŠ¼ í…ìŠ¤íŠ¸
+        GetText((int)Texts.OkayButtonText).text = _selectionType == EMemberSelectionType.Education ? "@êµìœ¡" : "@íŒŒê²¬";
     }
 
     private void OnOkayButtonClicked()
@@ -163,10 +173,10 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
 
     private void HandleEducation()
     {
-        // ±³À° °¡´É ¿©ºÎ Ã¼Å©
+        // êµìœ¡ ê°€ëŠ¥ ì—¬ë¶€ ì²´í¬
         if (!EducationManager.Instance.CanReceiveEducation())
         {
-            Debug.LogWarning($"ÇöÀç ±³À°À» ¹ŞÀ» ¼ö ¾ø´Â »óÅÂÀÔ´Ï´Ù.");
+            Debug.LogWarning($"í˜„ì¬ êµìœ¡ì„ ë°›ì„ ìˆ˜ ì—†ëŠ” ìƒíƒœì…ë‹ˆë‹¤.");
             return;
         }
 

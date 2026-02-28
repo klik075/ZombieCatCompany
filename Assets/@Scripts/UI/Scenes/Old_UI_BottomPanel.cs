@@ -109,7 +109,20 @@ public class Old_UI_BottomPanel : UI_UGUI
         EventManager.Instance.AddEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
         EventManager.Instance.AddEvent(EEventType.GameStateChanged, OnGameStateChanged);
     }
-
+    protected void OnDestroy()
+    {
+        // 이벤트 구독 해제
+        EventManager.Instance.RemoveEvent(EEventType.UI_LeftPanelStateChanged, UpdateUIStates);
+        EventManager.Instance.RemoveEvent(EEventType.UI_PopupClosed, UpdateUIStates);
+        EventManager.Instance.RemoveEvent(EEventType.UI_PopupOpened, UpdateUIStates);
+        
+        EventManager.Instance.RemoveEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
+        EventManager.Instance.RemoveEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
+        EventManager.Instance.RemoveEvent(EEventType.QualityChanged, OnQualityChanged);
+        EventManager.Instance.RemoveEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
+        EventManager.Instance.RemoveEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
+        EventManager.Instance.RemoveEvent(EEventType.GameStateChanged, OnGameStateChanged);
+    }
     // 부모(UI_NightGame)로부터 LeftPanel 참조 받기
     public void SetInfo(UI_LeftPanelBase leftPanel)
     {

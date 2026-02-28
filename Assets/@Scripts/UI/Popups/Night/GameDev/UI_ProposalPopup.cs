@@ -1,11 +1,11 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static Define;
 
 public class UI_ProposalPopup : UI_UGUI, IUI_Popup
 {
     enum GameObjects
     {
-        //BG - »óÈ£ÀÛ¿ë x
+        //BG - ìƒí˜¸ì‘ìš© x
         BG,
     }
     enum Buttons
@@ -47,38 +47,45 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.GenreButton).onClick.AddListener(() => OnClickSelectionButton(EProposalType.Genre));
         GetButton((int)Buttons.ContentButton).onClick.AddListener(() => OnClickSelectionButton(EProposalType.Content));
         GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnClickOkayButton());
-
-        EventManager.Instance.AddEvent(EEventType.ProposalChanged, UpdateContent);
     }
     protected override void OnEnable()
     {
         base.OnEnable();
+
+        EventManager.Instance.AddEvent(EEventType.ProposalChanged, UpdateContent);
+
         UpdateContent();
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+
+        EventManager.Instance.RemoveEvent(EEventType.ProposalChanged, UpdateContent);
     }
     public void UpdateContent()
     {
-        // GameDevManager¿¡¼­ ÇöÀç ¼±ÅÃµÈ Àå¸£¿Í ÄÜÅÙÃ÷ Á¤º¸ °¡Á®¿À±â
+        // GameDevManagerì—ì„œ í˜„ì¬ ì„ íƒëœ ì¥ë¥´ì™€ ì½˜í…ì¸  ì •ë³´ ê°€ì ¸ì˜¤ê¸°
         GenreData genreData = GameDevManager.Instance.CurrentGenreData;
         ContentData contentData = GameDevManager.Instance.CurrentContentData;
 
-        // ¸ŞÀÎ Å¸ÀÌÆ² ¼³Á¤
-        GetText((int)Texts.MainTitleText).text = "@°ÔÀÓ ±âÈ¹";
+        // ë©”ì¸ íƒ€ì´í‹€ ì„¤ì •
+        GetText((int)Texts.MainTitleText).text = "@ê²Œì„ ê¸°íš";
 
-        // Àå¸£ Á¤º¸ Ç¥½Ã
-        GetText((int)Texts.GenreNameText).text = "@Àå¸£";
+        // ì¥ë¥´ ì •ë³´ í‘œì‹œ
+        GetText((int)Texts.GenreNameText).text = "@ì¥ë¥´";
         GetText((int)Texts.GenreText).text = GenreData.GenreToString(genreData.GenreType);
 
-        // ÄÜÅÙÃ÷ Á¤º¸ Ç¥½Ã
-        GetText((int)Texts.ContentNameText).text = "@³»¿ë";
+        // ì½˜í…ì¸  ì •ë³´ í‘œì‹œ
+        GetText((int)Texts.ContentNameText).text = "@ë‚´ìš©";
         GetText((int)Texts.ContentText).text = ContentData.ContentToString(contentData.ContentType);
 
-        // ÃÑ °³¹ß ºñ¿ë °è»ê ¹× Ç¥½Ã
+        // ì´ ê°œë°œ ë¹„ìš© ê³„ì‚° ë° í‘œì‹œ
         int totalCost = GameDevManager.Instance.GetTotalDevelopmentCost();
-        GetText((int)Texts.SubMiddleCostNameText).text = "@°³¹ßºñ";
+        GetText((int)Texts.SubMiddleCostNameText).text = "@ê°œë°œë¹„";
         GetText((int)Texts.SubMiddleCostText).text = $"{totalCost:N0}G";
 
-        // È®ÀÎ ¹öÆ° ÅØ½ºÆ®
-        GetText((int)Texts.OkayButtonText).text = "@°áÁ¤";
+        // í™•ì¸ ë²„íŠ¼ í…ìŠ¤íŠ¸
+        GetText((int)Texts.OkayButtonText).text = "@ê²°ì •";
     }
 
     public void OnClickSelectionButton(EProposalType proposalType)
@@ -88,22 +95,22 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
     }
     public void OnClickOkayButton()
     {
-        // °³¹ß ºñ¿ëÀÌ ÃæºĞÇÑÁö È®ÀÎ
+        // ê°œë°œ ë¹„ìš©ì´ ì¶©ë¶„í•œì§€ í™•ì¸
         if (!GameDevManager.Instance.CanAffordDevelopment())
         {
-            // ÀÚ±İ ºÎÁ· ¸Ş½ÃÁö Ç¥½Ã
+            // ìê¸ˆ ë¶€ì¡± ë©”ì‹œì§€ í‘œì‹œ
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents);
             return;
         }
 
-        // °ÔÀÓ °³¹ß ½ÃÀÛ
+        // ê²Œì„ ê°œë°œ ì‹œì‘
         int totalCost = GameDevManager.Instance.GetTotalDevelopmentCost();
 
-        // °³¹ß ºñ¿ë Â÷°¨
+        // ê°œë°œ ë¹„ìš© ì°¨ê°
         //GameManager.Instance.Gold -= totalCost;
 
-        // ÆË¾÷ ´İ±â
+        // íŒì—… ë‹«ê¸°
         UIManager.Instance.ClosePopupUI();
         GameDevManager.Instance.StartNewProject();
     }

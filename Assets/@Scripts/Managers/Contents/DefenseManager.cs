@@ -191,8 +191,8 @@ public class DefenseManager : Singleton<DefenseManager>
                 SpawnCat(spawnInfo.SpawnPosition);
                 _spawnedCatsCount++;
                 
-                // UI 갱신 이벤트
-                EventManager.Instance.TriggerEvent(EEventType.DefenseProgressChanged);
+                //// UI 갱신 이벤트
+                //EventManager.Instance.TriggerEvent(EEventType.DefenseProgressChanged);
             }
             else
             {
@@ -237,7 +237,7 @@ public class DefenseManager : Singleton<DefenseManager>
 
     private void SpawnCat(Vector2Int spawnPosition)
     {
-        NormalCat cat = ObjectManager.Instance.SpawnNormalCat("CatBlack");
+        NormalCat cat = ObjectManager.Instance.SpawnNormalCat("CatBlack");//랜덤한 캣으로 변경할 것
 
         if (cat == null)
         {
@@ -268,14 +268,13 @@ public class DefenseManager : Singleton<DefenseManager>
         if (cat == null || !cat.IsAlive)
             return;
 
+        // 빈 타겟 위치 선택
         Vector2Int? targetPosition = SelectAvailableTargetPosition();
         
         if (targetPosition.HasValue)
         {
-            // 타겟 할당 및 이동
             _assignedTargets[cat] = targetPosition.Value;
             
-            // 대기 목록에서 제거
             _waitingCats.Remove(cat);
             
             var strategy = new FenceTargetMovementStrategy(cat, cat.GridManager, targetPosition.Value)
@@ -742,7 +741,7 @@ public class DefenseManager : Singleton<DefenseManager>
 
             // 디펜스 결과 데이터 생성
             var defenseData = new DefenseResultData(
-                defeatedCats: _totalCatsToSpawn, // 모든 물량 처치
+                defeatedCats: _totalCatsToSpawn,
                 defenseReward: defenseReward,
                 defeatedFoods: defeatedFoods
             );
@@ -755,89 +754,17 @@ public class DefenseManager : Singleton<DefenseManager>
                 StopDefense();
                 Debug.Log("[DefenseManager] Defense ended after result confirmation");
                 
-                // 보상 지급 (골드는 이미 UI_ResultsReportPopup에서 추가됨)
-                // 식량 추가 지급
+                // 식량 추가 지급 (골드는 UI_ResultsReportPopup에서 추가됨)
                 if (defeatedFoods > 0)
                 {
                     GameManager.Instance.Food += defeatedFoods;
                     Debug.Log($"[DefenseManager] Added {defeatedFoods} food");
                 }
                 
-                // 모든 데이터 저장 및 NightScene 로드
-                SaveAllDataAndLoadNightScene();
+                // SaveManager에게 저장 및 씬 전환 위임
+                SaveManager.Instance.SaveAndLoadNightScene();
             });
         }
-    }
-
-    /// <summary>
-    /// 모든 게임 데이터 저장 및 NightScene 로드
-    /// </summary>
-    private void SaveAllDataAndLoadNightScene()
-    {
-        Debug.Log("[DefenseManager] Saving all game data before loading NightScene...");
-
-        try
-        {
-            // NightScene용 멤버 위치 초기화 (자리로 복귀)
-            ResetMembersToSeatsForNightScene();
-            
-            // SaveManager를 통해 모든 게임 데이터 저장
-            SaveManager.Instance.SaveGameData();
-            
-            Debug.Log("[DefenseManager] All game data saved successfully");
-            
-            // 데이터 확인 로그
-            LogSavedData();
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"[DefenseManager] Failed to save game data: {e.Message}\n{e.StackTrace}");
-        }
-
-        // NightScene으로 전환
-        LoadNightScene();
-    }
-
-    /// <summary>
-    /// NightScene 진입 전 멤버들을 자리 위치로 초기화
-    /// </summary>
-    private void ResetMembersToSeatsForNightScene()
-    {
-        List<Member> members = MemberManager.Instance.GetAllMembers();
-        
-        Debug.Log("[DefenseManager] Resetting member positions for NightScene...");
-        
-        foreach (var member in members)
-        {
-            if (member == null)
-                continue;
-            
-            // 멤버의 인덱스 가져오기
-            int memberIndex = MemberManager.Instance.GetIndex(member);
-            
-            if (memberIndex == -1)
-            {
-                Debug.LogWarning($"[DefenseManager] Member {member.name} not found in MemberManager");
-                continue;
-            }
-            
-            // 멤버의 NightScene 자리 정보 가져오기 (기존 메서드 사용)
-            MemberSeatInfo seatInfo = MemberManager.Instance.GetMemberSeatInfo(memberIndex, isNight: true);
-            
-            // CellPosition을 자리로 설정
-            member.CellPosition = seatInfo.SeatPosition;
-            
-            // 이동 전략 초기화
-            member.ClearMovementStrategy();
-            
-            // 공격 중지
-            member.StopAttack();
-            
-            // 상태를 Idle로 변경
-            member.SetStateForced(Cat.ECatState.Idle);
-        }
-        
-        Debug.Log($"[DefenseManager] Reset {members.Count} members to their NightScene seats");
     }
 
     /// <summary>
@@ -865,17 +792,6 @@ public class DefenseManager : Singleton<DefenseManager>
             Debug.Log($"  - Fence Level: {gameData.MorningData.FenceSaveData.EnhanceLevel}");
             Debug.Log($"  - Fence Durability: {gameData.MorningData.FenceSaveData.CurrentDurability}");
         }
-    }
-
-    /// <summary>
-    /// NightScene으로 전환
-    /// </summary>
-    private void LoadNightScene()
-    {
-        Debug.Log("[DefenseManager] Loading NightScene...");
-        
-        // SceneManager를 통해 NightScene 로드
-        SceneManager.Instance.LoadScene(EScene.NightScene);
     }
 
     /// <summary>
@@ -907,16 +823,6 @@ public class DefenseManager : Singleton<DefenseManager>
         Debug.Log($"[DefenseManager] Foods calculated: {totalFoods}");
         
         return totalFoods;
-    }
-
-    public void SetSpawnPositions(DefenseSpawnInfo[] positions)
-    {
-        _spawnPositions = positions;
-    }
-
-    public void SetTargetPositions(DefenseTargetInfo[] positions)
-    {
-        _targetPositions = positions;
     }
 
     #endregion

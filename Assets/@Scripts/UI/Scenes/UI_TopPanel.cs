@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static Define;
 
 public class UI_TopPanel : UI_UGUI
@@ -25,10 +25,17 @@ public class UI_TopPanel : UI_UGUI
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        // °ÔÀÓ µ¥ÀÌÅÍ º¯°æ ÀÌº¥Æ® ±¸µ¶
+        // ê²Œì„ ë°ì´í„° ë³€ê²½ ì´ë²¤íŠ¸ êµ¬ë…
         EventManager.Instance.AddEvent(EEventType.YearChanged, OnYearChanged);
         EventManager.Instance.AddEvent(EEventType.GoldChanged, OnGoldChanged);
         EventManager.Instance.AddEvent(EEventType.FoodChanged, OnFoodChanged);
+    }
+    protected virtual void OnDestroy()
+    {
+        // ê²Œì„ ë°ì´í„° ë³€ê²½ ì´ë²¤íŠ¸ êµ¬ë… í•´ì œ
+        EventManager.Instance.RemoveEvent(EEventType.YearChanged, OnYearChanged);
+        EventManager.Instance.RemoveEvent(EEventType.GoldChanged, OnGoldChanged);
+        EventManager.Instance.RemoveEvent(EEventType.FoodChanged, OnFoodChanged);
     }
     private void OnYearChanged()
     {
@@ -47,24 +54,24 @@ public class UI_TopPanel : UI_UGUI
 
     private void UpdateSurvivalYearUI(int year)
     {
-        GetText((int)Texts.SurvivalYearText).text = $"@{year}³âÂ÷";
+        GetText((int)Texts.SurvivalYearText).text = $"@{year}ë…„ì°¨";
     }
 
     private void UpdateGoldUI(int gold)
     {
-        GetText((int)Texts.GoldText).text = $"@º¸À¯ ÀÚ±İ : {gold:N0}G";
+        GetText((int)Texts.GoldText).text = $"@ë³´ìœ  ìê¸ˆ : {gold:N0}G";
     }
 
     private void UpdateFoodUI(int food)
     {
-        GetText((int)Texts.FoodText).text = $"@º¸À¯ ÅëÁ¶¸² :{food}°³";
+        GetText((int)Texts.FoodText).text = $"@ë³´ìœ  í†µì¡°ë¦¼ :{food}ê°œ";
     }
 
     public override void RefreshUI()
     {
         base.RefreshUI();
         
-        // RefreshUI È£Ãâ ½Ã ¸ğµç µ¥ÀÌÅÍ ´Ù½Ã ¾÷µ¥ÀÌÆ®
+        // RefreshUI í˜¸ì¶œ ì‹œ ëª¨ë“  ë°ì´í„° ë‹¤ì‹œ ì—…ë°ì´íŠ¸
         OnYearChanged();
         OnGoldChanged();
         OnFoodChanged();
