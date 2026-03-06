@@ -42,6 +42,7 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
     {
         EventManager.Instance.AddEvent(EEventType.FenceStateChanged, UpdateFenceText);
         EventManager.Instance.AddEvent(EEventType.LoadCompleted, UpdateCompanyText);
+        EventManager.Instance.AddEvent(EEventType.LoadCompleted, UpdateFenceText);
         EventManager.Instance.AddEvent(EEventType.FenceDamaged, UpdateFenceText);
 
         EventManager.Instance.AddEvent(EEventType.DefenseStarted, OnDefenseStarted);
@@ -52,6 +53,7 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
 
         EventManager.Instance.RemoveEvent(EEventType.FenceStateChanged, UpdateFenceText);
         EventManager.Instance.RemoveEvent(EEventType.LoadCompleted, UpdateCompanyText);
+        EventManager.Instance.RemoveEvent(EEventType.LoadCompleted, UpdateFenceText);
         EventManager.Instance.RemoveEvent(EEventType.FenceDamaged, UpdateFenceText);
 
         EventManager.Instance.RemoveEvent(EEventType.DefenseStarted, OnDefenseStarted);

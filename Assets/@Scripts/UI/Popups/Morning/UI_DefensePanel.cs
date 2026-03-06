@@ -109,7 +109,11 @@ public class UI_DefensePanel : UI_UGUI
         // 텍스트 업데이트
         GetText((int)Texts.RemainingPercentageText).text = $"{remainingPercentage:F0}%";
         GetText((int)Texts.UserCatText).text = $"화가난 유저 고양이 무리 {remainingCats}/{totalCats}";
-        GetText((int)Texts.SpeedButtonText).text = $"배속 {Time.timeScale:F0}x";
+
+        if (Time.timeScale > 0f)
+        {
+            GetText((int)Texts.SpeedButtonText).text = $"배속 {Time.timeScale:F0}x";
+        }
     }
 
     private void OnWaveCompleted()
@@ -121,13 +125,6 @@ public class UI_DefensePanel : UI_UGUI
         
         // 잠시 후 패널 닫기
         //Invoke(nameof(ClosePanel), 1f);
-    }
-
-    private void ClosePanel()
-    {
-        gameObject.SetActive(false);
-        
-        // TODO: 승리/패배 팝업 표시
     }
 
     public void OnClickSpeedButton()

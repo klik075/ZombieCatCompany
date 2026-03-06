@@ -69,9 +69,6 @@ public class MeleeAttackStrategy : IAttackStrategy
 
         Debug.Log($"[MeleeAttack] {_owner.name} starts attacking fence!");
 
-        // 울타리 방향으로 캐릭터 회전
-        SetDirectionToFence(fence);
-
         while (_owner.IsAlive && fence != null && !fence.IsDestroyed())
         {
             if (CanAttack())
@@ -135,25 +132,5 @@ public class MeleeAttackStrategy : IAttackStrategy
         // 짧은 Idle 상태 (다음 공격 전 대기)
         _owner.SetStateIdle();
         yield return new WaitForSeconds(0.1f);
-    }
-
-    /// <summary>
-    /// 울타리 방향으로 캐릭터 회전
-    /// </summary>
-    private void SetDirectionToFence(Fence fence)
-    {
-        Vector3 ownerPos = _owner.transform.position;
-        Vector3 fencePos = fence.transform.position;
-        
-        // 방향 벡터 계산
-        Vector3 direction = fencePos - ownerPos;
-        
-        // Y축 기준으로 앞/뒤 결정
-        _owner.IsFacingForward = direction.y <= 0;
-        
-        // X축 기준으로 좌우 반전 결정
-        _owner.IsFlipped = direction.x < 0;
-        
-        Debug.Log($"[MeleeAttack] Direction to fence - IsFacingForward: {_owner.IsFacingForward}, IsFlipped: {_owner.IsFlipped}");
     }
 }

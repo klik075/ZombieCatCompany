@@ -97,13 +97,31 @@ public class SaveManager : Singleton<SaveManager>
         gameData.NightData.HireResult = GameManager.Instance.IsRecruiting ? MemberManager.Instance.GetHireResult() : null;
         gameData.NightData.GameDevProjectData = GameDevManager.Instance.GetGameDevProjectData();
 
-        gameData.MorningData.FenceSaveData = FenceManager.Instance.GetSaveData();
+        if (SceneManager.Instance.CurrentSceneType == EScene.MorningScene)
+        {
+            if (FenceManager.Instance != null && FenceManager.Instance.CurrentFence != null)
+            {
+                gameData.MorningData.FenceSaveData = FenceManager.Instance.GetSaveData();
+                Debug.Log($"[SaveManager] Fence data saved: Level {gameData.MorningData.FenceSaveData.EnhanceLevel}");
+            }
+            else
+            {
+                Debug.LogWarning("[SaveManager] In MorningScene but FenceManager or CurrentFence is null!");
+            }
+        }
+        else
+        {
+            //  NightScene 등 다른 씬에서는 기존 Fence 데이터 유지
+            Debug.Log($"[SaveManager] Not in MorningScene (current: {SceneManager.Instance.CurrentSceneType}), keeping existing Fence data");
+        }
 
 
         string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         File.WriteAllText(GameDataPath, json);
 
         Debug.Log($"SaveManager: Game saved to {GameDataPath}");
+
+        LogSavedData();
     }
 
     private void LoadGameData()
@@ -459,9 +477,6 @@ public class SaveManager : Singleton<SaveManager>
             SaveGameData();
             
             Debug.Log("[SaveManager] All data saved successfully");
-            
-            // 데이터 확인 로그
-            LogSavedData();
         }
         catch (System.Exception e)
         {
@@ -486,24 +501,32 @@ public class SaveManager : Singleton<SaveManager>
             return;
         }
 
-        Debug.Log($"[SaveManager] Saved Data Summary:");
-        Debug.Log($"  - GameState: {gameData.GameState}"); // ✅ GameState 로그 추가
-        Debug.Log($"  - Company: {gameData.CompanyData.CompanyName}");
-        Debug.Log($"  - Year: {gameData.CompanyData.Year}");
-        Debug.Log($"  - Gold: {gameData.CompanyData.Gold}");
-        Debug.Log($"  - Food: {gameData.CompanyData.Food}");
-        Debug.Log($"  - Members: {gameData.CompanyData.MemberSaveDatas?.Count ?? 0}");
+        // StringBuilder 사용하여 하나의 로그로 출력
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        
+        sb.AppendLine("[SaveManager] Saved Data Summary:");
+        sb.AppendLine($"GameState: {gameData.GameState}");
+        sb.AppendLine($"GameMode: {gameData.GameMode}");
+        sb.AppendLine($"Company: {gameData.CompanyData.CompanyName}");
+        sb.AppendLine($"Year: {gameData.CompanyData.Year}");
+        sb.AppendLine($"Gold: {gameData.CompanyData.Gold}");
+        sb.AppendLine($"Food: {gameData.CompanyData.Food}");
+        sb.AppendLine($"Members: {gameData.CompanyData.MemberSaveDatas?.Count ?? 0}");
         
         if (gameData.NightData.GameDevProjectData != null)
         {
-            Debug.Log($"  - GameDevType: {gameData.NightData.GameDevProjectData.gameDevType}");
+            sb.AppendLine($"GameDevType: {gameData.NightData.GameDevProjectData.gameDevType}");
         }
         
         if (gameData.MorningData.FenceSaveData != null)
         {
-            Debug.Log($"  - Fence HP: {gameData.MorningData.FenceSaveData.CurrentHp}");
-            Debug.Log($"  - Fence Level: {gameData.MorningData.FenceSaveData.EnhanceLevel}");
+            sb.AppendLine($"Fence Level: {gameData.MorningData.FenceSaveData.EnhanceLevel}");
+            sb.AppendLine($"Fence HP: {gameData.MorningData.FenceSaveData.CurrentHp}");
+            sb.AppendLine($"Fence Durability: {gameData.MorningData.FenceSaveData.CurrentDurability}");
         }
+        
+        // 하나의 Debug.Log로 출력
+        Debug.Log(sb.ToString());
     }
 
     #endregion

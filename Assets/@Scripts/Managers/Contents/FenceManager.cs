@@ -210,11 +210,14 @@ public class FenceManager : Singleton<FenceManager>
         if (saveData == null)
         {
             Debug.LogWarning("FenceSaveData is null! Initializing with default values.");
-            _currentFence.Initialize();
+            _currentFence.Initialize(1);
+            EventManager.Instance.TriggerEvent(EEventType.FenceStateChanged);
             return;
         }
 
         _currentFence.LoadFromSaveData(saveData);
+
+        EventManager.Instance.TriggerEvent(EEventType.FenceStateChanged);
     }
 
     #endregion

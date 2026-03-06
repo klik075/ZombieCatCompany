@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using static Define;
 
@@ -21,10 +22,14 @@ public struct DefenseSpawnInfo
 public struct DefenseTargetInfo
 {
     public Vector2Int TargetPosition;
+    public bool IsFacingForward;  
+    public bool IsFlipped;        
 
-    public DefenseTargetInfo(Vector2Int position)
+    public DefenseTargetInfo(Vector2Int position, bool isFacingForward = true, bool isFlipped = false)
     {
         TargetPosition = position;
+        IsFacingForward = isFacingForward;
+        IsFlipped = isFlipped;
     }
 }
 
@@ -40,12 +45,13 @@ public class DefenseManager : Singleton<DefenseManager>
 
     private DefenseTargetInfo[] _targetPositions = new DefenseTargetInfo[]
     {
-        new DefenseTargetInfo(new Vector2Int(0, -4)),
-        new DefenseTargetInfo(new Vector2Int(-1, -4)),
-        new DefenseTargetInfo(new Vector2Int(-2, -4)),
-        new DefenseTargetInfo(new Vector2Int(-3, -4)),
-        new DefenseTargetInfo(new Vector2Int(-4, -4)),
-        new DefenseTargetInfo(new Vector2Int(-5, -4)),
+        //각 타겟 위치마다 정확한 방향 설정
+        new DefenseTargetInfo(new Vector2Int(0, -4),   isFacingForward: false, isFlipped: true),
+        new DefenseTargetInfo(new Vector2Int(-1, -4),  isFacingForward: false, isFlipped: true),
+        new DefenseTargetInfo(new Vector2Int(-2, -4),  isFacingForward: false, isFlipped: true),
+        new DefenseTargetInfo(new Vector2Int(-3, -4),  isFacingForward: false, isFlipped: true),
+        new DefenseTargetInfo(new Vector2Int(-4, -4),  isFacingForward: false, isFlipped: true),
+        new DefenseTargetInfo(new Vector2Int(-5, -4),  isFacingForward: false, isFlipped: true),
     };
 
     [Header("Randomization Settings")]
@@ -269,20 +275,19 @@ public class DefenseManager : Singleton<DefenseManager>
             return;
 
         // 빈 타겟 위치 선택
-        Vector2Int? targetPosition = SelectAvailableTargetPosition();
+        DefenseTargetInfo? targetInfo = SelectAvailableTargetInfo();
         
-        if (targetPosition.HasValue)
+        if (targetInfo.HasValue)
         {
-            _assignedTargets[cat] = targetPosition.Value;
+            _assignedTargets[cat] = targetInfo.Value.TargetPosition;
             
             _waitingCats.Remove(cat);
             
-            var strategy = new FenceTargetMovementStrategy(cat, cat.GridManager, targetPosition.Value)
-                .SetOnArrived(() => OnCatReachedTarget(cat));
-            
+            var strategy = new FenceTargetMovementStrategy(cat, cat.GridManager, targetInfo.Value.TargetPosition)
+                .SetOnArrived(() => OnCatReachedTarget(cat, targetInfo.Value));
             cat.SetMovementStrategy(strategy);
             
-            Debug.Log($"[DefenseManager] Cat at {cat.CellPosition} assigned to fence target {targetPosition.Value}");
+            Debug.Log($"[DefenseManager] Cat at {cat.CellPosition} assigned to fence target {targetInfo.Value}");
         }
         else
         {
@@ -334,23 +339,23 @@ public class DefenseManager : Singleton<DefenseManager>
                     continue;
 
                 // 빈 타겟 찾기
-                Vector2Int? newTarget = SelectAvailableTargetPosition();
+                DefenseTargetInfo? newTargetInfo = SelectAvailableTargetInfo();
 
-                if (newTarget.HasValue)
+                if (newTargetInfo.HasValue)
                 {
                     // 타겟 발견! 재할당
                     _waitingCats.Remove(cat);
-                    _assignedTargets[cat] = newTarget.Value;
+                    _assignedTargets[cat] = newTargetInfo.Value.TargetPosition;
 
                     // 기존 전략 제거 후 새 전략 설정
                     cat.ClearMovementStrategy();
 
-                    var strategy = new FenceTargetMovementStrategy(cat, cat.GridManager, newTarget.Value)
-                        .SetOnArrived(() => OnCatReachedTarget(cat));
+                    var strategy = new FenceTargetMovementStrategy(cat, cat.GridManager, newTargetInfo.Value.TargetPosition)
+                        .SetOnArrived(() => OnCatReachedTarget(cat, newTargetInfo.Value));
 
                     cat.SetMovementStrategy(strategy);
 
-                    Debug.Log($"[DefenseManager] Waiting cat at {cat.CellPosition} reassigned to fence target {newTarget.Value}");
+                    Debug.Log($"[DefenseManager] Waiting cat at {cat.CellPosition} reassigned to fence target {newTargetInfo.Value}");
                 }
             }
         }
@@ -359,13 +364,16 @@ public class DefenseManager : Singleton<DefenseManager>
     /// <summary>
     /// 고양이가 타겟(울타리 앞)에 도착했을 때
     /// </summary>
-    private void OnCatReachedTarget(NormalCat cat)
+    private void OnCatReachedTarget(NormalCat cat, DefenseTargetInfo targetInfo)
     {
         if (cat == null || !cat.IsAlive)
             return;
 
         Debug.Log($"[DefenseManager] Cat reached fence target at {cat.CellPosition}! Starting attack.");
-        
+
+        cat.IsFacingForward = targetInfo.IsFacingForward;
+        cat.IsFlipped = targetInfo.IsFlipped;
+
         // 전략 제거 (더 이상 이동하지 않도록)
         cat.ClearMovementStrategy();
         
@@ -407,11 +415,11 @@ public class DefenseManager : Singleton<DefenseManager>
 
     #region 이동 제어
 
-    private Vector2Int? SelectAvailableTargetPosition()
+    private DefenseTargetInfo? SelectAvailableTargetInfo()
     {
         HashSet<Vector2Int> assignedTargets = new HashSet<Vector2Int>(_assignedTargets.Values);
 
-        List<Vector2Int> availableTargets = new List<Vector2Int>();
+        List<DefenseTargetInfo> availableTargets = new List<DefenseTargetInfo>();
 
         foreach (var target in _targetPositions)
         {
@@ -420,7 +428,7 @@ public class DefenseManager : Singleton<DefenseManager>
             // 이미 할당되지 않았고, 이동 가능한 위치인지 확인
             if (!assignedTargets.Contains(targetPos) && MapManager.Instance.CanMove(targetPos))
             {
-                availableTargets.Add(targetPos);
+                availableTargets.Add(target);
             }
         }
 
@@ -760,40 +768,13 @@ public class DefenseManager : Singleton<DefenseManager>
                     GameManager.Instance.Food += defeatedFoods;
                     Debug.Log($"[DefenseManager] Added {defeatedFoods} food");
                 }
-                
+
+                GameManager.Instance.Year += 1;
                 // SaveManager에게 저장 및 씬 전환 위임
                 SaveManager.Instance.SaveAndLoadNightScene();
             });
         }
     }
-
-    /// <summary>
-    /// 저장된 데이터 확인 로그
-    /// </summary>
-    private void LogSavedData()
-    {
-        var gameData = GameManager.Instance.MyGameData;
-        if (gameData == null)
-        {
-            Debug.LogWarning("[DefenseManager] GameData is null!");
-            return;
-        }
-
-        Debug.Log($"[DefenseManager] Saved Data Summary:");
-        Debug.Log($"  - Company: {gameData.CompanyData.CompanyName}");
-        Debug.Log($"  - Year: {gameData.CompanyData.Year}");
-        Debug.Log($"  - Gold: {gameData.CompanyData.Gold}");
-        Debug.Log($"  - Food: {gameData.CompanyData.Food}");
-        Debug.Log($"  - Members: {gameData.CompanyData.MemberSaveDatas?.Count ?? 0}");
-        
-        if (gameData.MorningData.FenceSaveData != null)
-        {
-            Debug.Log($"  - Fence HP: {gameData.MorningData.FenceSaveData.CurrentHp}");
-            Debug.Log($"  - Fence Level: {gameData.MorningData.FenceSaveData.EnhanceLevel}");
-            Debug.Log($"  - Fence Durability: {gameData.MorningData.FenceSaveData.CurrentDurability}");
-        }
-    }
-
     /// <summary>
     /// 방어 보상 계산 (웨이브 물량 * 고양이당 보상)
     /// </summary>

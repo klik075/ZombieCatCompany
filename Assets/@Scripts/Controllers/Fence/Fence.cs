@@ -308,6 +308,7 @@ public class Fence : ObjectBase
     /// </summary>
     public FenceSaveData GetSaveData()
     {
+        Debug.Log($"저장 펜스 상태 : 레벨 - {_enhanceLevel}, HP - {_currentHp}, 내구도 - {_currentDurability}");
         return new FenceSaveData
         {
             EnhanceLevel = _enhanceLevel,
@@ -324,10 +325,12 @@ public class Fence : ObjectBase
         if (saveData == null)
         {
             Debug.LogWarning("FenceSaveData is null!");
+            Initialize();
             return;
         }
 
         _enhanceLevel = saveData.EnhanceLevel;
+
         LoadFenceData(_enhanceLevel);
 
         _currentHp = saveData.CurrentHp;
@@ -335,7 +338,7 @@ public class Fence : ObjectBase
 
         UpdateVisuals();
 
-        Debug.Log($"Fence loaded: Level {_enhanceLevel}, HP {_currentHp}/{MaxHp}");
+        Debug.Log($"로드 펜스 상태 : 레벨 - {_enhanceLevel}, HP - {_currentHp}, 내구도 - {_currentDurability}");
     }
 
     #endregion
