@@ -1,83 +1,167 @@
-﻿using System.Collections.Generic;
+﻿using Spine;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static Define;
 
-/// <summary>
-/// 연차 이벤트 시스템 (DialogueManager 패턴 사용)
-/// </summary>
 public class YearEventManager : Singleton<YearEventManager>
 {
-    [SerializeField] private List<DialogueEventData> yearEventDatas;  // ScriptableObject로 관리
-    
-    private List<DialogueEvent> yearEventInstances;
-    private DialogueEvent currentYearEvent;
+    private const string YEAR_EVENT_FOLDER_PATH = "YearEvents";
+
+    private Dictionary<YearEventData, YearEvent> _yearEventInstancesDict;
+    private YearEvent _currentYearEvent;
     private bool _isSequenceRunning = false;
 
     #region 초기화
 
-    private void Awake()
+    protected void Awake()
     {
-        // DialogueEvent 인스턴스 생성
-        yearEventInstances = new List<DialogueEvent>();
-        
-        if (yearEventDatas != null)
+        InitializeYearEvents();
+    }
+
+    private void InitializeYearEvents()
+    {
+        _yearEventInstancesDict = new Dictionary<YearEventData, YearEvent>();
+
+        YearEventData[] yearEventDatas = ResourceManager.Instance.GetAllFromPath<YearEventData>(YEAR_EVENT_FOLDER_PATH);
+
+        if (yearEventDatas == null || yearEventDatas.Length == 0)
         {
-            foreach (var eventData in yearEventDatas)
+            Debug.LogWarning($"[YearEventManager] No year events found in path: {YEAR_EVENT_FOLDER_PATH}");
+            return;
+        }
+
+        foreach (var eventData in yearEventDatas)
+        {
+            YearEvent yearEvent = new YearEvent(eventData);
+            _yearEventInstancesDict[eventData] = yearEvent;
+        }
+
+        Debug.Log($"[YearEventManager] Initialized {_yearEventInstancesDict.Count} year events");
+    }
+
+    #endregion
+
+    #region 저장/로드
+    public void SaveEventStates(GameData gameData)
+    {
+        if (gameData.YearEventData == null)
+        {
+            gameData.YearEventData = new YearEventSaveData();
+        }
+
+        var saveData = gameData.YearEventData;
+        saveData.executedOnceEvents.Clear();
+        saveData.unlockedEvents.Clear();
+
+        foreach (var kvp in _yearEventInstancesDict)
+        {
+            var eventData = kvp.Key;
+            var yearEvent = kvp.Value;
+
+            // Once 타입 이벤트 중 실행된 것 저장
+            if (yearEvent.Data.executionType == ExecutionType.Once && yearEvent.IsFinished())
             {
-                GameObject eventGO = new GameObject($"YearEvent_{eventData.EventName}");
-                eventGO.transform.SetParent(transform);
-                DialogueEvent dialogueEvent = eventGO.AddComponent<DialogueEvent>();
-                dialogueEvent.Initialize(eventData);
-                yearEventInstances.Add(dialogueEvent);
+                saveData.executedOnceEvents.Add(eventData.name);
+            }
+
+            // 언락된 이벤트 저장 (initiallyUnlocked가 아닌데 언락된 경우)
+            if (yearEvent.IsUnlocked && !yearEvent.Data.initiallyUnlocked)
+            {
+                saveData.unlockedEvents.Add(eventData.name);
             }
         }
-        
-        Debug.Log($"[YearEventManager] Initialized {yearEventInstances.Count} year events");
+
+        Debug.Log($"[YearEventManager] Saved {saveData.executedOnceEvents.Count} executed events, " +
+                  $"{saveData.unlockedEvents.Count} unlocked events");
+    }
+
+    public void LoadEventStates(GameData gameData)
+    {
+        if (gameData.YearEventData == null)
+        {
+            Debug.Log("[YearEventManager] No saved event data found.");
+            return;
+        }
+
+        var saveData = gameData.YearEventData;
+
+        // 실행된 Once 이벤트 복원
+        foreach (var eventName in saveData.executedOnceEvents)
+        {
+            var eventData = _yearEventInstancesDict.Keys.FirstOrDefault(e => e.name == eventName);
+            if (eventData != null && _yearEventInstancesDict.TryGetValue(eventData, out var yearEvent))
+            {
+                yearEvent.MarkAsExecuted();
+                Debug.Log($"[YearEventManager] Restored executed event: {eventData.name}");
+            }
+        }
+
+        // 언락된 이벤트 복원
+        foreach (var eventName in saveData.unlockedEvents)
+        {
+            var eventData = _yearEventInstancesDict.Keys.FirstOrDefault(e => e.name == eventName);
+            if (eventData != null && _yearEventInstancesDict.TryGetValue(eventData, out var yearEvent))
+            {
+                yearEvent.Unlock();
+                Debug.Log($"[YearEventManager] Restored unlocked event: {eventData.name}");
+            }
+        }
+
+        Debug.Log($"[YearEventManager] Loaded {saveData.executedOnceEvents.Count} executed events, " +
+                  $"{saveData.unlockedEvents.Count} unlocked events");
     }
 
     #endregion
 
     #region 이벤트 선택 로직
 
-    /// <summary>
-    /// 현재 연차에 발생 가능한 이벤트 가져오기
-    /// </summary>
-    private List<DialogueEvent> GetAvailableYearEvents()
+    private List<YearEvent> GetAvailableYearEvents()
     {
-        return yearEventInstances.Where(e => e.CanExecute()).ToList();
+        return _yearEventInstancesDict.Values.Where(e => e.CanExecute()).ToList();
     }
 
-    /// <summary>
-    /// 가중치 기반 랜덤 이벤트 선택 (DialogueEventData에 Weight 추가 필요)
-    /// </summary>
-    private DialogueEvent SelectRandomYearEvent()
+    private YearEvent SelectRandomYearEvent()
     {
-        List<DialogueEvent> availableEvents = GetAvailableYearEvents();
+        List<YearEvent> availableEvents = GetAvailableYearEvents();
 
         if (availableEvents.Count == 0)
         {
-            Debug.LogWarning("[YearEventManager] No available year events! Using default.");
-            return GetDefaultYearEvent();
+            Debug.LogWarning("[YearEventManager] No available events");
+            return null;
         }
 
-        // 1개면 바로 반환
         if (availableEvents.Count == 1)
             return availableEvents[0];
 
-        // 가중치가 있다면 가중치 기반 선택 (추후 확장)
-        // 현재는 랜덤 선택
-        int randomIndex = Random.Range(0, availableEvents.Count);
-        return availableEvents[randomIndex];
+        return SelectByWeight(availableEvents);
     }
 
-    /// <summary>
-    /// 기본 연차 이벤트 (발생 가능한 이벤트가 없을 때)
-    /// </summary>
-    private DialogueEvent GetDefaultYearEvent()
+    private YearEvent SelectByWeight(List<YearEvent> events)
     {
-        // 기본 이벤트 반환 (1년차 이벤트 등)
-        return yearEventInstances.FirstOrDefault(e => e.Data.EventName == "Year1_Start");
+        int totalWeight = 0;
+        foreach (var evt in events)
+        {
+            totalWeight += Mathf.Max(1, evt.Data.weight);
+        }
+
+        int randomValue = Random.Range(0, totalWeight);
+        int cumulativeWeight = 0;
+
+        for (int i = 0; i < events.Count; i++)
+        {
+            int weight = Mathf.Max(1, events[i].Data.weight);
+            cumulativeWeight += weight;
+
+            if (randomValue < cumulativeWeight)
+            {
+                Debug.Log($"[YearEventManager] Selected '{events[i].Data.name}' " +
+                         $"(weight: {weight}/{totalWeight}, roll: {randomValue})");
+                return events[i];
+            }
+        }
+
+        return events[events.Count - 1];
     }
 
     #endregion
@@ -102,41 +186,26 @@ public class YearEventManager : Singleton<YearEventManager>
 
         Debug.Log($"[YearEventManager] Starting night sequence for Year {currentYear}");
 
-        // 연차 이벤트 실행 (Dialogue 시스템 활용)
-        yield return CoroutineManager.Instance.Run(CoExecuteYearEvent());
+        yield return CoroutineManager.Instance.Run(CoShowYearEvent());
 
-        // 1년차면 식량 배급만
-        if (currentYear == 1)
+        if (currentYear > 1)
         {
-            Debug.Log("[YearEventManager] Year 1 - Skipping dispatch");
+            if (HasDispatchResult())
+            {
+                yield return CoroutineManager.Instance.Run(CoShowDispatchResult());
+            }
+
+            yield return CoroutineManager.Instance.Run(CoShowDispatchSelection());
             yield return CoroutineManager.Instance.Run(CoShowFoodDistribution());
-            _isSequenceRunning = false;
-            yield break;
         }
-
-        // 파견 결과 (2년차 이상)
-        if (HasDispatchResult())
-        {
-            yield return CoroutineManager.Instance.Run(CoShowDispatchResult());
-        }
-
-        // 파견 보내기
-        yield return CoroutineManager.Instance.Run(CoShowDispatchSelection());
-
-        // 식량 배급
-        yield return CoroutineManager.Instance.Run(CoShowFoodDistribution());
 
         _isSequenceRunning = false;
         Debug.Log("[YearEventManager] Night sequence completed");
     }
 
-    /// <summary>
-    /// 연차 이벤트 실행 (Dialogue 시스템 활용)
-    /// </summary>
-    private System.Collections.IEnumerator CoExecuteYearEvent()
+    private System.Collections.IEnumerator CoShowYearEvent()
     {
-        // 조건 만족하는 이벤트 중 랜덤 선택
-        DialogueEvent selectedEvent = SelectRandomYearEvent();
+        YearEvent selectedEvent = SelectRandomYearEvent();
 
         if (selectedEvent == null)
         {
@@ -144,53 +213,40 @@ public class YearEventManager : Singleton<YearEventManager>
             yield break;
         }
 
-        Debug.Log($"[YearEventManager] Executing year event: {selectedEvent.Data.EventName}");
+        Debug.Log($"[YearEventManager] Executing year event: {selectedEvent.Data.name}");
 
-        // DialogueEvent 실행 (자동으로 조건 체크 → 액션 실행 → 다음 이벤트 언락)
-        currentYearEvent = selectedEvent;
-        selectedEvent.Execute();
+        _currentYearEvent = selectedEvent;
+        
+        // YearEvent.Execute()는 코루틴이므로 직접 실행
+        yield return CoroutineManager.Instance.Run(selectedEvent.Execute());
 
-        // 이벤트 완료 대기
-        while (!selectedEvent.IsFinished())
-        {
-            yield return null;
-        }
-
-        Debug.Log($"[YearEventManager] Year event '{selectedEvent.Data.EventName}' completed");
+        Debug.Log($"[YearEventManager] Year event completed: {selectedEvent.Data.name}");
     }
 
     #endregion
 
-    #region 파견 시스템 (TODO)
+    #region 파견 시스템
 
     private bool HasDispatchResult()
     {
-        //var dispatchData = GameManager.Instance.MyNightData.DispatchData;
-        //return dispatchData.DispatchedMemberIndex >= 0 && 
-        //       !dispatchData.IsReturned && 
-        //       GameManager.Instance.Year > dispatchData.DispatchYear;
-
-        return true;//Placeholder
+        return false;
     }
 
     private System.Collections.IEnumerator CoShowDispatchResult()
     {
         Debug.Log("[YearEventManager] Showing dispatch result");
-        // TODO: Dialogue 이벤트로 구현
         yield return null;
     }
 
     private System.Collections.IEnumerator CoShowDispatchSelection()
     {
         Debug.Log("[YearEventManager] Showing dispatch selection");
-        // TODO: Dialogue 이벤트로 구현
         yield return null;
     }
 
     private System.Collections.IEnumerator CoShowFoodDistribution()
     {
         Debug.Log("[YearEventManager] Showing food distribution");
-        // TODO: Dialogue 이벤트로 구현
         yield return null;
     }
 
@@ -204,13 +260,43 @@ public class YearEventManager : Singleton<YearEventManager>
     }
 
     /// <summary>
-    /// 특정 이벤트를 본 적이 있는지 확인
+    /// 특정 YearEventData를 언락
     /// </summary>
-    public bool HasViewedEvent(int eventID)
+    public void UnlockEvent(YearEventData eventData)
     {
-        // DialogueEvent의 hasBeenExecuted를 활용하거나
-        // UserData에 별도 저장
-        return false; // TODO: 구현
+        if (_yearEventInstancesDict.TryGetValue(eventData, out var yearEvent))
+        {
+            yearEvent.Unlock();
+            Debug.Log($"[YearEventManager] Unlocked event: {eventData.name}");
+        }
+        else
+        {
+            Debug.LogWarning($"[YearEventManager] Event not found: {eventData.name}");
+        }
+    }
+
+    /// <summary>
+    /// 모든 Repeatable 이벤트 초기화
+    /// </summary>
+    public void ResetRepeatableEvents()
+    {
+        foreach (var yearEvent in _yearEventInstancesDict.Values)
+        {
+            yearEvent.Reset();
+        }
+        Debug.Log("[YearEventManager] Reset all repeatable events");
+    }
+
+    /// <summary>
+    /// 특정 이벤트를 실행했는지 확인
+    /// </summary>
+    public bool HasExecutedEvent(YearEventData eventData)
+    {
+        if (_yearEventInstancesDict.TryGetValue(eventData, out var yearEvent))
+        {
+            return yearEvent.IsFinished();
+        }
+        return false;
     }
 
     #endregion

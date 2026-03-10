@@ -68,7 +68,7 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
     private void OnClickDiaryButton()
     {
         UI_EventPopup diaryPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
-        diaryPopup.SetInfo();
+        //diaryPopup.SetInfo(EEventPopupType.YearEvent);
         
         IsActive = false;
     }
@@ -77,7 +77,7 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
     {
         //TODO: 파견 결과 팝업 열기, 파견을 보내지 않았으면 UI_ChatPopup을 열고 "파견을 보내지 않았다냥." text 설정
         UI_EventPopup dispatchResultPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
-        dispatchResultPopup.SetInfo();
+        //dispatchResultPopup.SetInfo(EEventPopupType.DispatchResult);
         
         IsActive = false;
     }

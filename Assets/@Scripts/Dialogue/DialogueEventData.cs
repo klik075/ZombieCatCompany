@@ -10,6 +10,11 @@ public class DialogueEventData : ScriptableObject
     public string EventName;
     public ExecutionType executionType = ExecutionType.Repeated;
     public bool initiallyUnlocked = false;
+
+    [Range(0, 100)]
+    [Tooltip("이벤트 선택 가중치. 높을수록 선택될 확률이 높음")]
+    public int weight = 10;
+
     public List<DialogueEventData> nextEventDatas = new List<DialogueEventData>();
     public List<DialogueConditionData> conditionDatas;
     public List<DialogueActionData> actionDatas;
@@ -75,7 +80,7 @@ public class DialogueEvent : MonoBehaviour
         }
         
         // Open UI_Dialogue when event starts
-        DialogueManager.Instance.dialogueUI.gameObject.SetActive(true);
+        //DialogueManager.Instance.dialogueUI.gameObject.SetActive(true);
 
         currentActionIndex = 0;
         currentCoroutine = StartCoroutine(CoExecuteAllActions());
@@ -115,7 +120,7 @@ public class DialogueEvent : MonoBehaviour
         }
 
         // Close UI_Dialogue when all actions are finished
-        DialogueManager.Instance.dialogueUI.gameObject.SetActive(false);
+        //DialogueManager.Instance.dialogueUI.gameObject.SetActive(false);
     }
 
     public void Reset()
@@ -170,10 +175,4 @@ public class DialogueEvent : MonoBehaviour
             }
         }
     }
-}
-
-public enum ExecutionType
-{
-    Once,
-    Repeated
 }

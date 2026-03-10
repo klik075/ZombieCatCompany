@@ -4,10 +4,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.Collections;
 
-public class DialogueManager : MonoBehaviour
+public class DialogueManager : Singleton<DialogueManager>
 {
-    public static DialogueManager Instance { get; private set; }
-
     public UI_Dialogue dialogueUI;
     [SerializeField]
     private List<DialogueEventData> eventDatas;
@@ -20,14 +18,6 @@ public class DialogueManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-
         // Pre-create DialogueEvent instances
         eventInstances = new List<DialogueEvent>();
         foreach (var eventData in eventDatas)

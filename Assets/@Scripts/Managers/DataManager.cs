@@ -15,7 +15,7 @@ public interface IDataLoader<Key, Value> : IValidate
 public class DataManager : Singleton<DataManager>
 {
     private HashSet<IValidate> _loaders = new HashSet<IValidate>();
-
+    private bool _isDataLoaded = false;
     public GameConfig GameConfig { get; private set; }
     public LocalizationConfig LocalizationConfig { get; private set; }
     public AdsConfig AdsConfig { get; private set; }
@@ -32,6 +32,12 @@ public class DataManager : Singleton<DataManager>
 
     public void LoadData()
     {
+        if (_isDataLoaded)
+        {
+            Debug.Log("[DataManager] Data already loaded.");
+            return;
+        }
+
         GameConfig = LoadScriptableObject<GameConfig>("GameConfig");
         LocalizationConfig = LoadScriptableObject<LocalizationConfig>("LocalizationConfig");
         AdsConfig = LoadScriptableObject<AdsConfig>("AdsConfig");
@@ -47,6 +53,8 @@ public class DataManager : Singleton<DataManager>
         FenceDict = LoadJson<FenceDataLoader, int, FenceData>("FenceData").MakeDict();
 
         Validate();
+
+        _isDataLoaded = true;
     }
 
     private T LoadScriptableObject<T>(string path) where T : ScriptableObject

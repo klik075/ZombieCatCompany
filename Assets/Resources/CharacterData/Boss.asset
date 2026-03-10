@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 43ee23f2d3633564e970661fa2780040, type: 3}
-  m_Name: CD_Boss
+  m_Name: Boss
   m_EditorClassIdentifier: Assembly-CSharp::CharacterData
   characterId: 0
   characterName: Boss

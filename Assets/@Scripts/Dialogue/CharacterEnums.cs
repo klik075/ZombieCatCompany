@@ -1,8 +1,8 @@
-public enum CharacterId
+﻿public enum CharacterId
 {
     None,
-    Hero,
-    Villain,
+    Boss,
+    Merchant,
     // 필요에 따라 추가
 }
 

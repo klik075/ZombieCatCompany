@@ -20,6 +20,7 @@ public class NightScene : BaseScene
 
         SaveManager.Instance.LoadNightSceneData();
 
+        YearEventManager.Instance.StartNightSequence();
     }
     void OnApplicationQuit()
     {

@@ -63,7 +63,7 @@ public class DialogueCondition
 
             case ConditionType.EventViewed:
                 //return YearEventManager.Instance.HasViewedEvent(Data.eventIDValue);
-
+                return false;//placeholder
             case ConditionType.MemberCountGreaterThan:
                 return MemberManager.Instance.MemberCount >= Data.memberCountValue;
 

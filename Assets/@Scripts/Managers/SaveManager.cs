@@ -115,6 +115,7 @@ public class SaveManager : Singleton<SaveManager>
             Debug.Log($"[SaveManager] Not in MorningScene (current: {SceneManager.Instance.CurrentSceneType}), keeping existing Fence data");
         }
 
+        YearEventManager.Instance.SaveEventStates(gameData);
 
         string json = JsonConvert.SerializeObject(gameData, Formatting.Indented);
         File.WriteAllText(GameDataPath, json);
@@ -163,6 +164,8 @@ public class SaveManager : Singleton<SaveManager>
         {
             MemberManager.Instance.LoadFromSaveData();
         }
+
+        YearEventManager.Instance.LoadEventStates(gameData);
     }
     public void LoadNightSceneData()
     {

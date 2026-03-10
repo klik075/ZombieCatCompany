@@ -1,0 +1,50 @@
+GridBackground {
+    --grid-background-color: #282828;
+    --line-color: rgba(193, 196, 192, 0.1);
+    --thick-line-color: rgba(193, 196, 192, 0.1);
+    --spacing: 10;
+}
+
+.node {
+    min-width: 250px;
+    margin-top: 0;
+}
+
+.node #title {
+    background-color: rgba(63, 63, 63, 0.8);
+}
+
+.node #title-label {
+    font-size: 14px;
+    -unity-font-style: bold;
+    color: rgb(193, 196, 192);
+}
+
+.node #contents {
+    background-color: rgba(50, 50, 50, 0.8);
+}
+
+.node #divider {
+    min-height: 1px;
+    background-color: rgb(90, 90, 90);
+}
+
+Port {
+    height: 24px;
+}
+
+#connector {
+    width: 8px;
+    height: 8px;
+    background-color: rgb(200, 200, 200);
+    border-radius: 8px;
+}
+
+#connector:hover {
+    background-color: rgb(255, 255, 255);
+}
+
+#type {
+    font-size: 11px;
+    color: rgb(200, 200, 200);
+}

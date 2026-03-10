@@ -46,6 +46,7 @@ public class GameData
     public CompanyData CompanyData = new CompanyData();
     public NightData NightData = new NightData();
     public MorningData MorningData = new MorningData();
+    public YearEventSaveData YearEventData = new YearEventSaveData();
     public GameData()
     {
         GameMode = EGameMode.Purchase;

@@ -200,13 +200,13 @@ public class Old_UI_LeftPanel : UI_UGUI
                 break;
             case Buttons.DiaryButton:
                 UI_EventPopup diaryPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
-                diaryPopup.SetInfo();
+                //diaryPopup.SetInfo(EEventPopupType.YearEvent);
                 break;
             case Buttons.DispatchResultButton:
                 //TODO: 파견 결과 팝업 열기, 파견을 보내지 않았으면 UI_ChatPopup을 열고 "파견을 보내지 않았다냥." text 설정
                 //UI_EventPopup은 일기장과 파견 결과가 동일한 팝업을 사용하고 내용은 Diary인지, DispatchResult인지에 따라 다르게 설정
                 UI_EventPopup dispatchResultPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
-                dispatchResultPopup.SetInfo();
+                //dispatchResultPopup.SetInfo(EEventPopupType.DispatchResult);
                 break;
             case Buttons.FenceButton:
                 UI_FenceStatePopup fenceStatePopup = UIManager.Instance.ShowPopupUI<UI_FenceStatePopup>();

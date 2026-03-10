@@ -329,4 +329,9 @@ public static class Define
         GameSales,          // 게임 판매 결과
         Defense             // 디펜스 결과
     }
+    public enum EEventPopupType
+    {
+        YearEvent,
+        DispatchResult,
+    }
 }

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
+  m_Name: 0003_GoldYear
+  m_EditorClassIdentifier: Assembly-CSharp::YearEventData
+  executionType: 1
+  initiallyUnlocked: 1
+  weight: 4
+  nextEventDatas: []
+  conditionDatas:
+  - type: 5
+    yearValue: 0
+    yearValueMax: 0
+    goldValue: 0
+    foodValue: 0
+    memberCount: 0
+    requiredEvent: {fileID: 11400000, guid: 8257cf3c822a9984ba284acdbeba319d, type: 2}
+  actionDatas:
+  - type: 1
+    eventText: 
+    rewards:
+    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
+      amount: 5000
+    memberTargetType: 
+  - type: 0
+    eventText: "\uACE8\uB4DC\uB97C \uC5BB\uC5C8\uB2E4."
+    rewards:
+    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
+      amount: 5000
+    memberTargetType: 
