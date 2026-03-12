@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
@@ -65,7 +65,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        // ¹öÆ° ÀÌº¥Æ® µî·Ï
+        // ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡
         GetButton((int)Buttons.NextButton).onClick.AddListener(OnClickNextMember);
         GetButton((int)Buttons.PreviousButton).onClick.AddListener(OnClickPreviousMember);
         GetButton((int)Buttons.OkayButton).onClick.AddListener(OnClickOkayButton);
@@ -112,7 +112,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
     {
         EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
         string stageText = GetGameDevStageText(currentDevType);
-        GetText((int)Texts.MainTitleText).text = $"@{stageText} ´ã´çÇÒ °í¾çÀÌ";
+        GetText((int)Texts.MainTitleText).text = $"@{stageText} ë‹´ë‹¹í•  ê³ ì–‘ì´";
     }
 
     private string GetGameDevStageText(EGameDevType devType)
@@ -120,13 +120,13 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
         switch (devType)
         {
             case EGameDevType.Scenario:     
-                return "±âÈ¹À»";
+                return "ê¸°íšì„";
             case EGameDevType.Graphics:     
-                return "¿øÈ­¸¦";
+                return "ì›í™”ë¥¼";
             case EGameDevType.Sound:        
-                return "»ç¿îµå¸¦";
+                return "ì‚¬ìš´ë“œë¥¼";
             default:                        
-                return "³Ê´Â ´©±¸³Ä!";
+                return "ë„ˆëŠ” ëˆ„êµ¬ëƒ!";
         }
     }
 
@@ -134,18 +134,18 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
     {
         MemberData memberData = member.CurrentMemberData;
         
-        // ±âº» Á¤º¸ ¾÷µ¥ÀÌÆ®
+        // ê¸°ë³¸ ì •ë³´ ì—…ë°ì´íŠ¸
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
         
-        // »óÅÂ Á¤º¸ ¾÷µ¥ÀÌÆ®
-        GetText((int)Texts.StateNameText).text = "@»óÅÂ";
+        // ìƒíƒœ ì •ë³´ ì—…ë°ì´íŠ¸
+        GetText((int)Texts.StateNameText).text = "@ìƒíƒœ";
         GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State);
         
-        // ´É·ÂÄ¡ Á¤º¸ ¾÷µ¥ÀÌÆ®
+        // ëŠ¥ë ¥ì¹˜ ì •ë³´ ì—…ë°ì´íŠ¸
         UpdateAbilityTexts(memberData);
         
-        // ¸â¹ö ÀÌ¹ÌÁö ¾÷µ¥ÀÌÆ®
+        // ë©¤ë²„ ì´ë¯¸ì§€ ì—…ë°ì´íŠ¸
         UpdateMemberImage(memberData);
     }
 
@@ -190,9 +190,9 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
 
     private void UpdateOkayButton(Member member)
     {
-        bool isDispatchMember = member.CurrentMemberData.State == EMemberStateType.Dispatch;
+        bool isDispatchMember = member.IsDispatched;
         GetButton((int)Buttons.OkayButton).interactable = !isDispatchMember;
-        GetText((int)Texts.OkayButtonText).text = "@°áÁ¤";
+        GetText((int)Texts.OkayButtonText).text = "@ê²°ì •";
     }
 
     private void OnClickNextMember()
@@ -226,8 +226,8 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
             Debug.LogWarning("No member selected!");
             return;
         }
-            
-        if (selectedMember.CurrentMemberData.State == EMemberStateType.Dispatch)
+
+        if (selectedMember.IsDispatched)
         {
             Debug.LogWarning("Cannot select dispatched member!");
             return;

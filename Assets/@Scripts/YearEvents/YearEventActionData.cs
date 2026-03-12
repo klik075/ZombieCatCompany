@@ -17,10 +17,12 @@ public class YearEventAction
 {
     public YearEventActionData Data { get; private set; }
     private bool isFinished;
+    private EventCategory _category;
 
-    public YearEventAction(YearEventActionData data)
+    public YearEventAction(YearEventActionData data, EventCategory category)
     {
         Data = data;
+        _category = category;
         isFinished = false;
     }
 
@@ -52,8 +54,13 @@ public class YearEventAction
     private void ShowEventPopup()
     {
         UI_EventPopup popup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
+
+        Define.EEventPopupType popupType = _category == EventCategory.YearEvent
+            ? Define.EEventPopupType.YearEvent
+            : Define.EEventPopupType.DispatchResult;
+
         popup.SetInfo(
-            Define.EEventPopupType.YearEvent,
+            popupType,
             Data.eventText,
             Data.rewards,
             () => isFinished = true

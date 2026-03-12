@@ -125,8 +125,7 @@ public static class Define
         Hunger2,//배고픔
         Starvation,//굶주림
         Soon,//곧 죽음
-
-        Dispatch,//파견 중
+        Death//죽음
     }
     public enum EAbilityType
     {
@@ -173,6 +172,9 @@ public static class Define
     
     public enum EMessageType
     {
+        // 파견 관련
+        SelectDispatch,       // 파견 선택
+        DispatchMemberSelected, // 파견 멤버 선택됨
         // 재정 관련
         MoneyLow,          // 자금 부족
 

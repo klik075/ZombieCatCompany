@@ -1,17 +1,17 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// ±³À° ½Ã½ºÅÛÀ» °ü¸®ÇÏ´Â ¸Å´ÏÀú
-/// UI_MemberEducationMethodsPopup°ú UI_MemberEducationCompletionPopup¿¡¼­ »ç¿ëÇÏ´Â ±³À° °ü·Ã ±â´ÉÀ» Á¦°ø
+/// êµìœ¡ ì‹œìŠ¤í…œì„ ê´€ë¦¬í•˜ëŠ” ë§¤ë‹ˆì €
+/// UI_MemberEducationMethodsPopupê³¼ UI_MemberEducationCompletionPopupì—ì„œ ì‚¬ìš©í•˜ëŠ” êµìœ¡ ê´€ë ¨ ê¸°ëŠ¥ì„ ì œê³µ
 /// </summary>
 public class EducationManager : Singleton<EducationManager>
 {
     private const int ITEMS_PER_PAGE = 5;
     private bool _isDataLoaded = false;
-    // ±³À° µ¥ÀÌÅÍ Ä³½Ã
+    // êµìœ¡ ë°ì´í„° ìºì‹œ
     private List<EducationData> _cachedEducations;
     public int EducationCount { get { return _cachedEducations?.Count ?? 0; } }
     public EducationData SelectedEducation { get; set; }
@@ -36,10 +36,10 @@ public class EducationManager : Singleton<EducationManager>
         }
     }
 
-    #region Public API - ±³À° µ¥ÀÌÅÍ Á¢±Ù
+    #region Public API - êµìœ¡ ë°ì´í„° ì ‘ê·¼
 
     /// <summary>
-    /// ¸ğµç ±³À° µ¥ÀÌÅÍ¸¦ ¹İÈ¯ (Á¤·ÄµÈ º¹»çº»)
+    /// ëª¨ë“  êµìœ¡ ë°ì´í„°ë¥¼ ë°˜í™˜ (ì •ë ¬ëœ ë³µì‚¬ë³¸)
     /// </summary>
     public List<EducationData> GetAllEducations()
     {
@@ -52,7 +52,7 @@ public class EducationManager : Singleton<EducationManager>
     }
 
     /// <summary>
-    /// ÆäÀÌÁöº°·Î ±³À° µ¥ÀÌÅÍ¸¦ ¹İÈ¯ (UI_MemberEducationMethodsPopup¿¡¼­ »ç¿ë)
+    /// í˜ì´ì§€ë³„ë¡œ êµìœ¡ ë°ì´í„°ë¥¼ ë°˜í™˜ (UI_MemberEducationMethodsPopupì—ì„œ ì‚¬ìš©)
     /// </summary>
     public List<EducationData> GetEducationsForPage(int pageIndex, int itemsPerPage = ITEMS_PER_PAGE)
     {
@@ -67,7 +67,7 @@ public class EducationManager : Singleton<EducationManager>
     }
 
     /// <summary>
-    /// ÃÑ ÆäÀÌÁö ¼ö °è»ê
+    /// ì´ í˜ì´ì§€ ìˆ˜ ê³„ì‚°
     /// </summary>
     public int GetTotalPages(int itemsPerPage = ITEMS_PER_PAGE)
     {
@@ -75,7 +75,7 @@ public class EducationManager : Singleton<EducationManager>
     }
 
     /// <summary>
-    /// ID·Î Æ¯Á¤ ±³À° µ¥ÀÌÅÍ °Ë»ö
+    /// IDë¡œ íŠ¹ì • êµìœ¡ ë°ì´í„° ê²€ìƒ‰
     /// </summary>
     public EducationData GetEducationById(int educationId)
     {
@@ -83,10 +83,10 @@ public class EducationManager : Singleton<EducationManager>
     }
     #endregion
 
-    #region Public API - ±³À° °¡´É ¿©ºÎ Ã¼Å©
+    #region Public API - êµìœ¡ ê°€ëŠ¥ ì—¬ë¶€ ì²´í¬
 
     /// <summary>
-    /// ±³À° ºñ¿ëÀ» °¨´çÇÒ ¼ö ÀÖ´ÂÁö Ã¼Å©
+    /// êµìœ¡ ë¹„ìš©ì„ ê°ë‹¹í•  ìˆ˜ ìˆëŠ”ì§€ ì²´í¬
     /// </summary>
     public bool CanAffordEducation()
     {
@@ -97,7 +97,7 @@ public class EducationManager : Singleton<EducationManager>
     }
 
     /// <summary>
-    /// ¸â¹ö°¡ ±³À°À» ¹ŞÀ» ¼ö ÀÖ´Â »óÅÂÀÎÁö Ã¼Å©
+    /// ë©¤ë²„ê°€ êµìœ¡ì„ ë°›ì„ ìˆ˜ ìˆëŠ” ìƒíƒœì¸ì§€ ì²´í¬
     /// </summary>
     public bool CanReceiveEducation()
     {
@@ -105,15 +105,12 @@ public class EducationManager : Singleton<EducationManager>
 
         if (player == null || player?.CurrentMemberData == null) 
             return false;
-        
-        // ÆÄ°ß ÁßÀÌ°Å³ª Æ¯Á¤ »óÅÂ¿¡¼­´Â ±³À° ºÒ°¡
-        MemberData memberData = player.CurrentMemberData;
 
-        return memberData.State != Define.EMemberStateType.Dispatch;
+        return !player.IsDispatched;
     }
 
     /// <summary>
-    /// ±³À°ÀÌ °¡´ÉÇÑÁö Á¾ÇÕÀûÀ¸·Î Ã¼Å©
+    /// êµìœ¡ì´ ê°€ëŠ¥í•œì§€ ì¢…í•©ì ìœ¼ë¡œ ì²´í¬
     /// </summary>
     public bool CanExecuteEducation()
     {

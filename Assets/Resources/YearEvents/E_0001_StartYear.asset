@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
-  m_Name: 0001_StartYear
+  m_Name: E_0001_StartYear
   m_EditorClassIdentifier: Assembly-CSharp::YearEventData
   executionType: 0
   initiallyUnlocked: 1

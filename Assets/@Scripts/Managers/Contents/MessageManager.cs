@@ -204,6 +204,14 @@ public class MessageManager : Singleton<MessageManager>
         {
             Contents = new string[] { "펜스를 성공적으로 수리했다냥." }
         };
+        _messageScripts[EMessageType.SelectDispatch] = new MessageScript
+        {
+            Contents = new string[] { "새로운 파견을 보낼까?" }
+        };
+        _messageScripts[EMessageType.DispatchMemberSelected] = new MessageScript
+        {
+            Contents = new string[] { "내가 갈 순 없지 않냥.\r\n","! 믿는다냥!" }
+        };
     }
 
     //private void InitializeChatScripts()

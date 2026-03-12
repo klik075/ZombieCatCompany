@@ -7,6 +7,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "YearEvent/Year Event Data")]
 public class YearEventData : ScriptableObject
 {
+    public EventCategory category = EventCategory.YearEvent;
+
     public ExecutionType executionType = ExecutionType.Repeated;
     public bool initiallyUnlocked = false;
 
@@ -39,7 +41,7 @@ public class YearEvent
         {
             foreach (var actionData in data.actionDatas)
             {
-                runtimeActions.Add(new YearEventAction(actionData));
+                runtimeActions.Add(new YearEventAction(actionData, Data.category));
             }
         }
 
@@ -131,7 +133,7 @@ public class YearEvent
         {
             foreach (var actionData in Data.actionDatas)
             {
-                runtimeActions.Add(new YearEventAction(actionData));
+                runtimeActions.Add(new YearEventAction(actionData, Data.category));
             }
         }
     }
@@ -141,6 +143,11 @@ public class YearEventSaveData
 {
     public List<string> executedOnceEvents = new List<string>(); // 실행 완료된 Once 타입 이벤트 이름 목록
     public List<string> unlockedEvents = new List<string>(); // 언락된 이벤트 이름 목록 (조건 달성으로 해금된 이벤트)
+}
+public enum EventCategory
+{
+    YearEvent,      // 연차 이벤트
+    DispatchResult  // 파견 결과
 }
 public enum ExecutionType
 {

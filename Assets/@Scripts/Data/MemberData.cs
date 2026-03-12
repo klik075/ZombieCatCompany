@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static Define;
@@ -42,7 +42,7 @@ public class MemberData
         switch(eSalaryType)
         {
             case ESalaryType.Food:
-                return $"{SalaryToValue(eSalaryType)}°³";
+                return $"{SalaryToValue(eSalaryType)}ê°œ";
             case ESalaryType.Salary:
             case ESalaryType.Deposit:
                 return $"{SalaryToValue(eSalaryType)}G";
@@ -69,17 +69,17 @@ public class MemberData
         switch(eRoleType)
         {
             case ERoleType.Boss:
-                return "»çÀå";
+                return "ì‚¬ì¥";
             case ERoleType.Planner:
-                return "±âÈ¹ÀÚ";
+                return "ê¸°íšì";
             case ERoleType.Designer:
-                return "µğÀÚÀÌ³Ê";
+                return "ë””ìì´ë„ˆ";
             case ERoleType.SoundWriter:
-                return "»ç¿îµå ÀÛ°¡";
+                return "ì‚¬ìš´ë“œ ì‘ê°€"; 
             case ERoleType.Merchant:
-                return "»óÀÎ";
+                return "ìƒì¸";
             default:
-                return "´©±¸³Ä ³Í";
+                return "ëˆ„êµ¬ëƒ ë„Œ";
         }
     }
     public static string AbilityToString(EAbilityType eAbilityType)
@@ -87,17 +87,17 @@ public class MemberData
         switch(eAbilityType)
         {
             case EAbilityType.Programming:
-                return "ÇÁ·Î±×·¡¹Ö";
+                return "í”„ë¡œê·¸ë˜ë°";
             case EAbilityType.Scenario:
-                return "½Ã³ª¸®¿À";
+                return "ì‹œë‚˜ë¦¬ì˜¤";
             case EAbilityType.Graphics:
-                return "±×·¡ÇÈ";
+                return "ê·¸ë˜í”½";
             case EAbilityType.Sound:
-                return "»ç¿îµå";
+                return "ì‚¬ìš´ë“œ";
             case EAbilityType.Power:
-                return "ÀüÅõ·Â";
+                return "ì „íˆ¬ë ¥";
             default:
-                return "´©±¸³Ä ³Í";
+                return "ëˆ„êµ¬ëƒ ë„Œ";
         }
     }
     public static string StateToString(EMemberStateType eMemberState)
@@ -105,22 +105,22 @@ public class MemberData
         switch(eMemberState)
         {
             case EMemberStateType.Full:
-                return "¹èºÎ¸§";
+                return "ë°°ë¶€ë¦„";
             case EMemberStateType.Hunger1:
             case EMemberStateType.Hunger2:
-                return "¹è°íÇÄ";
+                return "ë°°ê³ í””";
             case EMemberStateType.Starvation:
-                return "±¾ÁÖ¸²";
+                return "êµ¶ì£¼ë¦¼";
             case EMemberStateType.Soon:
-                return "°ğ²¿´Ú";
-            case EMemberStateType.Dispatch:
-                return "ÆÄ°ßÁß";
+                return "ê³§ê¼¬ë‹¥";
+            case EMemberStateType.Death:
+                return "ì‚¬ë§";
             default:
-                return "´©±¸³Ä ³Í";
+                return "ëˆ„êµ¬ëƒ ë„Œ";
         }
     }
 
-    // ±íÀº º¹»ç ¸Ş¼­µå
+    // ê¹Šì€ ë³µì‚¬ ë©”ì„œë“œ
     public MemberData DeepCopy()
     {
         return new MemberData

@@ -13,6 +13,7 @@ public class MemberSaveData
 
     public MemberData CurrentMemberData;
     public bool AIEnabled;
+    public bool IsDispatched;
 }
 [Serializable]
 public class CompanyData

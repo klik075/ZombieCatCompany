@@ -59,6 +59,7 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
     }
 
     private EMemberSelectionType _selectionType;
+    private Action _onCompleteCallback;
 
     protected override void Awake()
     {
@@ -78,6 +79,7 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         base.OnEnable();
 
         EventManager.Instance.AddEvent(EEventType.SelectedMemberChanged, UpdateContent);
+        EventManager.Instance.AddEvent(EEventType.SelectedMemberChanged, UpdateOkayButtonState);
         EventManager.Instance.AddEvent(EEventType.EducationCompleted, UpdateContent);
     }
     protected override void OnDisable()
@@ -85,14 +87,22 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         base.OnDisable();
 
         EventManager.Instance.RemoveEvent(EEventType.SelectedMemberChanged, UpdateContent);
+        EventManager.Instance.RemoveEvent(EEventType.SelectedMemberChanged, UpdateOkayButtonState);
         EventManager.Instance.RemoveEvent(EEventType.EducationCompleted, UpdateContent);
     }
     public void SetInfo(EMemberSelectionType selectionType, int index = 0)
     {
         _selectionType = selectionType;
+        _onCompleteCallback = null;
         MemberManager.Instance.SelectMemberByIndex(index);//현재 선택된 멤버 설정
     }
-
+    public void SetInfo(EMemberSelectionType selectionType, Action onComplete, Action onCancel, int index = 0)
+    {
+        _selectionType = selectionType;
+        _onCompleteCallback = onComplete;
+        OnClosed(onCancel);
+        MemberManager.Instance.SelectMemberByIndex(index);
+    }
     public void UpdateContent()
     {
         Member selectedPlayer = MemberManager.Instance.SelectedMember;
@@ -154,7 +164,30 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         // 확인 버튼 텍스트
         GetText((int)Texts.OkayButtonText).text = _selectionType == EMemberSelectionType.Education ? "@교육" : "@파견";
     }
+    private void UpdateOkayButtonState()
+    {
+        bool canProceed = false;
 
+        switch (_selectionType)
+        {
+            case EMemberSelectionType.Education:
+                // 교육 가능 여부 체크
+                canProceed = EducationManager.Instance.CanReceiveEducation();
+                break;
+
+            case EMemberSelectionType.Dispatch:
+                // 파견 가능 여부 체크 (선택된 멤버 기준)
+                canProceed = MemberManager.Instance.CanDispatchMember();
+                break;
+
+            default:
+                canProceed = false;
+                break;
+        }
+
+        // 버튼 활성화/비활성화
+        GetButton((int)Buttons.OkayButton).interactable = canProceed;
+    }
     private void OnOkayButtonClicked()
     {
         switch(_selectionType)
@@ -166,7 +199,6 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
                 HandleDispatch();
                 break;
             default:
-                Debug.LogWarning("Unknown member selection type.");
                 break;
         }
     }
@@ -181,11 +213,39 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         }
 
         UI_MemberEducationMethodsPopup educationPopup = UIManager.Instance.ShowPopupUI<UI_MemberEducationMethodsPopup>();
+
+        _onCompleteCallback?.Invoke();
     }
 
     private void HandleDispatch()
     {
+        if (!MemberManager.Instance.CanDispatchMember())
+        {
+            Debug.LogWarning($"현재 파견을 보낼 수 없는 상태입니다.");
+            return;
+        }
 
+        bool success = MemberManager.Instance.DispatchSelectedMember();
+
+        if (!success)
+        {
+            Debug.LogWarning($"파견을 보내는 데 실패했습니다.");
+            return;
+        }
+
+        isTransitioning = true;
+
+        UIManager.Instance.ClosePopupUI();
+
+        UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+        chatPopup.SetInfo(
+            MemberManager.Instance.MainCharacter.CurrentMemberData.EmployeeID,
+            MessageManager.Instance.GetMessageScript(EMessageType.DispatchMemberSelected).Contents,
+            new string[] { MemberManager.Instance.GetDispatchMember().CurrentMemberData.Name },
+            action: () => {
+                _onCompleteCallback?.Invoke();
+            }
+        );
     }
 
     public override void RefreshUI()

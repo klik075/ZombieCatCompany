@@ -11,7 +11,8 @@ public class Member : Cat
     [SerializeField] private float _detectionRange = 5f;
     [SerializeField] private int _attackDamage = 3;
     [SerializeField] private float _attackSpeed = 0.5f;
-    
+
+    public bool IsDispatched { get; set; }
     public bool AIEnabled
     {
         get => _ai?.IsEnabled ?? false;
@@ -119,7 +120,8 @@ public class Member : Cat
             IsFlipped = IsFlipped,
             CellPosition = CellPosition,
             CurrentMemberData = CurrentMemberData,
-            AIEnabled = AIEnabled
+            AIEnabled = AIEnabled,
+            IsDispatched = IsDispatched
         };
     }
     
@@ -134,6 +136,7 @@ public class Member : Cat
         IsFlipped = saveData.IsFlipped;
         CellPosition = saveData.CellPosition;
         AIEnabled = saveData.AIEnabled;
+        IsDispatched = saveData.IsDispatched;
         transform.position = MapManager.Instance.CellToWorld(saveData.CellPosition);
         MapManager.Instance.MoveTo(this, saveData.CellPosition, true);
         ClearMovementStrategy();
@@ -149,6 +152,7 @@ public class Member : Cat
         IsFacingForward = saveData.IsFacingForward;
         IsFlipped = saveData.IsFlipped;
         AIEnabled = saveData.AIEnabled;
+        IsDispatched = saveData.IsDispatched;
         ClearMovementStrategy();
     }
     

@@ -394,15 +394,15 @@ public class MemberManager : Singleton<MemberManager>
         if (_members[memberIndex] == null)
             return false;
 
-        MemberData memberData = _members[memberIndex].CurrentMemberData;
+        //MemberData memberData = _members[memberIndex].CurrentMemberData;
 
-        if (memberData == null)
-            return false;
+        //if (memberData == null)
+        //    return false;
 
         if(ignoringStatus == true)
             return true;
 
-        if (memberData.State == EMemberStateType.Dispatch)
+        if (_members[memberIndex].IsDispatched)
             return false;
 
         return true;
@@ -514,14 +514,23 @@ public class MemberManager : Singleton<MemberManager>
         GameData gameData = SaveManager.Instance.GetGameData();
         List<MemberSaveData> saveDatas = gameData.CompanyData.MemberSaveDatas;
 
+        int actualMemberCount = 0;
+
         for (int i = 0; i < saveDatas.Count && i < MAX_MEMBERS; i++)
         {
             MemberSaveData saveData = saveDatas[i];
             if(saveData == null)
                 continue;
 
-            Member member = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
+            if (!isNight && saveData.IsDispatched)
+            {
+                Debug.Log($"[MemberManager] Skipping dispatched member at index {i} (MorningScene)");
+                _members[i] = null;  // 자리는 null로 유지
+                actualMemberCount++;  // 파견 중이어도 카운트는 포함 (배열 인덱스 유지)
+                continue;
+            }
 
+            Member member = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
             _members[i] = member;
 
             // 저장된 데이터 로드
@@ -546,9 +555,11 @@ public class MemberManager : Singleton<MemberManager>
                 member.IsFacingForward = seatInfo.IsFacingForward;
                 member.SetStateIdle(); // State 직접 설정 대신 내부 메서드 사용
             }
+
+            actualMemberCount++;
         }
-        
-        MemberCount = saveDatas.Count;
+
+        MemberCount = actualMemberCount;
 
         // 첫 번째 멤버를 기본 선택으로 설정
         SelectedMemberIndex = 0;
@@ -692,10 +703,110 @@ public class MemberManager : Singleton<MemberManager>
 
     #endregion
 
+    #region 파견 시스템
+    /// <summary>
+    /// 현재 선택된 멤버를 파견 보내기
+    /// </summary>
+    public bool DispatchSelectedMember()
+    {
+        return DispatchMember(SelectedMemberIndex);
+    }
+
+    /// <summary>
+    /// 특정 멤버를 파견 보내기
+    /// </summary>
+    public bool DispatchMember(int memberIndex)
+    {
+        if (!CanDispatchMember(memberIndex))
+        {
+            Debug.LogWarning($"[MemberManager] Cannot dispatch member at index {memberIndex}");
+            return false;
+        }
+
+        Member member = GetMember(memberIndex);
+
+        // 파견 상태로 설정
+        member.IsDispatched = true;
+
+        Debug.Log($"[MemberManager] Member {member.CurrentMemberData.Name} dispatched");
+        return true;
+    }
+    /// <summary>
+    /// 파견 중인 멤버 찾아서 복귀시키기
+    /// </summary>
+    public bool CompleteDispatch()
+    {
+        for (int i = 0; i < MemberCount; i++)
+        {
+            Member member = GetMember(i);
+            if (member != null && member.IsDispatched)
+            {
+                member.IsDispatched = false;
+                Debug.Log($"[MemberManager] Member {member.CurrentMemberData.Name} returned from dispatch");
+                return true;
+            }
+        }
+
+        Debug.LogWarning("[MemberManager] No dispatched member found");
+        return false;
+    }
+    /// <summary>
+    /// 파견 가능 여부 체크
+    /// </summary>
+    public bool CanDispatchMember()
+    {
+        return CanDispatchMember(SelectedMemberIndex);
+    }
+    public bool CanDispatchMember(int memberIndex)
+    {
+        // 주인공(보스)는 파견 불가
+        if (memberIndex == 0)
+            return false;
+
+        // 유효성 검사
+        if (memberIndex < 0 || memberIndex >= MemberCount)
+            return false;
+
+        Member member = GetMember(memberIndex);
+        if (member == null)
+            return false;
+
+        // 이미 파견 중이면 불가
+        if (member.IsDispatched)
+            return false;
+
+        // 이미 다른 멤버가 파견 중이면 불가 (한 번에 한 명만)
+        if (HasDispatchedMember())
+            return false;
+
+        return true;
+    }
+    /// <summary>
+    /// 파견 중인 멤버가 있는지 확인
+    /// </summary>
+    public bool HasDispatchedMember()
+    {
+        bool hasDispatched = GetDispatchMember() != null;
+        return hasDispatched;
+    }
+    public Member GetDispatchMember()
+    {
+        for (int i = 0; i < MemberCount; i++)
+        {
+            Member member = GetMember(i);
+            if (member != null && member.IsDispatched)
+            {
+                return member;
+            }
+        }
+        return null;
+    }
+    #endregion
+
     #region Player Seat Management
 
     // 기존 class를 struct로 변경
-    
+
 
     /// <summary>
     /// Player들의 개인 지정 자리 초기화

@@ -7,9 +7,13 @@ using static Define;
 public class YearEventManager : Singleton<YearEventManager>
 {
     private const string YEAR_EVENT_FOLDER_PATH = "YearEvents";
+    private const string DISPATCH_RESULT_FOLDER_PATH = "DispatchResults";
 
     private Dictionary<YearEventData, YearEvent> _yearEventInstancesDict;
+    private Dictionary<YearEventData, YearEvent> _dispatchResultDict;
+
     private YearEvent _currentYearEvent;
+    private YearEvent _currentDispatchResult;
     private bool _isSequenceRunning = false;
 
     #region 초기화
@@ -17,6 +21,7 @@ public class YearEventManager : Singleton<YearEventManager>
     protected void Awake()
     {
         InitializeYearEvents();
+        InitializeDispatchResults();
     }
 
     private void InitializeYearEvents()
@@ -33,13 +38,38 @@ public class YearEventManager : Singleton<YearEventManager>
 
         foreach (var eventData in yearEventDatas)
         {
-            YearEvent yearEvent = new YearEvent(eventData);
-            _yearEventInstancesDict[eventData] = yearEvent;
+            if (eventData.category == EventCategory.YearEvent)
+            {
+                YearEvent yearEvent = new YearEvent(eventData);
+                _yearEventInstancesDict[eventData] = yearEvent;
+            }
         }
 
         Debug.Log($"[YearEventManager] Initialized {_yearEventInstancesDict.Count} year events");
     }
+    private void InitializeDispatchResults()
+    {
+        _dispatchResultDict = new Dictionary<YearEventData, YearEvent>();
 
+        YearEventData[] dispatchResultDatas = ResourceManager.Instance.GetAllFromPath<YearEventData>(DISPATCH_RESULT_FOLDER_PATH);
+
+        if (dispatchResultDatas == null || dispatchResultDatas.Length == 0)
+        {
+            Debug.LogWarning($"[YearEventManager] No dispatch results found in path: {DISPATCH_RESULT_FOLDER_PATH}");
+            return;
+        }
+
+        foreach (var eventData in dispatchResultDatas)
+        {
+            if (eventData.category == EventCategory.DispatchResult)
+            {
+                YearEvent dispatchResult = new YearEvent(eventData);
+                _dispatchResultDict[eventData] = dispatchResult;
+            }
+        }
+
+        Debug.Log($"[YearEventManager] Initialized {_dispatchResultDict.Count} dispatch results");
+    }
     #endregion
 
     #region 저장/로드
@@ -59,14 +89,28 @@ public class YearEventManager : Singleton<YearEventManager>
             var eventData = kvp.Key;
             var yearEvent = kvp.Value;
 
-            // Once 타입 이벤트 중 실행된 것 저장
             if (yearEvent.Data.executionType == ExecutionType.Once && yearEvent.IsFinished())
             {
                 saveData.executedOnceEvents.Add(eventData.name);
             }
 
-            // 언락된 이벤트 저장 (initiallyUnlocked가 아닌데 언락된 경우)
             if (yearEvent.IsUnlocked && !yearEvent.Data.initiallyUnlocked)
+            {
+                saveData.unlockedEvents.Add(eventData.name);
+            }
+        }
+
+        foreach (var kvp in _dispatchResultDict)
+        {
+            var eventData = kvp.Key;
+            var dispatchResult = kvp.Value;
+
+            if (dispatchResult.Data.executionType == ExecutionType.Once && dispatchResult.IsFinished())
+            {
+                saveData.executedOnceEvents.Add(eventData.name);
+            }
+
+            if (dispatchResult.IsUnlocked && !dispatchResult.Data.initiallyUnlocked)
             {
                 saveData.unlockedEvents.Add(eventData.name);
             }
@@ -86,7 +130,7 @@ public class YearEventManager : Singleton<YearEventManager>
 
         var saveData = gameData.YearEventData;
 
-        // 실행된 Once 이벤트 복원
+        // YearEvent 로드
         foreach (var eventName in saveData.executedOnceEvents)
         {
             var eventData = _yearEventInstancesDict.Keys.FirstOrDefault(e => e.name == eventName);
@@ -97,7 +141,6 @@ public class YearEventManager : Singleton<YearEventManager>
             }
         }
 
-        // 언락된 이벤트 복원
         foreach (var eventName in saveData.unlockedEvents)
         {
             var eventData = _yearEventInstancesDict.Keys.FirstOrDefault(e => e.name == eventName);
@@ -105,6 +148,27 @@ public class YearEventManager : Singleton<YearEventManager>
             {
                 yearEvent.Unlock();
                 Debug.Log($"[YearEventManager] Restored unlocked event: {eventData.name}");
+            }
+        }
+
+        // DispatchResult 로드
+        foreach (var eventName in saveData.executedOnceEvents)
+        {
+            var eventData = _dispatchResultDict.Keys.FirstOrDefault(e => e.name == eventName);
+            if (eventData != null && _dispatchResultDict.TryGetValue(eventData, out var dispatchResult))
+            {
+                dispatchResult.MarkAsExecuted();
+                Debug.Log($"[YearEventManager] Restored executed dispatch result: {eventData.name}");
+            }
+        }
+
+        foreach (var eventName in saveData.unlockedEvents)
+        {
+            var eventData = _dispatchResultDict.Keys.FirstOrDefault(e => e.name == eventName);
+            if (eventData != null && _dispatchResultDict.TryGetValue(eventData, out var dispatchResult))
+            {
+                dispatchResult.Unlock();
+                Debug.Log($"[YearEventManager] Restored unlocked dispatch result: {eventData.name}");
             }
         }
 
@@ -136,6 +200,37 @@ public class YearEventManager : Singleton<YearEventManager>
 
         return SelectByWeight(availableEvents);
     }
+
+    #endregion
+
+    #region 파견 결과 선택 로직
+
+    // 사용 가능한 파견 결과 가져오기
+    private List<YearEvent> GetAvailableDispatchResults()
+    {
+        return _dispatchResultDict.Values.Where(e => e.CanExecute()).ToList();
+    }
+
+    // 랜덤 파견 결과 선택
+    private YearEvent SelectRandomDispatchResult()
+    {
+        List<YearEvent> availableResults = GetAvailableDispatchResults();
+
+        if (availableResults.Count == 0)
+        {
+            Debug.LogWarning("[YearEventManager] No available dispatch results");
+            return null;
+        }
+
+        if (availableResults.Count == 1)
+            return availableResults[0];
+
+        return SelectByWeight(availableResults);
+    }
+
+    #endregion
+
+    #region 공통 선택 로직
 
     private YearEvent SelectByWeight(List<YearEvent> events)
     {
@@ -188,9 +283,9 @@ public class YearEventManager : Singleton<YearEventManager>
 
         yield return CoroutineManager.Instance.Run(CoShowYearEvent());
 
-        if (currentYear > 1)
+        //if (currentYear > 1)
         {
-            if (HasDispatchResult())
+            //if (HasDispatchResult())
             {
                 yield return CoroutineManager.Instance.Run(CoShowDispatchResult());
             }
@@ -229,19 +324,98 @@ public class YearEventManager : Singleton<YearEventManager>
 
     private bool HasDispatchResult()
     {
-        return false;
+        return MemberManager.Instance.HasDispatchedMember();
     }
 
     private System.Collections.IEnumerator CoShowDispatchResult()
     {
-        Debug.Log("[YearEventManager] Showing dispatch result");
-        yield return null;
+        YearEvent selectedResult = SelectRandomDispatchResult();
+
+        if (selectedResult == null)
+        {
+            Debug.LogWarning("[YearEventManager] No dispatch result selected!");
+            yield break;
+        }
+
+        Debug.Log($"[YearEventManager] Executing dispatch result: {selectedResult.Data.name}");
+
+        _currentDispatchResult = selectedResult;
+
+        yield return CoroutineManager.Instance.Run(selectedResult.Execute());
+
+        Debug.Log($"[YearEventManager] Dispatch result completed: {selectedResult.Data.name}");
+
+        MemberManager.Instance.CompleteDispatch();
+
+        while(UIManager.Instance.PopupCount >= 1)
+        {
+            yield return null;
+        }
     }
 
     private System.Collections.IEnumerator CoShowDispatchSelection()
     {
-        Debug.Log("[YearEventManager] Showing dispatch selection");
-        yield return null;
+        while (true)
+        {
+            if (MemberManager.Instance.HasDispatchedMember())
+            {
+                Debug.Log("[YearEventManager] Already has dispatched member, skipping dispatch selection");
+                yield break;
+            }
+
+            if (MemberManager.Instance.MemberCount <= 1)
+            {
+                Debug.Log("[YearEventManager] No members available for dispatch");
+                yield break;
+            }
+
+            bool? messageChoice = null;
+
+            UI_MessagePopup messagePopup = UIManager.Instance.ShowPopupUI<UI_MessagePopup>();
+            messagePopup.SetInfo(
+                MessageManager.Instance.GetMessageScript(EMessageType.SelectDispatch).Contents,
+                null,
+                okAction: () => { messageChoice = true; },   // Yes
+                noAction: () => { messageChoice = false; }   // No
+            );
+
+            while (messageChoice == null)
+            {
+                yield return null;
+            }
+
+            // No 선택 시 종료 → CoShowFoodDistribution으로 진행
+            if (messageChoice == false)
+            {
+                Debug.Log("[YearEventManager] User declined dispatch");
+                yield break;
+            }
+
+            // Step 2: Yes 선택 → MemberSelectionPopup 열기
+            bool? selectionResult = null;  // null: 대기, true: 파견 완료, false: 뒤로 버튼
+
+            UI_MemberSelectionPopup selectionPopup = UIManager.Instance.ShowPopupUI<UI_MemberSelectionPopup>();
+            selectionPopup.SetInfo(
+                EMemberSelectionType.Dispatch,
+                onComplete: () =>{ selectionResult = true; },
+                onCancel: () => { selectionResult = false; },
+                index: 1  // 기본적으로 1번 멤버 선택 (보스 제외)
+            );
+
+            // MemberSelectionPopup 결과 대기
+            while (selectionResult == null)
+            {
+                yield return null;
+            }
+
+            // 파견 완료 → 루프 탈출하여 다음 코루틴으로 진행
+            if (selectionResult == true)
+            {
+                
+                Debug.Log("[YearEventManager] Exiting dispatch selection, proceeding to food distribution");
+                yield break;
+            }
+        }
     }
 
     private System.Collections.IEnumerator CoShowFoodDistribution()
@@ -264,15 +438,23 @@ public class YearEventManager : Singleton<YearEventManager>
     /// </summary>
     public void UnlockEvent(YearEventData eventData)
     {
+        // YearEvent 체크
         if (_yearEventInstancesDict.TryGetValue(eventData, out var yearEvent))
         {
             yearEvent.Unlock();
             Debug.Log($"[YearEventManager] Unlocked event: {eventData.name}");
+            return;
         }
-        else
+
+        // DispatchResult 체크
+        if (_dispatchResultDict.TryGetValue(eventData, out var dispatchResult))
         {
-            Debug.LogWarning($"[YearEventManager] Event not found: {eventData.name}");
+            dispatchResult.Unlock();
+            Debug.Log($"[YearEventManager] Unlocked dispatch result: {eventData.name}");
+            return;
         }
+
+        Debug.LogWarning($"[YearEventManager] Event not found: {eventData.name}");
     }
 
     /// <summary>
@@ -284,6 +466,12 @@ public class YearEventManager : Singleton<YearEventManager>
         {
             yearEvent.Reset();
         }
+
+        foreach (var dispatchResult in _dispatchResultDict.Values)
+        {
+            dispatchResult.Reset();
+        }
+
         Debug.Log("[YearEventManager] Reset all repeatable events");
     }
 
@@ -292,10 +480,18 @@ public class YearEventManager : Singleton<YearEventManager>
     /// </summary>
     public bool HasExecutedEvent(YearEventData eventData)
     {
+        // YearEvent 체크
         if (_yearEventInstancesDict.TryGetValue(eventData, out var yearEvent))
         {
             return yearEvent.IsFinished();
         }
+
+        // DispatchResult 체크
+        if (_dispatchResultDict.TryGetValue(eventData, out var dispatchResult))
+        {
+            return dispatchResult.IsFinished();
+        }
+
         return false;
     }
 
