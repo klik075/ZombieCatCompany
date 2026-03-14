@@ -281,11 +281,13 @@ public class YearEventManager : Singleton<YearEventManager>
 
         Debug.Log($"[YearEventManager] Starting night sequence for Year {currentYear}");
 
+        ResetRepeatableEventsForNewCycle();
+
         yield return CoroutineManager.Instance.Run(CoShowYearEvent());
 
-        //if (currentYear > 1)
+        if (currentYear > 1)
         {
-            //if (HasDispatchResult())
+            if (HasDispatchResult())
             {
                 yield return CoroutineManager.Instance.Run(CoShowDispatchResult());
             }
@@ -420,8 +422,28 @@ public class YearEventManager : Singleton<YearEventManager>
 
     private System.Collections.IEnumerator CoShowFoodDistribution()
     {
-        Debug.Log("[YearEventManager] Showing food distribution");
-        yield return null;
+        bool? messageChoice = null;
+
+        UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+        chatPopup.SetInfo(
+            MemberManager.Instance.MainCharacter.CurrentMemberData.EmployeeID,
+            MessageManager.Instance.GetMessageScript(EMessageType.FoodRationing).Contents,
+            null,
+            () => { messageChoice = true; });
+
+        while (messageChoice == null)
+        {
+            yield return null;
+        }
+
+        bool? rationCompleted = null;
+        UI_FoodRationPopup rationPopup = UIManager.Instance.ShowPopupUI<UI_FoodRationPopup>();
+        rationPopup.OnClosed(() => { rationCompleted = true; });
+
+        while (rationCompleted == null)
+        {
+            yield return null;
+        }
     }
 
     #endregion
@@ -458,24 +480,6 @@ public class YearEventManager : Singleton<YearEventManager>
     }
 
     /// <summary>
-    /// 모든 Repeatable 이벤트 초기화
-    /// </summary>
-    public void ResetRepeatableEvents()
-    {
-        foreach (var yearEvent in _yearEventInstancesDict.Values)
-        {
-            yearEvent.Reset();
-        }
-
-        foreach (var dispatchResult in _dispatchResultDict.Values)
-        {
-            dispatchResult.Reset();
-        }
-
-        Debug.Log("[YearEventManager] Reset all repeatable events");
-    }
-
-    /// <summary>
     /// 특정 이벤트를 실행했는지 확인
     /// </summary>
     public bool HasExecutedEvent(YearEventData eventData)
@@ -493,6 +497,34 @@ public class YearEventManager : Singleton<YearEventManager>
         }
 
         return false;
+    }
+
+    #endregion
+
+    #region 씬 전환 시 초기화
+
+    /// <summary>
+    /// 씬 전환 시 Repeated 이벤트 초기화 (밤 시작 시 호출)
+    /// </summary>
+    public void ResetRepeatableEventsForNewCycle()
+    {
+        foreach (var yearEvent in _yearEventInstancesDict.Values)
+        {
+            if (yearEvent.Data.executionType == ExecutionType.Repeated)
+            {
+                yearEvent.Reset();
+            }
+        }
+
+        foreach (var dispatchResult in _dispatchResultDict.Values)
+        {
+            if (dispatchResult.Data.executionType == ExecutionType.Repeated)
+            {
+                dispatchResult.Reset();
+            }
+        }
+
+        Debug.Log("[YearEventManager] Reset all repeatable events for new cycle");
     }
 
     #endregion

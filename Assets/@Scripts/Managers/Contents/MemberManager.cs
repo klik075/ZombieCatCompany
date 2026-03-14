@@ -522,16 +522,19 @@ public class MemberManager : Singleton<MemberManager>
             if(saveData == null)
                 continue;
 
+            Member member = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
+            _members[i] = member;
+
             if (!isNight && saveData.IsDispatched)
             {
                 Debug.Log($"[MemberManager] Skipping dispatched member at index {i} (MorningScene)");
-                _members[i] = null;  // 자리는 null로 유지
-                actualMemberCount++;  // 파견 중이어도 카운트는 포함 (배열 인덱스 유지)
+                member.LoadFromSaveDataNoCellpos(saveData);
+                member.IsDispatched = true;
+                member.AIEnabled = false;
+                member.gameObject.SetActive(false);
+                actualMemberCount++;
                 continue;
             }
-
-            Member member = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
-            _members[i] = member;
 
             // 저장된 데이터 로드
             if (isNight)
@@ -584,21 +587,25 @@ public class MemberManager : Singleton<MemberManager>
     }
 
     // 모든 구성원 가져오기 (null 제외)
-    public List<Member> GetAllMembers()
+    public List<Member> GetAllMembers(bool excludeDispatched = false)
     {
         List<Member> members = new List<Member>();
         for (int i = 0; i < MemberCount; i++)
         {
             if (_members[i] != null)
+            {
+                // 파견 중인 멤버 제외 옵션
+                if (excludeDispatched && _members[i].IsDispatched)
+                    continue;
+
                 members.Add(_members[i]);
+            }
         }
         return members;
     }
-
-    // 빈 슬롯 개수 가져오기
-    public int GetEmptySlotCount()
+    public List<Member> GetActiveMembers()
     {
-        return MAX_MEMBERS - MemberCount;
+        return GetAllMembers(excludeDispatched: true);
     }
 
     // 팀이 가득 찼는지 확인
@@ -728,6 +735,9 @@ public class MemberManager : Singleton<MemberManager>
         // 파견 상태로 설정
         member.IsDispatched = true;
 
+        MapManager.Instance.UnregisterCat(member.CellPosition);
+        member.gameObject.SetActive(false);
+
         Debug.Log($"[MemberManager] Member {member.CurrentMemberData.Name} dispatched");
         return true;
     }
@@ -742,6 +752,14 @@ public class MemberManager : Singleton<MemberManager>
             if (member != null && member.IsDispatched)
             {
                 member.IsDispatched = false;
+
+                member.gameObject.SetActive(true);
+
+                bool isNight = SceneManager.Instance.CurrentSceneType == EScene.NightScene;
+                MemberSeatInfo seatInfo = GetMemberSeatInfo(i, isNight);
+
+                member.MoveToSeat(seatInfo.SeatPosition);
+
                 Debug.Log($"[MemberManager] Member {member.CurrentMemberData.Name} returned from dispatch");
                 return true;
             }
@@ -958,13 +976,16 @@ public class MemberManager : Singleton<MemberManager>
         
         Debug.Log("All players moved to their designated seats");
     }
-    public int HowManyMemberSitting()
+    public int HowManyMemberSitting(bool excludeDispatched = false)
     {
         int count = 0;
         for (int i = 0; i < MemberCount; i++)
         {
             if (_members[i] != null)
             {
+                if (excludeDispatched && _members[i].IsDispatched)
+                    continue;
+
                 Vector2Int seatPos = GetMemberSeat(i);
                 if (_members[i].CellPosition == seatPos)
                     count++;
@@ -972,9 +993,13 @@ public class MemberManager : Singleton<MemberManager>
         }
         return count;
     }
+    public int HowManyActiveMemberSitting()
+    {
+        return HowManyMemberSitting(excludeDispatched: true);
+    }
     public bool IsAnyMemberAtSeat()
     {
-        return HowManyMemberSitting() > 0;
+        return HowManyActiveMemberSitting() > 0;
     }
     #endregion
 

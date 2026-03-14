@@ -25,7 +25,10 @@ public class YearEventAction
         _category = category;
         isFinished = false;
     }
-
+    public void Reset()
+    {
+        isFinished = false;
+    }
     public void Execute()
     {
         switch (Data.type)

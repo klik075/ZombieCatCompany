@@ -122,18 +122,14 @@ public class YearEvent
     public void Reset()
     {
         currentActionIndex = 0;
+
         if (Data.executionType == ExecutionType.Repeated)
         {
             hasBeenExecuted = false;
-        }
 
-        // Reset actions
-        runtimeActions.Clear();
-        if (Data.actionDatas != null)
-        {
-            foreach (var actionData in Data.actionDatas)
+            foreach (var action in runtimeActions)
             {
-                runtimeActions.Add(new YearEventAction(actionData, Data.category));
+                action.Reset();
             }
         }
     }

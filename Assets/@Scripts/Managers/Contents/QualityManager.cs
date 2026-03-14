@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -13,22 +13,22 @@ public class QualityData
         switch (qualityType)
         {
             case EQualityType.Fun:
-                return "Àç¹Ì";
+                return "ì¬ë¯¸";
             case EQualityType.Nyang:
-                return "³É·Â";
+                return "ëƒ¥ë ¥";
             case EQualityType.Graphics:
-                return "±×·¡ÇÈ";
+                return "ê·¸ë˜í”½";
             case EQualityType.Sound:
-                return "»ç¿îµå";
+                return "ì‚¬ìš´ë“œ";
             case EQualityType.Bug:
-                return "¹ö±×";
+                return "ë²„ê·¸";
             default:
-                return "¾Ë ¼ö ¾øÀ½";
+                return "ì•Œ ìˆ˜ ì—†ìŒ";
         }
     }
 }
 /// <summary>
-/// ÀÛ¾÷ ¾Ö´Ï¸ŞÀÌ¼ÇÀ» À§ÇÑ µ¥ÀÌÅÍ Àü´Ş °´Ã¼ (DTO)
+/// ì‘ì—… ì• ë‹ˆë©”ì´ì…˜ì„ ìœ„í•œ ë°ì´í„° ì „ë‹¬ ê°ì²´ (DTO)
 /// </summary>
 public class WorkAnimationData
 {
@@ -43,12 +43,12 @@ public class WorkAnimationData
 }
 
 /// <summary>
-/// Quality ÀÌ¹ÌÁö ¾Ö´Ï¸ŞÀÌ¼ÇÀ» °ü¸®ÇÏ´Â ¸Å´ÏÀú
-/// UI¿Í µ¶¸³ÀûÀ¸·Î Quality »ı¼º, ¾Ö´Ï¸ŞÀÌ¼Ç, ¿Ï·á Ã³¸®¸¦ ´ã´ç
+/// Quality ì´ë¯¸ì§€ ì• ë‹ˆë©”ì´ì…˜ì„ ê´€ë¦¬í•˜ëŠ” ë§¤ë‹ˆì €
+/// UIì™€ ë…ë¦½ì ìœ¼ë¡œ Quality ìƒì„±, ì• ë‹ˆë©”ì´ì…˜, ì™„ë£Œ ì²˜ë¦¬ë¥¼ ë‹´ë‹¹
 /// </summary>
 public class QualityManager : Singleton<QualityManager>
 {
-    // ¾Ö´Ï¸ŞÀÌ¼Ç °ü·Ã »ó¼ö
+    // ì• ë‹ˆë©”ì´ì…˜ ê´€ë ¨ ìƒìˆ˜
     private const float ANIMATION_SPEED = 500f;
     private const float MIN_ANIMATION_DURATION = 0.5f;
     private const float ARRIVAL_THRESHOLD = 5f;
@@ -59,7 +59,7 @@ public class QualityManager : Singleton<QualityManager>
     private GameObject _animationCanvasObj;
     private Canvas _animationCanvas;
     
-    // ¾Ö´Ï¸ŞÀÌ¼Ç µ¥ÀÌÅÍ
+    // ì• ë‹ˆë©”ì´ì…˜ ë°ì´í„°
     private List<EQualityType> _qualitySequence;
     private int _totalQualityCount = 0;
     private int _completedQualityCount = 0;
@@ -71,7 +71,7 @@ public class QualityManager : Singleton<QualityManager>
     #region Public API
 
     /// <summary>
-    /// ÀÛ¾÷ ½ÃÀÛ (GameDevManager¿¡¼­ µ¥ÀÌÅÍ °¡Á®¿Í¼­ ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ)
+    /// ì‘ì—… ì‹œì‘ (GameDevManagerì—ì„œ ë°ì´í„° ê°€ì ¸ì™€ì„œ ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘)
     /// </summary>
     public void StartMainWork(
         Vector2 startPosition,
@@ -80,7 +80,7 @@ public class QualityManager : Singleton<QualityManager>
         Action<EQualityType> onQualityComplete,
         Action onAllComplete)
     {
-        // GameDevManager¿¡¼­ ÀÛ¾÷ µ¥ÀÌÅÍ °¡Á®¿À±â
+        // GameDevManagerì—ì„œ ì‘ì—… ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
         WorkAnimationData animationData = GetWorkAnimationData();
         
         if (animationData?.QualitySequence == null || animationData.QualitySequence.Count == 0)
@@ -103,22 +103,22 @@ public class QualityManager : Singleton<QualityManager>
         _onQualityComplete = onQualityComplete;
         _onAllQualitiesComplete = onAllComplete;
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Canvas »ı¼º
+        // ì• ë‹ˆë©”ì´ì…˜ Canvas ìƒì„±
         CreateAnimationCanvas();
 
-        // ¾Ö´Ï¸ŞÀÌ¼Ç ÄÚ·çÆ¾ ½ÃÀÛ
+        // ì• ë‹ˆë©”ì´ì…˜ ì½”ë£¨í‹´ ì‹œì‘
         CoroutineManager.Instance.StartCoroutine(CoAnimateQualitySequence(startPosition, targetPositions, interval));
     }
     public void StartIndividualWork()
     {
-        // ¾Ö´Ï¸ŞÀÌ¼Ç Canvas »ı¼º
+        // ì• ë‹ˆë©”ì´ì…˜ Canvas ìƒì„±
         CreateAnimationCanvas();
 
-        // ÄÚ·çÆ¾ ½ÇÇà
+        // ì½”ë£¨í‹´ ì‹¤í–‰
         CoroutineManager.Instance.StartCoroutine(CoStartIndividualWork());
     }
     /// <summary>
-    /// GameDevManager·ÎºÎÅÍ ÀÛ¾÷ ¾Ö´Ï¸ŞÀÌ¼Ç µ¥ÀÌÅÍ °¡Á®¿À±â
+    /// GameDevManagerë¡œë¶€í„° ì‘ì—… ì• ë‹ˆë©”ì´ì…˜ ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
     /// </summary>
     private WorkAnimationData GetWorkAnimationData()
     {
@@ -130,7 +130,7 @@ public class QualityManager : Singleton<QualityManager>
             return null;
         }
 
-        // Manager¿¡¼­ WorkResult¸¦ °è»êÇÏ°í DTO·Î º¯È¯
+        // Managerì—ì„œ WorkResultë¥¼ ê³„ì‚°í•˜ê³  DTOë¡œ ë³€í™˜
         var workResult = GameDevManager.Instance.CalculateWorkResult(worker.CurrentMemberData);
         return new WorkAnimationData(workResult.qualitySequence);
     }
@@ -170,11 +170,11 @@ public class QualityManager : Singleton<QualityManager>
 
         foreach (var canvas in allCanvases)
         {
-            // ¾Ö´Ï¸ŞÀÌ¼Ç Canvas ÀÚ½ÅÀº Á¦¿Ü
+            // ì• ë‹ˆë©”ì´ì…˜ Canvas ìì‹ ì€ ì œì™¸
             if (canvas.name == _animationCanvasName)
                 continue;
 
-            // Ã¹ ¹øÂ° Overlay Canvas ¹İÈ¯
+            // ì²« ë²ˆì§¸ Overlay Canvas ë°˜í™˜
             if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
                 return canvas;
         }
@@ -338,21 +338,23 @@ public class QualityManager : Singleton<QualityManager>
 
     private IEnumerator CoStartIndividualWork()
     {
-        List<Member> players = MemberManager.Instance.GetAllMembers();
+        List<Member> players = MemberManager.Instance.GetActiveMembers();
+
         if (players == null || players.Count == 0)
         {
             CleanupAnimationCanvas();
             yield break;
         }
 
-        // °¢ ÇÃ·¹ÀÌ¾î º° ÄÚ·çÆ¾ ½ÃÀÛ (µ¿½Ã ½ÇÇà)
+        // ê° í”Œë ˆì´ì–´ ë³„ ì½”ë£¨í‹´ ì‹œì‘ (ë™ì‹œ ì‹¤í–‰)
         List<Coroutine> coroutines = new List<Coroutine>();
+
         foreach (Member player in players)
         {
             coroutines.Add(CoroutineManager.Instance.StartCoroutine(CoProcessIndividualWork(player)));
         }
 
-        // ¸ğµç ÄÚ·çÆ¾ÀÌ ³¡³¯ ¶§±îÁö ±â´Ù¸²
+        // ëª¨ë“  ì½”ë£¨í‹´ì´ ëë‚  ë•Œê¹Œì§€ ê¸°ë‹¤ë¦¼
         foreach (Coroutine coroutine in coroutines)
         {
             yield return coroutine;
@@ -379,17 +381,17 @@ public class QualityManager : Singleton<QualityManager>
         
         while (elapsed < 10f)
         {
-            // ¸Å ÇÁ·¹ÀÓ¸¶´Ù Ã¼Å©
+            // ë§¤ í”„ë ˆì„ë§ˆë‹¤ ì²´í¬
             yield return null;
             
-            // Time.timeScaleÀÌ 0º¸´Ù Å¬ ¶§¸¸ elapsed Áõ°¡
+            // Time.timeScaleì´ 0ë³´ë‹¤ í´ ë•Œë§Œ elapsed ì¦ê°€
             if (Time.timeScale > 0)
             {
                 elapsed += Time.deltaTime;
             }
             else
             {
-                continue; // ÀÏ½ÃÁ¤Áö ÁßÀÌ¸é ÀÛ¾÷ ¾È ÇÔ
+                continue; // ì¼ì‹œì •ì§€ ì¤‘ì´ë©´ ì‘ì—… ì•ˆ í•¨
             }
 
             if (player.CellPosition != MemberManager.Instance.GetMemberSeat(player) || player.State == Cat.ECatState.Work || player.State == Cat.ECatState.Move)
@@ -403,23 +405,23 @@ public class QualityManager : Singleton<QualityManager>
                     yield break;
             }
 
-            // 5ÃÊ¸¶´Ù ÀÛ¾÷ ½ÇÇà
+            // 5ì´ˆë§ˆë‹¤ ì‘ì—… ì‹¤í–‰
             if (elapsed > nextWorkTime)
             {
-                // 95% È®·ü·Î ÀÛ¾÷ ½ÇÇà
+                // 95% í™•ë¥ ë¡œ ì‘ì—… ì‹¤í–‰
                 if (UnityEngine.Random.value < 0.95f)
                 {
-                    // ÀÛ¾÷ ½ÃÀÛ
+                    // ì‘ì—… ì‹œì‘
                     player.DoWork();
 
-                    // Quality µ¥ÀÌÅÍ °è»ê
+                    // Quality ë°ì´í„° ê³„ì‚°
                     var workResult = GameDevManager.Instance.CalculateIndividualWorkResult(player.CurrentMemberData);
                     if (workResult.tries > 0)
                     {
                         EQualityType quality = workResult.mainQuality;
                         int qualityCount = workResult.tries;
 
-                        // ¾Ö´Ï¸ŞÀÌ¼Ç ÄÚ·çÆ¾ ½ÃÀÛ
+                        // ì• ë‹ˆë©”ì´ì…˜ ì½”ë£¨í‹´ ì‹œì‘
                         coAnimList.Add(CoroutineManager.Instance.StartCoroutine(CoShowIndividualQualityAnimation(player, quality, qualityCount)));
                     }
                 }
@@ -442,14 +444,14 @@ public class QualityManager : Singleton<QualityManager>
 
     private IEnumerator CoShowIndividualQualityAnimation(Member player, EQualityType quality, int qualityCount)
     {
-        // Quality ÀÌ¹ÌÁö »ı¼º
+        // Quality ì´ë¯¸ì§€ ìƒì„±
         GameObject qualityObj = CreateQualityImage(quality);
         if (qualityObj != null)
         {
             RectTransform qualityRect = qualityObj.GetComponent<RectTransform>();
             qualityRect.SetParent(_animationCanvas.transform, false);
             
-            // PlayerÀÇ World PositionÀ» CanvasÀÇ Local PositionÀ¸·Î º¯È¯
+            // Playerì˜ World Positionì„ Canvasì˜ Local Positionìœ¼ë¡œ ë³€í™˜
             Vector3 worldPos = player.transform.position;
             Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
             
@@ -458,14 +460,14 @@ public class QualityManager : Singleton<QualityManager>
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvasRect, 
                 screenPos, 
-                null, // Overlay Canvas´Â null »ç¿ë
+                null, // Overlay CanvasëŠ” null ì‚¬ìš©
                 out uiPos
             );
             
             qualityRect.anchoredPosition = uiPos + new Vector2(0f, 200f);
             qualityRect.sizeDelta = new Vector2(QUALITY_IMAGE_SIZE, QUALITY_IMAGE_SIZE);
 
-            // Quality ÅØ½ºÆ® »ı¼º (ÀÌ¹ÌÁö ¹Ù·Î ¿À¸¥ÂÊ)
+            // Quality í…ìŠ¤íŠ¸ ìƒì„± (ì´ë¯¸ì§€ ë°”ë¡œ ì˜¤ë¥¸ìª½)
             bool positive = GameDevManager.Instance.CurrentGameDevType != EGameDevType.Debug;
             TextMeshProUGUI qualityText = CreateQualityText(qualityCount, positive);
             if (qualityText != null)
@@ -473,7 +475,7 @@ public class QualityManager : Singleton<QualityManager>
                 RectTransform textRect = qualityText.GetComponent<RectTransform>();
                 textRect.SetParent(_animationCanvas.transform, false);
                 
-                // ÅØ½ºÆ® À§Ä¡¸¦ ÀÌ¹ÌÁö ¿À¸¥ÂÊ¿¡ ¹èÄ¡
+                // í…ìŠ¤íŠ¸ ìœ„ì¹˜ë¥¼ ì´ë¯¸ì§€ ì˜¤ë¥¸ìª½ì— ë°°ì¹˜
                 Vector2 textOffset = new Vector2(QUALITY_IMAGE_SIZE / 2 + 10, 0);
                 textRect.anchoredPosition = uiPos + textOffset + new Vector2(0f, 200f);
                 textRect.pivot = new Vector2(0, 0.5f);
@@ -482,7 +484,7 @@ public class QualityManager : Singleton<QualityManager>
 
             GameDevManager.Instance.AddQualityScore(quality, qualityCount);
 
-            // 4ÃÊ µ¿¾È Ç¥½Ã ÈÄ »èÁ¦
+            // 4ì´ˆ ë™ì•ˆ í‘œì‹œ í›„ ì‚­ì œ
             yield return new WaitForSeconds(4f);
             
             if (qualityObj != null) 

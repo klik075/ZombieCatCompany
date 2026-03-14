@@ -1,7 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "VN/Character Data")]
+[CreateAssetMenu(menuName = "YearEvent/Character Data")]
 public class CharacterData : ScriptableObject
 {
     public CharacterId characterId;

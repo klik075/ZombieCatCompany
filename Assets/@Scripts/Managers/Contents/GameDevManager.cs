@@ -822,8 +822,8 @@ public class GameDevManager : Singleton<GameDevManager>
                 startIndividualWork = true;
             }
 
-            // 멤버 수에 따라 가속된 시간 누적 (멤버가 많을수록 빠르게 증가)
-            float memberRatio = MemberManager.Instance.HowManyMemberSitting() / (float)MemberManager.MAX_MEMBERS;
+            int sittingCount = MemberManager.Instance.HowManyActiveMemberSitting();
+            float memberRatio = sittingCount / (float)MemberManager.MAX_MEMBERS;
             acceleratedTime += Time.deltaTime * memberRatio;
             
             // duration 기준으로 진행도 계산

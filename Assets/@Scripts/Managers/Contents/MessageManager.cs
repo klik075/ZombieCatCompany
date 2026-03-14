@@ -212,6 +212,14 @@ public class MessageManager : Singleton<MessageManager>
         {
             Contents = new string[] { "내가 갈 순 없지 않냥.\r\n","! 믿는다냥!" }
         };
+        _messageScripts[EMessageType.FoodRationing] = new MessageScript
+        {
+            Contents = new string[] { "식량 배급 시간이다냥.." }
+        };
+        _messageScripts[EMessageType.FoodShortage] = new MessageScript
+        {
+            Contents = new string[] { "식량이 부족하다냥.\r\n누군가는 굶어야겠지냥.." }
+        };
     }
 
     //private void InitializeChatScripts()

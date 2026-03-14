@@ -175,6 +175,11 @@ public static class Define
         // 파견 관련
         SelectDispatch,       // 파견 선택
         DispatchMemberSelected, // 파견 멤버 선택됨
+
+        // 식량 관련
+        FoodRationing,       // 식량 배급
+        FoodShortage,        // 식량 부족
+
         // 재정 관련
         MoneyLow,          // 자금 부족
 

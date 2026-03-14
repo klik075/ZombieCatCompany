@@ -1,13 +1,15 @@
-using System;
+ï»¿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Member ÅğÀå °ü¸® (door µµÂø ½Ã Disable)
+/// Member í‡´ì¥ ê´€ë¦¬ (door ë„ì°© ì‹œ Disable)
 /// </summary>
 public class MemberExitController
 {
     private List<Member> _members;
+    private List<Member> _exitingMembers;
     private Vector2Int _exitPosition;
     private Action _onAllMembersExited;
     private int _exitedCount = 0;
@@ -19,51 +21,61 @@ public class MemberExitController
     }
 
     /// <summary>
-    /// ¸ğµç Member¸¦ door·Î ÀÌµ¿ ½ÃÀÛ
+    /// ëª¨ë“  Memberë¥¼ doorë¡œ ì´ë™ ì‹œì‘
     /// </summary>
     public void StartExit(Action onAllMembersExited)
     {
         _onAllMembersExited = onAllMembersExited;
         _exitedCount = 0;
 
-        foreach (Member member in _members)
+        _exitingMembers = _members.Where(m => m != null && !m.IsDispatched).ToList();
+
+        if (_exitingMembers.Count == 0)
         {
-            // SeatMovement·Î door ÀÌµ¿
+            Debug.Log("[MemberExitController] No members to exit (all dispatched or null)");
+            _onAllMembersExited?.Invoke();
+            return;
+        }
+
+        foreach (Member member in _exitingMembers)
+        {
+            // SeatMovementë¡œ door ì´ë™
             var doorMovement = MovementPoolManager.Instance.Get<SeatMovement>()
                 .Initialize(_exitPosition, new GridManagerAdapter());
 
-            // °¢ MemberÀÇ µµÂø ÀÌº¥Æ® ±¸µ¶
+            // ê° Memberì˜ ë„ì°© ì´ë²¤íŠ¸ êµ¬ë…
             doorMovement.OnArrived += () => OnMemberArrived(member);
 
-            member.AIEnabled = false; // AI ºñÈ°¼ºÈ­
+            member.AIEnabled = false; // AI ë¹„í™œì„±í™”
             member.SetMovementStrategy(doorMovement);
         }
     }
 
     /// <summary>
-    /// Member°¡ door¿¡ µµÂøÇßÀ» ¶§
+    /// Memberê°€ doorì— ë„ì°©í–ˆì„ ë•Œ
     /// </summary>
     private void OnMemberArrived(Member member)
     {
-        // Member Disable Ã³¸®
+        // Member Disable ì²˜ë¦¬
         member.gameObject.SetActive(false);
         _exitedCount++;
 
         Debug.Log($"Member exited: {_exitedCount}/{_members.Count}");
 
-        // ¸ğµÎ ÅğÀåÇßÀ¸¸é Äİ¹é È£Ãâ
-        if (_exitedCount >= _members.Count)
+        // ëª¨ë‘ í‡´ì¥í–ˆìœ¼ë©´ ì½œë°± í˜¸ì¶œ
+        if (_exitedCount >= _exitingMembers.Count)
         {
             _onAllMembersExited?.Invoke();
         }
     }
 
     /// <summary>
-    /// Á¤¸®
+    /// ì •ë¦¬
     /// </summary>
     public void Cancel()
     {
         _members = null;
+        _exitingMembers = null;
         _onAllMembersExited = null;
     }
 }
