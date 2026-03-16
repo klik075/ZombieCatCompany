@@ -220,6 +220,10 @@ public class MessageManager : Singleton<MessageManager>
         {
             Contents = new string[] { "식량이 부족하다냥.\r\n누군가는 굶어야겠지냥.." }
         };
+        _messageScripts[EMessageType.DispatchNotSent] = new MessageScript
+        {
+            Contents = new string[] { "파견을 보내지 않았다냥.." }
+        };
     }
 
     //private void InitializeChatScripts()

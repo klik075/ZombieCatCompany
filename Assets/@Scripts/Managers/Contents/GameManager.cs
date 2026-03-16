@@ -226,6 +226,7 @@ public class GameManager : Singleton<GameManager>
                 PurchaseManager.Instance.StartPurchase();
                 break;
             case EGameState.Morning:
+                YearEventManager.Instance.ResetNightSequenceFlag();
                 GameDevManager.Instance.InitNewProject();
                 SaveManager.Instance.SaveGameData();
                 SceneManager.Instance.LoadScene(EScene.MorningScene);

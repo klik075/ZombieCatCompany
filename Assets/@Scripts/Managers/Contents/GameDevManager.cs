@@ -328,6 +328,7 @@ public class GameDevManager : Singleton<GameDevManager>
     }
 
     #endregion
+
     #region 저장 및 복원
     /// <summary>
     /// 게임 개발 관련 저장 데이터 생성
@@ -459,23 +460,45 @@ public class GameDevManager : Singleton<GameDevManager>
                 break;
             case EGameDevType.Scenario:
                 UI_ChatPopup scenarioPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-                scenarioPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.SelectPlanner).Contents, new string[] { $"{GameManager.Instance.Year}",$"{GenreData.GenreToString(CurrentGenreData.GenreType)}", $"{ContentData.ContentToString(CurrentContentData.ContentType)}" }, OnClickChatPopup);
+                scenarioPopup.SetInfo(
+                    MemberManager.MAIN_CHARACTER_ID,
+                    MessageManager.Instance.GetMessageScript(EMessageType.SelectPlanner).Contents,
+                    new string[] { $"{GameManager.Instance.Year}",$"{GenreData.GenreToString(CurrentGenreData.GenreType)}", $"{ContentData.ContentToString(CurrentContentData.ContentType)}" },
+                    OnClickChatPopup
+                    );
                 break;
             case EGameDevType.Graphics:
                 UI_ChatPopup graphicsPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-                graphicsPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.SelectDesigner).Contents, action : OnClickChatPopup);
+                graphicsPopup.SetInfo(
+                    MemberManager.MAIN_CHARACTER_ID,
+                    MessageManager.Instance.GetMessageScript(EMessageType.SelectDesigner).Contents,
+                    action : OnClickChatPopup
+                    );
                 break;
             case EGameDevType.Sound:
                 UI_ChatPopup soundPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-                soundPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.SelectSoundWriter).Contents, action: OnClickChatPopup);
+                soundPopup.SetInfo(
+                    MemberManager.MAIN_CHARACTER_ID,
+                    MessageManager.Instance.GetMessageScript(EMessageType.SelectSoundWriter).Contents,
+                    action: OnClickChatPopup
+                    );
                 break;
             case EGameDevType.Debug:
                 UI_ChatPopup debugPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-                debugPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.StartDebugging).Contents, action: OnClickChatPopup);
+                debugPopup.SetInfo(
+                    MemberManager.MAIN_CHARACTER_ID,
+                    MessageManager.Instance.GetMessageScript(EMessageType.StartDebugging).Contents,
+                    action: OnClickChatPopup
+                    );
                 break;
             case EGameDevType.Complete:
                 UI_ChatPopup completePopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-                completePopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.CompleteGameDev).Contents, new string[] { $"{GameManager.Instance.Year}" }, action: OnClickChatPopup);
+                completePopup.SetInfo(
+                    MemberManager.MAIN_CHARACTER_ID,
+                    MessageManager.Instance.GetMessageScript(EMessageType.CompleteGameDev).Contents,
+                    new string[] { $"{GameManager.Instance.Year}" },
+                    action: OnClickChatPopup
+                    );
                 break;
             case EGameDevType.EndDev:
                 if (GameManager.Instance.GameMode == EGameMode.Purchase)
@@ -484,7 +507,7 @@ public class GameDevManager : Singleton<GameDevManager>
                 }
                 else
                 {
-                    GameManager.Instance.GameState = EGameState.Morning;
+                    PurchaseManager.Instance.ExitAllMembersAndTransition();
                 }
                 break;
             default:

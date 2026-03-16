@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using UnityEditor;
+using UnityEngine;
 
 [System.Serializable]
 public class YearEventActionData
@@ -62,10 +63,25 @@ public class YearEventAction
             ? Define.EEventPopupType.YearEvent
             : Define.EEventPopupType.DispatchResult;
 
+        SavedEventInfo eventInfo = new SavedEventInfo
+        {
+            eventText = Data.eventText,
+            rewards = ConvertToSerializableRewards(Data.rewards),
+            deathMembers = new List<string>()
+        };
+
+        if (_category == EventCategory.YearEvent)
+        {
+            YearEventManager.Instance.SetLastYearEvent(eventInfo);
+        }
+        else if (_category == EventCategory.DispatchResult)
+        {
+            YearEventManager.Instance.SetLastDispatchResult(eventInfo);
+        }
+
         popup.SetInfo(
             popupType,
-            Data.eventText,
-            Data.rewards,
+            eventInfo,
             () => isFinished = true
         );
     }
@@ -98,6 +114,30 @@ public class YearEventAction
         }
     }
 
+    private List<SerializableReward> ConvertToSerializableRewards(EventReward[] rewards)
+    {
+        List<SerializableReward> serializableRewards = new List<SerializableReward>();
+
+        if (rewards == null || rewards.Length == 0)
+        {
+            return serializableRewards;
+        }
+
+        foreach (var reward in rewards)
+        {
+            if (reward.rewardData == null)
+                continue;
+
+            serializableRewards.Add(new SerializableReward
+            {
+                rewardType = reward.rewardData.rewardType,
+                amount = reward.amount,
+                rewardId = reward.rewardData.rewardId
+            });
+        }
+
+        return serializableRewards;
+    }
     private void FireMember()
     {
         // TODO: 멤버 해고 로직

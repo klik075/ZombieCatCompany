@@ -134,11 +134,34 @@ public class YearEvent
         }
     }
 }
+/// <summary>
+/// 직렬화 가능한 보상 정보 (UI 표시용)
+/// </summary>
+[Serializable]
+public class SerializableReward
+{
+    public RewardType rewardType;  // 보상 타입
+    public int amount;             // 보상 양
+    public int rewardId;           // RewardData의 ID (Sprite 로드용)
+}
+
+[Serializable]
+public class SavedEventInfo
+{
+    public string eventText;
+    public List<SerializableReward> rewards;  // 보상 정보 (UI 표시용)
+    public List<string> deathMembers;  // 죽은 멤버 이름 목록
+}
+
 [Serializable]
 public class YearEventSaveData
 {
     public List<string> executedOnceEvents = new List<string>(); // 실행 완료된 Once 타입 이벤트 이름 목록
     public List<string> unlockedEvents = new List<string>(); // 언락된 이벤트 이름 목록 (조건 달성으로 해금된 이벤트)
+    public bool hasCompletedNightSequence = false; // 현재 밤 시퀀스 완료 여부
+
+    public SavedEventInfo lastYearEvent;
+    public SavedEventInfo lastDispatchResult;
 }
 public enum EventCategory
 {

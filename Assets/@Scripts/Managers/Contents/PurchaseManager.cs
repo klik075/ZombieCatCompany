@@ -38,20 +38,23 @@ public class PurchaseManager : Singleton<PurchaseManager>
     /// </summary>
     private void OnPurchaseFlowCompleted()
     {
-        // Member 퇴장 관리자 생성
-        _exitController = new MemberExitController(
-            MemberManager.Instance.GetAllMembers(),
-            MemberManager.Instance.DoorWay
-        );
-        
-        // 퇴장 시작 (모두 퇴장하면 OnAllMembersExited 호출)
-        _exitController.StartExit(onAllMembersExited: OnAllMembersExited);
-        
         // Merchant 제거
         ObjectManager.Instance.Despawn(_merchant);
         _merchant = null;
         _currentFlow = null;
 
+        ExitAllMembersAndTransition();
+    }
+    public void ExitAllMembersAndTransition()
+    {
+        // Member 퇴장 관리자 생성
+        _exitController = new MemberExitController(
+            MemberManager.Instance.GetAllMembers(),
+            MemberManager.Instance.DoorWay
+        );
+
+        // 퇴장 시작 (모두 퇴장하면 OnAllMembersExited 호출)
+        _exitController.StartExit(onAllMembersExited: OnAllMembersExited);
     }
     
     /// <summary>

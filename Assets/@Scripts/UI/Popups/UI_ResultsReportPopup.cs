@@ -160,8 +160,8 @@ public class UI_ResultsReportPopup : UI_UGUI, IUI_Popup, IClickableUI
 
     private void OnClickOkayButton()
     {
-        _onConfirm?.Invoke();
         UIManager.Instance.ClosePopupUI();
+        _onConfirm?.Invoke();
     }
 
     public override void RefreshUI()

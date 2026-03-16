@@ -313,7 +313,13 @@ public class UI_FoodRationPopup : UI_UGUI, IUI_Popup, IClickableUI
 
         GameManager.Instance.Food -= totalFood;
 
-        // TODO : 선택된 멤버 배고픔 단계 이전으로 두 칸 이동
+        for (int i = 0; i < MemberManager.MAX_MEMBERS; i++)
+        {
+            if (_toggles[i] != null && _toggles[i].isOn)
+            {
+                MemberManager.Instance.DecreaseHungerState(i, stages: 2);
+            }
+        }
 
         UIManager.Instance.ClosePopupUI();
     }

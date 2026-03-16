@@ -12,9 +12,16 @@ public class YearEventManager : Singleton<YearEventManager>
     private Dictionary<YearEventData, YearEvent> _yearEventInstancesDict;
     private Dictionary<YearEventData, YearEvent> _dispatchResultDict;
 
+    public List<string> CurrentDeathMembers { get; private set; } = new List<string>();
+
+    // 마지막으로 실행된 이벤트 정보 (다시보기용)
+    public SavedEventInfo LastYearEvent { get; private set; }
+    public SavedEventInfo LastDispatchResult { get; private set; }
+
     private YearEvent _currentYearEvent;
     private YearEvent _currentDispatchResult;
     private bool _isSequenceRunning = false;
+    private bool _hasCompletedNightSequence = false; // 현재 밤 시퀀스 완료 여부
 
     #region 초기화
 
@@ -83,6 +90,12 @@ public class YearEventManager : Singleton<YearEventManager>
         var saveData = gameData.YearEventData;
         saveData.executedOnceEvents.Clear();
         saveData.unlockedEvents.Clear();
+        
+        // 밤 시퀀스 완료 여부 저장
+        saveData.hasCompletedNightSequence = _hasCompletedNightSequence;
+
+        saveData.lastYearEvent = LastYearEvent;
+        saveData.lastDispatchResult = LastDispatchResult;
 
         foreach (var kvp in _yearEventInstancesDict)
         {
@@ -117,7 +130,8 @@ public class YearEventManager : Singleton<YearEventManager>
         }
 
         Debug.Log($"[YearEventManager] Saved {saveData.executedOnceEvents.Count} executed events, " +
-                  $"{saveData.unlockedEvents.Count} unlocked events");
+                  $"{saveData.unlockedEvents.Count} unlocked events, " +
+                  $"hasCompletedNightSequence: {saveData.hasCompletedNightSequence}");
     }
 
     public void LoadEventStates(GameData gameData)
@@ -125,10 +139,17 @@ public class YearEventManager : Singleton<YearEventManager>
         if (gameData.YearEventData == null)
         {
             Debug.Log("[YearEventManager] No saved event data found.");
+            _hasCompletedNightSequence = false;
             return;
         }
 
         var saveData = gameData.YearEventData;
+        
+        // 밤 시퀀스 완료 여부 로드
+        _hasCompletedNightSequence = saveData.hasCompletedNightSequence;
+
+        LastYearEvent = saveData.lastYearEvent;
+        LastDispatchResult = saveData.lastDispatchResult;
 
         // YearEvent 로드
         foreach (var eventName in saveData.executedOnceEvents)
@@ -173,7 +194,8 @@ public class YearEventManager : Singleton<YearEventManager>
         }
 
         Debug.Log($"[YearEventManager] Loaded {saveData.executedOnceEvents.Count} executed events, " +
-                  $"{saveData.unlockedEvents.Count} unlocked events");
+                  $"{saveData.unlockedEvents.Count} unlocked events, " +
+                  $"hasCompletedNightSequence: {_hasCompletedNightSequence}");
     }
 
     #endregion
@@ -223,7 +245,9 @@ public class YearEventManager : Singleton<YearEventManager>
         }
 
         if (availableResults.Count == 1)
+        {
             return availableResults[0];
+        }
 
         return SelectByWeight(availableResults);
     }
@@ -265,6 +289,13 @@ public class YearEventManager : Singleton<YearEventManager>
 
     public void StartNightSequence()
     {
+        // 이미 완료했으면 생략
+        if (_hasCompletedNightSequence)
+        {
+            Debug.Log("[YearEventManager] Night sequence already completed this cycle. Skipping.");
+            return;
+        }
+
         if (_isSequenceRunning)
         {
             Debug.LogWarning("[YearEventManager] Sequence already running!");
@@ -283,21 +314,32 @@ public class YearEventManager : Singleton<YearEventManager>
 
         ResetRepeatableEventsForNewCycle();
 
-        yield return CoroutineManager.Instance.Run(CoShowYearEvent());
+        CurrentDeathMembers = MemberManager.Instance.IncreaseAllMembersHunger();
+
+        yield return CoroutineManager.Instance.Run(CoShowYearEvent()); //연차 이벤트
 
         if (currentYear > 1)
         {
             if (HasDispatchResult())
             {
-                yield return CoroutineManager.Instance.Run(CoShowDispatchResult());
+                yield return CoroutineManager.Instance.Run(CoShowDispatchResult()); //파견 결과
             }
 
-            yield return CoroutineManager.Instance.Run(CoShowDispatchSelection());
-            yield return CoroutineManager.Instance.Run(CoShowFoodDistribution());
+            yield return CoroutineManager.Instance.Run(CoShowDispatchSelection()); //파견 선택
+            yield return CoroutineManager.Instance.Run(CoShowFoodDistribution()); //식량 배급
         }
 
         _isSequenceRunning = false;
-        Debug.Log("[YearEventManager] Night sequence completed");
+        
+        // 시퀀스 완료 플래그 설정
+        _hasCompletedNightSequence = true;
+
+        CurrentDeathMembers.Clear();
+
+        // 자동 저장
+        SaveManager.Instance.SaveGameData();
+        
+        Debug.Log("[YearEventManager] Night sequence completed and auto-saved");
     }
 
     private System.Collections.IEnumerator CoShowYearEvent()
@@ -314,7 +356,7 @@ public class YearEventManager : Singleton<YearEventManager>
 
         _currentYearEvent = selectedEvent;
         
-        // YearEvent.Execute()는 코루틴이므로 직접 실행
+        // ShowEventPopup 액션이 실행될 때 자동으로 저장됨
         yield return CoroutineManager.Instance.Run(selectedEvent.Execute());
 
         Debug.Log($"[YearEventManager] Year event completed: {selectedEvent.Data.name}");
@@ -342,7 +384,8 @@ public class YearEventManager : Singleton<YearEventManager>
         Debug.Log($"[YearEventManager] Executing dispatch result: {selectedResult.Data.name}");
 
         _currentDispatchResult = selectedResult;
-
+        
+        // ShowEventPopup 액션이 실행될 때 자동으로 저장됨
         yield return CoroutineManager.Instance.Run(selectedResult.Execute());
 
         Debug.Log($"[YearEventManager] Dispatch result completed: {selectedResult.Data.name}");
@@ -449,7 +492,39 @@ public class YearEventManager : Singleton<YearEventManager>
     #endregion
 
     #region 공개 메서드
+    public void SetLastYearEvent(SavedEventInfo eventInfo)
+    {
+        // 죽은 멤버 정보 추가
+        if (eventInfo.deathMembers == null)
+        {
+            eventInfo.deathMembers = new List<string>();
+        }
 
+        // 현재 죽은 멤버들을 복사하여 저장
+        eventInfo.deathMembers.Clear();
+        if (CurrentDeathMembers != null && CurrentDeathMembers.Count > 0)
+        {
+            eventInfo.deathMembers.AddRange(CurrentDeathMembers);
+        }
+
+        LastYearEvent = eventInfo;
+        Debug.Log($"[YearEventManager] Saved year event info");
+    }
+
+    /// <summary>
+    /// 마지막 파견 결과 정보 설정 (ShowEventPopup 실행 시 호출)
+    /// </summary>
+    public void SetLastDispatchResult(SavedEventInfo eventInfo)
+    {
+        // 파견 결과는 죽은 멤버 정보가 필요 없음
+        if (eventInfo.deathMembers == null)
+        {
+            eventInfo.deathMembers = new List<string>();
+        }
+
+        LastDispatchResult = eventInfo;
+        Debug.Log($"[YearEventManager] Saved dispatch result info");
+    }
     public bool IsSequenceRunning()
     {
         return _isSequenceRunning;
@@ -525,6 +600,23 @@ public class YearEventManager : Singleton<YearEventManager>
         }
 
         Debug.Log("[YearEventManager] Reset all repeatable events for new cycle");
+    }
+
+    /// <summary>
+    /// 씬 전환 시 밤 시퀀스 플래그 초기화
+    /// </summary>
+    public void ResetNightSequenceFlag()
+    {
+        _hasCompletedNightSequence = false;
+        Debug.Log("[YearEventManager] Night sequence flag reset for new cycle");
+    }
+
+    /// <summary>
+    /// 밤 시퀀스 완료 여부 확인
+    /// </summary>
+    public bool HasCompletedNightSequence()
+    {
+        return _hasCompletedNightSequence;
     }
 
     #endregion

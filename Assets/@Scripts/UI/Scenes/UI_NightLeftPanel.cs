@@ -67,18 +67,53 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
 
     private void OnClickDiaryButton()
     {
-        UI_EventPopup diaryPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
-        //diaryPopup.SetInfo(EEventPopupType.YearEvent);
-        
+        SavedEventInfo eventInfo = YearEventManager.Instance.LastYearEvent;
+
+        if (eventInfo == null || string.IsNullOrEmpty(eventInfo.eventText))
+        {
+            // 아직 이벤트를 보지 않았을 때
+            UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+            chatPopup.SetInfo(
+                MemberManager.MAIN_CHARACTER_ID,
+                new string[] { "버그다냥.." }
+            );
+        }
+        else
+        {
+            // 이전 이벤트 다시 보기 (보상 정보는 표시하되 지급은 안함)
+            UI_EventPopup diaryPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
+            diaryPopup.SetInfo(
+                EEventPopupType.YearEvent,
+                eventInfo
+            );
+        }
+
         IsActive = false;
     }
 
     private void OnClickDispatchResultButton()
     {
-        //TODO: 파견 결과 팝업 열기, 파견을 보내지 않았으면 UI_ChatPopup을 열고 "파견을 보내지 않았다냥." text 설정
-        UI_EventPopup dispatchResultPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
-        //dispatchResultPopup.SetInfo(EEventPopupType.DispatchResult);
-        
+        SavedEventInfo resultInfo = YearEventManager.Instance.LastDispatchResult;
+
+        if (resultInfo == null || string.IsNullOrEmpty(resultInfo.eventText))
+        {
+            // 파견을 보내지 않았거나 결과가 없을 때
+            UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+            chatPopup.SetInfo(
+                MemberManager.MAIN_CHARACTER_ID,
+                MessageManager.Instance.GetMessageScript(EMessageType.DispatchNotSent).Contents
+            );
+        }
+        else
+        {
+            // 이전 파견 결과 다시 보기 (보상 정보는 표시하되 지급은 안함)
+            UI_EventPopup dispatchResultPopup = UIManager.Instance.ShowPopupUI<UI_EventPopup>();
+            dispatchResultPopup.SetInfo(
+                EEventPopupType.DispatchResult,
+                resultInfo
+            );
+        }
+
         IsActive = false;
     }
 

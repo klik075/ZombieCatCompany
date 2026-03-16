@@ -29,6 +29,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, List<SynergyData>> SynergyDict { get; private set; } = new Dictionary<int, List<SynergyData>>();
     public Dictionary<int, ModeData> ModeDict { get; private set; } = new Dictionary<int, ModeData>();
     public Dictionary<int, FenceData> FenceDict { get; private set; } = new Dictionary<int, FenceData>();
+    public Dictionary<int, EventRewardData> RewardDict { get; private set; } = new Dictionary<int, EventRewardData>();
 
     public void LoadData()
     {
@@ -52,11 +53,13 @@ public class DataManager : Singleton<DataManager>
         ModeDict = LoadJson<ModeDataLoader, int, ModeData>("ModeData").MakeDict();
         FenceDict = LoadJson<FenceDataLoader, int, FenceData>("FenceData").MakeDict();
 
+        RewardDict = LoadRewardDict();
+
         Validate();
 
         _isDataLoaded = true;
     }
-
+    
     private T LoadScriptableObject<T>(string path) where T : ScriptableObject
     {
         T asset = ResourceManager.Instance.Get<T>(path);
@@ -76,7 +79,24 @@ public class DataManager : Singleton<DataManager>
 
         return loader;
     }
+    private Dictionary<int, EventRewardData> LoadRewardDict()
+    {
+        var dict = new Dictionary<int, EventRewardData>();
+        EventRewardData[] rewards = ResourceManager.Instance.GetAllFromPath<EventRewardData>("RewardData");
 
+        foreach (var reward in rewards)
+        {
+            if (dict.ContainsKey(reward.rewardId))
+            {
+                Debug.LogError($"[DataManager] Duplicate rewardId: {reward.rewardId} in EventRewardData");
+                continue;
+            }
+            dict.Add(reward.rewardId, reward);
+        }
+
+        Debug.Log($"[DataManager] Loaded {dict.Count} EventRewardData");
+        return dict;
+    }
     private bool Validate()
     {
         bool success = true;

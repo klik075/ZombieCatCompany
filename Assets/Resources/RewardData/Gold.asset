@@ -15,3 +15,4 @@ MonoBehaviour:
   rewardName: Gold
   rewardType: 0
   sprite: {fileID: -4964902326363272455, guid: c06aac57c4579b243a65690a2168429d, type: 3}
+  rewardId: 1

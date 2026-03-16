@@ -6,6 +6,7 @@ public class EventRewardData : ScriptableObject
     public string rewardName;
     public RewardType rewardType;
     public Sprite sprite;
+    public int rewardId;
 }
 
 public enum RewardType

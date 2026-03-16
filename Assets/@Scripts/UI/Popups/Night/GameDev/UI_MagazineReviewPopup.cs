@@ -90,7 +90,6 @@ public class UI_MagazineReviewPopup : UI_UGUI, IUI_Popup, IClickableUI
         yield return new WaitForSecondsRealtime(1f);
 
         GameDevManager.Instance.CurrentEvaluationScore = _totalScore;
-        GameDevManager.Instance.AdvanceToNextStage();
         SetClickInteractable(true);
     }
     private void Init()
@@ -126,14 +125,7 @@ public class UI_MagazineReviewPopup : UI_UGUI, IUI_Popup, IClickableUI
 
         // 결과 팝업 표시
         var resultPopup = UIManager.Instance.ShowPopupUI<UI_ResultsReportPopup>();
-        resultPopup.SetInfo(salesData, () =>
-        {
-            // 결과 확인 후 실행할 로직
-            Debug.Log("게임 판매 결과 확인 완료");
-            // 예: 다음 씬으로 이동, 다음 날로 진행 등
-        });
-        //UI_ResultsReportPopup resultPopup = UIManager.Instance.ShowPopupUI<UI_ResultsReportPopup>();
-        //resultPopup.SetInfo();
+        resultPopup.SetInfo(salesData, () => { GameDevManager.Instance.AdvanceToNextStage(); });
     }
     public override void RefreshUI()
     {

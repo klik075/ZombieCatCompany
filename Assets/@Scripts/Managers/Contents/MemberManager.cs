@@ -525,7 +525,7 @@ public class MemberManager : Singleton<MemberManager>
             Member member = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
             _members[i] = member;
 
-            if (!isNight && saveData.IsDispatched)
+            if (saveData.IsDispatched)
             {
                 Debug.Log($"[MemberManager] Skipping dispatched member at index {i} (MorningScene)");
                 member.LoadFromSaveDataNoCellpos(saveData);
@@ -821,7 +821,7 @@ public class MemberManager : Singleton<MemberManager>
     }
     #endregion
 
-    #region Player Seat Management
+    #region 좌석 관리
 
     // 기존 class를 struct로 변경
 
@@ -1001,8 +1001,7 @@ public class MemberManager : Singleton<MemberManager>
     {
         return HowManyActiveMemberSitting() > 0;
     }
-    #endregion
-
+   
     /// <summary>
     /// 모든 멤버를 지정된 씬의 자리로 초기화
     /// </summary>
@@ -1045,4 +1044,114 @@ public class MemberManager : Singleton<MemberManager>
         
         Debug.Log($"[MemberManager] All members reset to their seats");
     }
+    #endregion
+
+    #region 배고픔 시스템
+
+    /// <summary>
+    /// 모든 멤버의 배고픔 상태를 1단계 증가시키고, 사망한 멤버를 처리
+    /// </summary>
+    /// <returns>사망한 멤버 수</returns>
+    public List<string> IncreaseAllMembersHunger()
+    {
+        List<string> deathNames = new List<string>();
+
+        // 뒤에서부터 순회 (해고 시 인덱스 변경 방지)
+        for (int i = MemberCount - 1; i >= 0; i--)
+        {
+            Member member = GetMember(i);
+
+            if (member == null || member.CurrentMemberData == null)
+                continue;
+
+            MemberData memberData = member.CurrentMemberData;
+            EMemberStateType currentState = memberData.State;
+
+            // 이미 Death 상태면 스킵
+            if (currentState == EMemberStateType.Death)
+                continue;
+
+            // 배고픔 상태 1단계 증가
+            EMemberStateType nextState = GetNextHungerState(currentState);
+            memberData.State = nextState;
+
+            Debug.Log($"[MemberManager] {memberData.Name}: {currentState} → {nextState}");
+
+            // Death 상태가 되면 해고
+            if (nextState == EMemberStateType.Death)
+            {
+                string memberName = memberData.Name;
+                Debug.Log($"[MemberManager] {memberName} died from starvation. Firing member...");
+
+                // ignoringStatus = true로 상태 무시하고 강제 해고
+                bool fired = FireMember(i, ignoringStatus: true);
+
+                if (fired)
+                {
+                    deathNames.Add(memberName);
+                }
+            }
+        }
+
+        return deathNames;
+    }
+
+    /// <summary>
+    /// 특정 멤버의 배고픔 상태를 감소시킴 (식량 배급 시 사용)
+    /// </summary>
+    public void DecreaseHungerState(int memberIndex, int stages = 2)
+    {
+        Member member = GetMember(memberIndex);
+
+        if (member == null || member.CurrentMemberData == null)
+            return;
+
+        MemberData memberData = member.CurrentMemberData;
+        EMemberStateType currentState = memberData.State;
+
+        // stages만큼 배고픔 감소
+        for (int i = 0; i < stages; i++)
+        {
+            currentState = GetPreviousHungerState(currentState);
+        }
+
+        memberData.State = currentState;
+        Debug.Log($"[MemberManager] {memberData.Name}: Hunger decreased to {currentState}");
+    }
+
+    /// <summary>
+    /// 다음 배고픔 상태 반환
+    /// </summary>
+    private EMemberStateType GetNextHungerState(EMemberStateType currentState)
+    {
+        return currentState switch
+        {
+            EMemberStateType.Full => EMemberStateType.Hunger1,
+            EMemberStateType.Hunger1 => EMemberStateType.Hunger2,
+            EMemberStateType.Hunger2 => EMemberStateType.Starvation,
+            EMemberStateType.Starvation => EMemberStateType.Soon,
+            EMemberStateType.Soon => EMemberStateType.Death,
+            EMemberStateType.Death => EMemberStateType.Death, // 이미 죽음
+            _ => EMemberStateType.Hunger1
+        };
+    }
+
+    /// <summary>
+    /// 이전 배고픔 상태 반환 (식량 배급 시)
+    /// </summary>
+    private EMemberStateType GetPreviousHungerState(EMemberStateType currentState)
+    {
+        return currentState switch
+        {
+            EMemberStateType.Death => EMemberStateType.Soon,
+            EMemberStateType.Soon => EMemberStateType.Starvation,
+            EMemberStateType.Starvation => EMemberStateType.Hunger2,
+            EMemberStateType.Hunger2 => EMemberStateType.Hunger1,
+            EMemberStateType.Hunger1 => EMemberStateType.Full,
+            EMemberStateType.Full => EMemberStateType.Full, // 이미 배부름
+            _ => EMemberStateType.Full
+        };
+    }
+
+    #endregion
 }
