@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using UnityEngine;
 using static Define;
 
@@ -6,7 +6,7 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
 {
     enum GameObjects
     {
-        //BG - »óÈ£ÀÛ¿ë x
+        //BG - ìƒí˜¸ì‘ìš© x
         BG,
     }
     enum Buttons
@@ -93,38 +93,38 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
 
         MemberData memberData = selectedPlayer.CurrentMemberData;
 
-        // Á¦¸ñ ¼³Á¤
-        GetText((int)Texts.MainTitleText).text = "@±³À° ¿Ï·á";
+        // ì œëª© ì„¤ì •
+        GetText((int)Texts.MainTitleText).text = "@êµìœ¡ ì™„ë£Œ";
         
-        // ¸â¹ö ÀÌ¸§ ¼³Á¤
+        // ë©¤ë²„ ì´ë¦„ ì„¤ì •
         GetText((int)Texts.SubMiddleNameText).text = $"@{memberData.Name}";
 
-        // ´É·ÂÄ¡ ÀÌ¸§ ¼³Á¤
+        // ëŠ¥ë ¥ì¹˜ ì´ë¦„ ì„¤ì •
         GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);
         GetText((int)Texts.AbilityNameText2).text = MemberData.AbilityToString(EAbilityType.Scenario);
         GetText((int)Texts.AbilityNameText3).text = MemberData.AbilityToString(EAbilityType.Graphics);
         GetText((int)Texts.AbilityNameText4).text = MemberData.AbilityToString(EAbilityType.Sound);
         GetText((int)Texts.AbilityNameText5).text = MemberData.AbilityToString(EAbilityType.Power);
 
-        // ÇöÀç ´É·ÂÄ¡ Á¡¼ö ¼³Á¤ (±³À° Àû¿ë ÈÄ)
+        // í˜„ì¬ ëŠ¥ë ¥ì¹˜ ì ìˆ˜ ì„¤ì • (êµìœ¡ ì ìš© í›„)
         GetText((int)Texts.AbilityCurrentScoreText1).text = memberData.Programming.ToString();
         GetText((int)Texts.AbilityCurrentScoreText2).text = memberData.Scenario.ToString();
         GetText((int)Texts.AbilityCurrentScoreText3).text = memberData.Graphics.ToString();
         GetText((int)Texts.AbilityCurrentScoreText4).text = memberData.Sound.ToString();
         GetText((int)Texts.AbilityCurrentScoreText5).text = memberData.Power.ToString();
 
-        // »ó½ÂÇÑ ´É·ÂÄ¡ Á¡¼ö ¼³Á¤ (+ Ç¥½Ã)
+        // ìƒìŠ¹í•œ ëŠ¥ë ¥ì¹˜ ì ìˆ˜ ì„¤ì • (+ í‘œì‹œ)
         GetText((int)Texts.AbilityUpgradeScoreText1).text = GetUpgradeText(educationData.Programming);
         GetText((int)Texts.AbilityUpgradeScoreText2).text = GetUpgradeText(educationData.Scenario);
         GetText((int)Texts.AbilityUpgradeScoreText3).text = GetUpgradeText(educationData.Graphics);
         GetText((int)Texts.AbilityUpgradeScoreText4).text = GetUpgradeText(educationData.Sound);
         GetText((int)Texts.AbilityUpgradeScoreText5).text = GetUpgradeText(educationData.Power);
 
-        // ¸â¹ö ÀÌ¹ÌÁö ¼³Á¤
+        // ë©¤ë²„ ì´ë¯¸ì§€ ì„¤ì •
         SetMemberImage(memberData);
 
-        // È®ÀÎ ¹öÆ° ÅØ½ºÆ® ¼³Á¤
-        GetText((int)Texts.OkayButtonText).text = "È®ÀÎ";
+        // í™•ì¸ ë²„íŠ¼ í…ìŠ¤íŠ¸ ì„¤ì •
+        GetText((int)Texts.OkayButtonText).text = "í™•ì¸";
     }
 
     private string GetUpgradeText(int upgradeAmount)
@@ -145,7 +145,7 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
 
     private void SetMemberImage(MemberData memberData)
     {
-        // ¸â¹ö ÀÌ¹ÌÁö ¼³Á¤ (»óÅÂ¿¡ µû¶ó normal/zombie ÀÌ¹ÌÁö ¼±ÅÃ)
+        // ë©¤ë²„ ì´ë¯¸ì§€ ì„¤ì • (ìƒíƒœì— ë”°ë¼ normal/zombie ì´ë¯¸ì§€ ì„ íƒ)
         string imagePath = memberData.ZombieImagePath;
         
         if (!string.IsNullOrEmpty(imagePath))
@@ -174,10 +174,10 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
             return;
         }
 
-        // °ñµå Â÷°¨
+        // ê³¨ë“œ ì°¨ê°
         GameManager.Instance.Gold -= educationData.Cost;
 
-        // ´É·ÂÄ¡ Çâ»ó Àû¿ë
+        // ëŠ¥ë ¥ì¹˜ í–¥ìƒ ì ìš©
         MemberData memberData = targetMember.CurrentMemberData;
         memberData.Programming += educationData.Programming;
         memberData.Scenario += educationData.Scenario;
@@ -185,8 +185,9 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
         memberData.Sound += educationData.Sound;
         memberData.Power += educationData.Power;
 
+        EndingManager.Instance.RecordStat(Define.EEndingStatType.Education, 1);
         EventManager.Instance.TriggerEvent(EEventType.EducationCompleted);
-        Debug.Log($"{memberData.Name}ÀÌ(°¡) {educationData.Name} ±³À°À» ¹Ş¾Ò½À´Ï´Ù!");
+        Debug.Log($"{memberData.Name}ì´(ê°€) {educationData.Name} êµìœ¡ì„ ë°›ì•˜ìŠµë‹ˆë‹¤!");
     }
     
     public override void RefreshUI()

@@ -55,6 +55,41 @@ public class UIManager : Singleton<UIManager>
     }
     #endregion
 
+    #region Fade Panel (특수 UI)
+    private UI_FadePanel _fadePanel;
+
+    /// <summary>
+    /// Fade Panel 가져오기 (없으면 생성, DontDestroyOnLoad)
+    /// </summary>
+    public UI_FadePanel GetFadePanel()
+    {
+        if (_fadePanel != null && _fadePanel.gameObject != null)
+            return _fadePanel;
+
+        // 기존에 있는지 찾기
+        _fadePanel = FindFirstObjectByType<UI_FadePanel>();
+
+        if (_fadePanel == null)
+        {
+            // 새로 생성
+            GameObject go = ResourceManager.Instance.Instantiate("UI_FadePanel");
+            _fadePanel = Utils.GetOrAddComponent<UI_FadePanel>(go);
+
+            // DontDestroyOnLoad 설정 (씬 전환 시 유지)
+            DontDestroyOnLoad(_fadePanel.gameObject);
+        }
+
+        // 최상위 Canvas로 설정 (모든 UI 위에 표시)
+        Canvas canvas = _fadePanel.GetComponent<Canvas>();
+        if (canvas != null)
+        {
+            canvas.sortingOrder = 10000; // 매우 높은 값으로 설정
+        }
+
+        return _fadePanel;
+    }
+    #endregion
+
     #region Popup UI
     Transform _popupRoot;
     Transform PopupRoot

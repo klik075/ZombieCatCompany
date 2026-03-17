@@ -90,8 +90,8 @@ public class UI_InputFieldPopup : UI_UGUI, IUI_Popup, IClickableUI
     {
         string inputText = GetObject((int)GameObjects.InputField).GetComponent<TMP_InputField>().text;
 
-        _onConfirm?.Invoke(inputText);
         OnNoButtonClicked();
+        _onConfirm?.Invoke(inputText);
     }
     public void OnNoButtonClicked()
     {

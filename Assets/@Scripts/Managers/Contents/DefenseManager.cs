@@ -597,7 +597,6 @@ public class DefenseManager : Singleton<DefenseManager>
         }
         return false;
     }
-
     #endregion
 
     #region 웨이브 관리
@@ -725,6 +724,8 @@ public class DefenseManager : Singleton<DefenseManager>
             // UI 갱신 이벤트 발생
             EventManager.Instance.TriggerEvent(EEventType.DefenseProgressChanged);
 
+            EndingManager.Instance.RecordStat(Define.EEndingStatType.KilledCats);
+
             // 웨이브 완료 체크
             CheckWaveCompletion();
         }
@@ -813,6 +814,9 @@ public class DefenseManager : Singleton<DefenseManager>
     private void OnDrawGizmos()
     {
         if (!Application.isPlaying || MapManager.Instance == null)
+            return;
+
+        if (!MapManager.Instance.IsInitialized())
             return;
 
         // 스폰 위치 (녹색)

@@ -12,26 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
   m_Name: E_0001_StartYear
   m_EditorClassIdentifier: Assembly-CSharp::YearEventData
+  category: 0
   executionType: 0
   initiallyUnlocked: 1
   weight: 10
   nextEventDatas:
   - {fileID: 11400000, guid: 5c1090ee63cbaf3478a53f47cde108f6, type: 2}
+  - {fileID: 11400000, guid: 2dfe9b663811d64468ce2cfe71fc6b11, type: 2}
   conditionDatas: []
   actionDatas:
-  - type: 1
-    eventText: "\uC0B4\uC544\uB0A8\uAE30 \uC704\uD574 \uD68C\uC0AC\uB97C \uCC28\uB838\uB2E4."
-    rewards:
-    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
-      amount: 500
-    - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
-      amount: 10
-    memberTargetType: 
   - type: 0
     eventText: "\uC0B4\uC544\uB0A8\uAE30 \uC704\uD574 \uD68C\uC0AC\uB97C \uCC28\uB838\uB2E4."
-    rewards:
-    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
-      amount: 500
-    - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
-      amount: 10
+    rewards: []
     memberTargetType: 

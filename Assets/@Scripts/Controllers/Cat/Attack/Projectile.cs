@@ -48,7 +48,8 @@ public class Projectile : ObjectBase
 
     private void Update()
     {
-        if (!_isActive) return;
+        if (!_isActive)
+            return;
 
         // 생존 시간 체크
         _lifeTime += Time.deltaTime;

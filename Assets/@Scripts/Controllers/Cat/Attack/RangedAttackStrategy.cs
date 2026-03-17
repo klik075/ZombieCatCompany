@@ -91,13 +91,26 @@ public class RangedAttackStrategy : IAttackStrategy
         
         // 팔을 뻗는 타이밍까지 대기
         yield return new WaitForSeconds(_projectileLaunchDelay);
-        
-        // 타겟이 여전히 유효한지 확인
-        if (target != null && target.IsAlive)
+
+        // 대기 후 owner 유효성 확인
+        if (_owner == null || _owner.gameObject == null || !_owner.gameObject.activeInHierarchy)
         {
-            LaunchProjectile(target);
+            Debug.LogWarning("[RangedAttackStrategy] Owner destroyed during attack delay");
+            _attackCoroutine = null;
+            yield break;
         }
-        
+
+        // 타겟 유효성 확인
+        if (target == null || !target.IsAlive)
+        {
+            Debug.LogWarning("[RangedAttackStrategy] Target destroyed during attack delay");
+            _owner.SetStateIdle();
+            _attackCoroutine = null;
+            yield break;
+        }
+
+        LaunchProjectile(target);
+
         // 애니메이션이 완료될 때까지 대기
         float animDuration = _owner.GetCurrentAnimationDuration();
         float remainingTime = animDuration - _projectileLaunchDelay;
@@ -106,9 +119,12 @@ public class RangedAttackStrategy : IAttackStrategy
         {
             yield return new WaitForSeconds(remainingTime);
         }
-        
-        // Idle 상태로 복귀
-        _owner.SetStateIdle();
+
+        // Idle 복귀 전에도 유효성 확인
+        if (_owner != null && _owner.gameObject != null && _owner.gameObject.activeInHierarchy)
+        {
+            _owner.SetStateIdle();
+        }
         _attackCoroutine = null;
     }
 
@@ -142,12 +158,30 @@ public class RangedAttackStrategy : IAttackStrategy
 
     private void LaunchProjectile(NormalCat target)
     {
-        Debug.Log($"[RangedAttack] {_owner.name} launches projectile at {target.name}");
+        // 발사체 생성 전 최종 안전 체크
+        if (_owner == null || _owner.gameObject == null || !_owner.gameObject.activeInHierarchy)
+        {
+            Debug.LogWarning("[RangedAttackStrategy] Cannot launch projectile: owner is destroyed");
+            return;
+        }
+
+        if (target == null || !target.IsAlive)
+        {
+            Debug.LogWarning("[RangedAttackStrategy] Cannot launch projectile: target is destroyed");
+            return;
+        }
 
         // ObjectManager를 통해 발사체 생성 (풀링 사용)
         Projectile projectile = ObjectManager.Instance.SpawnProjectile(_projectilePrefabName, pooling: true);
+
+        // 발사체 생성 실패 체크
+        if (projectile == null)
+        {
+            Debug.LogError("[RangedAttackStrategy] Failed to spawn projectile");
+            return;
+        }
+
         projectile.transform.position = _owner.transform.position;
-        
         projectile.Initialize(target, _damage, null);
     }
 }

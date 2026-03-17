@@ -150,9 +150,27 @@ public static class Define
     }
     public enum EEndingType
     {
-        Starved,//굶어 죽음
-        Detection,//정체 발각
-        Serum,//혈청 투여
+        GameStart,  //게임 시작
+        Starvation, //굶어 죽음
+        Exposed, //정체 발각
+        Serum, //혈청 투여
+    }
+    public enum ERecordType
+    {
+        Shortest = 0,        // 최단 기록
+        Longest = 1          // 최장 기록
+    }
+    public enum EEndingStatType
+    {
+        TotalGold,           // 총 자금 (누적)
+        ConsumedFood,        // 먹은 통조림
+        DeadMembers,         // 죽은 멤버
+        KilledCats,          // 잡은 고양이
+        HiredMembers,        // 고용한 멤버
+        Education,           // 교육 횟수
+        DispatchedMembers,   // 파견 보낸 멤버
+        EnhancementLevel,    // 강화 레벨
+        EnhancementFail      // 강화 실패
     }
     public enum EHireMethodType
     {
@@ -217,6 +235,11 @@ public static class Define
         TryEnhanceFence,      // 강화 시도
         EnhanceSuccess,       // 강화 성공
         EnhanceFail,          // 강화 실패
+
+        //엔딩 관련
+        EndingStarvation,     // 굶어 죽음 엔딩
+        EndingExposed,        // 정체 발각 엔딩
+        EndingSerum,          // 혈청 엔딩
     }
 
     public enum EChatType

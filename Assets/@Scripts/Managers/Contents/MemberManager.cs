@@ -322,6 +322,8 @@ public class MemberManager : Singleton<MemberManager>
         MemberCount++;
         MapManager.Instance.MoveTo(newPlayer, MapManager.Instance.FindNearPosition(DoorWay), true);
 
+        EndingManager.Instance.RecordStat(Define.EEndingStatType.HiredMembers, 1);
+
         return true;
     }
     public string GetMemberPrefabName(int employeeId)
@@ -1080,6 +1082,12 @@ public class MemberManager : Singleton<MemberManager>
             // Death 상태가 되면 해고
             if (nextState == EMemberStateType.Death)
             {
+                if (memberData.Role == ERoleType.Boss)
+                {
+                    EndingManager.Instance.TriggerEnding(EEndingType.Starvation);
+                    return deathNames;
+                }
+
                 string memberName = memberData.Name;
                 Debug.Log($"[MemberManager] {memberName} died from starvation. Firing member...");
 
@@ -1092,6 +1100,8 @@ public class MemberManager : Singleton<MemberManager>
                 }
             }
         }
+
+        EndingManager.Instance.RecordStat(EEndingStatType.DeadMembers, deathNames.Count);
 
         return deathNames;
     }
@@ -1153,5 +1163,37 @@ public class MemberManager : Singleton<MemberManager>
         };
     }
 
+    #endregion
+
+    #region 이동, 공격 정지
+    /// <summary>
+    /// 모든 멤버의 이동 및 공격 즉시 정지 (긴급 상황용 - 엔딩, 씬 전환 등)
+    /// </summary>
+    public void StopAllMembersImmediately()
+    {
+        Debug.Log("[MemberManager] Stopping all members immediately...");
+
+        for (int i = 0; i < MemberCount; i++)
+        {
+            Member member = GetMember(i);
+
+            if (member != null)
+            {
+                // 공격 전략 제거 (코루틴 정지)
+                member.StopAttack();
+
+                // 이동 전략 제거
+                member.ClearMovementStrategy();
+
+                // AI 비활성화
+                member.AIEnabled = false;
+
+                // 상태 강제 변경
+                member.SetStateForced(Cat.ECatState.Idle);
+            }
+        }
+
+        Debug.Log("[MemberManager] All members stopped");
+    }
     #endregion
 }

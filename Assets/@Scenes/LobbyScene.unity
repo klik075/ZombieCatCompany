@@ -312,6 +312,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI_LobbyGame
       objectReference: {fileID: 0}
+    - target: {fileID: 4290497372920416420, guid: b1dd0dc4bf4c0be4cbd189d1e6396ada, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5838593781727062816, guid: b1dd0dc4bf4c0be4cbd189d1e6396ada, type: 3}
       propertyPath: m_Pivot.x
       value: 0

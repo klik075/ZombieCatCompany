@@ -224,6 +224,18 @@ public class MessageManager : Singleton<MessageManager>
         {
             Contents = new string[] { "파견을 보내지 않았다냥.." }
         };
+        _messageScripts[EMessageType.EndingStarvation] = new MessageScript
+        {
+            Contents = new string[] { "자금이 부족하다냥.\r\n여기까지인 것 같다냥..." }
+        };
+        _messageScripts[EMessageType.EndingExposed] = new MessageScript
+        {
+            Contents = new string[] { "정체가 발각되었다냥.\r\n여기까지인 것 같다냥..." }
+        };
+        _messageScripts[EMessageType.EndingSerum] = new MessageScript
+        {
+            Contents = new string[] { "혈청을 구했다냥.\r\n나는 자유다냥!" }
+        };
     }
 
     //private void InitializeChatScripts()

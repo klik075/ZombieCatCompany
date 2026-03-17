@@ -63,7 +63,10 @@ public class MapManager : Singleton<MapManager>
             }
         }
     }
-
+    public bool IsInitialized()
+    {
+        return _tilemap != null && !_tilemap.Equals(null);
+    }
     public bool CanMove(int x, int y)
     {
         if (_walkableMap == null) 

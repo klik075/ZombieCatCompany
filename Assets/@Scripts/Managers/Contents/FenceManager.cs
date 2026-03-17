@@ -122,6 +122,7 @@ public class FenceManager : Singleton<FenceManager>
         {
             // 강화 성공
             _currentFence.ExecuteEnhanceSuccess();
+            EndingManager.Instance.RecordStat(EEndingStatType.EnhancementLevel, _currentFence.EnhanceLevel);
             EventManager.Instance.TriggerEvent(EEventType.FenceStateChanged);
             return true;
         }
@@ -129,6 +130,7 @@ public class FenceManager : Singleton<FenceManager>
         {
             // 강화 실패
             _currentFence.ExecuteEnhanceFailed();
+            EndingManager.Instance.RecordStat(EEndingStatType.EnhancementFail, 1);
             EventManager.Instance.TriggerEvent(EEventType.FenceStateChanged);
             return false;
         }
@@ -163,9 +165,10 @@ public class FenceManager : Singleton<FenceManager>
     /// </summary>
     private void OnFenceDestroyed()
     {
-        //EventManager.Instance.TriggerEvent(EEventType.FenceDestroyed);
-        Debug.LogWarning("Fence destroyed!");
-        // TODO: 게임 오버 또는 엔딩 로직
+        DefenseManager.Instance.StopDefense();
+        MemberManager.Instance.StopAllMembersImmediately();
+
+        EndingManager.Instance.TriggerEnding(EEndingType.Exposed);
     }
 
     /// <summary>

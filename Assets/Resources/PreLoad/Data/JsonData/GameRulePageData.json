@@ -1,0 +1,44 @@
+﻿{
+  "pages": [
+    {
+      "PageId": 0,
+      "Content": "이 게임은 좀비 고양이가 정체를 숨긴 채 게임 회사를 운영하며 살아남는 서바이벌, 전략, 디펜스, 경영 시뮬레이션 게임입니다. \n밤에는 게임을 개발해 돈을 벌고, 낮에는 게임에 불만을 가진 유저 고양이들의 시위를 막아야 합니다.\n식량을 관리하고 끝까지 살아남아 좀비 바이러스를 치료할 방법을 찾아보세요."
+    },
+    {
+      "PageId": 1,
+      "Content": "Place Hold"
+    },
+    {
+      "PageId": 2,
+      "Content": "Place Hold"
+    },
+    {
+      "PageId": 3,
+      "Content": "Place Hold"
+    },
+    {
+      "PageId": 4,
+      "Content": "Place Hold"
+    },
+    {
+      "PageId": 5,
+      "Content": "Place Hold"
+    },
+    {
+      "PageId": 6,
+      "Content": "Place Hold"
+    },
+    {
+      "PageId": 7,
+      "Content": "Place Hold"
+    },
+    {
+      "PageId": 8,
+      "Content": "Place Hold"
+    },
+    {
+      "PageId": 9,
+      "Content": "Place Hold"
+    }
+  ]
+}

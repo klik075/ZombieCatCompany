@@ -20,6 +20,8 @@ MonoBehaviour:
   conditionDatas: []
   actionDatas:
   - type: 0
-    eventText: "\uC544\uBB34\uC77C\uB3C4 \uC5C6\uC5C8\uB2E4."
+    eventText: "\uC624\uB298\uC740 \uC774\uC0C1\uD560 \uC815\uB3C4\uB85C \uC870\uC6A9\uD588\uB2E4.\n\uC544\uBB34
+      \uC77C\uB3C4 \uC77C\uC5B4\uB098\uC9C0 \uC54A\uC558\uB2E4.\n\uC774\uB7F0 \uBC24\uC744
+      \uACC4\uC18D \uBCF4\uB0BC \uC218 \uC788\uC744\uAE4C?"
     rewards: []
     memberTargetType: 

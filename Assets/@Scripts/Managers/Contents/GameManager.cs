@@ -48,18 +48,21 @@ public class GameData
     public NightData NightData = new NightData();
     public MorningData MorningData = new MorningData();
     public YearEventSaveData YearEventData = new YearEventSaveData();
+    public EndingData CurrentEndingData = new EndingData(); 
     public GameData()
     {
         GameMode = EGameMode.Purchase;
         GameState = EGameState.None;
 
         CompanyData.CompanyName = "";
-        CompanyData.Year = 0;
+        CompanyData.Year = 1;
         CompanyData.Gold = 0;
         CompanyData.Food = 0;
 
         NightData.AnnualProfit = 0;
         NightData.IsRecruiting = false;
+
+        CurrentEndingData = new EndingData();
     }
 }
 [Serializable]
@@ -80,7 +83,7 @@ public class UserData
 public class EndingData
 {
     public EGameMode GameMode;//게임 모드
-    public string EndingName;//엔딩 이름
+    public EEndingType EndingType;//엔딩 타입 추가
     public string CompanyName;//회사 명
     public int Year;//연차
     public int TotalGold;//총 자금
@@ -92,6 +95,36 @@ public class EndingData
     public int DispatchedMembersCount;//파견 보낸 멤버 수
     public int TotalEnhancementLevel;//강화수치
     public int EnhancementFailCount;//강화 실패 횟수
+
+    public EndingData()
+    {
+        EndingType = EEndingType.Starvation;
+        CompanyName = "";
+        Year = 0;
+        TotalGold = 0;
+        ConsumedFood = 0;
+        DeadMembersCount = 0;
+        KilledCatsCount = 0;
+        HiredMembersCount = 0;
+        EducationCount = 0;
+        DispatchedMembersCount = 0;
+        TotalEnhancementLevel = 0;
+        EnhancementFailCount = 0;
+    }
+    public static string EndingTypeToString(EEndingType type)
+    {
+        switch (type)
+        {
+            case EEndingType.Starvation:
+                return "굶어 죽음";
+            case EEndingType.Exposed:
+                return "정체 발각";
+            case EEndingType.Serum:
+                return "혈청 투여";
+            default:
+                return "버그다냥";
+        }
+    }
 }
 
 public class GameManager : Singleton<GameManager>
@@ -133,6 +166,12 @@ public class GameManager : Singleton<GameManager>
             if (_userData.MyGameData.CompanyData.Year < 1)
                 _userData.MyGameData.CompanyData.Year = 1;
 
+            // EndingData 동기화
+            if (_userData.MyGameData.CurrentEndingData != null)
+            {
+                _userData.MyGameData.CurrentEndingData.Year = _userData.MyGameData.CompanyData.Year;
+            }
+
             EventManager.Instance.TriggerEvent(Define.EEventType.YearChanged);
         }
     }
@@ -142,6 +181,12 @@ public class GameManager : Singleton<GameManager>
         get { return _userData.MyGameData.CompanyData.Gold; }
         set
         {
+            int prevGold = _userData.MyGameData.CompanyData.Gold;
+            int changeAmount = value - prevGold;
+            if (changeAmount > 0)
+            {
+                EndingManager.Instance.RecordStat(EEndingStatType.TotalGold, changeAmount);
+            }
             _userData.MyGameData.CompanyData.Gold = value;
 
             if (_userData.MyGameData.CompanyData.Gold < 0)
@@ -155,6 +200,12 @@ public class GameManager : Singleton<GameManager>
         get { return _userData.MyGameData.CompanyData.Food; }
         set
         {
+            int prevFood = _userData.MyGameData.CompanyData.Food;
+            int changeAmount = value - prevFood;
+            if (changeAmount < 0)
+            {
+                EndingManager.Instance.RecordStat(EEndingStatType.ConsumedFood, -changeAmount);
+            }
             _userData.MyGameData.CompanyData.Food = value;
 
             if (_userData.MyGameData.CompanyData.Food < 0)
@@ -166,12 +217,29 @@ public class GameManager : Singleton<GameManager>
     public EGameMode GameMode
     {
         get { return _userData.MyGameData.GameMode; }
-        set { _userData.MyGameData.GameMode = value; }
+        set
+        {
+            _userData.MyGameData.GameMode = value;
+
+            if (_userData.MyGameData.CurrentEndingData != null)
+            {
+                _userData.MyGameData.CurrentEndingData.GameMode = value;
+            }
+        }
     }
     public string CompanyName
     {
         get { return _userData.MyGameData.CompanyData.CompanyName; }
-        set { _userData.MyGameData.CompanyData.CompanyName = value; }
+        set
+        {
+            _userData.MyGameData.CompanyData.CompanyName = value;
+
+            // EndingData 동기화
+            if (_userData.MyGameData.CurrentEndingData != null)
+            {
+                _userData.MyGameData.CurrentEndingData.CompanyName = value;
+            }
+        }
     }
     public EGameState GameState
     {

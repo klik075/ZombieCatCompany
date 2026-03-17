@@ -30,6 +30,7 @@ public class DataManager : Singleton<DataManager>
     public Dictionary<int, ModeData> ModeDict { get; private set; } = new Dictionary<int, ModeData>();
     public Dictionary<int, FenceData> FenceDict { get; private set; } = new Dictionary<int, FenceData>();
     public Dictionary<int, EventRewardData> RewardDict { get; private set; } = new Dictionary<int, EventRewardData>();
+    public Dictionary<int, GameRulePageData> GameRuleDict { get; private set; } = new Dictionary<int, GameRulePageData>();
 
     public void LoadData()
     {
@@ -52,6 +53,7 @@ public class DataManager : Singleton<DataManager>
         SynergyDict = LoadJson<SynergyDataLoader, int, List<SynergyData>>("SynergyData").MakeDict();
         ModeDict = LoadJson<ModeDataLoader, int, ModeData>("ModeData").MakeDict();
         FenceDict = LoadJson<FenceDataLoader, int, FenceData>("FenceData").MakeDict();
+        GameRuleDict = LoadJson<GameRulePageDataLoader, int, GameRulePageData>("GameRulePageData").MakeDict();
 
         RewardDict = LoadRewardDict();
 

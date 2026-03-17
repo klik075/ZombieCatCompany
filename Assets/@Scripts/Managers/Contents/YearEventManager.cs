@@ -456,7 +456,7 @@ public class YearEventManager : Singleton<YearEventManager>
             // 파견 완료 → 루프 탈출하여 다음 코루틴으로 진행
             if (selectionResult == true)
             {
-                
+                EndingManager.Instance.RecordStat(Define.EEndingStatType.DispatchedMembers, 1);
                 Debug.Log("[YearEventManager] Exiting dispatch selection, proceeding to food distribution");
                 yield break;
             }

@@ -98,9 +98,16 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         // 개발 비용이 충분한지 확인
         if (!GameDevManager.Instance.CanAffordDevelopment())
         {
+            UIManager.Instance.ClosePopupUI();
+
             // 자금 부족 메시지 표시
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
-            chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents);
+            chatPopup.SetInfo(
+                MemberManager.MAIN_CHARACTER_ID,
+                MessageManager.Instance.GetMessageScript(EMessageType.EndingStarvation).Contents,
+                null,
+                () => { EndingManager.Instance.TriggerEnding(EEndingType.Starvation);}
+                );
             return;
         }
 

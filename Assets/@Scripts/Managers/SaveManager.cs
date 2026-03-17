@@ -331,6 +331,8 @@ public class SaveManager : Singleton<SaveManager>
         gameData.NightData.IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting;
 
         GameManager.Instance.MyGameData = gameData;
+
+        EndingManager.Instance.InitializeCurrentRecord();
         Debug.Log("SaveManager: GameData reset to initial values.");
     }
 

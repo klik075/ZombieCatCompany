@@ -103,7 +103,6 @@ public class UI_EndingRecordDetailsPopup : UI_UGUI, IUI_Popup
     {
         UpdateUIByMode();
         UpdateRecordDisplay();
-        UpdateNavigationButtons();
         
         GetText((int)Texts.OkayButtonText).text = "확인";
     }
@@ -129,6 +128,8 @@ public class UI_EndingRecordDetailsPopup : UI_UGUI, IUI_Popup
             // 기록이 있는 경우
             ShowRecord(currentData);
         }
+
+        UpdateSurvivalRecordNameText();
     }
 
     private void ShowNoRecord()
@@ -136,7 +137,7 @@ public class UI_EndingRecordDetailsPopup : UI_UGUI, IUI_Popup
         GetText((int)Texts.NoRecordText).gameObject.SetActive(true);
         GetImage((int)Images.NoRecordImage).gameObject.SetActive(true);
 
-        GetText((int)Texts.EndingNameText).text = "?";
+        GetText((int)Texts.EndingNameText).text = "엔딩 : ?";
         GetText((int)Texts.NoRecordText).text = "기록 없음";
 
         // 모든 콘텐츠 텍스트 숨기기
@@ -149,26 +150,48 @@ public class UI_EndingRecordDetailsPopup : UI_UGUI, IUI_Popup
         GetImage((int)Images.NoRecordImage).gameObject.SetActive(false);
 
         // 엔딩 정보
-        GetText((int)Texts.EndingNameText).text = data.EndingName;
+        GetText((int)Texts.EndingNameText).text = $"엔딩 : {EndingData.EndingTypeToString(data.EndingType)}";
 
-        // 왼쪽 콘텐츠 (라벨)
-        GetText((int)Texts.LeftContentLeftText1).text = "회사명";
-        GetText((int)Texts.LeftContentLeftText2).text = "연차";
+        // 왼쪽 컨텐츠 (라벨)
+        GetText((int)Texts.LeftContentLeftText1).text = "회사 명";
+        GetText((int)Texts.LeftContentLeftText2).text = "생존 연차";
         GetText((int)Texts.LeftContentLeftText3).text = "총 자금";
         GetText((int)Texts.LeftContentLeftText4).text = "먹은 통조림";
-        GetText((int)Texts.LeftContentLeftText5).text = "죽은 멤버";
-        GetText((int)Texts.LeftContentLeftText6).text = "잡은 고양이";
+        GetText((int)Texts.LeftContentLeftText5).text = "죽은 직원";
+        GetText((int)Texts.LeftContentLeftText6).text = "고양이 처치";
 
-        // 왼쪽 콘텐츠 (값)
+        // 왼쪽 컨텐츠 (값)
         GetText((int)Texts.LeftContentRightText1).text = data.CompanyName;
-        GetText((int)Texts.LeftContentRightText2).text = $"{data.Year}년차";
+        GetText((int)Texts.LeftContentRightText2).text = $"{data.Year}";
         GetText((int)Texts.LeftContentRightText3).text = $"{data.TotalGold:N0}";
-        GetText((int)Texts.LeftContentRightText4).text = $"{data.ConsumedFood}개";
-        GetText((int)Texts.LeftContentRightText5).text = $"{data.DeadMembersCount}명";
-        GetText((int)Texts.LeftContentRightText6).text = $"{data.KilledCatsCount}마리";
+        GetText((int)Texts.LeftContentRightText4).text = $"{data.ConsumedFood}";
+        GetText((int)Texts.LeftContentRightText5).text = $"{data.DeadMembersCount}";
+        GetText((int)Texts.LeftContentRightText6).text = $"{data.KilledCatsCount}";
+
+        // 오른쪽 컨텐츠 (라벨)
+        GetText((int)Texts.RightContentLeftText1).text = "고용 횟수";
+        GetText((int)Texts.RightContentLeftText2).text = "교육 횟수";
+        GetText((int)Texts.RightContentLeftText3).text = "파견 횟수";
+        GetText((int)Texts.RightContentLeftText4).text = "펜스 강화";
+        GetText((int)Texts.RightContentLeftText5).text = "강화 실패";
+        GetText((int)Texts.RightContentLeftText6).text = "";
+
+        // 오른쪽 컨텐츠 (값)
+        GetText((int)Texts.RightContentRightText1).text = $"{data.HiredMembersCount}";
+        GetText((int)Texts.RightContentRightText2).text = $"{data.EducationCount}";
+        GetText((int)Texts.RightContentRightText3).text = $"{data.DispatchedMembersCount}";
+        GetText((int)Texts.RightContentRightText4).text = $"{data.TotalEnhancementLevel}";
+        GetText((int)Texts.RightContentRightText5).text = $"{data.EnhancementFailCount}";
+        GetText((int)Texts.RightContentRightText6).text = "";
 
         // 모든 콘텐츠 텍스트 표시
         AllContentTextsSetActive(true);
+    }
+    private void UpdateSurvivalRecordNameText()
+    {
+        bool isShortest = (_currentIndex % 2 == 0);
+        string recordTypeName = isShortest ? "최단 생존 연차 기록" : "최장 생존 연차 기록";
+        GetText((int)Texts.SurvivalRecordNameText).text = recordTypeName;
     }
 
     private void AllContentTextsSetActive(bool isActive)
@@ -177,31 +200,21 @@ public class UI_EndingRecordDetailsPopup : UI_UGUI, IUI_Popup
         {
             GetText((int)Texts.LeftContentLeftText1 + i - 1).gameObject.SetActive(isActive);
             GetText((int)Texts.LeftContentRightText1 + i - 1).gameObject.SetActive(isActive);
+            GetText((int)Texts.RightContentLeftText1 + i - 1).gameObject.SetActive(isActive);
+            GetText((int)Texts.RightContentRightText1 + i - 1).gameObject.SetActive(isActive);
         }
-    }
-
-    private void UpdateNavigationButtons()
-    {
-        GetButton((int)Buttons.PreviousButton).interactable = _currentIndex > 0;
-        GetButton((int)Buttons.NextButton).interactable = _currentIndex < _currentRecords.Length - 1;
     }
 
     private void OnNextButtonClicked()
     {
-        if (_currentIndex < _currentRecords.Length - 1)
-        {
-            _currentIndex++;
-            UpdateContent();
-        }
+        _currentIndex = (_currentIndex + 1) % _currentRecords.Length;
+        UpdateContent();
     }
 
     private void OnPreviousButtonClicked()
     {
-        if (_currentIndex > 0)
-        {
-            _currentIndex--;
-            UpdateContent();
-        }
+        _currentIndex = (_currentIndex - 1 + _currentRecords.Length) % _currentRecords.Length;
+        UpdateContent();
     }
     public override void RefreshUI()
     {

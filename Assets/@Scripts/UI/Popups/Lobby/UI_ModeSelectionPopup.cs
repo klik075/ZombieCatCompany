@@ -133,16 +133,21 @@ public class UI_ModeSelectionPopup : UI_UGUI, IUI_Popup
     {
         SaveManager.Instance.NewGame();
 
-        GameData gameData = GameManager.Instance.MyGameData;
-        gameData.GameMode = _selectedMode;
-        gameData.GameState = EGameState.Night;
-        gameData.CompanyData.CompanyName = input;
+        GameManager.Instance.GameMode = _selectedMode;
+        GameManager.Instance.GameState = EGameState.Night;
+        GameManager.Instance.CompanyName = input;
+        //GameData gameData = GameManager.Instance.MyGameData;
+        //gameData.GameMode = _selectedMode;
+        //gameData.GameState = EGameState.Night;
+        //gameData.CompanyData.CompanyName = input;
 
         SaveManager.Instance.SaveGameData();
         SaveManager.Instance.SaveUserData();
 
-        SceneManager.Instance.LoadScene(EScene.NightScene);
+        UIManager.Instance.CloseAllPopupUI();
 
+        EndingManager.Instance.TriggerGameStart();
+        //SceneManager.Instance.LoadScene(EScene.NightScene);
     }
     public override void RefreshUI()
     {

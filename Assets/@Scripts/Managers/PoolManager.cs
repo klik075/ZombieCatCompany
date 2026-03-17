@@ -131,6 +131,19 @@ public class PoolManager : Singleton<PoolManager>
             Debug.Log($"[PoolManager] Pool '{poolName}' cleared");
         }
     }
+    public void ClearAllPools()
+    {
+        Debug.Log($"[PoolManager] Clearing all pools ({_pools.Count} pools)");
+
+        foreach (var pool in _pools.Values)
+        {
+            pool.Clear();
+        }
+
+        _pools.Clear();
+
+        Debug.Log("[PoolManager] All pools cleared");
+    }
     public void Clear()
     {
         _pools.Clear();
