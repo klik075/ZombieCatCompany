@@ -133,6 +133,25 @@ public class YearEvent
             }
         }
     }
+    /// <summary>
+    /// 새 게임 시작 시 모든 타입의 이벤트 완전 초기화
+    /// </summary>
+    public void ResetForNewGame()
+    {
+        currentActionIndex = 0;
+        hasBeenExecuted = false;
+
+        // initiallyUnlocked가 아닌 이벤트는 잠금 상태로
+        IsUnlocked = Data.initiallyUnlocked;
+
+        // 모든 액션 리셋
+        foreach (var action in runtimeActions)
+        {
+            action.Reset();
+        }
+
+        Debug.Log($"[YearEvent] '{Data.name}' reset for new game (ExecutionType: {Data.executionType})");
+    }
 }
 /// <summary>
 /// 직렬화 가능한 보상 정보 (UI 표시용)

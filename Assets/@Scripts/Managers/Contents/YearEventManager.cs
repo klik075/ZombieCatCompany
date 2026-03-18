@@ -77,6 +77,37 @@ public class YearEventManager : Singleton<YearEventManager>
 
         Debug.Log($"[YearEventManager] Initialized {_dispatchResultDict.Count} dispatch results");
     }
+    /// <summary>
+    /// 새 게임 시작 시 모든 상태 초기화
+    /// </summary>
+    public void ResetForNewGame()
+    {
+        Debug.Log("[YearEventManager] Resetting for new game...");
+
+        // 1. 모든 YearEvent 초기화
+        foreach (var yearEvent in _yearEventInstancesDict.Values)
+        {
+            yearEvent.ResetForNewGame();
+        }
+        
+        // 2. 모든 DispatchResult 초기화
+        foreach (var dispatchResult in _dispatchResultDict.Values)
+        {
+            dispatchResult.ResetForNewGame();
+        }
+
+        // 3. 실행 상태 초기화
+        LastYearEvent = null;
+        LastDispatchResult = null;
+        CurrentDeathMembers.Clear();
+
+        _currentYearEvent = null;
+        _currentDispatchResult = null;
+        _isSequenceRunning = false;
+        _hasCompletedNightSequence = false;
+
+        Debug.Log("[YearEventManager] Reset complete");
+    }
     #endregion
 
     #region 저장/로드

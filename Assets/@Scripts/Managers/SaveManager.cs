@@ -300,6 +300,8 @@ public class SaveManager : Singleton<SaveManager>
         // 보스 SaveData만 GameData에 생성 (런타임 소환이 불가능한 Lobby에서도 안전)
         CreateBossData();
 
+        InitializeAllManagers();
+
         GameDevManager.Instance.InitNewProject();
 
         CreateFenceData();
@@ -309,6 +311,11 @@ public class SaveManager : Singleton<SaveManager>
         SaveUserData();
 
         Debug.Log("SaveManager: New game started.");
+    }
+    private void InitializeAllManagers()
+    {
+        YearEventManager.Instance.ResetForNewGame();
+        DefenseManager.Instance.ResetForNewGame();
     }
 
     /// <summary>

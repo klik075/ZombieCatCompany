@@ -84,8 +84,36 @@ public class DefenseManager : Singleton<DefenseManager>
     private Coroutine _spawnCoroutine;
     private Coroutine _reassignCoroutine;
 
-    #region 디펜스 시작/종료
+    #region 초기화
+    public void ResetForNewGame()
+    {
+        Debug.Log("[DefenseManager] Resetting for new game...");
 
+        // 기존 디펜스 정지
+        if (_isDefenseActive)
+        {
+            StopDefense();
+        }
+
+        // 상태 초기화
+        _currentWave = 0;
+        _spawnedCatsCount = 0;
+        _totalCatsToSpawn = 10;
+        _isDefenseActive = false;
+        _spawnCoroutine = null;
+        _reassignCoroutine = null;
+
+        // 리스트 초기화
+        _spawnedCats.Clear();
+        _waitingCats.Clear();
+        _attackingCats.Clear();
+        _assignedTargets.Clear();
+
+        Debug.Log("[DefenseManager] Reset complete");
+    }
+    #endregion
+
+    #region 디펜스 시작/종료
     public void StartDefense()
     {
         if (_isDefenseActive)

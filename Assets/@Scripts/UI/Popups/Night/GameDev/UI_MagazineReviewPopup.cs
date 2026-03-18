@@ -81,7 +81,17 @@ public class UI_MagazineReviewPopup : UI_UGUI, IUI_Popup, IClickableUI
             yield return new WaitForSecondsRealtime(2f);
 
             GetObject((int)GameObjects.EvaluationTextFrame1 + i).SetActive(true);
-            GetText((int)Texts.EvaluationText1 + i).text = "대사로 설정할 것";
+
+            string dialogue = "버그다냥!"; // 기본값
+            if (DataManager.Instance.EvaluationScriptDict.TryGetValue(score, out var dialogueList)
+                && dialogueList != null && dialogueList.Count > 0)
+            {
+                // 리스트에서 랜덤하게 하나 선택
+                int randomIndex = UnityEngine.Random.Range(0, dialogueList.Count);
+                dialogue = dialogueList[randomIndex].Dialogue;
+            }
+
+            GetText((int)Texts.EvaluationText1 + i).text = dialogue;
             GetText((int)Texts.EvaluationScoreText1 + i).text = score.ToString();
             _totalScore += score;
             UpdateTotalScore();
