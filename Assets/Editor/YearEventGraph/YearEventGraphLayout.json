@@ -156,8 +156,8 @@
         },
         {
             "eventName": "E_0005_BusinessProposal2_Y",
-            "x": 2024.0,
-            "y": 833.0,
+            "x": 2025.0,
+            "y": 853.0,
             "width": 250.0,
             "height": 192.0
         },
@@ -205,21 +205,21 @@
         },
         {
             "eventName": "E_0005_SwindlerCaught",
-            "x": 2698.0,
-            "y": 937.0,
+            "x": 2671.0,
+            "y": 971.0,
             "width": 250.0,
             "height": 108.0
         },
         {
             "eventName": "E_0005_SwindlerCaughtBroadcast1",
-            "x": 2353.0,
-            "y": 832.0,
+            "x": 2318.0,
+            "y": 853.0,
             "width": 289.0,
             "height": 164.0
         },
         {
             "eventName": "E_0005_SwindlerCaughtBroadcast2",
-            "x": 2353.0,
+            "x": 2317.0,
             "y": 1045.0,
             "width": 291.0,
             "height": 164.0

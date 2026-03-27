@@ -250,6 +250,8 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
             SetInfo();
         else
         {
+            MemberManager.Instance.ActivateHiredMembersAI();
+
             MemberManager.Instance.EndHire();
             UIManager.Instance.ClosePopupUI();
         }

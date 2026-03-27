@@ -320,11 +320,46 @@ public class MemberManager : Singleton<MemberManager>
         newPlayer.SetMemberData(newMemberData);
         _members[MemberCount] = newPlayer;
         MemberCount++;
-        MapManager.Instance.MoveTo(newPlayer, MapManager.Instance.FindNearPosition(DoorWay), true);
+
+        // 개선 1: AI 비활성화 (자동 이동 방지)
+        newPlayer.AIEnabled = false;
+
+        // 개선 2: DoorWay 근처에 배치
+        Vector2Int spawnPosition = MapManager.Instance.FindNearPosition(DoorWay);
+        MapManager.Instance.MoveTo(newPlayer, spawnPosition, true);
+
+        // 개선 3: Idle 상태로 고정
+        newPlayer.SetStateIdle();
 
         EndingManager.Instance.RecordStat(Define.EEndingStatType.HiredMembers, 1);
 
+        Debug.Log($"[MemberManager] Hired {newMemberData.Name} at {spawnPosition} (AI disabled)");
         return true;
+    }
+
+    /// <summary>
+    /// 고용된 모든 멤버의 AI 활성화 (고용 프로세스 완료 후 호출)
+    /// </summary>
+    public void ActivateHiredMembersAI()
+    {
+        int activatedCount = 0;
+        
+        for (int i = 0; i < MemberCount; i++)
+        {
+            Member member = GetMember(i);
+            
+            if (member != null && !member.AIEnabled)
+            {
+                member.AIEnabled = true;
+                activatedCount++;
+                Debug.Log($"[MemberManager] Activated AI for {member.CurrentMemberData?.Name}");
+            }
+        }
+        
+        if (activatedCount > 0)
+        {
+            Debug.Log($"[MemberManager] Activated AI for {activatedCount} newly hired members");
+        }
     }
     public string GetMemberPrefabName(int employeeId)
     {
