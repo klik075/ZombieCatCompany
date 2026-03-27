@@ -4,13 +4,14 @@ using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 
 public class YearEventGraphEditorWindow : EditorWindow
 {
     private YearEventGraphView graphView;
     private List<YearEventData> eventDataList = new List<YearEventData>();
     
-    private const string POSITION_PREFS_KEY = "YearEventGraph_NodePositions";
+    private const string LAYOUT_FILE_PATH = "Assets/Editor/YearEventGraph/YearEventGraphLayout.json";
 
     [MenuItem("Tools/Year Event Graph")]
     public static void OpenWindow()
@@ -25,14 +26,59 @@ public class YearEventGraphEditorWindow : EditorWindow
         CreateGraphView();
         CreateToolbar();
         LoadAllYearEvents();
+        
+        EditorApplication.wantsToQuit += OnEditorQuit;
+        AssemblyReloadEvents.beforeAssemblyReload += OnBeforeAssemblyReload;
+        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
     }
 
     private void OnDisable()
     {
+        if (graphView != null && !EditorApplication.isPlayingOrWillChangePlaymode)
+        {
+            SaveNodePositionsToFile();
+            rootVisualElement.Remove(graphView);
+        }
+        
+        EditorApplication.wantsToQuit -= OnEditorQuit;
+        AssemblyReloadEvents.beforeAssemblyReload -= OnBeforeAssemblyReload;
+        EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+    }
+
+    private bool OnEditorQuit()
+    {
+        SaveNodePositionsToFile();
+        Debug.Log("[YearEventGraph] Layout saved before editor quit");
+        return true;
+    }
+
+    private void OnBeforeAssemblyReload()
+    {
         if (graphView != null)
         {
-            SaveNodePositionsToPrefs();
-            rootVisualElement.Remove(graphView);
+            SaveNodePositionsToFile();
+            Debug.Log("[YearEventGraph] Layout auto-saved before script recompile");
+        }
+    }
+
+    private void OnPlayModeStateChanged(PlayModeStateChange state)
+    {
+        if (state == PlayModeStateChange.ExitingEditMode && graphView != null)
+        {
+            SaveNodePositionsToFile();
+            Debug.Log("[YearEventGraph] Layout saved before entering Play Mode");
+        }
+        
+        if (state == PlayModeStateChange.EnteredEditMode)
+        {
+            Debug.Log("[YearEventGraph] Returned to Edit Mode, reloading graph...");
+            EditorApplication.delayCall += () =>
+            {
+                if (this != null && graphView != null)
+                {
+                    RefreshGraph();
+                }
+            };
         }
     }
 
@@ -51,12 +97,43 @@ public class YearEventGraphEditorWindow : EditorWindow
         var toolbar = new YearEventToolbar();
 
         var refreshButton = new Button(() => RefreshGraph()) { text = "Refresh" };
+        refreshButton.tooltip = "Reload all events and restore saved layout";
         toolbar.Add(refreshButton);
 
-        var saveButton = new Button(() => SaveConnections()) { text = "Save Connections" };
+        var saveButton = new Button(() => SaveConnections()) { text = "Save All" };
+        saveButton.tooltip = "Save connections and node positions to file";
         toolbar.Add(saveButton);
 
+        var resetLayoutButton = new Button(() => ResetLayout()) { text = "Reset Layout" };
+        resetLayoutButton.tooltip = "Reset all positions to grid layout sorted by name (can be reverted via Git)";
+        toolbar.Add(resetLayoutButton);
+
         rootVisualElement.Add(toolbar);
+    }
+
+    private void ResetLayout()
+    {
+        bool confirmed = EditorUtility.DisplayDialog(
+            "Reset Layout",
+            "모든 노드의 위치가 초기화되고 이름 순으로 재배치됩니다.\n\n" +
+            "이 작업은 Git으로 되돌릴 수 있습니다.\n\n" +
+            "정말로 진행하시겠습니까?",
+            "확인",
+            "취소"
+        );
+
+        if (!confirmed)
+        {
+            Debug.Log("[YearEventGraph] Layout reset cancelled");
+            return;
+        }
+
+        Dictionary<string, Rect> emptyPositions = new Dictionary<string, Rect>();
+        graphView.RefreshGraphWithPositions(eventDataList, emptyPositions);
+
+        SaveNodePositionsToFile();
+
+        Debug.Log($"[YearEventGraph] Layout reset: {eventDataList.Count} nodes repositioned in grid");
     }
 
     private void LoadAllYearEvents()
@@ -73,13 +150,16 @@ public class YearEventGraphEditorWindow : EditorWindow
             }
         }
 
-        Dictionary<string, Rect> savedPositions = LoadNodePositionsFromPrefs();
+        Dictionary<string, Rect> savedPositions = LoadNodePositionsFromFile();
         graphView.PopulateGraphWithSavedPositions(eventDataList, savedPositions);
     }
 
     private void RefreshGraph()
     {
-        SaveNodePositionsToPrefs();
+        if (graphView != null)
+        {
+            SaveNodePositionsToFile();
+        }
         
         eventDataList.Clear();
         string[] guids = AssetDatabase.FindAssets("t:YearEventData");
@@ -93,10 +173,20 @@ public class YearEventGraphEditorWindow : EditorWindow
             }
         }
 
-        Dictionary<string, Rect> savedPositions = LoadNodePositionsFromPrefs();
-        graphView.RefreshGraphWithPositions(eventDataList, savedPositions);
+        Dictionary<string, Rect> savedPositions = LoadNodePositionsFromFile();
         
-        Debug.Log($"Graph refreshed: {eventDataList.Count} events loaded");
+        if (savedPositions.Count > 0)
+        {
+            Debug.Log($"[YearEventGraph] Refreshing with {savedPositions.Count} saved positions");
+            graphView.RefreshGraphWithPositions(eventDataList, savedPositions);
+        }
+        else
+        {
+            Debug.LogWarning("[YearEventGraph] No saved layout found! Using grid layout");
+            graphView.RefreshGraphWithPositions(eventDataList, new Dictionary<string, Rect>());
+        }
+        
+        Debug.Log($"[YearEventGraph] Graph refreshed: {eventDataList.Count} events loaded");
     }
 
     public void SaveConnections()
@@ -109,7 +199,6 @@ public class YearEventGraphEditorWindow : EditorWindow
 
             Undo.RecordObject(node.EventData, "Set Next Events");
 
-            // Save Next connections
             var outputPort = node.outputContainer.Q<Port>("NextPort");
             if (outputPort != null)
             {
@@ -130,14 +219,12 @@ public class YearEventGraphEditorWindow : EditorWindow
                 node.EventData.nextEventDatas.AddRange(uniqueNextEvents);
             }
 
-            // Save Yes/No connections (ShowChoicePopup)
             if (node.EventData.actionDatas != null)
             {
                 foreach (var actionData in node.EventData.actionDatas)
                 {
                     if (actionData.type == YearActionType.ShowChoicePopup)
                     {
-                        // Yes Port
                         var yesPort = node.outputContainer.Q<Port>("YesPort");
                         if (yesPort != null && yesPort.connections.Any())
                         {
@@ -153,7 +240,6 @@ public class YearEventGraphEditorWindow : EditorWindow
                             actionData.yesNextEvent = null;
                         }
 
-                        // No Port
                         var noPort = node.outputContainer.Q<Port>("NoPort");
                         if (noPort != null && noPort.connections.Any())
                         {
@@ -176,63 +262,176 @@ public class YearEventGraphEditorWindow : EditorWindow
         }
 
         AssetDatabase.SaveAssets();
-        SaveNodePositionsToPrefs();
+        SaveNodePositionsToFile();
         
-        Debug.Log("Year event connections saved!");
+        Debug.Log("[YearEventGraph] Connections and layout saved to file!");
     }
 
-    #region EditorPrefs 위치 저장/로드
+    #region JSON 파일 저장/로드
 
-    private void SaveNodePositionsToPrefs()
+    private void SaveNodePositionsToFile()
     {
+        if (EditorApplication.isPlaying)
+        {
+            Debug.LogWarning("[YearEventGraph] Skipping save: Currently in Play Mode");
+            return;
+        }
+
+        if (graphView == null)
+        {
+            Debug.LogWarning("[YearEventGraph] Cannot save layout: graphView is null");
+            return;
+        }
+        
         var positions = graphView.SaveNodePositions();
+        
+        if (positions == null || positions.Count == 0)
+        {
+            Debug.LogWarning("[YearEventGraph] Skipping save: No positions to save");
+            return;
+        }
+        
         var serializable = new SerializablePositionData();
+        int validCount = 0;
+        int invalidCount = 0;
         
         foreach (var kvp in positions)
         {
             if (kvp.Key != null)
             {
-                serializable.positions.Add(new NodePosition
+                if (IsValidPosition(kvp.Value))
                 {
-                    eventName = kvp.Key.name,
-                    x = kvp.Value.x,
-                    y = kvp.Value.y,
-                    width = kvp.Value.width,
-                    height = kvp.Value.height
-                });
+                    serializable.positions.Add(new NodePosition
+                    {
+                        eventName = kvp.Key.name,
+                        x = kvp.Value.x,
+                        y = kvp.Value.y,
+                        width = kvp.Value.width,
+                        height = kvp.Value.height
+                    });
+                    validCount++;
+                }
+                else
+                {
+                    invalidCount++;
+                    //Debug.LogWarning($"[YearEventGraph] Skipping invalid position for '{kvp.Key.name}': " +
+                                   //$"x={kvp.Value.x}, y={kvp.Value.y}, w={kvp.Value.width}, h={kvp.Value.height}");
+                }
             }
         }
         
-        string json = JsonUtility.ToJson(serializable, true);
-        EditorPrefs.SetString(POSITION_PREFS_KEY, json);
+        if (serializable.positions.Count == 0)
+        {
+            Debug.LogWarning($"[YearEventGraph] Skipping save: No valid positions found (invalid: {invalidCount})");
+            return;
+        }
+
+        if (invalidCount > validCount)
+        {
+            Debug.LogError($"[YearEventGraph] Aborting save: Too many invalid positions! Valid: {validCount}, Invalid: {invalidCount}");
+            return;
+        }
+
+        try
+        {
+            string directory = Path.GetDirectoryName(LAYOUT_FILE_PATH);
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            string json = JsonUtility.ToJson(serializable, true);
+            File.WriteAllText(LAYOUT_FILE_PATH, json);
+            AssetDatabase.Refresh();
+            
+            Debug.Log($"[YearEventGraph] Saved {serializable.positions.Count} valid node positions (skipped {invalidCount} invalid)");
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"[YearEventGraph] Failed to save layout: {e.Message}");
+        }
     }
 
-    private Dictionary<string, Rect> LoadNodePositionsFromPrefs()
+    private bool IsValidPosition(Rect rect)
+    {
+        if (float.IsNaN(rect.x) || float.IsNaN(rect.y) || 
+            float.IsNaN(rect.width) || float.IsNaN(rect.height))
+        {
+            return false;
+        }
+
+        if (float.IsInfinity(rect.x) || float.IsInfinity(rect.y) || 
+            float.IsInfinity(rect.width) || float.IsInfinity(rect.height))
+        {
+            return false;
+        }
+
+        if (rect.width <= 0 || rect.height <= 0)
+        {
+            return false;
+        }
+
+        if (Mathf.Abs(rect.x) > 100000 || Mathf.Abs(rect.y) > 100000)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private Dictionary<string, Rect> LoadNodePositionsFromFile()
     {
         Dictionary<string, Rect> positions = new Dictionary<string, Rect>();
         
-        if (!EditorPrefs.HasKey(POSITION_PREFS_KEY))
+        if (!File.Exists(LAYOUT_FILE_PATH))
         {
-            return positions;
-        }
-        
-        string json = EditorPrefs.GetString(POSITION_PREFS_KEY);
-        if (string.IsNullOrEmpty(json))
-        {
+            Debug.Log($"[YearEventGraph] No layout file found. Will use grid layout.");
             return positions;
         }
         
         try
         {
-            var serializable = JsonUtility.FromJson<SerializablePositionData>(json);
-            foreach (var nodePos in serializable.positions)
+            string json = File.ReadAllText(LAYOUT_FILE_PATH);
+            if (string.IsNullOrEmpty(json))
             {
-                positions[nodePos.eventName] = new Rect(nodePos.x, nodePos.y, nodePos.width, nodePos.height);
+                return positions;
+            }
+            
+            var serializable = JsonUtility.FromJson<SerializablePositionData>(json);
+            if (serializable?.positions != null)
+            {
+                int validCount = 0;
+                int invalidCount = 0;
+
+                foreach (var nodePos in serializable.positions)
+                {
+                    Rect rect = new Rect(nodePos.x, nodePos.y, nodePos.width, nodePos.height);
+                    
+                    if (IsValidPosition(rect))
+                    {
+                        positions[nodePos.eventName] = rect;
+                        validCount++;
+                    }
+                    else
+                    {
+                        invalidCount++;
+                        Debug.LogWarning($"[YearEventGraph] Skipping invalid saved position for '{nodePos.eventName}'");
+                    }
+                }
+                
+                if (invalidCount > 0)
+                {
+                    Debug.LogWarning($"[YearEventGraph] Loaded {validCount} valid positions, skipped {invalidCount} invalid positions");
+                }
+                else
+                {
+                    Debug.Log($"[YearEventGraph] Loaded {positions.Count} node positions from file");
+                }
             }
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"Failed to load node positions: {e.Message}");
+            Debug.LogError($"[YearEventGraph] Failed to load layout: {e.Message}");
         }
         
         return positions;
@@ -310,41 +509,23 @@ public class YearEventGraphView : GraphView
         return positions;
     }
 
-    public void PopulateGraph(List<YearEventData> eventDataList)
-    {
-        nodeMap.Clear();
-
-        float xOffset = 0;
-        float yOffset = 0;
-        int column = 0;
-
-        foreach (var eventData in eventDataList)
-        {
-            var node = CreateEventNode(eventData);
-            node.SetPosition(new Rect(100 + xOffset, 100 + yOffset, 250, 150));
-            AddElement(node);
-            nodeMap[eventData] = node;
-
-            xOffset += 300;
-            column++;
-            if (column >= 4)
-            {
-                column = 0;
-                xOffset = 0;
-                yOffset += 250;
-            }
-        }
-
-        CreateEdgesFromEventData(eventDataList);
-    }
-
     public void PopulateGraphWithSavedPositions(List<YearEventData> eventDataList, Dictionary<string, Rect> savedPositions)
     {
         nodeMap.Clear();
 
-        List<Rect> occupiedPositions = new List<Rect>(savedPositions.Values);
-        
-        foreach (var eventData in eventDataList)
+        var sortedEvents = eventDataList.OrderBy(e => e.name).ToList();
+
+        const float nodeWidth = 250;
+        const float nodeHeight = 150;
+        const float horizontalSpacing = 300;
+        const float verticalSpacing = 200;
+        const float startX = 100;
+        const float startY = 100;
+        const int maxColumns = 4;
+
+        int gridIndex = 0;
+
+        foreach (var eventData in sortedEvents)
         {
             var node = CreateEventNode(eventData);
             
@@ -355,8 +536,14 @@ public class YearEventGraphView : GraphView
             }
             else
             {
-                nodePosition = FindNonOverlappingPosition(occupiedPositions);
-                occupiedPositions.Add(nodePosition);
+                int row = gridIndex / maxColumns;
+                int col = gridIndex % maxColumns;
+                
+                float x = startX + col * horizontalSpacing;
+                float y = startY + row * verticalSpacing;
+                
+                nodePosition = new Rect(x, y, nodeWidth, nodeHeight);
+                gridIndex++;
             }
 
             node.SetPosition(nodePosition);
@@ -364,7 +551,7 @@ public class YearEventGraphView : GraphView
             nodeMap[eventData] = node;
         }
 
-        CreateEdgesFromEventData(eventDataList);
+        CreateEdgesFromEventData(sortedEvents);
     }
 
     public void RefreshGraphWithPositions(List<YearEventData> eventDataList, Dictionary<string, Rect> savedPositions)
@@ -379,9 +566,19 @@ public class YearEventGraphView : GraphView
         }
         nodeMap.Clear();
 
-        List<Rect> occupiedPositions = new List<Rect>(savedPositions.Values);
-        
-        foreach (var eventData in eventDataList)
+        var sortedEvents = eventDataList.OrderBy(e => e.name).ToList();
+
+        const float nodeWidth = 250;
+        const float nodeHeight = 150;
+        const float horizontalSpacing = 300;
+        const float verticalSpacing = 200;
+        const float startX = 100;
+        const float startY = 100;
+        const int maxColumns = 4;
+
+        int gridIndex = 0;
+
+        foreach (var eventData in sortedEvents)
         {
             var node = CreateEventNode(eventData);
             
@@ -392,8 +589,14 @@ public class YearEventGraphView : GraphView
             }
             else
             {
-                nodePosition = FindNonOverlappingPosition(occupiedPositions);
-                occupiedPositions.Add(nodePosition);
+                int row = gridIndex / maxColumns;
+                int col = gridIndex % maxColumns;
+                
+                float x = startX + col * horizontalSpacing;
+                float y = startY + row * verticalSpacing;
+                
+                nodePosition = new Rect(x, y, nodeWidth, nodeHeight);
+                gridIndex++;
             }
 
             node.SetPosition(nodePosition);
@@ -401,52 +604,7 @@ public class YearEventGraphView : GraphView
             nodeMap[eventData] = node;
         }
 
-        CreateEdgesFromEventData(eventDataList);
-    }
-
-    private Rect FindNonOverlappingPosition(List<Rect> occupiedPositions)
-    {
-        const float nodeWidth = 250;
-        const float nodeHeight = 150;
-        const float margin = 50;
-        const float startX = 100;
-        const float startY = 100;
-        const int maxColumns = 4;
-
-        for (int row = 0; row < 100; row++)
-        {
-            for (int col = 0; col < maxColumns; col++)
-            {
-                float x = startX + col * (nodeWidth + margin);
-                float y = startY + row * (nodeHeight + margin);
-                Rect candidateRect = new Rect(x, y, nodeWidth, nodeHeight);
-
-                bool overlaps = false;
-                foreach (var occupied in occupiedPositions)
-                {
-                    if (RectOverlaps(candidateRect, occupied, margin))
-                    {
-                        overlaps = true;
-                        break;
-                    }
-                }
-
-                if (!overlaps)
-                {
-                    return candidateRect;
-                }
-            }
-        }
-
-        return new Rect(startX, startY + occupiedPositions.Count * (nodeHeight + margin), nodeWidth, nodeHeight);
-    }
-
-    private bool RectOverlaps(Rect a, Rect b, float margin)
-    {
-        return !(a.xMax + margin < b.xMin ||
-                 a.xMin > b.xMax + margin ||
-                 a.yMax + margin < b.yMin ||
-                 a.yMin > b.yMax + margin);
+        CreateEdgesFromEventData(sortedEvents);
     }
 
     private void CreateEdgesFromEventData(List<YearEventData> eventDataList)
@@ -456,7 +614,6 @@ public class YearEventGraphView : GraphView
             if (!nodeMap.ContainsKey(eventData)) continue;
             var sourceNode = nodeMap[eventData];
 
-            // Next events connections
             if (eventData.nextEventDatas != null)
             {
                 foreach (var nextEvent in eventData.nextEventDatas)
@@ -476,14 +633,12 @@ public class YearEventGraphView : GraphView
                 }
             }
 
-            // ShowChoicePopup의 Yes/No connections
             if (eventData.actionDatas != null)
             {
                 foreach (var actionData in eventData.actionDatas)
                 {
                     if (actionData.type == YearActionType.ShowChoicePopup)
                     {
-                        // Yes connection (초록색)
                         if (actionData.yesNextEvent != null && nodeMap.ContainsKey(actionData.yesNextEvent))
                         {
                             var yesPort = sourceNode.outputContainer.Q<Port>("YesPort");
@@ -497,7 +652,6 @@ public class YearEventGraphView : GraphView
                             }
                         }
 
-                        // No connection (빨간색)
                         if (actionData.noNextEvent != null && nodeMap.ContainsKey(actionData.noNextEvent))
                         {
                             var noPort = sourceNode.outputContainer.Q<Port>("NoPort");
@@ -520,19 +674,6 @@ public class YearEventGraphView : GraphView
     {
         var node = new YearEventNode(eventData);
         return node;
-    }
-
-    public void ClearGraph()
-    {
-        foreach (var node in nodes.ToList())
-        {
-            RemoveElement(node);
-        }
-        foreach (var edge in edges.ToList())
-        {
-            RemoveElement(edge);
-        }
-        nodeMap.Clear();
     }
 }
 

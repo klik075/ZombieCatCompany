@@ -18,14 +18,7 @@ MonoBehaviour:
   weight: 2
   nextEventDatas:
   - {fileID: 11400000, guid: f161d250082faec449f0125ce38c235b, type: 2}
-  conditionDatas:
-  - type: 3
-    yearValue: 0
-    yearValueMax: 0
-    goldValue: 10000
-    foodValue: 0
-    memberCount: 0
-    requiredEvent: {fileID: 11400000, guid: 8257cf3c822a9984ba284acdbeba319d, type: 2}
+  conditionDatas: []
   actionDatas:
   - type: 2
     eventText: 

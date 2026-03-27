@@ -15,7 +15,7 @@ MonoBehaviour:
   category: 0
   executionType: 1
   initiallyUnlocked: 0
-  weight: 10
+  weight: 4
   nextEventDatas: []
   conditionDatas: []
   actionDatas:

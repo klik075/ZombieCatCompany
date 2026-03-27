@@ -1,0 +1,501 @@
+{
+    "positions": [
+        {
+            "eventName": "D_0001_NoResult",
+            "x": -425.0,
+            "y": -457.0,
+            "width": 250.0,
+            "height": 177.0
+        },
+        {
+            "eventName": "D_0002_AddFood",
+            "x": -425.0,
+            "y": -252.0,
+            "width": 250.0,
+            "height": 205.0
+        },
+        {
+            "eventName": "D_0002_AddFood2",
+            "x": -125.0,
+            "y": -252.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "D_0003_AddGold",
+            "x": -425.0,
+            "y": -19.0,
+            "width": 250.0,
+            "height": 205.0
+        },
+        {
+            "eventName": "D_0003_AddGold2",
+            "x": -125.0,
+            "y": -19.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "D_0004_FindZombieCat",
+            "x": 201.0,
+            "y": -275.0,
+            "width": 250.0,
+            "height": 177.0
+        },
+        {
+            "eventName": "D_0009_FoodMerchantNews",
+            "x": 201.0,
+            "y": 2605.0,
+            "width": 250.0,
+            "height": 177.0
+        },
+        {
+            "eventName": "D_0010_TreasureMap",
+            "x": -425.0,
+            "y": 412.0,
+            "width": 250.0,
+            "height": 177.0
+        },
+        {
+            "eventName": "D_0010_TreasureMapResult1",
+            "x": -121.0,
+            "y": 248.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "D_0010_TreasureMapResult2",
+            "x": -121.0,
+            "y": 412.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "D_0010_TreasureMapResult3",
+            "x": -121.0,
+            "y": 592.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0001_StartYear",
+            "x": 201.0,
+            "y": -480.0,
+            "width": 250.0,
+            "height": 177.0
+        },
+        {
+            "eventName": "E_0002_QuietYear",
+            "x": 501.0,
+            "y": -480.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0004_ScientistMistake",
+            "x": 802.0,
+            "y": -275.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0004_Serum",
+            "x": 1357.0,
+            "y": -275.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0004_StartSerumStudy",
+            "x": 1084.0,
+            "y": -275.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0004_SuspiciousBroadcast",
+            "x": 504.0,
+            "y": -275.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0005_BusinessProposal1",
+            "x": 802.0,
+            "y": 616.0,
+            "width": 250.0,
+            "height": 255.0
+        },
+        {
+            "eventName": "E_0005_BusinessProposal1_N",
+            "x": 1074.0,
+            "y": 918.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0005_BusinessProposal1_Y",
+            "x": 1084.0,
+            "y": 520.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0005_BusinessProposal2",
+            "x": 1722.0,
+            "y": 918.0,
+            "width": 250.0,
+            "height": 255.0
+        },
+        {
+            "eventName": "E_0005_BusinessProposal2_N",
+            "x": 2024.0,
+            "y": 1045.0,
+            "width": 251.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0005_BusinessProposal2_Y",
+            "x": 2024.0,
+            "y": 833.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0005_InvestmentFailure",
+            "x": 1425.0,
+            "y": 674.0,
+            "width": 250.0,
+            "height": 244.0
+        },
+        {
+            "eventName": "E_0005_InvestmentSuccess1",
+            "x": 1425.0,
+            "y": -58.0,
+            "width": 250.0,
+            "height": 244.0
+        },
+        {
+            "eventName": "E_0005_InvestmentSuccess2",
+            "x": 1425.0,
+            "y": 186.0,
+            "width": 250.0,
+            "height": 244.0
+        },
+        {
+            "eventName": "E_0005_InvestmentSuccess3",
+            "x": 1425.0,
+            "y": 430.0,
+            "width": 250.0,
+            "height": 244.0
+        },
+        {
+            "eventName": "E_0005_Investor",
+            "x": 507.0,
+            "y": 616.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0005_SmallProfit",
+            "x": 201.0,
+            "y": 616.0,
+            "width": 250.0,
+            "height": 205.0
+        },
+        {
+            "eventName": "E_0005_SwindlerCaught",
+            "x": 2698.0,
+            "y": 937.0,
+            "width": 250.0,
+            "height": 108.0
+        },
+        {
+            "eventName": "E_0005_SwindlerCaughtBroadcast1",
+            "x": 2353.0,
+            "y": 832.0,
+            "width": 289.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0005_SwindlerCaughtBroadcast2",
+            "x": 2353.0,
+            "y": 1045.0,
+            "width": 291.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0007_FoodDiscovery",
+            "x": 1042.0,
+            "y": 1705.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0007_FoodSteal",
+            "x": 492.0,
+            "y": 1578.0,
+            "width": 250.0,
+            "height": 255.0
+        },
+        {
+            "eventName": "E_0007_FoodSteal_N",
+            "x": 765.0,
+            "y": 1705.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0007_FoodSteal_Y",
+            "x": 765.0,
+            "y": 1482.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0007_FoodSteal2",
+            "x": 1042.0,
+            "y": 1482.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0007_FoodThief",
+            "x": 1042.0,
+            "y": 1258.0,
+            "width": 250.0,
+            "height": 224.0
+        },
+        {
+            "eventName": "E_0007_FoodThiefMember",
+            "x": 1315.0,
+            "y": 1258.0,
+            "width": 250.0,
+            "height": 234.0
+        },
+        {
+            "eventName": "E_0007_HungryNight",
+            "x": 201.0,
+            "y": 1578.0,
+            "width": 250.0,
+            "height": 209.0
+        },
+        {
+            "eventName": "E_0008_GoldSteal1",
+            "x": 1107.0,
+            "y": 1985.0,
+            "width": 250.0,
+            "height": 223.0
+        },
+        {
+            "eventName": "E_0008_GoldSteal1_N",
+            "x": 1394.0,
+            "y": 2111.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0008_GoldSteal1_Y",
+            "x": 1394.0,
+            "y": 1919.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0008_GoldSteal2",
+            "x": 1974.0,
+            "y": 1920.0,
+            "width": 250.0,
+            "height": 223.0
+        },
+        {
+            "eventName": "E_0008_GoldSteal2_N",
+            "x": 2253.0,
+            "y": 1824.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0008_GoldSteal2_Y",
+            "x": 2253.0,
+            "y": 1660.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0008_GoldThief1",
+            "x": 501.0,
+            "y": 1984.0,
+            "width": 250.0,
+            "height": 224.0
+        },
+        {
+            "eventName": "E_0008_GoldThief2",
+            "x": 813.0,
+            "y": 1984.0,
+            "width": 250.0,
+            "height": 224.0
+        },
+        {
+            "eventName": "E_0008_GoldThief3",
+            "x": 1680.0,
+            "y": 1919.0,
+            "width": 250.0,
+            "height": 224.0
+        },
+        {
+            "eventName": "E_0008_GoldThief4",
+            "x": 2853.0,
+            "y": 1919.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0008_GoldThiefBroadcast",
+            "x": 201.0,
+            "y": 1985.0,
+            "width": 250.0,
+            "height": 209.0
+        },
+        {
+            "eventName": "E_0008_GoldThiefCaught",
+            "x": 3123.0,
+            "y": 2111.0,
+            "width": 250.0,
+            "height": 108.0
+        },
+        {
+            "eventName": "E_0008_GoldThiefCaughtBroadcast",
+            "x": 2546.0,
+            "y": 2111.0,
+            "width": 289.0,
+            "height": 196.0
+        },
+        {
+            "eventName": "E_0008_GoldThiefCaughtBroadcast2",
+            "x": 3404.0,
+            "y": 2111.0,
+            "width": 298.0,
+            "height": 196.0
+        },
+        {
+            "eventName": "E_0008_GoldThiefRecruitment",
+            "x": 2853.0,
+            "y": 1727.0,
+            "width": 254.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0008_GoldThiefRunningAway",
+            "x": 2853.0,
+            "y": 1535.0,
+            "width": 263.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0008_SuspiciousShadow1",
+            "x": 2546.0,
+            "y": 1267.0,
+            "width": 250.0,
+            "height": 275.0
+        },
+        {
+            "eventName": "E_0008_SuspiciousShadow2",
+            "x": 2546.0,
+            "y": 1800.0,
+            "width": 250.0,
+            "height": 275.0
+        },
+        {
+            "eventName": "E_0008_SuspiciousShadow3",
+            "x": 2546.0,
+            "y": 1535.0,
+            "width": 250.0,
+            "height": 265.0
+        },
+        {
+            "eventName": "E_0008_WarehouseArrangement",
+            "x": 2853.0,
+            "y": 1371.0,
+            "width": 270.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0009_BrokenTrust",
+            "x": 1099.0,
+            "y": 2777.0,
+            "width": 250.0,
+            "height": 108.0
+        },
+        {
+            "eventName": "E_0009_FoodDiscount1",
+            "x": 1922.0,
+            "y": 2343.0,
+            "width": 250.0,
+            "height": 234.0
+        },
+        {
+            "eventName": "E_0009_FoodDiscount2",
+            "x": 1922.0,
+            "y": 2577.0,
+            "width": 250.0,
+            "height": 234.0
+        },
+        {
+            "eventName": "E_0009_FoodFree",
+            "x": 1641.0,
+            "y": 2343.0,
+            "width": 250.0,
+            "height": 234.0
+        },
+        {
+            "eventName": "E_0009_FoodTrade1",
+            "x": 509.0,
+            "y": 2605.0,
+            "width": 250.0,
+            "height": 265.0
+        },
+        {
+            "eventName": "E_0009_FoodTrade1_N",
+            "x": 785.0,
+            "y": 2777.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0009_FoodTrade1_Y",
+            "x": 785.0,
+            "y": 2450.0,
+            "width": 250.0,
+            "height": 224.0
+        },
+        {
+            "eventName": "E_0009_FoodTrade2",
+            "x": 1099.0,
+            "y": 2450.0,
+            "width": 250.0,
+            "height": 275.0
+        },
+        {
+            "eventName": "E_0009_FoodTrade2_N",
+            "x": 1373.0,
+            "y": 2777.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0009_FoodTrade2_Y",
+            "x": 1373.0,
+            "y": 2343.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
+            "eventName": "E_0009_MerchantDeath",
+            "x": 1922.0,
+            "y": 2811.0,
+            "width": 250.0,
+            "height": 164.0
+        }
+    ]
+}
