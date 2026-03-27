@@ -79,6 +79,9 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
     
     private const int EDUCATION_METHODS_PER_PAGE = 5;
     private int currentPageIndex = 0;
+    
+    // 선택된 슬롯 추적
+    private int selectedSlotIndex = -1;
 
     protected override void Awake()
     {
@@ -92,8 +95,6 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.NextButton).onClick.AddListener(NextPage);
         GetButton((int)Buttons.PreviousButton).onClick.AddListener(PreviousPage);
 
-        
-
         // 교육 방법 버튼들 클릭 이벤트 등록
         for (int i = 0; i < EDUCATION_METHODS_PER_PAGE; i++)
         {
@@ -101,6 +102,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
             GetButton((int)Buttons.EducationMethodButton1 + i).onClick.AddListener(() => OnClickEducationMethodButton(index));
         }
     }
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -109,14 +111,17 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
 
         SetInfo();
     }
+
     protected override void OnDisable()
     {
         base.OnDisable();
         EventManager.Instance.RemoveEvent(EEventType.EducationCompleted, SetInfo);
     }
+
     public void SetInfo()
     {
         currentPageIndex = 0;
+        selectedSlotIndex = -1; // 선택 상태 초기화
         UpdateContent();
     }
 
@@ -202,6 +207,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         if (currentPageIndex < totalPages - 1)
         {
             currentPageIndex++;
+            selectedSlotIndex = -1; // 페이지 변경 시 선택 초기화
             UpdateContent();
         }
     }
@@ -211,10 +217,14 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         if (currentPageIndex > 0)
         {
             currentPageIndex--;
+            selectedSlotIndex = -1; // 페이지 변경 시 선택 초기화
             UpdateContent();
         }
     }
 
+    /// <summary>
+    /// 교육 방법 버튼 클릭 시
+    /// </summary>
     private void OnClickEducationMethodButton(int slotIndex)
     {
         List<EducationData> currentPageEducations = GetCurrentPageEducations();
@@ -225,18 +235,67 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
             return;
         }
 
-        EducationManager.Instance.SelectedEducation = currentPageEducations[slotIndex];
+        // 같은 버튼을 다시 클릭했는지 확인
+        if (selectedSlotIndex == slotIndex)
+        {
+            // 두 번째 클릭 → 교육 실행
+            ExecuteEducation(slotIndex);
+        }
+        else
+        {
+            // 첫 번째 클릭 → 선택 상태로 표시
+            SelectEducationMethod(slotIndex);
+        }
+    }
+
+    /// <summary>
+    /// 교육 방법 선택 (첫 번째 클릭)
+    /// </summary>
+    private void SelectEducationMethod(int slotIndex)
+    {
+        selectedSlotIndex = slotIndex;
+        
+        List<EducationData> currentPageEducations = GetCurrentPageEducations();
+        EducationData educationData = currentPageEducations[slotIndex];
+
+        if (educationData == null)
+            return;
+
+        // TODO: 능력치 증가량을 AbilityFrame에 표시
+        Debug.Log($"[Selected] Education: {educationData.Name}");
+        
+        // 설명 텍스트 업데이트
+        GetText((int)Texts.DescriptionText).text = $"선택 : {educationData.Name}";
+        
+        // TODO: 선택된 버튼 하이라이트 효과 추가
+    }
+
+    /// <summary>
+    /// 교육 실행 (두 번째 클릭)
+    /// </summary>
+    private void ExecuteEducation(int slotIndex)
+    {
+        List<EducationData> currentPageEducations = GetCurrentPageEducations();
+        EducationData educationData = currentPageEducations[slotIndex];
+
+        EducationManager.Instance.SelectedEducation = educationData;
         
         if (!EducationManager.Instance.CanExecuteEducation())
         {
             EducationManager.Instance.SelectedEducation = null;
+            selectedSlotIndex = -1; // 선택 해제
+            
             // 자금 부족 팝업
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents);
             return;
         }
 
+        Debug.Log($"[Executed] Education: {educationData.Name}");
+        
         UI_MemberEducationCompletionPopup educationCompletionPopup = UIManager.Instance.ShowPopupUI<UI_MemberEducationCompletionPopup>();
+        
+        selectedSlotIndex = -1; // 실행 후 선택 초기화
     }
 
     public override void RefreshUI()

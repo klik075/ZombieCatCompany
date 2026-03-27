@@ -45,7 +45,6 @@ public static class Define
         YearChanged,
         GoldChanged,
         FoodChanged,
-        AnnualProfitChanged,
         GameStateChanged,
         ProposalChanged,
         GameDevStateChanged,

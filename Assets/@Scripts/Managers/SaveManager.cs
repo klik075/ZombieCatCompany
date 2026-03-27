@@ -334,7 +334,6 @@ public class SaveManager : Singleton<SaveManager>
         gameData.CompanyData.Gold = DataManager.Instance.GameConfig.InitialGold;
         gameData.CompanyData.Food = DataManager.Instance.GameConfig.InitialFood;
 
-        gameData.NightData.AnnualProfit = DataManager.Instance.GameConfig.InitialAnnualProfit;
         gameData.NightData.IsRecruiting = DataManager.Instance.GameConfig.InitialIsRecruiting;
 
         GameManager.Instance.MyGameData = gameData;

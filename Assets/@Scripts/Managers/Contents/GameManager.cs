@@ -28,7 +28,6 @@ public class CompanyData
 [Serializable]
 public class NightData
 {
-    public int AnnualProfit;//연간 이익
     public bool IsRecruiting; //멤버 모집 중인지
     public HireResult HireResult = null;
     public GameDevProjectData GameDevProjectData = new GameDevProjectData();
@@ -59,7 +58,6 @@ public class GameData
         CompanyData.Gold = 0;
         CompanyData.Food = 0;
 
-        NightData.AnnualProfit = 0;
         NightData.IsRecruiting = false;
 
         CurrentEndingData = new EndingData();
@@ -248,15 +246,6 @@ public class GameManager : Singleton<GameManager>
         { 
             _userData.MyGameData.GameState = value; 
             EventManager.Instance.TriggerEvent(Define.EEventType.GameStateChanged);
-        }
-    }
-    public int AnnualProfit
-    {
-        get { return _userData.MyGameData.NightData.AnnualProfit; }
-        set
-        {
-            _userData.MyGameData.NightData.AnnualProfit = value;
-            EventManager.Instance.TriggerEvent(Define.EEventType.AnnualProfitChanged);
         }
     }
     public bool IsRecruiting

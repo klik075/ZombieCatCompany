@@ -33,9 +33,8 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
         QualityText5,
 
         // NightBottomPanel1
-        AnnualProfitNameText,
-        AnnualProfitText,
-        DevelopmentStatusText,
+        CompanyNameText,
+        CompanyText,
     }
 
     enum Images
@@ -61,8 +60,6 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
         EventManager.Instance.AddEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
         EventManager.Instance.AddEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
         EventManager.Instance.AddEvent(EEventType.QualityChanged, OnQualityChanged);
-        EventManager.Instance.AddEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
-        EventManager.Instance.AddEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
     }
     protected override void OnDestroy()
     {
@@ -71,24 +68,11 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
         EventManager.Instance.RemoveEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
         EventManager.Instance.RemoveEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
         EventManager.Instance.RemoveEvent(EEventType.QualityChanged, OnQualityChanged);
-        EventManager.Instance.RemoveEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
-        EventManager.Instance.RemoveEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
     }
     protected override Button GetSaveButton() => GetButton((int)Buttons.SaveButton);
     protected override Button GetMenuButton() => GetButton((int)Buttons.MenuButton);
     protected override TMP_Text GetSaveButtonText() => GetText((int)Texts.SaveButtonText);
     protected override TMP_Text GetMenuButtonText() => GetText((int)Texts.MenuButtonText);
-
-    // 밤 전용 이벤트 처리
-    private void OnAnnualProfitChanged()
-    {
-        UpdateAnnualProfitUI(GameManager.Instance.AnnualProfit);
-    }
-
-    private void OnNewDevTitleChanged()
-    {
-        UpdateDevelopmentStatusUI(GameDevManager.Instance.CurrentGameTitle);
-    }
 
     private void OnGameDevStateChanged()
     {
@@ -149,6 +133,17 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
         }
     }
 
+    /// <summary>
+    /// 회사 이름 업데이트
+    /// </summary>
+    private void UpdateCompanyText()
+    {
+        if (GetObject((int)GameObjects.NightBottomPanel1).activeSelf == false)
+            return;
+
+        GetText((int)Texts.CompanyText).text = GameManager.Instance.CompanyName;
+    }
+
     private void UpdateBottomPanelBasedOnDevState()
     {
         EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
@@ -158,22 +153,11 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
 
         GetObject((int)GameObjects.NightBottomPanel1).SetActive(isNightPanel);
         GetObject((int)GameObjects.GameDevBottomPanel1).SetActive(isGameDevPanel);
-    }
 
-    private void UpdateAnnualProfitUI(int annualProfit)
-    {
-        GetText((int)Texts.AnnualProfitText).text = $"{annualProfit:N0}G";
-    }
-
-    private void UpdateDevelopmentStatusUI(string newDevTitle)
-    {
-        if (string.IsNullOrEmpty(newDevTitle))
+        // NightPanel이 활성화될 때 회사 이름 업데이트
+        if (isNightPanel)
         {
-            GetText((int)Texts.DevelopmentStatusText).text = "@신규 개발 없음";
-        }
-        else
-        {
-            GetText((int)Texts.DevelopmentStatusText).text = $"{newDevTitle}";
+            UpdateCompanyText();
         }
     }
 
@@ -181,8 +165,7 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
     {
         base.RefreshUI();
         UpdateBottomPanelBasedOnDevState();
-        OnAnnualProfitChanged();
-        OnNewDevTitleChanged();
+        UpdateCompanyText();
         //TODO: Localization
     }
 }

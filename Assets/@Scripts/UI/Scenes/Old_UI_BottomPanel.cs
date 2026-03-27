@@ -105,7 +105,6 @@ public class Old_UI_BottomPanel : UI_UGUI
         EventManager.Instance.AddEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
         EventManager.Instance.AddEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
         EventManager.Instance.AddEvent(EEventType.QualityChanged, OnQualityChanged);
-        EventManager.Instance.AddEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
         EventManager.Instance.AddEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
         EventManager.Instance.AddEvent(EEventType.GameStateChanged, OnGameStateChanged);
     }
@@ -119,7 +118,6 @@ public class Old_UI_BottomPanel : UI_UGUI
         EventManager.Instance.RemoveEvent(EEventType.GameDevStateChanged, OnGameDevStateChanged);
         EventManager.Instance.RemoveEvent(EEventType.GameDevProgressChanged, OnGameDevProgressChanged);
         EventManager.Instance.RemoveEvent(EEventType.QualityChanged, OnQualityChanged);
-        EventManager.Instance.RemoveEvent(EEventType.AnnualProfitChanged, OnAnnualProfitChanged);
         EventManager.Instance.RemoveEvent(EEventType.NewDevTitleChanged, OnNewDevTitleChanged);
         EventManager.Instance.RemoveEvent(EEventType.GameStateChanged, OnGameStateChanged);
     }
@@ -127,11 +125,6 @@ public class Old_UI_BottomPanel : UI_UGUI
     public void SetInfo(UI_LeftPanelBase leftPanel)
     {
         _leftPanel = leftPanel;
-    }
-
-    private void OnAnnualProfitChanged()
-    {
-        UpdateAnnualProfitUI(GameManager.Instance.AnnualProfit);
     }
 
     private void OnNewDevTitleChanged()
@@ -344,7 +337,6 @@ public class Old_UI_BottomPanel : UI_UGUI
         base.RefreshUI();
         UpdateUIStates(); // MenuButton과 SaveButton 상태 모두 업데이트
         UpdateBottomPanelBasedOnDevState(); // GameDev 상태에 따른 패널 전환
-        OnAnnualProfitChanged();
         OnNewDevTitleChanged();
         //TODO : Localization
     }

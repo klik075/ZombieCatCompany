@@ -31,6 +31,7 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         GenreText,
         ContentNameText,
         ContentText,
+        SynergyText,
 
         //SubBottom
         OkayButtonText,
