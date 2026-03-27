@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 [System.Serializable]
 public class YearEventActionData
@@ -11,7 +12,14 @@ public class YearEventActionData
     public string eventText;        // for ShowEventPopup
     public EventReward[] rewards;   // for ShowEventPopup, GiveRewards
 
-    public string memberTargetType; // for FireMember (Random, Lowest, etc.)
+    public int memberIndex;         // for ChangeHungerState (멤버 인덱스)
+    public int hungerChange;        // for ChangeHungerState (배고픔 변화량: 양수=배고파짐, 음수=배불러짐)
+
+    [TextArea(3, 10)]
+    public string choiceEventText;  // for ShowChoicePopup (선택지 텍스트)
+    public YearEventData yesNextEvent;  // Yes 선택 시 해금할 이벤트
+    public YearEventData noNextEvent;   // No 선택 시 해금할 이벤트
+    public bool executeImmediately = false;  // 체인 실행 옵션
 }
 
 public class YearEventAction
@@ -38,6 +46,10 @@ public class YearEventAction
                 ShowEventPopup();
                 break;
 
+            case YearActionType.ShowChoicePopup:
+                ShowChoicePopup();
+                break;
+
             case YearActionType.GiveRewards:
                 GiveRewards();
                 isFinished = true;
@@ -48,8 +60,8 @@ public class YearEventAction
                 isFinished = true;
                 break;
 
-            case YearActionType.ClosePopup:
-                UIManager.Instance.ClosePopupUI();
+            case YearActionType.ChangeHungerState:
+                ChangeHungerState();
                 isFinished = true;
                 break;
         }
@@ -85,7 +97,57 @@ public class YearEventAction
             () => isFinished = true
         );
     }
+    private void ShowChoicePopup()
+    {
+        UI_EventChoicePopup popup = UIManager.Instance.ShowPopupUI<UI_EventChoicePopup>();
 
+        Define.EEventPopupType popupType = _category == EventCategory.YearEvent
+            ? Define.EEventPopupType.YearEvent
+            : Define.EEventPopupType.DispatchResult;
+
+        popup.SetInfo(
+            popupType,
+            Data.choiceEventText,
+            () => OnChoiceSelected(true),   // Yes
+            () => OnChoiceSelected(false)   // No
+        );
+    }
+    private void OnChoiceSelected(bool isYes)
+    {
+        YearEventData nextEventData = isYes ? Data.yesNextEvent : Data.noNextEvent;
+
+        if (nextEventData != null)
+        {
+            if (Data.executeImmediately)
+            {
+                CoroutineManager.Instance.Run(CoExecuteNextEventChain(nextEventData));
+            }
+            else
+            {
+                // 해금만 (다음 기회에 실행)
+                YearEventManager.Instance.UnlockEvent(nextEventData);
+                isFinished = true;
+            }
+        }
+        else
+        {
+            isFinished = true;
+        }
+    }
+    private System.Collections.IEnumerator CoExecuteNextEventChain(YearEventData nextEvent)
+    {
+        Debug.Log($"[YearEventAction] Executing next event chain: {nextEvent.name}");
+
+        // 다음 이벤트 해금 및 실행
+        yield return CoroutineManager.Instance.Run(
+            YearEventManager.Instance.UnlockAndExecuteEvent(nextEvent)
+        );
+
+        Debug.Log($"[YearEventAction] Next event chain completed: {nextEvent.name}");
+
+        // 체인 실행 완료 후 현재 액션 완료
+        isFinished = true;
+    }
     private void GiveRewards()
     {
         if (Data.rewards == null || Data.rewards.Length == 0)
@@ -108,7 +170,7 @@ public class YearEventAction
                     break;
 
                 case RewardType.Member:
-                    Debug.Log($"[YearEventAction] +Member (Not implemented)");
+                    MemberManager.Instance.HireMember(reward.rewardData.rewardId);
                     break;
             }
         }
@@ -143,7 +205,49 @@ public class YearEventAction
         // TODO: 멤버 해고 로직
         Debug.Log($"[YearEventAction] Fire member (Not implemented)");
     }
+    private void ChangeHungerState()
+    {
+        List<Member> eligibleMembers = new List<Member>();
+        List<Member> activeMembers = MemberManager.Instance.GetActiveMembers(); // 파견 제외
 
+        foreach (var member in activeMembers)
+        {
+            int index = MemberManager.Instance.GetIndex(member);
+            if (index > 0) // 보스(인덱스 0) 제외
+            {
+                eligibleMembers.Add(member);
+            }
+        }
+
+        // 선택 가능한 멤버가 없으면 종료
+        if (eligibleMembers.Count == 0)
+        {
+            Debug.LogWarning($"[YearEventAction] No eligible members for hunger change (Boss and dispatched excluded)");
+            return;
+        }
+
+        // 랜덤으로 한 명 선택
+        int randomListIndex = Random.Range(0, eligibleMembers.Count);
+        Member selectedMember = eligibleMembers[randomListIndex];
+        int memberIndex = MemberManager.Instance.GetIndex(selectedMember);
+
+        if (selectedMember == null || selectedMember.CurrentMemberData == null)
+        {
+            Debug.LogWarning($"[YearEventAction] Member not found at index: {Data.memberIndex}");
+            return;
+        }
+
+        if (Data.hungerChange > 0)
+        {
+            // 양수: 배고픔 증가
+            MemberManager.Instance.IncreaseHungerState(Data.memberIndex, Data.hungerChange);
+        }
+        else if (Data.hungerChange < 0)
+        {
+            // 음수: 배고픔 감소 (절댓값 사용)
+            MemberManager.Instance.DecreaseHungerState(Data.memberIndex, Mathf.Abs(Data.hungerChange));
+        }
+    }
     public bool IsFinished()
     {
         return isFinished;
@@ -157,10 +261,11 @@ public class YearEventAction
 
 public enum YearActionType
 {
-    ShowEventPopup,
-    GiveRewards,
-    FireMember,
-    ClosePopup
+    ShowEventPopup,// 이벤트 팝업 표시 (텍스트 + 보상)
+    ShowChoicePopup,       // 선택지 팝업 표시 (Yes/No 선택)
+    GiveRewards,// 보상 지급 (골드, 음식, 멤버)
+    FireMember,// 멤버 해고
+    ChangeHungerState// 배고픔 상태 변경 (양수: 배고픔 증가 / 음수: 배고픔 감소)
 }
 
 #if UNITY_EDITOR
@@ -194,6 +299,32 @@ public class YearEventActionDrawer : PropertyDrawer
                 EditorGUI.PropertyField(position, rewardsProp, new GUIContent("Rewards"), true);
                 break;
 
+            case YearActionType.ShowChoicePopup:
+                // Event Text
+                var choiceTextProp = property.FindPropertyRelative("choiceEventText");
+                float choiceTextHeight = EditorGUI.GetPropertyHeight(choiceTextProp, true);
+                position.height = choiceTextHeight;
+                EditorGUI.PropertyField(position, choiceTextProp, new GUIContent("Choice Text"), true);
+                position.y += choiceTextHeight + EditorGUIUtility.standardVerticalSpacing;
+
+                // Yes Next Event
+                var yesNextProp = property.FindPropertyRelative("yesNextEvent");
+                position.height = EditorGUIUtility.singleLineHeight;
+                EditorGUI.PropertyField(position, yesNextProp, new GUIContent("Yes Unlock Event"));
+                position.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+
+                // No Next Event
+                var noNextProp = property.FindPropertyRelative("noNextEvent");
+                position.height = EditorGUIUtility.singleLineHeight;
+                EditorGUI.PropertyField(position, noNextProp, new GUIContent("No Unlock Event"));
+                position.y += EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
+
+                // Execute Immediately
+                var executeImmediatelyProp = property.FindPropertyRelative("executeImmediately");
+                position.height = EditorGUIUtility.singleLineHeight;
+                EditorGUI.PropertyField(position, executeImmediatelyProp, new GUIContent("Execute Immediately"));
+                break;
+
             case YearActionType.GiveRewards:
                 var rewardsProp2 = property.FindPropertyRelative("rewards");
                 float rewardsHeight2 = EditorGUI.GetPropertyHeight(rewardsProp2, true);
@@ -202,9 +333,16 @@ public class YearEventActionDrawer : PropertyDrawer
                 break;
 
             case YearActionType.FireMember:
-                var memberTargetProp = property.FindPropertyRelative("memberTargetType");
+                var memberIndexProp = property.FindPropertyRelative("memberIndex");
                 position.height = EditorGUIUtility.singleLineHeight;
-                EditorGUI.PropertyField(position, memberTargetProp, new GUIContent("Target Type"));
+                EditorGUI.PropertyField(position, memberIndexProp, new GUIContent("Member Index"));
+                break;
+
+            case YearActionType.ChangeHungerState:
+                // Hunger Change
+                var hungerChangeProp = property.FindPropertyRelative("hungerChange");
+                position.height = EditorGUIUtility.singleLineHeight;
+                EditorGUI.PropertyField(position, hungerChangeProp, new GUIContent("Hunger Change (+ 배고픔 / - 배부름)"));
                 break;
         }
 
@@ -226,12 +364,19 @@ public class YearEventActionDrawer : PropertyDrawer
                 height += EditorGUI.GetPropertyHeight(rewardsProp, true);
                 break;
 
+            case YearActionType.ShowChoicePopup:
+                var choiceTextProp = property.FindPropertyRelative("choiceEventText");
+                height += EditorGUI.GetPropertyHeight(choiceTextProp, true) + EditorGUIUtility.standardVerticalSpacing;
+                height += EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing * 3; // Yes, No fields
+                break;
+
             case YearActionType.GiveRewards:
                 var rewardsProp2 = property.FindPropertyRelative("rewards");
                 height += EditorGUI.GetPropertyHeight(rewardsProp2, true);
                 break;
 
             case YearActionType.FireMember:
+            case YearActionType.ChangeHungerState:
                 height += EditorGUIUtility.singleLineHeight;
                 break;
         }

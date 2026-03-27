@@ -9,6 +9,8 @@ public class YearEventGraphEditorWindow : EditorWindow
 {
     private YearEventGraphView graphView;
     private List<YearEventData> eventDataList = new List<YearEventData>();
+    
+    private const string POSITION_PREFS_KEY = "YearEventGraph_NodePositions";
 
     [MenuItem("Tools/Year Event Graph")]
     public static void OpenWindow()
@@ -29,6 +31,7 @@ public class YearEventGraphEditorWindow : EditorWindow
     {
         if (graphView != null)
         {
+            SaveNodePositionsToPrefs();
             rootVisualElement.Remove(graphView);
         }
     }
@@ -70,13 +73,30 @@ public class YearEventGraphEditorWindow : EditorWindow
             }
         }
 
-        graphView.PopulateGraph(eventDataList);
+        Dictionary<string, Rect> savedPositions = LoadNodePositionsFromPrefs();
+        graphView.PopulateGraphWithSavedPositions(eventDataList, savedPositions);
     }
 
     private void RefreshGraph()
     {
-        graphView.ClearGraph();
-        LoadAllYearEvents();
+        SaveNodePositionsToPrefs();
+        
+        eventDataList.Clear();
+        string[] guids = AssetDatabase.FindAssets("t:YearEventData");
+        foreach (string guid in guids)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            YearEventData eventData = AssetDatabase.LoadAssetAtPath<YearEventData>(path);
+            if (eventData != null)
+            {
+                eventDataList.Add(eventData);
+            }
+        }
+
+        Dictionary<string, Rect> savedPositions = LoadNodePositionsFromPrefs();
+        graphView.RefreshGraphWithPositions(eventDataList, savedPositions);
+        
+        Debug.Log($"Graph refreshed: {eventDataList.Count} events loaded");
     }
 
     public void SaveConnections()
@@ -96,12 +116,58 @@ public class YearEventGraphEditorWindow : EditorWindow
                 var edges = outputPort.connections.ToList();
                 node.EventData.nextEventDatas.Clear();
                 
+                HashSet<YearEventData> uniqueNextEvents = new HashSet<YearEventData>();
+                
                 foreach (var edge in edges)
                 {
                     var targetNode = edge.input.node as YearEventNode;
                     if (targetNode != null && targetNode.EventData != null)
                     {
-                        node.EventData.nextEventDatas.Add(targetNode.EventData);
+                        uniqueNextEvents.Add(targetNode.EventData);
+                    }
+                }
+                
+                node.EventData.nextEventDatas.AddRange(uniqueNextEvents);
+            }
+
+            // Save Yes/No connections (ShowChoicePopup)
+            if (node.EventData.actionDatas != null)
+            {
+                foreach (var actionData in node.EventData.actionDatas)
+                {
+                    if (actionData.type == YearActionType.ShowChoicePopup)
+                    {
+                        // Yes Port
+                        var yesPort = node.outputContainer.Q<Port>("YesPort");
+                        if (yesPort != null && yesPort.connections.Any())
+                        {
+                            var yesEdge = yesPort.connections.First();
+                            var yesTargetNode = yesEdge.input.node as YearEventNode;
+                            if (yesTargetNode != null && yesTargetNode.EventData != null)
+                            {
+                                actionData.yesNextEvent = yesTargetNode.EventData;
+                            }
+                        }
+                        else
+                        {
+                            actionData.yesNextEvent = null;
+                        }
+
+                        // No Port
+                        var noPort = node.outputContainer.Q<Port>("NoPort");
+                        if (noPort != null && noPort.connections.Any())
+                        {
+                            var noEdge = noPort.connections.First();
+                            var noTargetNode = noEdge.input.node as YearEventNode;
+                            if (noTargetNode != null && noTargetNode.EventData != null)
+                            {
+                                actionData.noNextEvent = noTargetNode.EventData;
+                            }
+                        }
+                        else
+                        {
+                            actionData.noNextEvent = null;
+                        }
                     }
                 }
             }
@@ -110,9 +176,90 @@ public class YearEventGraphEditorWindow : EditorWindow
         }
 
         AssetDatabase.SaveAssets();
+        SaveNodePositionsToPrefs();
+        
         Debug.Log("Year event connections saved!");
     }
+
+    #region EditorPrefs 위치 저장/로드
+
+    private void SaveNodePositionsToPrefs()
+    {
+        var positions = graphView.SaveNodePositions();
+        var serializable = new SerializablePositionData();
+        
+        foreach (var kvp in positions)
+        {
+            if (kvp.Key != null)
+            {
+                serializable.positions.Add(new NodePosition
+                {
+                    eventName = kvp.Key.name,
+                    x = kvp.Value.x,
+                    y = kvp.Value.y,
+                    width = kvp.Value.width,
+                    height = kvp.Value.height
+                });
+            }
+        }
+        
+        string json = JsonUtility.ToJson(serializable, true);
+        EditorPrefs.SetString(POSITION_PREFS_KEY, json);
+    }
+
+    private Dictionary<string, Rect> LoadNodePositionsFromPrefs()
+    {
+        Dictionary<string, Rect> positions = new Dictionary<string, Rect>();
+        
+        if (!EditorPrefs.HasKey(POSITION_PREFS_KEY))
+        {
+            return positions;
+        }
+        
+        string json = EditorPrefs.GetString(POSITION_PREFS_KEY);
+        if (string.IsNullOrEmpty(json))
+        {
+            return positions;
+        }
+        
+        try
+        {
+            var serializable = JsonUtility.FromJson<SerializablePositionData>(json);
+            foreach (var nodePos in serializable.positions)
+            {
+                positions[nodePos.eventName] = new Rect(nodePos.x, nodePos.y, nodePos.width, nodePos.height);
+            }
+        }
+        catch (System.Exception e)
+        {
+            Debug.LogError($"Failed to load node positions: {e.Message}");
+        }
+        
+        return positions;
+    }
+
+    #endregion
 }
+
+#region Serializable Position Data
+
+[System.Serializable]
+public class SerializablePositionData
+{
+    public List<NodePosition> positions = new List<NodePosition>();
+}
+
+[System.Serializable]
+public class NodePosition
+{
+    public string eventName;
+    public float x;
+    public float y;
+    public float width;
+    public float height;
+}
+
+#endregion
 
 public class YearEventGraphView : GraphView
 {
@@ -148,11 +295,25 @@ public class YearEventGraphView : GraphView
         return compatiblePorts;
     }
 
+    public Dictionary<YearEventData, Rect> SaveNodePositions()
+    {
+        Dictionary<YearEventData, Rect> positions = new Dictionary<YearEventData, Rect>();
+        
+        foreach (var kvp in nodeMap)
+        {
+            if (kvp.Value != null)
+            {
+                positions[kvp.Key] = kvp.Value.GetPosition();
+            }
+        }
+        
+        return positions;
+    }
+
     public void PopulateGraph(List<YearEventData> eventDataList)
     {
         nodeMap.Clear();
 
-        // Create nodes
         float xOffset = 0;
         float yOffset = 0;
         int column = 0;
@@ -174,7 +335,122 @@ public class YearEventGraphView : GraphView
             }
         }
 
-        // Create edges based on existing connections
+        CreateEdgesFromEventData(eventDataList);
+    }
+
+    public void PopulateGraphWithSavedPositions(List<YearEventData> eventDataList, Dictionary<string, Rect> savedPositions)
+    {
+        nodeMap.Clear();
+
+        List<Rect> occupiedPositions = new List<Rect>(savedPositions.Values);
+        
+        foreach (var eventData in eventDataList)
+        {
+            var node = CreateEventNode(eventData);
+            
+            Rect nodePosition;
+            if (savedPositions.ContainsKey(eventData.name))
+            {
+                nodePosition = savedPositions[eventData.name];
+            }
+            else
+            {
+                nodePosition = FindNonOverlappingPosition(occupiedPositions);
+                occupiedPositions.Add(nodePosition);
+            }
+
+            node.SetPosition(nodePosition);
+            AddElement(node);
+            nodeMap[eventData] = node;
+        }
+
+        CreateEdgesFromEventData(eventDataList);
+    }
+
+    public void RefreshGraphWithPositions(List<YearEventData> eventDataList, Dictionary<string, Rect> savedPositions)
+    {
+        foreach (var node in nodes.ToList())
+        {
+            RemoveElement(node);
+        }
+        foreach (var edge in edges.ToList())
+        {
+            RemoveElement(edge);
+        }
+        nodeMap.Clear();
+
+        List<Rect> occupiedPositions = new List<Rect>(savedPositions.Values);
+        
+        foreach (var eventData in eventDataList)
+        {
+            var node = CreateEventNode(eventData);
+            
+            Rect nodePosition;
+            if (savedPositions.ContainsKey(eventData.name))
+            {
+                nodePosition = savedPositions[eventData.name];
+            }
+            else
+            {
+                nodePosition = FindNonOverlappingPosition(occupiedPositions);
+                occupiedPositions.Add(nodePosition);
+            }
+
+            node.SetPosition(nodePosition);
+            AddElement(node);
+            nodeMap[eventData] = node;
+        }
+
+        CreateEdgesFromEventData(eventDataList);
+    }
+
+    private Rect FindNonOverlappingPosition(List<Rect> occupiedPositions)
+    {
+        const float nodeWidth = 250;
+        const float nodeHeight = 150;
+        const float margin = 50;
+        const float startX = 100;
+        const float startY = 100;
+        const int maxColumns = 4;
+
+        for (int row = 0; row < 100; row++)
+        {
+            for (int col = 0; col < maxColumns; col++)
+            {
+                float x = startX + col * (nodeWidth + margin);
+                float y = startY + row * (nodeHeight + margin);
+                Rect candidateRect = new Rect(x, y, nodeWidth, nodeHeight);
+
+                bool overlaps = false;
+                foreach (var occupied in occupiedPositions)
+                {
+                    if (RectOverlaps(candidateRect, occupied, margin))
+                    {
+                        overlaps = true;
+                        break;
+                    }
+                }
+
+                if (!overlaps)
+                {
+                    return candidateRect;
+                }
+            }
+        }
+
+        return new Rect(startX, startY + occupiedPositions.Count * (nodeHeight + margin), nodeWidth, nodeHeight);
+    }
+
+    private bool RectOverlaps(Rect a, Rect b, float margin)
+    {
+        return !(a.xMax + margin < b.xMin ||
+                 a.xMin > b.xMax + margin ||
+                 a.yMax + margin < b.yMin ||
+                 a.yMin > b.yMax + margin);
+    }
+
+    private void CreateEdgesFromEventData(List<YearEventData> eventDataList)
+    {
         foreach (var eventData in eventDataList)
         {
             if (!nodeMap.ContainsKey(eventData)) continue;
@@ -195,6 +471,44 @@ public class YearEventGraphView : GraphView
                         {
                             var edge = outputPort.ConnectTo(inputPort);
                             AddElement(edge);
+                        }
+                    }
+                }
+            }
+
+            // ShowChoicePopup의 Yes/No connections
+            if (eventData.actionDatas != null)
+            {
+                foreach (var actionData in eventData.actionDatas)
+                {
+                    if (actionData.type == YearActionType.ShowChoicePopup)
+                    {
+                        // Yes connection (초록색)
+                        if (actionData.yesNextEvent != null && nodeMap.ContainsKey(actionData.yesNextEvent))
+                        {
+                            var yesPort = sourceNode.outputContainer.Q<Port>("YesPort");
+                            var targetNode = nodeMap[actionData.yesNextEvent];
+                            var inputPort = targetNode.inputContainer.Q<Port>();
+
+                            if (yesPort != null && inputPort != null)
+                            {
+                                var edge = yesPort.ConnectTo(inputPort);
+                                AddElement(edge);
+                            }
+                        }
+
+                        // No connection (빨간색)
+                        if (actionData.noNextEvent != null && nodeMap.ContainsKey(actionData.noNextEvent))
+                        {
+                            var noPort = sourceNode.outputContainer.Q<Port>("NoPort");
+                            var targetNode = nodeMap[actionData.noNextEvent];
+                            var inputPort = targetNode.inputContainer.Q<Port>();
+
+                            if (noPort != null && inputPort != null)
+                            {
+                                var edge = noPort.ConnectTo(inputPort);
+                                AddElement(edge);
+                            }
                         }
                     }
                 }
@@ -242,11 +556,34 @@ public class YearEventNode : Node
         inputPort.portName = "In";
         inputContainer.Add(inputPort);
 
-        // Output port (connects to next events - Multi capacity for multiple connections)
-        var outputPort = Port.Create<Edge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(YearEventData));
-        outputPort.portName = "Next";
-        outputPort.name = "NextPort";
-        outputContainer.Add(outputPort);
+        // Next port (기본)
+        var nextPort = Port.Create<Edge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Multi, typeof(YearEventData));
+        nextPort.portName = "Next";
+        nextPort.name = "NextPort";
+        outputContainer.Add(nextPort);
+
+        // ShowChoicePopup이 있으면 Yes/No 포트 추가
+        if (eventData != null && eventData.actionDatas != null)
+        {
+            bool hasChoiceAction = eventData.actionDatas.Any(a => a.type == YearActionType.ShowChoicePopup);
+            
+            if (hasChoiceAction)
+            {
+                // Yes Port
+                var yesPort = Port.Create<Edge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(YearEventData));
+                yesPort.portName = "Yes";
+                yesPort.name = "YesPort";
+                yesPort.portColor = new Color(0.4f, 1f, 0.4f); // 초록색
+                outputContainer.Add(yesPort);
+
+                // No Port
+                var noPort = Port.Create<Edge>(Orientation.Horizontal, Direction.Output, Port.Capacity.Single, typeof(YearEventData));
+                noPort.portName = "No";
+                noPort.name = "NoPort";
+                noPort.portColor = new Color(1f, 0.4f, 0.4f); // 빨간색
+                outputContainer.Add(noPort);
+            }
+        }
 
         // Add info label
         if (eventData != null)
@@ -273,11 +610,7 @@ public class YearEventNode : Node
             }
 
             mainContainer.Add(infoContainer);
-
-            // Add conditions info
             AddConditionsInfo(eventData);
-
-            // Add first action info
             AddFirstActionInfo(eventData);
         }
 
@@ -338,12 +671,20 @@ public class YearEventNode : Node
                 return $"Year {condition.yearValue}-{condition.yearValueMax}";
             case YearConditionType.GoldGreaterThan:
                 return $"Gold >= {condition.goldValue}";
+            case YearConditionType.GoldLessThan:
+                return $"Gold < {condition.goldValue}";
             case YearConditionType.FoodGreaterThan:
                 return $"Food >= {condition.foodValue}";
+            case YearConditionType.FoodLessThan:
+                return $"Food < {condition.foodValue}";
             case YearConditionType.MemberCountGreaterThan:
                 return $"Members >= {condition.memberCount}";
+            case YearConditionType.MemberCountLessThan:
+                return $"Members < {condition.memberCount}";
             case YearConditionType.EventViewed:
                 return $"Viewed: {(condition.requiredEvent != null ? condition.requiredEvent.name : "None")}";
+            case YearConditionType.EventNotViewed:
+                return $"NotViewed: {(condition.requiredEvent != null ? condition.requiredEvent.name : "None")}";
             default:
                 return condition.type.ToString();
         }
@@ -353,7 +694,7 @@ public class YearEventNode : Node
     {
         if (eventData.actionDatas == null || eventData.actionDatas.Count == 0) return;
 
-        var firstAction = eventData.actionDatas.FirstOrDefault(a => a.type == YearActionType.ShowEventPopup);
+        var firstAction = eventData.actionDatas.FirstOrDefault(a => a.type == YearActionType.ShowEventPopup || a.type == YearActionType.ShowChoicePopup);
         if (firstAction == null) return;
 
         var actionContainer = new VisualElement();
@@ -371,8 +712,21 @@ public class YearEventNode : Node
         actionContainer.style.paddingLeft = 5;
         actionContainer.style.paddingRight = 5;
 
+        // Action type indicator
+        if (firstAction.type == YearActionType.ShowChoicePopup)
+        {
+            var choiceLabel = new Label("🔀 CHOICE EVENT");
+            choiceLabel.style.fontSize = 9;
+            choiceLabel.style.color = new Color(1f, 1f, 0.4f);
+            choiceLabel.style.unityFontStyleAndWeight = FontStyle.Bold;
+            actionContainer.Add(choiceLabel);
+        }
+
         // Event text
-        var eventText = firstAction.eventText ?? "";
+        string eventText = firstAction.type == YearActionType.ShowChoicePopup 
+            ? (firstAction.choiceEventText ?? "") 
+            : (firstAction.eventText ?? "");
+        
         if (eventText.Length > 60)
         {
             eventText = eventText.Substring(0, 57) + "...";
@@ -383,8 +737,8 @@ public class YearEventNode : Node
         textLabel.style.color = new Color(0.9f, 0.9f, 0.9f);
         actionContainer.Add(textLabel);
 
-        // Rewards
-        if (firstAction.rewards != null && firstAction.rewards.Length > 0)
+        // Rewards (ShowEventPopup만)
+        if (firstAction.type == YearActionType.ShowEventPopup && firstAction.rewards != null && firstAction.rewards.Length > 0)
         {
             var rewardsContainer = new VisualElement();
             rewardsContainer.style.flexDirection = FlexDirection.Row;

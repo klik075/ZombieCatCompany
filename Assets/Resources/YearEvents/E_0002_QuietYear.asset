@@ -24,4 +24,9 @@ MonoBehaviour:
       \uC77C\uB3C4 \uC77C\uC5B4\uB098\uC9C0 \uC54A\uC558\uB2E4.\n\uC774\uB7F0 \uBC24\uC744
       \uACC4\uC18D \uBCF4\uB0BC \uC218 \uC788\uC744\uAE4C?"
     rewards: []
-    memberTargetType: 
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

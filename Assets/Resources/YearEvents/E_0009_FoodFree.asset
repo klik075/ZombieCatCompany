@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
+  m_Name: E_0009_FoodFree
+  m_EditorClassIdentifier: Assembly-CSharp::YearEventData
+  category: 0
+  executionType: 0
+  initiallyUnlocked: 0
+  weight: 10
+  nextEventDatas:
+  - {fileID: 11400000, guid: e1528adf418d6cd4a9ac5e7baf8e4fb1, type: 2}
+  - {fileID: 11400000, guid: 77820140595829d48ad0c983867a999e, type: 2}
+  - {fileID: 11400000, guid: 93420e0437c22a142b481ac181edbba8, type: 2}
+  conditionDatas:
+  - type: 5
+    yearValue: 0
+    yearValueMax: 0
+    goldValue: 0
+    foodValue: 25
+    memberCount: 0
+    requiredEvent: {fileID: 0}
+  - type: 10
+    yearValue: 0
+    yearValueMax: 0
+    goldValue: 0
+    foodValue: 25
+    memberCount: 0
+    requiredEvent: {fileID: 11400000, guid: 5a82eedb6e5fd324d9c708a24e309d79, type: 2}
+  actionDatas:
+  - type: 0
+    eventText: "\uC800\uBC88\uC5D0 \uB9CC\uB0AC\uB358 \uC0C1\uC778\uC744 \uB2E4\uC2DC
+      \uB9CC\uB0AC\uB2E4.\r\n\uC774\uBC88\uC5D0\uB294 \uC74C\uC2DD\uC744 \uBB34\uB8CC\uB85C
+      \uB098\uB220\uC92C\uB2E4.\r\n\uBBF8\uC548\uD588\uB358 \uAC74\uAC00?"
+    rewards:
+    - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
+      amount: 50
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

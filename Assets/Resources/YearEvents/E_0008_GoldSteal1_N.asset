@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
+  m_Name: E_0008_GoldSteal1_N
+  m_EditorClassIdentifier: Assembly-CSharp::YearEventData
+  category: 0
+  executionType: 0
+  initiallyUnlocked: 0
+  weight: 0
+  nextEventDatas:
+  - {fileID: 11400000, guid: 05dc3c2c317d6cd45927f8dab08da59e, type: 2}
+  conditionDatas: []
+  actionDatas:
+  - type: 0
+    eventText: "\uBE44\uB85D \uB3C4\uB451\uC774 \uB4E4\uC5C8\uC9C0\uB9CC\r\n\uB098\uB3C4
+      \uAC19\uC740 \uACE0\uC591\uC774\uAC00 \uB420 \uC21C \uC5C6\uB2E4.\r\n\uD6D4\uCE58\uC9C0
+      \uC54A\uAE30\uB85C \uD588\uB2E4."
+    rewards: []
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

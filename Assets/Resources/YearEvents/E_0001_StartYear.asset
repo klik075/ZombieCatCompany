@@ -15,13 +15,19 @@ MonoBehaviour:
   category: 0
   executionType: 0
   initiallyUnlocked: 1
-  weight: 10
+  weight: 100
   nextEventDatas:
   - {fileID: 11400000, guid: 5c1090ee63cbaf3478a53f47cde108f6, type: 2}
-  - {fileID: 11400000, guid: 2dfe9b663811d64468ce2cfe71fc6b11, type: 2}
   conditionDatas: []
   actionDatas:
   - type: 0
-    eventText: "\uC0B4\uC544\uB0A8\uAE30 \uC704\uD574 \uD68C\uC0AC\uB97C \uCC28\uB838\uB2E4."
+    eventText: "\uC0B4\uC544\uB0A8\uAE30 \uC704\uD574 \uAC8C\uC784 \uD68C\uC0AC\uB97C
+      \uCC28\uB838\uB2E4.\r\n\uCD5C\uB300\uD55C \uC0B4\uC544\uB0A8\uC744 \uAC83\uC774\uB2E4.\r\n\uC55E\uC73C\uB85C
+      \uC5BC\uB9C8\uB098 \uBC84\uD2F8 \uC218 \uC788\uC744\uAE4C.."
     rewards: []
-    memberTargetType: 
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

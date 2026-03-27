@@ -15,14 +15,20 @@ MonoBehaviour:
   category: 0
   executionType: 0
   initiallyUnlocked: 0
-  weight: 5
-  nextEventDatas: []
+  weight: 2
+  nextEventDatas:
+  - {fileID: 11400000, guid: 8a409053607c74e47b376e52edef70f2, type: 2}
   conditionDatas: []
   actionDatas:
   - type: 0
-    eventText: "TV\uC5D0\uC11C \uC774\uC0C1\uD55C \uBC29\uC1A1\uC774 \uB098\uC654\uB2E4.\n\uD55C
-      \uACFC\uD559\uC790\uAC00 \uC880\uBE44\uC758 \uC874\uC7AC\uB97C \uC8FC\uC7A5\uD558\uACE0
-      \uC788\uC5C8\uB2E4.\n\uB098\uC758 \uC874\uC7AC\uB97C \uC54C\uACE0 \uC788\uB294
-      \uB4EF\uD588\uB2E4."
+    eventText: "TV\uC5D0\uC11C \uD55C \uACFC\uD559\uC790\uAC00 \uC880\uBE44\uC758
+      \uC874\uC7AC\uB97C \uC8FC\uC7A5\uD558\uACE0 \uC788\uB2E4. \r\n\uB098\uC758
+      \uC874\uC7AC\uB97C \uC54C\uACE0 \uC788\uB294 \uAC74\uAC00?\r\n\uAD1C\uD788
+      \uBD88\uC548\uD574\uC84C\uB2E4."
     rewards: []
-    memberTargetType: 
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

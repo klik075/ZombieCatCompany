@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
+  m_Name: E_0007_FoodDiscovery
+  m_EditorClassIdentifier: Assembly-CSharp::YearEventData
+  category: 0
+  executionType: 1
+  initiallyUnlocked: 0
+  weight: 2
+  nextEventDatas: []
+  conditionDatas: []
+  actionDatas:
+  - type: 2
+    eventText: 
+    rewards:
+    - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
+      amount: 25
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+  - type: 0
+    eventText: "\uACE8\uBAA9\uC744 \uB4A4\uC9C0\uB2E4\uAC00 \uBA39\uC744 \uAC83\uC744
+      \uBC1C\uACAC\uD588\uB2E4.\n\uC0C1\uD0DC\uB294 \uC88B\uC9C0 \uC54A\uC9C0\uB9CC
+      \uCDA9\uBD84\uD788 \uBA39\uC744 \uC218 \uC788\uB2E4.\n\uC774\uB7F0 \uD589\uC6B4\uC774
+      \uACC4\uC18D\uB418\uBA74 \uC88B\uACA0\uB2E4."
+    rewards:
+    - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
+      amount: 25
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

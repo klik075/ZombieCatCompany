@@ -10,24 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
-  m_Name: D_0001_AddFood
+  m_Name: E_0007_FoodSteal2
   m_EditorClassIdentifier: Assembly-CSharp::YearEventData
-  category: 1
+  category: 0
   executionType: 1
-  initiallyUnlocked: 1
-  weight: 10
+  initiallyUnlocked: 0
+  weight: 2
   nextEventDatas: []
   conditionDatas: []
   actionDatas:
-  - type: 1
+  - type: 2
     eventText: 
     rewards:
     - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
-      amount: 10
-    memberTargetType: 
+      amount: 25
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
   - type: 0
-    eventText: "\uC606 \uD68C\uC0AC\uC5D0\uC11C \uC2DD\uB7C9\uC744 \uD6D4\uCCD0\uC654\uB2E4."
+    eventText: "\uC606 \uD68C\uC0AC\uC5D0\uC11C \uBAB0\uB798 \uC74C\uC2DD\uC744 \uD6D4\uCCD0
+      \uC654\uB2E4.\r\n\uC544\uC2AC\uD588\uC9C0\uB9CC \uC131\uACF5\uC801\uC774\uC5C8\uB2E4.\r\n\uD558\uBA74
+      \uC548 \uB418\uB294 \uAC83\uC744 \uC54C\uC9C0\uB9CC \uC5B4\uCA54 \uC218 \uC5C6\uB2E4."
     rewards:
     - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
-      amount: 10
-    memberTargetType: 
+      amount: 25
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

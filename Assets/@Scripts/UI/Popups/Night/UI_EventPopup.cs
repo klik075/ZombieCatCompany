@@ -9,7 +9,10 @@ public class UI_EventPopup : UI_UGUI, IUI_Popup, IClickableUI
 {
     enum GameObjects
     {
-        EventResultFrame
+        EventResultFrame,
+        RewardFrame1,
+        RewardFrame2,
+        RewardFrame3,
     }
     enum Buttons
     {
@@ -23,13 +26,19 @@ public class UI_EventPopup : UI_UGUI, IUI_Popup, IClickableUI
 
         //Content
         EventText,
-        EventResultText,
+
+        EventResultText1,
+        EventResultText2,
+        EventResultText3,
+
         MemberStateEventText,
     }
     enum Images
     {
         //Content
-        EventResultIcon,
+        EventResultIcon1,
+        EventResultIcon2,
+        EventResultIcon3,
     }
     private EEventPopupType _currentType;
     private Action _onCloseCallback;  // 추가
@@ -92,24 +101,6 @@ public class UI_EventPopup : UI_UGUI, IUI_Popup, IClickableUI
 
         GetText((int)Texts.MemberStateEventText).text = stateText;
     }
-
-    //private void UpdateContent(string text, EventReward[] rewards)
-    //{
-    //    GetText((int)Texts.EventText).text = text;
-
-    //    if (GetObject((int)GameObjects.EventResultFrame).activeSelf)
-    //    {
-    //        // 첫 번째 보상의 스프라이트와 수량 표시
-    //        if (rewards != null && rewards.Length > 0 && rewards[0].rewardData != null)
-    //        {
-    //            GetImage((int)Images.EventResultIcon).sprite = rewards[0].rewardData.sprite;
-
-    //            int amount = rewards[0].amount;
-    //            string amountText = amount > 0 ? $"+{amount}" : $"{amount}";
-    //            GetText((int)Texts.EventResultText).text = amountText;
-    //        }
-    //    }
-    //}
     
     private void SetEventResultFrame(bool isActive)
     {
@@ -154,22 +145,43 @@ public class UI_EventPopup : UI_UGUI, IUI_Popup, IClickableUI
     {
         GetText((int)Texts.EventText).text = text;
 
+        // 모든 RewardFrame 초기화 (비활성화)
+        GetObject((int)GameObjects.RewardFrame1).SetActive(false);
+        GetObject((int)GameObjects.RewardFrame2).SetActive(false);
+        GetObject((int)GameObjects.RewardFrame3).SetActive(false);
+
         if (GetObject((int)GameObjects.EventResultFrame).activeSelf && rewards != null && rewards.Count > 0)
         {
-            var firstReward = rewards[0];
+            // 최대 3개의 보상까지 처리
+            int rewardCount = Mathf.Min(rewards.Count, 3);
 
-            // DataManager의 RewardDict에서 EventRewardData 가져오기
-            if (DataManager.Instance.RewardDict.TryGetValue(firstReward.rewardId, out EventRewardData rewardData))
+            for (int i = 0; i < rewardCount; i++)
             {
-                GetImage((int)Images.EventResultIcon).sprite = rewardData.sprite;
+                var reward = rewards[i];
 
-                int amount = firstReward.amount;
-                string amountText = amount > 0 ? $"+{amount}" : $"{amount}";
-                GetText((int)Texts.EventResultText).text = amountText;
-            }
-            else
-            {
-                Debug.LogError($"[UI_EventPopup] EventRewardData not found for rewardId: {firstReward.rewardId}");
+                // DataManager의 RewardDict에서 EventRewardData 가져오기
+                if (DataManager.Instance.RewardDict.TryGetValue(reward.rewardId, out EventRewardData rewardData))
+                {
+                    // i번째 RewardFrame 활성화
+                    GameObject rewardFrame = GetObject((int)GameObjects.RewardFrame1 + i);
+                    rewardFrame.SetActive(true);
+
+                    // i번째 아이콘 설정
+                    Image icon = GetImage((int)Images.EventResultIcon1 + i);
+                    if (icon != null && rewardData.sprite != null)
+                    {
+                        icon.sprite = rewardData.sprite;
+                    }
+
+                    // i번째 텍스트 설정
+                    int amount = reward.amount;
+                    string formattedAmount = amount > 0 ? $"+{amount}" : $"{amount}";
+                    GetText((int)Texts.EventResultText1 + i).text = formattedAmount;
+                }
+                else
+                {
+                    Debug.LogError($"[UI_EventPopup] EventRewardData not found for rewardId: {reward.rewardId}");
+                }
             }
         }
     }

@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
+  m_Name: D_0003_AddGold
+  m_EditorClassIdentifier: Assembly-CSharp::YearEventData
+  category: 1
+  executionType: 1
+  initiallyUnlocked: 1
+  weight: 5
+  nextEventDatas:
+  - {fileID: 11400000, guid: 3195c1719ca9ed94c912f7648a7985b6, type: 2}
+  conditionDatas: []
+  actionDatas:
+  - type: 2
+    eventText: 
+    rewards:
+    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
+      amount: 4000
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+  - type: 0
+    eventText: "\uC5B4\uB5A4 \uBC29\uBC95\uC73C\uB85C \uB3C8\uC744 \uAD6C\uD588\uB294\uC9C0\uB294
+      \uBAA8\uB974\uC9C0\uB9CC\r\n\uB3C8\uC744 \uAD6C\uD574\uC654\uB2E4.\r\n\uCE6D\uCC2C\uD574
+      \uC918\uC57C\uACA0\uB2E4."
+    rewards:
+    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
+      amount: 4000
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

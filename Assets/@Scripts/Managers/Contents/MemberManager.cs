@@ -1105,7 +1105,36 @@ public class MemberManager : Singleton<MemberManager>
 
         return deathNames;
     }
+    public void IncreaseHungerState(int memberIndex, int stages = 1)//이벤트 용
+    {
+        Member member = GetMember(memberIndex);
 
+        if (member == null || member.CurrentMemberData == null)
+        {
+            Debug.LogWarning($"[MemberManager] Cannot increase hunger: Invalid member at index {memberIndex}");
+            return;
+        }
+
+        MemberData memberData = member.CurrentMemberData;
+        EMemberStateType newState = memberData.State;
+
+        if (memberData.State == EMemberStateType.Soon)
+            return;
+
+        // stages만큼 배고픔 증가
+        for (int i = 0; i < stages; i++)
+        {
+            newState = GetNextHungerState(newState);
+        }
+
+        memberData.State = newState;
+
+        // Death 상태가 되면 엔딩 처리
+        if (newState == EMemberStateType.Death)
+        {
+            memberData.State = EMemberStateType.Soon; 
+        }
+    }
     /// <summary>
     /// 특정 멤버의 배고픔 상태를 감소시킴 (식량 배급 시 사용)
     /// </summary>

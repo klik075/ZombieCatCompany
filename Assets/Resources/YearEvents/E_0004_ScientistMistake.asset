@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
+  m_Name: E_0004_ScientistMistake
+  m_EditorClassIdentifier: Assembly-CSharp::YearEventData
+  category: 0
+  executionType: 0
+  initiallyUnlocked: 0
+  weight: 2
+  nextEventDatas:
+  - {fileID: 11400000, guid: 0a1cc153fc53f6440ae5c4392b9c0ab6, type: 2}
+  conditionDatas: []
+  actionDatas:
+  - type: 0
+    eventText: "TV\uC5D0 \uB610 \uADF8 \uACFC\uD559\uC790\uAC00 \uB098\uC654\uB2E4.\r\n\uC880\uBE44
+      \uBC14\uC774\uB7EC\uC2A4\uB294 \uC790\uC2E0\uC758 \uC2E4\uC218\uC600\uB2E4\uACE0
+      \uD55C\uB2E4.\r\n\uC880\uBE44\uAC00 \uB41C \uC774\uC720\uB294 \uACFC\uD559\uC790
+      \uB54C\uBB38\uC774\uC5C8\uB2E4.."
+    rewards: []
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

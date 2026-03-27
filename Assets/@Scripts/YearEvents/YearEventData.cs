@@ -82,8 +82,8 @@ public class YearEvent
     }
     public bool IsFinished()
     {
-        if (hasBeenExecuted)
-            return true;
+        if (!hasBeenExecuted)
+            return false;
 
         return currentActionIndex >= runtimeActions.Count || runtimeActions.All(a => a.IsFinished());
     }

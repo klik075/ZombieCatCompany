@@ -10,18 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
-  m_Name: E_0006_FoodRobbery
+  m_Name: E_0004_Serum
   m_EditorClassIdentifier: Assembly-CSharp::YearEventData
   category: 0
-  executionType: 1
+  executionType: 0
   initiallyUnlocked: 0
-  weight: 10
+  weight: 2
   nextEventDatas: []
   conditionDatas: []
   actionDatas:
-  - type: 1
-    eventText: 
-    rewards:
-    - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
-      amount: 0
-    memberTargetType: 
+  - type: 0
+    eventText: "TV\uC5D0 \uB610 \uADF8 \uACFC\uD559\uC790\uAC00 \uB098\uC654\uB2E4.\r\n\uD608\uCCAD
+      \uC5F0\uAD6C\uB97C \uC9C4\uD589 \uC911\uC774\uB77C\uACE0 \uD55C\uB2E4.\r\n\uACE7
+      \uC815\uC0C1\uC73C\uB85C \uB3CC\uC544\uAC08 \uC218 \uC788\uACA0\uC9C0.."
+    rewards: []
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

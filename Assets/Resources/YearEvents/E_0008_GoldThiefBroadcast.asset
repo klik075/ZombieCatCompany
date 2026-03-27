@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
+  m_Name: E_0008_GoldThiefBroadcast
+  m_EditorClassIdentifier: Assembly-CSharp::YearEventData
+  category: 0
+  executionType: 0
+  initiallyUnlocked: 1
+  weight: 100
+  nextEventDatas:
+  - {fileID: 11400000, guid: 742038c7db4ffb54792de051588eeea4, type: 2}
+  conditionDatas:
+  - type: 2
+    yearValue: 0
+    yearValueMax: 0
+    goldValue: 100000
+    foodValue: 0
+    memberCount: 0
+    requiredEvent: {fileID: 0}
+  actionDatas:
+  - type: 0
+    eventText: "TV\uC5D0 \uB3C8 \uB3C4\uB451\uC744 \uC870\uC2EC\uD558\uB77C\uB294
+      \uBC29\uC1A1\uC774 \uB098\uC654\uB2E4.\r\n\uD65C\uB3D9 \uBC94\uC704\uB294 \uD68C\uC0AC
+      \uADFC\uCC98\uB2E4..\r\n\uB3C8\uC774 \uB9CE\uC73C\uBA74 \uBAA9\uD45C\uAC00
+      \uB41C\uB2E4\uACE0 \uD55C\uB2E4."
+    rewards: []
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0

@@ -7,10 +7,10 @@ public class YearEventConditionData
     public YearConditionType type;
     public int yearValue;       // for YearGreaterThan, YearBetween
     public int yearValueMax;    // for YearBetween
-    public int goldValue;       // for GoldGreaterThan
-    public int foodValue;       // for FoodGreaterThan
-    public int memberCount;     // for MemberCountGreaterThan
-    public YearEventData requiredEvent;    // for EventViewed
+    public int goldValue;       // for GoldGreaterThan, GoldLessThan
+    public int foodValue;       // for FoodGreaterThan, FoodLessThan
+    public int memberCount;     // for MemberCountGreaterThan, MemberCountLessThan
+    public YearEventData requiredEvent;    // for EventViewed, EventNotViewed
 }
 
 public class YearEventCondition
@@ -36,17 +36,44 @@ public class YearEventCondition
             case YearConditionType.GoldGreaterThan:
                 return GameManager.Instance.Gold >= Data.goldValue;
 
+            case YearConditionType.GoldLessThan:
+                return GameManager.Instance.Gold < Data.goldValue;
+
             case YearConditionType.FoodGreaterThan:
                 return GameManager.Instance.Food >= Data.foodValue;
 
+            case YearConditionType.FoodLessThan:
+                return GameManager.Instance.Food < Data.foodValue;
+
             case YearConditionType.MemberCountGreaterThan:
                 return MemberManager.Instance.GetAllMembers().Count >= Data.memberCount;
+
+            case YearConditionType.MemberCountLessThan:
+                return MemberManager.Instance.GetAllMembers().Count < Data.memberCount;
 
             case YearConditionType.EventViewed:
                 if (Data.requiredEvent == null)
                     return true; // null이면 조건 무시
 
                 return YearEventManager.Instance.HasExecutedEvent(Data.requiredEvent);
+
+            case YearConditionType.EventNotViewed:
+                if (Data.requiredEvent == null)
+                    return true; // null이면 조건 무시
+
+                return !YearEventManager.Instance.HasExecutedEvent(Data.requiredEvent);
+
+            case YearConditionType.EventIsUnlocked:
+                if (Data.requiredEvent == null)
+                    return true;
+
+                return YearEventManager.Instance.IsEventUnlocked(Data.requiredEvent);
+
+            case YearConditionType.EventIsLocked:
+                if (Data.requiredEvent == null)
+                    return true;
+
+                return !YearEventManager.Instance.IsEventUnlocked(Data.requiredEvent);
 
             default:
                 return true;
@@ -56,12 +83,18 @@ public class YearEventCondition
 
 public enum YearConditionType
 {
-    YearGreaterThan,
-    YearBetween,
-    GoldGreaterThan,
-    FoodGreaterThan,
-    MemberCountGreaterThan,
-    EventViewed
+    YearGreaterThan,//연차 이상
+    YearBetween, //연차 범위
+    GoldGreaterThan, //골드 이상
+    GoldLessThan, //골드 미만
+    FoodGreaterThan, //음식 이상
+    FoodLessThan, //음식 미만
+    MemberCountGreaterThan, //멤버 수 이상
+    MemberCountLessThan, //멤버 수 미만
+    EventViewed, //특정 이벤트를 본 적이 있는지
+    EventNotViewed, //특정 이벤트를 본 적이 없는지
+    EventIsUnlocked,  // 특정 이벤트가 해금되었는지
+    EventIsLocked,    // 특정 이벤트가 잠겨있는지
 }
 
 #if UNITY_EDITOR
@@ -94,23 +127,53 @@ public class YearEventConditionDrawer : PropertyDrawer
                 break;
 
             case YearConditionType.GoldGreaterThan:
-                var goldProp = property.FindPropertyRelative("goldValue");
-                EditorGUI.PropertyField(position, goldProp, new GUIContent("Min Gold"));
+                var goldGreaterProp = property.FindPropertyRelative("goldValue");
+                EditorGUI.PropertyField(position, goldGreaterProp, new GUIContent("Min Gold"));
+                break;
+
+            case YearConditionType.GoldLessThan:
+                var goldLessProp = property.FindPropertyRelative("goldValue");
+                EditorGUI.PropertyField(position, goldLessProp, new GUIContent("Max Gold"));
                 break;
 
             case YearConditionType.FoodGreaterThan:
-                var foodProp = property.FindPropertyRelative("foodValue");
-                EditorGUI.PropertyField(position, foodProp, new GUIContent("Min Food"));
+                var foodGreaterProp = property.FindPropertyRelative("foodValue");
+                EditorGUI.PropertyField(position, foodGreaterProp, new GUIContent("Min Food"));
+                break;
+
+            case YearConditionType.FoodLessThan:
+                var foodLessProp = property.FindPropertyRelative("foodValue");
+                EditorGUI.PropertyField(position, foodLessProp, new GUIContent("Max Food"));
                 break;
 
             case YearConditionType.MemberCountGreaterThan:
-                var memberProp = property.FindPropertyRelative("memberCount");
-                EditorGUI.PropertyField(position, memberProp, new GUIContent("Min Members"));
+                var memberGreaterProp = property.FindPropertyRelative("memberCount");
+                EditorGUI.PropertyField(position, memberGreaterProp, new GUIContent("Min Members"));
+                break;
+
+            case YearConditionType.MemberCountLessThan:
+                var memberLessProp = property.FindPropertyRelative("memberCount");
+                EditorGUI.PropertyField(position, memberLessProp, new GUIContent("Max Members"));
                 break;
 
             case YearConditionType.EventViewed:
-                var eventNameProp = property.FindPropertyRelative("requiredEvent");
-                EditorGUI.PropertyField(position, eventNameProp, new GUIContent("RequiredEvent"));
+                var eventViewedProp = property.FindPropertyRelative("requiredEvent");
+                EditorGUI.PropertyField(position, eventViewedProp, new GUIContent("Required Event (Viewed)"));
+                break;
+
+            case YearConditionType.EventNotViewed:
+                var eventNotViewedProp = property.FindPropertyRelative("requiredEvent");
+                EditorGUI.PropertyField(position, eventNotViewedProp, new GUIContent("Required Event (Not Viewed)"));
+                break;
+
+            case YearConditionType.EventIsUnlocked:
+                var eventUnlockedProp = property.FindPropertyRelative("requiredEvent");
+                EditorGUI.PropertyField(position, eventUnlockedProp, new GUIContent("Required Event (Unlocked)"));
+                break;
+
+            case YearConditionType.EventIsLocked:
+                var eventLockedProp = property.FindPropertyRelative("requiredEvent");
+                EditorGUI.PropertyField(position, eventLockedProp, new GUIContent("Required Event (Locked)"));
                 break;
         }
 

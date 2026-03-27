@@ -21,6 +21,7 @@ public class YearEventManager : Singleton<YearEventManager>
     private YearEvent _currentYearEvent;
     private YearEvent _currentDispatchResult;
     private bool _isSequenceRunning = false;
+    [SerializeField]
     private bool _hasCompletedNightSequence = false; // 현재 밤 시퀀스 완료 여부
 
     #region 초기화
@@ -289,29 +290,42 @@ public class YearEventManager : Singleton<YearEventManager>
 
     private YearEvent SelectByWeight(List<YearEvent> events)
     {
-        int totalWeight = 0;
-        foreach (var evt in events)
+        var weightedEvents = events.Where(e => e.Data.weight > 0).ToList();
+
+        if (weightedEvents.Count == 0)
         {
-            totalWeight += Mathf.Max(1, evt.Data.weight);
+            Debug.LogWarning("[YearEventManager] No events with weight > 0 available for random selection");
+            return null;
+        }
+
+        if (weightedEvents.Count == 1)
+        {
+            return weightedEvents[0];
+        }
+
+        int totalWeight = 0;
+        foreach (var evt in weightedEvents)
+        {
+            totalWeight += evt.Data.weight;
         }
 
         int randomValue = Random.Range(0, totalWeight);
         int cumulativeWeight = 0;
 
-        for (int i = 0; i < events.Count; i++)
+        for (int i = 0; i < weightedEvents.Count; i++)
         {
-            int weight = Mathf.Max(1, events[i].Data.weight);
+            int weight = weightedEvents[i].Data.weight;
             cumulativeWeight += weight;
 
             if (randomValue < cumulativeWeight)
             {
                 Debug.Log($"[YearEventManager] Selected '{events[i].Data.name}' " +
                          $"(weight: {weight}/{totalWeight}, roll: {randomValue})");
-                return events[i];
+                return weightedEvents[i];
             }
         }
 
-        return events[events.Count - 1];
+        return weightedEvents[weightedEvents.Count - 1];
     }
 
     #endregion
@@ -347,10 +361,9 @@ public class YearEventManager : Singleton<YearEventManager>
 
         CurrentDeathMembers = MemberManager.Instance.IncreaseAllMembersHunger();
 
-        yield return CoroutineManager.Instance.Run(CoShowYearEvent()); //연차 이벤트
-
         if (currentYear > 1)
         {
+            yield return CoroutineManager.Instance.Run(CoShowYearEvent()); //연차 이벤트
             if (HasDispatchResult())
             {
                 yield return CoroutineManager.Instance.Run(CoShowDispatchResult()); //파견 결과
@@ -358,6 +371,10 @@ public class YearEventManager : Singleton<YearEventManager>
 
             yield return CoroutineManager.Instance.Run(CoShowDispatchSelection()); //파견 선택
             yield return CoroutineManager.Instance.Run(CoShowFoodDistribution()); //식량 배급
+        }
+        else
+        {
+            yield return CoroutineManager.Instance.Run(CoShowStartYearEvent()); //1년차 시작 이벤트
         }
 
         _isSequenceRunning = false;
@@ -372,7 +389,34 @@ public class YearEventManager : Singleton<YearEventManager>
         
         Debug.Log("[YearEventManager] Night sequence completed and auto-saved");
     }
+    private System.Collections.IEnumerator CoShowStartYearEvent()
+    {
+        // E_0001_StartYear 이벤트 찾기
+        var startYearEventData = _yearEventInstancesDict.Keys.FirstOrDefault(e => e.name == "E_0001_StartYear");//SO 데이터 매니저로 들고 있기?
 
+        if (startYearEventData == null)
+        {
+            Debug.LogWarning("[YearEventManager] E_0001_StartYear event not found! Falling back to random selection.");
+            // 찾지 못하면 일반 연차 이벤트 선택 로직으로 폴백
+            yield return CoroutineManager.Instance.Run(CoShowYearEvent());
+            yield break;
+        }
+
+        if (!_yearEventInstancesDict.TryGetValue(startYearEventData, out var startYearEvent))
+        {
+            Debug.LogWarning("[YearEventManager] Failed to get E_0001_StartYear event instance!");
+            yield break;
+        }
+
+        Debug.Log($"[YearEventManager] Executing start year event: {startYearEvent.Data.name}");
+
+        _currentYearEvent = startYearEvent;
+
+        // ShowEventPopup 액션이 실행될 때 자동으로 저장됨
+        yield return CoroutineManager.Instance.Run(startYearEvent.Execute());
+
+        Debug.Log($"[YearEventManager] Start year event completed: {startYearEvent.Data.name}");
+    }
     private System.Collections.IEnumerator CoShowYearEvent()
     {
         YearEvent selectedEvent = SelectRandomYearEvent();
@@ -586,6 +630,25 @@ public class YearEventManager : Singleton<YearEventManager>
     }
 
     /// <summary>
+    /// 특정 이벤트가 해금되었는지 확인
+    /// </summary>
+    public bool IsEventUnlocked(YearEventData eventData)
+    {
+        // YearEvent 체크
+        if (_yearEventInstancesDict.TryGetValue(eventData, out var yearEvent))
+        {
+            return yearEvent.IsUnlocked;
+        }
+
+        // DispatchResult 체크
+        if (_dispatchResultDict.TryGetValue(eventData, out var dispatchResult))
+        {
+            return dispatchResult.IsUnlocked;
+        }
+
+        return false;
+    }
+    /// <summary>
     /// 특정 이벤트를 실행했는지 확인
     /// </summary>
     public bool HasExecutedEvent(YearEventData eventData)
@@ -604,7 +667,38 @@ public class YearEventManager : Singleton<YearEventManager>
 
         return false;
     }
+    /// <summary>
+    /// YearEventData로부터 YearEvent 인스턴스 가져오기
+    /// </summary>
+    public YearEvent GetYearEventInstance(YearEventData eventData)
+    {
+        if (_yearEventInstancesDict.TryGetValue(eventData, out var yearEvent))
+        {
+            return yearEvent;
+        }
 
+        if (_dispatchResultDict.TryGetValue(eventData, out var dispatchResult))
+        {
+            return dispatchResult;
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// 이벤트를 해금하고 즉시 실행
+    /// </summary>
+    public System.Collections.IEnumerator UnlockAndExecuteEvent(YearEventData eventData)
+    {
+        UnlockEvent(eventData);
+
+        var yearEvent = GetYearEventInstance(eventData);
+        if (yearEvent != null && yearEvent.CanExecute())
+        {
+            Debug.Log($"[YearEventManager] Executing unlocked event immediately: {eventData.name}");
+            yield return CoroutineManager.Instance.Run(yearEvent.Execute());
+        }
+    }
     #endregion
 
     #region 씬 전환 시 초기화
