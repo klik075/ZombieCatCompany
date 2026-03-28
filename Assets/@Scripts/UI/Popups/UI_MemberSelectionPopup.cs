@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 
@@ -105,15 +106,18 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
     }
     public void UpdateContent()
     {
-        Member selectedPlayer = MemberManager.Instance.SelectedMember;
+        Member member = MemberManager.Instance.SelectedMember;
         
-        if (selectedPlayer == null || selectedPlayer?.CurrentMemberData == null)
+        if (member == null || member?.CurrentMemberData == null)
         {
             Debug.LogWarning("No selected member or MemberData is null!");
             return;
         }
 
-        MemberData memberData = selectedPlayer.CurrentMemberData;
+        MemberData memberData = member.CurrentMemberData;
+
+        Member dispatchMember = MemberManager.Instance.GetDispatchMember();
+        bool isDispatchMember = dispatchMember != null && dispatchMember == member;
 
         // 제목 표시 (현재 선택된 멤버의 순서)
         int currentOrder = MemberManager.Instance.SelectedMemberIndex + 1;
@@ -133,7 +137,7 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
 
         // 상태 표시
         GetText((int)Texts.StateNameText).text = "@상태";
-        GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State);
+        GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State, isDispatchMember);
 
         // 능력치 이름 설정
         GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);

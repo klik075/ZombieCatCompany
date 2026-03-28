@@ -943,23 +943,6 @@ public class MemberManager : Singleton<MemberManager>
             _memberMorningSeat[memberIndex].SeatPosition = newSeat;
         }
     }
-
-    /// <summary>
-    /// 특정 Player 객체의 지정 자리 변경
-    /// </summary>
-    /// <param name="player">Player 객체</param>
-    /// <param name="newSeat">새로운 지정 자리 좌표</param>
-    public void SetMemberSeat(Member player, Vector2Int newSeat, bool isNight = true)
-    {
-        int index = GetIndex(player);
-        if (index == -1)
-        {
-            Debug.LogWarning("Player not found in team");
-            return;
-        }
-
-        SetMemberSeat(index, newSeat, isNight);
-    }
     /// <summary>
     /// Player를 자신의 지정 자리로 이동시키기
     /// </summary>
@@ -978,23 +961,6 @@ public class MemberManager : Singleton<MemberManager>
 
         Debug.Log($"Moving player {memberIndex} to seat position {seatPosition}");
         MapManager.Instance.MoveTo(player, seatPosition, immediate);
-    }
-
-    /// <summary>
-    /// 특정 Player 객체를 자신의 지정 자리로 이동시키기
-    /// </summary>
-    /// <param name="member">Player 객체</param>
-    /// <param name="immediate">즉시 이동 여부</param>
-    public void MoveMemberToSeat(Member member, bool immediate = false)
-    {
-        int index = GetIndex(member);
-        if (index == -1)
-        {
-            Debug.LogWarning("Player not found in team");
-            return;
-        }
-
-        MoveMemberToSeat(index, immediate);
     }
 
     /// <summary>
@@ -1092,6 +1058,7 @@ public class MemberManager : Singleton<MemberManager>
     public List<string> IncreaseAllMembersHunger()
     {
         List<string> deathNames = new List<string>();
+        bool bossIsDead = false;
 
         // 뒤에서부터 순회 (해고 시 인덱스 변경 방지)
         for (int i = MemberCount - 1; i >= 0; i--)
@@ -1117,26 +1084,32 @@ public class MemberManager : Singleton<MemberManager>
             // Death 상태가 되면 해고
             if (nextState == EMemberStateType.Death)
             {
+                string memberName = memberData.Name;
+
                 if (memberData.Role == ERoleType.Boss)
                 {
-                    EndingManager.Instance.TriggerEnding(EEndingType.Starvation);
-                    return deathNames;
-                }
-
-                string memberName = memberData.Name;
-                Debug.Log($"[MemberManager] {memberName} died from starvation. Firing member...");
-
-                // ignoringStatus = true로 상태 무시하고 강제 해고
-                bool fired = FireMember(i, ignoringStatus: true);
-
-                if (fired)
-                {
+                    bossIsDead = true;
                     deathNames.Add(memberName);
+                }
+                else
+                {
+                    // ignoringStatus = true로 상태 무시하고 강제 해고
+                    bool fired = FireMember(i, ignoringStatus: true);
+
+                    if (fired)
+                    {
+                        deathNames.Add(memberName);
+                    }
                 }
             }
         }
 
         EndingManager.Instance.RecordStat(EEndingStatType.DeadMembers, deathNames.Count);
+
+        if (bossIsDead)
+        {
+            EndingManager.Instance.TriggerEnding(EEndingType.Starvation);
+        }
 
         return deathNames;
     }

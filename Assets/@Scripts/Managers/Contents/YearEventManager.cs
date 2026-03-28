@@ -485,7 +485,22 @@ public class YearEventManager : Singleton<YearEventManager>
 
             if (MemberManager.Instance.MemberCount <= 1)
             {
-                Debug.Log("[YearEventManager] No members available for dispatch");
+                bool? chatClosed = null;
+
+                UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
+                chatPopup.SetInfo(
+                    MemberManager.MAIN_CHARACTER_ID,
+                    MessageManager.Instance.GetMessageScript(EMessageType.NoMembersForDispatch).Contents,
+                    null,
+                    action: () => { chatClosed = true; }
+                );
+
+                // ChatPopup이 닫힐 때까지 대기
+                while (chatClosed == null)
+                {
+                    yield return null;
+                }
+
                 yield break;
             }
 

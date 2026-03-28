@@ -84,15 +84,19 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
 
     public void UpdateContent()
     {
-        Member player = MemberManager.Instance.SelectedMember;
+        Member member = MemberManager.Instance.SelectedMember;
 
-        if (player == null || player.CurrentMemberData == null)
+        if (member == null || member.CurrentMemberData == null)
         {
             Debug.LogWarning("Player, MemberData is null!");
             return;
         }
 
-        MemberData memberData = player.CurrentMemberData;
+        MemberData memberData = member.CurrentMemberData;
+
+        Member dispatchMember = MemberManager.Instance.GetDispatchMember();
+        bool isDispatchMember = dispatchMember != null && dispatchMember == member;
+
         // 이름 표시
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
@@ -105,7 +109,7 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
 
         // 상태 표시
         GetText((int)Texts.StateNameText).text = "@상태";
-        GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State);
+        GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State, isDispatchMember);
 
         // 능력치 이름 설정
         GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);

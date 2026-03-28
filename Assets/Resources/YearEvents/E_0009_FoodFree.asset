@@ -49,3 +49,4 @@ MonoBehaviour:
     yesNextEvent: {fileID: 0}
     noNextEvent: {fileID: 0}
     executeImmediately: 0
+    endingType: 0

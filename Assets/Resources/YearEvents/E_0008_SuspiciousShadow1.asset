@@ -51,3 +51,4 @@ MonoBehaviour:
     yesNextEvent: {fileID: 11400000, guid: 5b5818fc6e3b72147bcf7f94bbeb34b0, type: 2}
     noNextEvent: {fileID: 11400000, guid: e016d2b5c35257645b7b92563ce7c9e7, type: 2}
     executeImmediately: 1
+    endingType: 0

@@ -2,6 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem.LowLevel;
+using static Define;
 
 [System.Serializable]
 public class YearEventActionData
@@ -20,6 +21,8 @@ public class YearEventActionData
     public YearEventData yesNextEvent;  // Yes 선택 시 해금할 이벤트
     public YearEventData noNextEvent;   // No 선택 시 해금할 이벤트
     public bool executeImmediately = false;  // 체인 실행 옵션
+
+    public EEndingType endingType;  // for TriggerEnding (엔딩 타입)
 }
 
 public class YearEventAction
@@ -62,6 +65,11 @@ public class YearEventAction
 
             case YearActionType.ChangeHungerState:
                 ChangeHungerState();
+                isFinished = true;
+                break;
+
+            case YearActionType.TriggerEnding:
+                TriggerEnding();
                 isFinished = true;
                 break;
         }
@@ -248,6 +256,13 @@ public class YearEventAction
             MemberManager.Instance.DecreaseHungerState(Data.memberIndex, Mathf.Abs(Data.hungerChange));
         }
     }
+    /// <summary>
+    /// 엔딩 트리거 (게임 종료)
+    /// </summary>
+    private void TriggerEnding()
+    {
+        EndingManager.Instance.TriggerEnding(Data.endingType);
+    }
     public bool IsFinished()
     {
         return isFinished;
@@ -262,10 +277,11 @@ public class YearEventAction
 public enum YearActionType
 {
     ShowEventPopup,// 이벤트 팝업 표시 (텍스트 + 보상)
-    ShowChoicePopup,       // 선택지 팝업 표시 (Yes/No 선택)
+    ShowChoicePopup,// 선택지 팝업 표시 (Yes/No 선택)
     GiveRewards,// 보상 지급 (골드, 음식, 멤버)
     FireMember,// 멤버 해고
-    ChangeHungerState// 배고픔 상태 변경 (양수: 배고픔 증가 / 음수: 배고픔 감소)
+    ChangeHungerState,// 배고픔 상태 변경 (양수: 배고픔 증가 / 음수: 배고픔 감소)
+    TriggerEnding// 엔딩 트리거 (게임 종료)
 }
 
 #if UNITY_EDITOR
@@ -344,6 +360,13 @@ public class YearEventActionDrawer : PropertyDrawer
                 position.height = EditorGUIUtility.singleLineHeight;
                 EditorGUI.PropertyField(position, hungerChangeProp, new GUIContent("Hunger Change (+ 배고픔 / - 배부름)"));
                 break;
+
+            case YearActionType.TriggerEnding:
+                // Ending Type
+                var endingTypeProp = property.FindPropertyRelative("endingType");
+                position.height = EditorGUIUtility.singleLineHeight;
+                EditorGUI.PropertyField(position, endingTypeProp, new GUIContent("Ending Type"));
+                break;
         }
 
         EditorGUI.EndProperty();
@@ -377,6 +400,7 @@ public class YearEventActionDrawer : PropertyDrawer
 
             case YearActionType.FireMember:
             case YearActionType.ChangeHungerState:
+            case YearActionType.TriggerEnding:
                 height += EditorGUIUtility.singleLineHeight;
                 break;
         }

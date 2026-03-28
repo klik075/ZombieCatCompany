@@ -10,33 +10,31 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
-  m_Name: E_0008_GoldThiefBroadcast
+  m_Name: E_0004_PurchaseSerum
   m_EditorClassIdentifier: Assembly-CSharp::YearEventData
   category: 0
-  executionType: 0
-  initiallyUnlocked: 1
-  weight: 100
-  nextEventDatas:
-  - {fileID: 11400000, guid: 742038c7db4ffb54792de051588eeea4, type: 2}
+  executionType: 1
+  initiallyUnlocked: 0
+  weight: 2
+  nextEventDatas: []
   conditionDatas:
   - type: 2
     yearValue: 0
     yearValueMax: 0
-    goldValue: 100000
+    goldValue: 150000
     foodValue: 0
     memberCount: 0
     requiredEvent: {fileID: 0}
   actionDatas:
-  - type: 0
-    eventText: "TV\uC5D0 \uB3C8 \uB3C4\uB451\uC744 \uC870\uC2EC\uD558\uB77C\uB294
-      \uBC29\uC1A1\uC774 \uB098\uC654\uB2E4.\r\n\uD65C\uB3D9 \uBC94\uC704\uB294 \uD68C\uC0AC
-      \uADFC\uCC98\uB2E4..\r\n\uB3C8\uC774 \uB9CE\uC73C\uBA74 \uBAA9\uD45C\uAC00
-      \uB41C\uB2E4\uACE0 \uD55C\uB2E4."
+  - type: 1
+    eventText: 
     rewards: []
     memberIndex: 0
     hungerChange: 0
-    choiceEventText: 
-    yesNextEvent: {fileID: 0}
-    noNextEvent: {fileID: 0}
-    executeImmediately: 0
+    choiceEventText: "\uD68C\uC0AC \uADFC\uCC98\uC5D0\uC11C \uD608\uCCAD\uC744 \uD30C\uB294
+      \uC0C1\uC778\uC744 \uB9CC\uB0AC\uB2E4.\r\n150,000G\uC5D0 \uD310\uB2E4\uACE0
+      \uD558\uB294\uB370\r\n\uBE44\uC2F8\uC9C0\uB9CC \uD608\uCCAD\uC744 \uAD6C\uB9E4\uD560\uAE4C?"
+    yesNextEvent: {fileID: 11400000, guid: 2d40d90ab8b1b1f4e875a18e8bed273f, type: 2}
+    noNextEvent: {fileID: 11400000, guid: ce594c60eaa5719468761a9f03c3fae7, type: 2}
+    executeImmediately: 1
     endingType: 0

@@ -44,6 +44,7 @@ MonoBehaviour:
     yesNextEvent: {fileID: 0}
     noNextEvent: {fileID: 0}
     executeImmediately: 0
+    endingType: 0
   - type: 4
     eventText: 
     rewards:
@@ -55,6 +56,7 @@ MonoBehaviour:
     yesNextEvent: {fileID: 0}
     noNextEvent: {fileID: 0}
     executeImmediately: 0
+    endingType: 0
   - type: 0
     eventText: "\uBD84\uBA85 \uC5B4\uC81C\uAE4C\uC9C0\uB9CC \uD574\uB3C4 \uC74C\uC2DD\uC774
       \uC788\uC5C8\uB2E4.\r\n\uB610 \uD68C\uC0AC\uC5D0 \uB3C4\uB451\uC774 \uB4E0
@@ -69,3 +71,4 @@ MonoBehaviour:
     yesNextEvent: {fileID: 0}
     noNextEvent: {fileID: 0}
     executeImmediately: 0
+    endingType: 0

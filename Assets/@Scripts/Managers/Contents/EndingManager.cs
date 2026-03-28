@@ -106,7 +106,7 @@ public class EndingManager : Singleton<EndingManager>
             return;
         }
 
-        int endingIndex = (int)newRecord.EndingType;
+        int endingIndex = (int)newRecord.EndingType - 1;//1, 2, 3
         int shortestIndex = endingIndex * 2;      // 0, 2, 4
         int longestIndex = endingIndex * 2 + 1;   // 1, 3, 5
 

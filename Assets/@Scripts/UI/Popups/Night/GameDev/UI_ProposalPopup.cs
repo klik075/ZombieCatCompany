@@ -49,6 +49,7 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         GetButton((int)Buttons.ContentButton).onClick.AddListener(() => OnClickSelectionButton(EProposalType.Content));
         GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnClickOkayButton());
     }
+    
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -57,12 +58,14 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
 
         UpdateContent();
     }
+    
     protected override void OnDisable()
     {
         base.OnDisable();
 
         EventManager.Instance.RemoveEvent(EEventType.ProposalChanged, UpdateContent);
     }
+    
     public void UpdateContent()
     {
         // GameDevManager에서 현재 선택된 장르와 콘텐츠 정보 가져오기
@@ -73,12 +76,18 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         GetText((int)Texts.MainTitleText).text = "@게임 기획";
 
         // 장르 정보 표시
+        string genreText = GenreData.GenreToString(genreData.GenreType);
         GetText((int)Texts.GenreNameText).text = "@장르";
-        GetText((int)Texts.GenreText).text = GenreData.GenreToString(genreData.GenreType);
+        GetText((int)Texts.GenreText).text = genreText;
 
         // 콘텐츠 정보 표시
+        string contentText = ContentData.ContentToString(contentData.ContentType);
         GetText((int)Texts.ContentNameText).text = "@내용";
-        GetText((int)Texts.ContentText).text = ContentData.ContentToString(contentData.ContentType);
+        GetText((int)Texts.ContentText).text = contentText;
+
+        string synergyText = SynergyData.SynergyTypeToString(GameDevManager.Instance.CurrentSynergy);
+        // 시너지 정보 표시
+        GetText((int)Texts.SynergyText).text = $"{genreText} + {contentText} = {synergyText}";
 
         // 총 개발 비용 계산 및 표시
         int totalCost = GameDevManager.Instance.GetTotalDevelopmentCost();
@@ -94,6 +103,7 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         UI_GameSelectionPopup selectedPopup = UIManager.Instance.ShowPopupUI<UI_GameSelectionPopup>();
         selectedPopup.SetInfo(proposalType);
     }
+    
     public void OnClickOkayButton()
     {
         // 개발 비용이 충분한지 확인
@@ -108,7 +118,7 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
                 MessageManager.Instance.GetMessageScript(EMessageType.EndingStarvation).Contents,
                 null,
                 () => { EndingManager.Instance.TriggerEnding(EEndingType.Starvation);}
-                );
+            );
             return;
         }
 
@@ -116,15 +126,16 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         int totalCost = GameDevManager.Instance.GetTotalDevelopmentCost();
 
         // 개발 비용 차감
-        //GameManager.Instance.Gold -= totalCost;
+        GameManager.Instance.Gold -= totalCost;
 
         // 팝업 닫기
         UIManager.Instance.ClosePopupUI();
         GameDevManager.Instance.StartNewProject();
     }
+    
     public override void RefreshUI()
     {
         base.RefreshUI();
-
+        UpdateContent();
     }
 }

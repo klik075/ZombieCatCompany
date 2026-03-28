@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using static Define;
 
@@ -102,22 +103,41 @@ public class MemberData
     }
     public static string StateToString(EMemberStateType eMemberState)
     {
-        switch(eMemberState)
+        return StateToString(eMemberState, false);
+    }
+    public static string StateToString(EMemberStateType eMemberState, bool isDispatch)
+    {
+        StringBuilder sb = new StringBuilder();
+
+        switch (eMemberState)
         {
             case EMemberStateType.Full:
-                return "배부름";
+                sb.Append("배부름");
+                break;
             case EMemberStateType.Hunger1:
             case EMemberStateType.Hunger2:
-                return "배고픔";
+                sb.Append("배고픔");
+                break;
             case EMemberStateType.Starvation:
-                return "굶주림";
+                sb.Append("굶주림");
+                break;
             case EMemberStateType.Soon:
-                return "곧꼬닥";
+                sb.Append("곧꼬닥");
+                break;
             case EMemberStateType.Death:
-                return "사망";
+                sb.Append("사망");
+                break;
             default:
-                return "누구냐 넌";
+                sb.Append("누구냐 넌");
+                break;
         }
+
+        if (isDispatch)
+        {
+            sb.Append("(파견 중)");
+        }
+
+        return sb.ToString();
     }
 
     // 깊은 복사 메서드

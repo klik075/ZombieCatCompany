@@ -133,14 +133,17 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
     private void UpdateMemberInfo(Member member)
     {
         MemberData memberData = member.CurrentMemberData;
-        
+
+        Member dispatchMember = MemberManager.Instance.GetDispatchMember();
+        bool isDispatchMember = dispatchMember != null && dispatchMember == member;
+
         // 기본 정보 업데이트
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
         
         // 상태 정보 업데이트
         GetText((int)Texts.StateNameText).text = "@상태";
-        GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State);
+        GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State, isDispatchMember);
         
         // 능력치 정보 업데이트
         UpdateAbilityTexts(memberData);

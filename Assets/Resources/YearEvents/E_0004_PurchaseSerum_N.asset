@@ -10,27 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
-  m_Name: E_0007_HungryNight
+  m_Name: E_0004_PurchaseSerum_N
   m_EditorClassIdentifier: Assembly-CSharp::YearEventData
   category: 0
-  executionType: 0
-  initiallyUnlocked: 1
-  weight: 2
-  nextEventDatas:
-  - {fileID: 11400000, guid: 8a806dd52b556c844b6384f1bc1c14ee, type: 2}
-  conditionDatas:
-  - type: 5
-    yearValue: 0
-    yearValueMax: 0
-    goldValue: 0
-    foodValue: 25
-    memberCount: 0
-    requiredEvent: {fileID: 0}
+  executionType: 1
+  initiallyUnlocked: 0
+  weight: 0
+  nextEventDatas: []
+  conditionDatas: []
   actionDatas:
   - type: 0
-    eventText: "\uBA39\uC744 \uAC83\uC774 \uAC70\uC758 \uB0A8\uC9C0 \uC54A\uC558\uB2E4.\n\uB2E4\uB4E4
-      \uC810\uC810 \uC9C0\uCCD0\uAC00\uB294 \uAC8C \uBCF4\uC778\uB2E4.\n\uC774 \uC0C1\uD0DC\uB85C\uB294
-      \uC624\uB798 \uBABB \uAC04\uB2E4."
+    eventText: "\uC6D0\uD558\uB358 \uD608\uCCAD\uC774\uC9C0\uB9CC \uC758\uC2EC\uC2A4\uB7FD\uB2E4.\r\n\uACB0\uAD6D
+      \uAD6C\uC785\uD558\uC9C0 \uC54A\uC558\uB2E4.\r\n\uB2E4\uC2DC \uAD6C\uD560 \uC218
+      \uC788\uB294 \uB0A0\uC774 \uC624\uACA0\uC9C0.."
     rewards: []
     memberIndex: 0
     hungerChange: 0

@@ -193,6 +193,7 @@ public static class Define
         SelectDispatch,       // 파견 선택
         DispatchMemberSelected, // 파견 멤버 선택됨
         DispatchNotSent,       // 파견 안보냄
+        NoMembersForDispatch,  // 파견할 멤버 없음
 
         // 식량 관련
         FoodRationing,       // 식량 배급

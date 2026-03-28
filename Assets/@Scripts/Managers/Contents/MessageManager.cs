@@ -236,6 +236,10 @@ public class MessageManager : Singleton<MessageManager>
         {
             Contents = new string[] { "혈청을 구했다냥.\r\n나는 자유다냥!" }
         };
+        _messageScripts[EMessageType.NoMembersForDispatch] = new MessageScript
+        {
+            Contents = new string[] { "파견 보낼 수 있는 고양이가 없다냥." }
+        };
     }
 
     //private void InitializeChatScripts()

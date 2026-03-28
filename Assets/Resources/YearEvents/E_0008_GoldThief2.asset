@@ -38,6 +38,7 @@ MonoBehaviour:
     yesNextEvent: {fileID: 0}
     noNextEvent: {fileID: 0}
     executeImmediately: 0
+    endingType: 0
   - type: 0
     eventText: "\uC77C\uC5B4\uB098 \uBCF4\uB2C8 \uB3C8\uC774 \uB610 \uC0AC\uB77C\uC84C\uB2E4.\r\n\uB3C4\uB451
       \uB4E0 \uAC8C \uBC8C\uC368 \uB450 \uBC88\uC9F8\uB2E4.\r\n\uD639\uC2DC \uC606
@@ -51,3 +52,4 @@ MonoBehaviour:
     yesNextEvent: {fileID: 0}
     noNextEvent: {fileID: 0}
     executeImmediately: 0
+    endingType: 0

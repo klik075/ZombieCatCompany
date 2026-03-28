@@ -92,6 +92,27 @@
             "height": 164.0
         },
         {
+            "eventName": "E_0004_PurchaseSerum",
+            "x": 1739.0,
+            "y": -275.0,
+            "width": 250.0,
+            "height": 255.0
+        },
+        {
+            "eventName": "E_0004_PurchaseSerum_N",
+            "x": 2013.0,
+            "y": -166.0,
+            "width": 250.0,
+            "height": 164.0
+        },
+        {
+            "eventName": "E_0004_PurchaseSerum_Y",
+            "x": 2013.0,
+            "y": -358.0,
+            "width": 250.0,
+            "height": 192.0
+        },
+        {
             "eventName": "E_0004_ScientistMistake",
             "x": 802.0,
             "y": -275.0,
@@ -99,15 +120,15 @@
             "height": 164.0
         },
         {
-            "eventName": "E_0004_Serum",
-            "x": 1357.0,
+            "eventName": "E_0004_SerumSuccess",
+            "x": 1425.0,
             "y": -275.0,
             "width": 250.0,
             "height": 164.0
         },
         {
             "eventName": "E_0004_StartSerumStudy",
-            "x": 1084.0,
+            "x": 1107.0,
             "y": -275.0,
             "width": 250.0,
             "height": 164.0

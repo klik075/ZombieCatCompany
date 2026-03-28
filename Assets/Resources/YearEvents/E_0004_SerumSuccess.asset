@@ -10,19 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e663f80331ee724eaf9015a0840daf1, type: 3}
-  m_Name: E_0004_Serum
+  m_Name: E_0004_SerumSuccess
   m_EditorClassIdentifier: Assembly-CSharp::YearEventData
   category: 0
   executionType: 0
   initiallyUnlocked: 0
   weight: 2
-  nextEventDatas: []
+  nextEventDatas:
+  - {fileID: 11400000, guid: ec1a044b11c97d542a204bceba1c0a45, type: 2}
   conditionDatas: []
   actionDatas:
   - type: 0
     eventText: "TV\uC5D0 \uB610 \uADF8 \uACFC\uD559\uC790\uAC00 \uB098\uC654\uB2E4.\r\n\uD608\uCCAD
-      \uC5F0\uAD6C\uB97C \uC9C4\uD589 \uC911\uC774\uB77C\uACE0 \uD55C\uB2E4.\r\n\uACE7
-      \uC815\uC0C1\uC73C\uB85C \uB3CC\uC544\uAC08 \uC218 \uC788\uACA0\uC9C0.."
+      \uC5F0\uAD6C\uC5D0 \uC131\uACF5\uD588\uB2E4\uACE0 \uD55C\uB2E4.\r\n\uD608\uCCAD\uC740
+      100,000G\uC5D0 \uD310\uB2E4\uACE0 \uD55C\uB2E4.\r\n\uBB34\uB8CC\uB85C \uC81C\uACF5\uD574
+      \uC918\uB3C4 \uBAA8\uC790\uB784 \uD310\uC5D0.."
     rewards: []
     memberIndex: 0
     hungerChange: 0
@@ -30,3 +32,4 @@ MonoBehaviour:
     yesNextEvent: {fileID: 0}
     noNextEvent: {fileID: 0}
     executeImmediately: 0
+    endingType: 0
