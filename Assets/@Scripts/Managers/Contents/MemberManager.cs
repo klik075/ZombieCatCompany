@@ -315,7 +315,7 @@ public class MemberManager : Singleton<MemberManager>
             CurrentHireResult.MemberDatas.Remove(memberData);
 
         // 현재 MemberCount 인덱스에 새 구성원 추가
-        Member newPlayer = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(memberData.EmployeeID));
+        Member newPlayer = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(memberData.Role));
         MemberData newMemberData = InfectMemberData(memberData);
         newPlayer.SetMemberData(newMemberData);
         _members[MemberCount] = newPlayer;
@@ -361,21 +361,21 @@ public class MemberManager : Singleton<MemberManager>
             Debug.Log($"[MemberManager] Activated AI for {activatedCount} newly hired members");
         }
     }
-    public string GetMemberPrefabName(int employeeId)
+    public string GetMemberPrefabName(ERoleType eRoleType)
     {
         string name = "";
-        switch (employeeId)
+        switch (eRoleType)
         {
-            case 100:
+            case ERoleType.Boss:
                 name = "CatBlackZombie";
                 break;
-            case 101:
+            case ERoleType.Planner:
                 name = "CatGrayZombie";
                 break;
-            case 102:
+            case ERoleType.Designer:
                 name = "CatBrownZombie";
                 break;
-            case 103:
+            case ERoleType.SoundWriter:
                 name = "CatWhiteZombie";
                 break;
             default:
@@ -559,7 +559,7 @@ public class MemberManager : Singleton<MemberManager>
             if(saveData == null)
                 continue;
 
-            Member member = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(saveData.CurrentMemberData.EmployeeID));
+            Member member = ObjectManager.Instance.SpawnMember(GetMemberPrefabName(saveData.CurrentMemberData.Role));
             _members[i] = member;
 
             if (saveData.IsDispatched)

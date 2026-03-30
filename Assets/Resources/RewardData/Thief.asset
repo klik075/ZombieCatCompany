@@ -15,4 +15,4 @@ MonoBehaviour:
   rewardName: Member
   rewardType: 2
   sprite: {fileID: 21300000, guid: 048c35908e107bd4e8e3b67a5e0a17af, type: 3}
-  rewardId: 2
+  rewardId: 200

@@ -598,20 +598,19 @@ public class GameDevManager : Singleton<GameDevManager>
     public WorkResult CalculateIndividualWorkResult(MemberData worker)
     {
         var result = new WorkResult();
-        int tries = UnityEngine.Random.Range(1, 7);//수치 따로 뺄 것, 밸런스 조정 필요
 
         if (CurrentGameDevType == EGameDevType.Debug)
         {
-            result.tries = tries;
             result.mainQuality = EQualityType.Bug;
+            result.tries = GetIndividualTries(worker, EQualityType.Bug, true);
             return result;
         }
 
         EQualityType mainQuality = GetMainQualityByRole(worker);
         var (quality, score) = RollOneScore(mainQuality, isIndividual : true);
 
-        result.tries = tries;
         result.mainQuality = quality;
+        result.tries = GetIndividualTries(worker, mainQuality);
         return result;
     }
     private EQualityType GetMainQualityByRole(MemberData worker)
@@ -630,6 +629,22 @@ public class GameDevManager : Singleton<GameDevManager>
             default:
                 return EQualityType.Fun;
         }
+    }
+    private int GetIndividualTries(MemberData worker, EQualityType mainQuality, bool isDebug = false)
+    {
+        int ability = Mathf.Max(GetAbilityByQuality(worker, mainQuality), 1);
+        int tries = 0;
+
+        if (mainQuality == EQualityType.Bug)
+        {
+            tries = isDebug ? Mathf.Min((ability / 10) + 1, 10) : Mathf.Min((50 / ability), 10);
+            tries = UnityEngine.Random.Range(tries/2, tries + 1);
+            return Mathf.Max(tries, 1);
+        }
+
+        tries = (ability / 10);
+        tries = UnityEngine.Random.Range(tries / 2, tries + 1);
+        return Mathf.Max(tries, 1);
     }
     /// <summary>
     /// 한 번의 시도에서 품질과 점수 결정
@@ -690,6 +705,7 @@ public class GameDevManager : Singleton<GameDevManager>
         switch (quality)
         {
             case EQualityType.Fun:
+            case EQualityType.Bug:
                 return worker.GetAbilityValue(EAbilityType.Programming);
             case EQualityType.Nyang:
                 return worker.GetAbilityValue(EAbilityType.Scenario);
@@ -697,7 +713,6 @@ public class GameDevManager : Singleton<GameDevManager>
                 return worker.GetAbilityValue(EAbilityType.Graphics);
             case EQualityType.Sound:
                 return worker.GetAbilityValue(EAbilityType.Sound);
-            case EQualityType.Bug:
             default:
                 return 0;
         }

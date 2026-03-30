@@ -66,8 +66,7 @@ public class FenceManager : Singleton<FenceManager>
 
         // 펜스 수리 실행
         _currentFence.ExecuteRepair();
-
-        //EventManager.Instance.TriggerEvent(EEventType.FenceRepaired);
+        EventManager.Instance.TriggerEvent(EEventType.FenceStateChanged);
 
         return true;
     }

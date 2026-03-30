@@ -55,6 +55,20 @@
       "Graphics": 10,
       "Sound": 10,
       "Power": 10
+    },
+    {
+      "EmployeeID": 200,
+      "NormalImagePath": "ZCC_OC",
+      "ZombieImagePath": "ZCC_ZOC",
+      "Name": "도둑",
+      "Role": 2,
+      "Salary": 25,
+      "State": 0,
+      "Programming": 50,
+      "Scenario": 50,
+      "Graphics": 50,
+      "Sound": 50,
+      "Power": 10
     }
   ]
 }

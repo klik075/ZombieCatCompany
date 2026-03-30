@@ -78,6 +78,7 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
     {
         UpdateBottomPanelBasedOnDevState();
         UpdateNewWorkText();
+        UpdateQualityText();
     }
 
     private void OnGameDevProgressChanged()
@@ -148,7 +149,7 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
     {
         EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
 
-        bool isNightPanel = (currentDevType == EGameDevType.None);
+        bool isNightPanel = (currentDevType == EGameDevType.None || currentDevType == EGameDevType.EndDev);
         bool isGameDevPanel = !isNightPanel;
 
         GetObject((int)GameObjects.NightBottomPanel1).SetActive(isNightPanel);
@@ -166,6 +167,8 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
         base.RefreshUI();
         UpdateBottomPanelBasedOnDevState();
         UpdateCompanyText();
+        UpdateQualityText(); 
+        UpdateNewWorkText();
         //TODO: Localization
     }
 }

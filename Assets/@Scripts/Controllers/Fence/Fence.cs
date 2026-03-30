@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.UI;
+using static Define;
 
 [Serializable]
 public class FenceSaveData
@@ -135,7 +136,7 @@ public class Fence : ObjectBase
     /// </summary>
     public bool NeedsRepair()
     {
-        return _currentDurability < MaxDurability;
+        return _currentDurability < MaxDurability || _currentHp < MaxHp;
     }
 
     /// <summary>
@@ -144,7 +145,8 @@ public class Fence : ObjectBase
     public void ExecuteRepair()
     {
         CurrentDurability = MaxDurability;
-        Debug.Log($"Fence repaired. Durability: {CurrentDurability}/{MaxDurability}");
+        CurrentHp = MaxHp;
+        Debug.Log($"Fence repaired. Durability: {CurrentDurability}/{MaxDurability}, HP: {CurrentHp}/{MaxHp}");
     }
 
     #endregion

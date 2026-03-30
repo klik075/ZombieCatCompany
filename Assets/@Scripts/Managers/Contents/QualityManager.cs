@@ -68,6 +68,15 @@ public class QualityManager : Singleton<QualityManager>
     private Action _onAllQualitiesComplete;
 
     public bool isAnimating => _animationCanvasObj != null;
+
+    // 퀄리티 점수 관련 상수
+    [SerializeField]
+    private float baseChance = 0.5f; // 기본 확률 15%
+    [SerializeField]
+    private float maxChance = 0.9f; // 최대 확률 90%
+    [SerializeField]
+    private float bonusRatio = 0.005f; // 능력치 당 확률 증가 비율 (예: 50 능력 → 25% 증가)
+
     #region Public API
 
     /// <summary>
@@ -408,8 +417,13 @@ public class QualityManager : Singleton<QualityManager>
             // 5초마다 작업 실행
             if (elapsed > nextWorkTime)
             {
-                // 95% 확률로 작업 실행
-                if (UnityEngine.Random.value < 0.95f)
+                int programming = player.CurrentMemberData.GetAbilityValue(EAbilityType.Programming);
+                float abilityBonus = programming * bonusRatio; // 능력 50 → 25%
+                float finalChance = baseChance + abilityBonus;
+                finalChance = Mathf.Min(finalChance, maxChance); // 상한 제한
+                Debug.Log($"개인 작업 확률: {finalChance}");
+
+                if (UnityEngine.Random.value < finalChance)
                 {
                     // 작업 시작
                     player.DoWork();
@@ -425,7 +439,7 @@ public class QualityManager : Singleton<QualityManager>
                         coAnimList.Add(CoroutineManager.Instance.StartCoroutine(CoShowIndividualQualityAnimation(player, quality, qualityCount)));
                     }
                 }
-                
+
                 nextWorkTime += nextWorkInterval;
             }
         }
