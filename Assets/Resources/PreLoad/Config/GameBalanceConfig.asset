@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4de6848dda41054e933dfd02cd0fbc2, type: 3}
+  m_Name: GameBalanceConfig
+  m_EditorClassIdentifier: Assembly-CSharp::GameBalanceConfig
+  foodPricePerUnit: 50
+  developmentCost: 1000
+  contractDepositRate: 2
+  bossSalary: 10
+  employeeSalary: 8
+  salaryIncreasePerEducation: 2
+  baseIncomePerYear: 200
+  earlyGameBonusYears: 5
+  earlyGameBonusPerYear: 300
+  highQualityBonus: 1.5
+  midQualityBonus: 1.2
+  lowQualityBonus: 1
+  veryLowQualityPenalty: 0.7
+  rewardPerCat: 100
+  evaluationMobMultiplierMin: 0.8
+  evaluationMobMultiplierMax: 1.5

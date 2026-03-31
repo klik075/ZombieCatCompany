@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using static Define;
 
 [CreateAssetMenu(fileName = "GameConfig", menuName = "Config/GameConfig")]
@@ -41,8 +41,6 @@ public class GameConfig : ScriptableObject
     public EGameMode InitialGameMode => initialGameMode;
     public string InitialCompanyName => initialCompanyName;
     public EGameState InitialGameState => initialGameState;
-
-    public int InitialAnnualProfit => initialAnnualProfit;
 
     public bool InitialIsRecruiting => initialIsRecruiting;
 }
