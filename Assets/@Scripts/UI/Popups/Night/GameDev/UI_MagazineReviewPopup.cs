@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Define;
 public class UI_MagazineReviewPopup : UI_UGUI, IUI_Popup, IClickableUI
@@ -120,11 +121,12 @@ public class UI_MagazineReviewPopup : UI_UGUI, IUI_Popup, IClickableUI
     {
         UIManager.Instance.ClosePopupUI();
 
+        int year = GameManager.Instance.Year;
+        GameBalanceConfig config = DataManager.Instance.GameBalanceConfig;
+
         // 판매량 계산 (평가 점수 기반)
-        int salesCount = 100;
-        // 영업 수익 계산 (판매량 * 게임 가격)
-        int gamePrice = 1000; // 게임당 가격 (조정 가능)
-        int salesRevenue = salesCount * gamePrice;
+        int salesRevenue = config.CalculateFinalIncome(year, _totalScore);
+        int salesCount = salesRevenue / config.GamePrice;
 
         // 게임 판매 결과 데이터 생성
         var salesData = new GameSalesResultData(

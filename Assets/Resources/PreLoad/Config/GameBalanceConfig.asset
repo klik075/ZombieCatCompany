@@ -15,16 +15,25 @@ MonoBehaviour:
   foodPricePerUnit: 50
   developmentCost: 1000
   contractDepositRate: 2
-  bossSalary: 10
-  employeeSalary: 8
+  gamePrice: 100
   salaryIncreasePerEducation: 2
+  baseIncome: 1000
   baseIncomePerYear: 200
   earlyGameBonusYears: 5
   earlyGameBonusPerYear: 300
-  highQualityBonus: 1.5
-  midQualityBonus: 1.2
-  lowQualityBonus: 1
+  guaranteedIncomeRatio: 0.5
+  highQualityBonus: 1.3
+  midQualityBonus: 1.15
+  lowQualityBonus: 0.85
   veryLowQualityPenalty: 0.7
-  rewardPerCat: 100
+  baseRewardPerCat: 100
+  rewardIncreasePerYear: 10
   evaluationMobMultiplierMin: 0.8
   evaluationMobMultiplierMax: 1.5
+  baseSpawnCount: 8
+  spawnCountIncreasePerYear: 1.1
+  maxSpawnCount: 30
+  baseHealth: 30
+  healthGrowthRate: 1.05
+  baseDamage: 8
+  damageGrowthRate: 1.05

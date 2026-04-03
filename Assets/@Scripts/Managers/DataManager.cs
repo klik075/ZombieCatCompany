@@ -17,6 +17,7 @@ public class DataManager : Singleton<DataManager>
     private HashSet<IValidate> _loaders = new HashSet<IValidate>();
     private bool _isDataLoaded = false;
     public GameConfig GameConfig { get; private set; }
+    public GameBalanceConfig GameBalanceConfig { get; private set; }
     public LocalizationConfig LocalizationConfig { get; private set; }
     public AdsConfig AdsConfig { get; private set; }
     public IAPConfig IAPConfig { get; private set; }
@@ -42,6 +43,7 @@ public class DataManager : Singleton<DataManager>
         }
 
         GameConfig = LoadScriptableObject<GameConfig>("GameConfig");
+        GameBalanceConfig = LoadScriptableObject<GameBalanceConfig>("GameBalanceConfig");
         LocalizationConfig = LoadScriptableObject<LocalizationConfig>("LocalizationConfig");
         AdsConfig = LoadScriptableObject<AdsConfig>("AdsConfig");
         IAPConfig = LoadScriptableObject<IAPConfig>("IAPConfig");

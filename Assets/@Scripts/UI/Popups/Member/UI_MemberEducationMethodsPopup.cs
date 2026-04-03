@@ -122,6 +122,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
     {
         currentPageIndex = 0;
         selectedSlotIndex = -1; // 선택 상태 초기화
+        ResetAllAddIcons(); // + 아이콘 초기화
         UpdateContent();
     }
 
@@ -208,6 +209,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         {
             currentPageIndex++;
             selectedSlotIndex = -1; // 페이지 변경 시 선택 초기화
+            ResetAllAddIcons(); // + 아이콘 초기화
             UpdateContent();
         }
     }
@@ -218,6 +220,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         {
             currentPageIndex--;
             selectedSlotIndex = -1; // 페이지 변경 시 선택 초기화
+            ResetAllAddIcons(); // + 아이콘 초기화
             UpdateContent();
         }
     }
@@ -261,13 +264,20 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         if (educationData == null)
             return;
 
-        // TODO: 능력치 증가량을 AbilityFrame에 표시
-        Debug.Log($"[Selected] Education: {educationData.Name}");
-        
-        // 설명 텍스트 업데이트
+        // 모든 + 아이콘 초기화
+        ResetAllAddIcons();
+
+        for (int i = 0; i < 5; i++)
+        {
+            int increaseAmount = educationData.GetAbilityIncrease(i);
+
+            if (increaseAmount > 0)
+            {
+                SetAddIconActive(i, increaseAmount);
+            }
+        }
+
         GetText((int)Texts.DescriptionText).text = $"선택 : {educationData.Name}";
-        
-        // TODO: 선택된 버튼 하이라이트 효과 추가
     }
 
     /// <summary>
@@ -284,6 +294,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         {
             EducationManager.Instance.SelectedEducation = null;
             selectedSlotIndex = -1; // 선택 해제
+            ResetAllAddIcons(); // + 아이콘 초기화
             
             // 자금 부족 팝업
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
@@ -296,6 +307,44 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         UI_MemberEducationCompletionPopup educationCompletionPopup = UIManager.Instance.ShowPopupUI<UI_MemberEducationCompletionPopup>();
         
         selectedSlotIndex = -1; // 실행 후 선택 초기화
+        ResetAllAddIcons(); // + 아이콘 초기화
+    }
+
+    /// <summary>
+    /// 모든 + 아이콘 비활성화
+    /// </summary>
+    private void ResetAllAddIcons()
+    {
+        for (int i = 0; i < 5; i++)
+        {
+            GetImage((int)Images.AddIcon1_1 + i).gameObject.SetActive(false);
+            GetImage((int)Images.AddIcon1_2 + i).gameObject.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// 특정 능력치의 + 아이콘 활성화
+    /// </summary>
+    /// <param name="abilityIndex">능력치 인덱스 (0: Programming, 1: Scenario, 2: Graphics, 3: Sound, 4: Power)</param>
+    /// <param name="increaseAmount">증가량</param>
+    private void SetAddIconActive(int abilityIndex, int increaseAmount)
+    {
+        if (abilityIndex < 0 || abilityIndex >= 5)
+        {
+            Debug.LogWarning($"Invalid ability index: {abilityIndex}");
+            return;
+        }
+
+        // + 아이콘은 항상 활성화 (_1)
+        GetImage((int)Images.AddIcon1_1 + abilityIndex).gameObject.SetActive(true);
+
+        // 증가량이 5 이상이면 ++ 아이콘도 활성화 (_2)
+        if (increaseAmount >= 5)
+        {
+            GetImage((int)Images.AddIcon1_2 + abilityIndex).gameObject.SetActive(true);
+        }
+
+        Debug.Log($"[AddIcon] Ability {abilityIndex} ({(EAbilityType)abilityIndex}): +{increaseAmount} {(increaseAmount >= 5 ? "(++)" : "(+)")}");
     }
 
     public override void RefreshUI()

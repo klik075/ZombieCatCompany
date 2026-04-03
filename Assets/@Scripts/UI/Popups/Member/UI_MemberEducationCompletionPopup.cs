@@ -176,6 +176,7 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
 
         // 골드 차감
         GameManager.Instance.Gold -= educationData.Cost;
+        GameBalanceConfig config = DataManager.Instance.GameBalanceConfig;
 
         // 능력치 향상 적용
         MemberData memberData = targetMember.CurrentMemberData;
@@ -184,6 +185,7 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
         memberData.Graphics += educationData.Graphics;
         memberData.Sound += educationData.Sound;
         memberData.Power += educationData.Power;
+        memberData.Salary += config.SalaryIncreasePerEducation;
 
         EndingManager.Instance.RecordStat(Define.EEndingStatType.Education, 1);
         EventManager.Instance.TriggerEvent(EEventType.EducationCompleted);

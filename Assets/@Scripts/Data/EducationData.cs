@@ -13,6 +13,19 @@ public class EducationData
     public int Graphics;
     public int Sound;
     public int Power;
+
+    public int GetAbilityIncrease(int abilityIndex)
+    {
+        return abilityIndex switch
+        {
+            0 => Programming,
+            1 => Scenario,
+            2 => Graphics,
+            3 => Sound,
+            4 => Power,
+            _ => 0
+        };
+    }
 }
 
 [Serializable]
