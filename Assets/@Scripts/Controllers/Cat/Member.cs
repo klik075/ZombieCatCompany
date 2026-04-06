@@ -9,7 +9,6 @@ public class Member : Cat
 
     [SerializeField] private string _projectilePrefabName = "Projectile";
     [SerializeField] private float _detectionRange = 5f;
-    [SerializeField] private int _attackDamage = 3;
     [SerializeField] private float _attackSpeed = 0.5f;
 
     public bool IsDispatched { get; set; }
@@ -23,15 +22,17 @@ public class Member : Cat
         }
     }
 
+    /// <summary>
+    /// 현재 공격력 (MemberData.Power 기반)
+    /// </summary>
+    public int AttackDamage => CurrentMemberData?.Power ?? 0;
+
     protected override void Awake()
     {
         base.Awake();
 
-        // 원거리 공격 전략 설정
-        if (!string.IsNullOrEmpty(_projectilePrefabName))
-        {
-            SetAttackStrategy(new RangedAttackStrategy(this, _attackDamage, _attackSpeed, _detectionRange, _projectilePrefabName));
-        }
+        // 초기 공격 전략 설정 (데미지는 나중에 업데이트됨)
+        UpdateAttackStrategy();
     }
     
     protected override void Start()
@@ -55,14 +56,43 @@ public class Member : Cat
     public void SetMemberData(int employeeId)
     {
         if (DataManager.Instance.MemberDict.TryGetValue(employeeId, out MemberData data))
+        {
             CurrentMemberData = data.DeepCopy();
+            UpdateAttackStrategy(); // 공격력 업데이트
+        }
         else
+        {
             CurrentMemberData = null;
+        }
     }
     
     public void SetMemberData(MemberData memberData)
     {
         CurrentMemberData = memberData?.DeepCopy();
+        UpdateAttackStrategy(); // 공격력 업데이트
+    }
+    
+    /// <summary>
+    /// 공격 전략 업데이트 (MemberData.Power 기반)
+    /// </summary>
+    public void UpdateAttackStrategy()
+    {
+        if (!string.IsNullOrEmpty(_projectilePrefabName))
+        {
+            // damage 파라미터 제거
+            SetAttackStrategy(new RangedAttackStrategy(this, _attackSpeed, _detectionRange, _projectilePrefabName));
+            Debug.Log($"[Member] {CurrentMemberData?.Name ?? "Unknown"} attack strategy updated (Current Power: {AttackDamage})");
+        }
+    }
+    
+    /// <summary>
+    /// 공격 설정 변경 (공격 속도와 탐지 범위만)
+    /// </summary>
+    public void SetAttackSettings(float attackSpeed, float detectionRange)
+    {
+        _attackSpeed = attackSpeed;
+        _detectionRange = detectionRange;
+        UpdateAttackStrategy();
     }
     
     public void MoveToSeat(Vector2Int seatPosition)
@@ -82,34 +112,6 @@ public class Member : Cat
     
     public void DoWork() { SetStateWork(); }
     public void FinishWork() { SetStateIdle(); }
-
-    /// <summary>
-    /// 발사체 프리팹 이름 설정
-    /// </summary>
-    public void SetProjectilePrefabName(string prefabName)
-    {
-        _projectilePrefabName = prefabName;
-
-        if (!string.IsNullOrEmpty(_projectilePrefabName))
-        {
-            SetAttackStrategy(new RangedAttackStrategy(this, _attackDamage, _attackSpeed, _detectionRange, _projectilePrefabName));
-        }
-    }
-
-    /// <summary>
-    /// 공격 설정 변경
-    /// </summary>
-    public void SetAttackSettings(int damage, float attackSpeed, float detectionRange)
-    {
-        _attackDamage = damage;
-        _attackSpeed = attackSpeed;
-        _detectionRange = detectionRange;
-
-        if (!string.IsNullOrEmpty(_projectilePrefabName))
-        {
-            SetAttackStrategy(new RangedAttackStrategy(this, _attackDamage, _attackSpeed, _detectionRange, _projectilePrefabName));
-        }
-    }
     
     public MemberSaveData GetSaveData()
     {
@@ -140,6 +142,7 @@ public class Member : Cat
         transform.position = MapManager.Instance.CellToWorld(saveData.CellPosition);
         MapManager.Instance.MoveTo(this, saveData.CellPosition, true);
         ClearMovementStrategy();
+        UpdateAttackStrategy(); // 공격력 업데이트
     }
     
     public void LoadFromSaveDataNoCellpos(MemberSaveData saveData)
@@ -154,6 +157,7 @@ public class Member : Cat
         AIEnabled = saveData.AIEnabled;
         IsDispatched = saveData.IsDispatched;
         ClearMovementStrategy();
+        UpdateAttackStrategy(); // 공격력 업데이트
     }
     
     public Sprite GetMemberSprite(EPlayerImageType playerImageType = EPlayerImageType.Zombie)

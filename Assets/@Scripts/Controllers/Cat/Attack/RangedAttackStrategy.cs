@@ -8,7 +8,6 @@ using UnityEngine;
 public class RangedAttackStrategy : IAttackStrategy
 {
     private readonly Member _owner;
-    private readonly int _damage;
     private readonly float _attackSpeed;
     private readonly float _detectionRange;
     private readonly string _projectilePrefabName;
@@ -21,10 +20,14 @@ public class RangedAttackStrategy : IAttackStrategy
 
     public bool IsAttacking => _isAttacking;
 
-    public RangedAttackStrategy(Member owner, int damage, float attackSpeed, float detectionRange, string projectilePrefabName)
+    /// <summary>
+    /// 현재 공격 데미지 (Member.Power 기반)
+    /// </summary>
+    private int CurrentDamage => _owner?.AttackDamage ?? 0;
+
+    public RangedAttackStrategy(Member owner, float attackSpeed, float detectionRange, string projectilePrefabName)
     {
         _owner = owner;
-        _damage = damage;
         _attackSpeed = attackSpeed;
         _detectionRange = detectionRange;
         _projectilePrefabName = projectilePrefabName;
@@ -108,7 +111,6 @@ public class RangedAttackStrategy : IAttackStrategy
             _attackCoroutine = null;
             yield break;
         }
-
         LaunchProjectile(target);
 
         // 애니메이션이 완료될 때까지 대기
@@ -180,8 +182,12 @@ public class RangedAttackStrategy : IAttackStrategy
             Debug.LogError("[RangedAttackStrategy] Failed to spawn projectile");
             return;
         }
-
         projectile.transform.position = _owner.transform.position;
-        projectile.Initialize(target, _damage, null);
+        
+        // 현재 시점의 데미지를 동적으로 가져옴
+        int currentDamage = CurrentDamage;
+        projectile.Initialize(target, currentDamage, null);
+        
+        Debug.Log($"[RangedAttackStrategy] {_owner.CurrentMemberData?.Name} launched projectile with {currentDamage} damage (Power: {_owner.CurrentMemberData?.Power})");
     }
 }
