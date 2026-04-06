@@ -106,10 +106,10 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
 
         // 개당 가격
         GetText((int)Texts.CostNameText).text = "개당 가격";
-        GetText((int)Texts.CostText).text = $"{GameManager.FOOD_PRICE_PER_UNIT:N0}G";
+        GetText((int)Texts.CostText).text = $"{GameManager.Instance.FOOD_PRICE_PER_UNIT:N0}G";
 
         // 총 가격
-        int totalCost = _purchaseAmount * GameManager.FOOD_PRICE_PER_UNIT;
+        int totalCost = _purchaseAmount * GameManager.Instance.FOOD_PRICE_PER_UNIT;
         GetText((int)Texts.TotalCostNameText).text = "총 가격";
         GetText((int)Texts.TotalCostText).text = $"{totalCost:N0}G";
     }

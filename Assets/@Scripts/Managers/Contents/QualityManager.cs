@@ -27,6 +27,7 @@ public class QualityData
         }
     }
 }
+
 /// <summary>
 /// 작업 애니메이션을 위한 데이터 전달 객체 (DTO)
 /// </summary>
@@ -69,13 +70,15 @@ public class QualityManager : Singleton<QualityManager>
 
     public bool isAnimating => _animationCanvasObj != null;
 
-    // 퀄리티 점수 관련 상수
-    [SerializeField]
-    private float baseChance = 0.5f; // 기본 확률 15%
-    [SerializeField]
-    private float maxChance = 0.9f; // 최대 확률 90%
-    [SerializeField]
-    private float bonusRatio = 0.005f; // 능력치 당 확률 증가 비율 (예: 50 능력 → 25% 증가)
+    // 개인 작업 밸런스 (GameBalanceConfig 스타일)
+    [Header("개인 작업 밸런스")]
+    [SerializeField] private float baseWorkChance = 0.2f;          // 기본 작업 확률 20%
+    [SerializeField] private float abilityChanceBonus = 0.01f;     // 능력치당 1% 증가
+    [SerializeField] private float maxWorkChance = 0.8f;           // 최대 작업 확률 80%
+    [SerializeField] private float minWorkInterval = 3f;           // 최소 작업 간격
+    [SerializeField] private float maxWorkInterval = 5f;           // 최대 작업 간격
+    [SerializeField] private int baseScorePerWork = 1;             // 작업당 기본 점수
+    [SerializeField] private float abilityScoreBonus = 0.02f;      // 능력치당 점수 보너스 (능력 50 → +1점)
 
     #region Public API
 
@@ -118,6 +121,7 @@ public class QualityManager : Singleton<QualityManager>
         // 애니메이션 코루틴 시작
         CoroutineManager.Instance.StartCoroutine(CoAnimateQualitySequence(startPosition, targetPositions, interval));
     }
+
     public void StartIndividualWork()
     {
         // 애니메이션 Canvas 생성
@@ -126,6 +130,7 @@ public class QualityManager : Singleton<QualityManager>
         // 코루틴 실행
         CoroutineManager.Instance.StartCoroutine(CoStartIndividualWork());
     }
+
     /// <summary>
     /// GameDevManager로부터 작업 애니메이션 데이터 가져오기
     /// </summary>
@@ -173,6 +178,7 @@ public class QualityManager : Singleton<QualityManager>
             }
         }
     }
+
     private Canvas FindMainCanvas()
     {
         Canvas[] allCanvases = GameObject.FindObjectsByType<Canvas>(FindObjectsSortMode.None);
@@ -190,6 +196,7 @@ public class QualityManager : Singleton<QualityManager>
 
         return null;
     }
+
     private void CleanupAnimationCanvas()
     {
         if (_animationCanvasObj != null)
@@ -267,6 +274,7 @@ public class QualityManager : Singleton<QualityManager>
             _ => "FunQuality"
         };
     }
+
     private TextMeshProUGUI CreateQualityText(int count, bool positive = true)
     {
         GameObject textObj = new GameObject("QualityText");
@@ -277,6 +285,7 @@ public class QualityManager : Singleton<QualityManager>
         textMesh.color = Color.white;
         return textMesh;
     }
+
     private string GetQualityString(int count, bool positive = true)
     {
         string text = "";
@@ -290,6 +299,7 @@ public class QualityManager : Singleton<QualityManager>
         }
         return text;
     }
+
     private void StartQualityAnimation(GameObject qualityObj, Vector2 targetPos, EQualityType quality)
     {
         RectTransform rectTransform = qualityObj.GetComponent<RectTransform>();
@@ -345,6 +355,10 @@ public class QualityManager : Singleton<QualityManager>
         }
     }
 
+    #endregion
+
+    #region Individual Work (개인 작업)
+
     private IEnumerator CoStartIndividualWork()
     {
         List<Member> players = MemberManager.Instance.GetActiveMembers();
@@ -375,18 +389,21 @@ public class QualityManager : Singleton<QualityManager>
             GameDevManager.Instance.AdvanceToNextStage();
     }
 
+    /// <summary>
+    /// 개인 작업 처리 (밸런스 개선 버전)
+    /// </summary>
     private IEnumerator CoProcessIndividualWork(Member player)
     {
+        // Debug 단계에서 버그가 0이면 작업 불필요
         if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.Debug)
         {
-            if(GameDevManager.Instance.CurrentProject.bugScore == 0)
+            if (GameDevManager.Instance.CurrentProject.bugScore == 0)
                 yield break;
         }
 
         float elapsed = 0f;
         List<Coroutine> coAnimList = new List<Coroutine>();
-        float nextWorkInterval = UnityEngine.Random.Range(5f, 7f);
-        float nextWorkTime = UnityEngine.Random.Range(0f, 6f);
+        float nextWorkTime = UnityEngine.Random.Range(0f, maxWorkInterval);
         
         while (elapsed < 10f)
         {
@@ -403,47 +420,57 @@ public class QualityManager : Singleton<QualityManager>
                 continue; // 일시정지 중이면 작업 안 함
             }
 
-            if (player.CellPosition != MemberManager.Instance.GetMemberSeat(player) || player.State == Cat.ECatState.Work || player.State == Cat.ECatState.Move)
+            // 멤버가 자리에 없거나 이미 작업 중이면 스킵
+            if (player.CellPosition != MemberManager.Instance.GetMemberSeat(player) || 
+                player.State == Cat.ECatState.Work || 
+                player.State == Cat.ECatState.Move)
             {
                 continue;
             }
 
+            // Debug 단계 추가 체크
             if (GameDevManager.Instance.CurrentGameDevType == EGameDevType.Debug)
             {
                 if (GameDevManager.Instance.CurrentProject.bugScore == 0)
                     yield break;
             }
 
-            // 5초마다 작업 실행
-            if (elapsed > nextWorkTime)
+            // 다음 작업 시간이 되었는지 확인
+            if (elapsed >= nextWorkTime)
             {
-                int programming = player.CurrentMemberData.GetAbilityValue(EAbilityType.Programming);
-                float abilityBonus = programming * bonusRatio; // 능력 50 → 25%
-                float finalChance = baseChance + abilityBonus;
-                finalChance = Mathf.Min(finalChance, maxChance); // 상한 제한
-                Debug.Log($"개인 작업 확률: {finalChance}");
+                // 프로그래밍 능력치 기반 작업 확률 계산
+                float workChance = CalculateWorkChance(player);
+                
+                Debug.Log($"[QualityManager] {player.CurrentMemberData?.Name} work chance: {workChance:P1} (Programming: {player.CurrentMemberData?.Programming ?? 0})");
 
-                if (UnityEngine.Random.value < finalChance)
+                if (UnityEngine.Random.value < workChance)
                 {
                     // 작업 시작
                     player.DoWork();
 
-                    // Quality 데이터 계산
+                    // GameDevManager의 CalculateIndividualWorkResult 사용
                     var workResult = GameDevManager.Instance.CalculateIndividualWorkResult(player.CurrentMemberData);
+                    
                     if (workResult.tries > 0)
                     {
                         EQualityType quality = workResult.mainQuality;
-                        int qualityCount = workResult.tries;
+                        int score = workResult.tries;
+
+                        Debug.Log($"[QualityManager] {player.CurrentMemberData?.Name} gained {score} {quality} points");
 
                         // 애니메이션 코루틴 시작
-                        coAnimList.Add(CoroutineManager.Instance.StartCoroutine(CoShowIndividualQualityAnimation(player, quality, qualityCount)));
+                        coAnimList.Add(CoroutineManager.Instance.StartCoroutine(
+                            CoShowIndividualQualityAnimation(player, quality, score)));
                     }
                 }
 
-                nextWorkTime += nextWorkInterval;
+                // 다음 작업 시간 설정
+                float interval = UnityEngine.Random.Range(minWorkInterval, maxWorkInterval);
+                nextWorkTime = elapsed + interval;
             }
         }
 
+        // 모든 애니메이션 대기
         if (coAnimList.Count > 0)
         {
             foreach (var coAnim in coAnimList)
@@ -452,61 +479,84 @@ public class QualityManager : Singleton<QualityManager>
             }
         }
 
-        if(player.State == Cat.ECatState.Work)
+        // 작업 종료
+        if (player.State == Cat.ECatState.Work)
             player.FinishWork();
     }
 
-    private IEnumerator CoShowIndividualQualityAnimation(Member player, EQualityType quality, int qualityCount)
+    /// <summary>
+    /// 작업 확률 계산 (프로그래밍 능력치 기반)
+    /// </summary>
+    private float CalculateWorkChance(Member player)
+    {
+        if (player?.CurrentMemberData == null)
+            return baseWorkChance;
+
+        // 프로그래밍 능력치 사용
+        int programmingAbility = player.CurrentMemberData.Programming;
+        
+        // 기본 확률 + (프로그래밍 능력치 × 보너스)
+        float chance = baseWorkChance + (programmingAbility * abilityChanceBonus);
+        
+        // 상한선 적용
+        return Mathf.Min(chance, maxWorkChance);
+    }
+
+    /// <summary>
+    /// 개인 작업 애니메이션 표시
+    /// </summary>
+    private IEnumerator CoShowIndividualQualityAnimation(Member player, EQualityType quality, int score)
     {
         // Quality 이미지 생성
         GameObject qualityObj = CreateQualityImage(quality);
-        if (qualityObj != null)
+        if (qualityObj == null)
+            yield break;
+
+        RectTransform qualityRect = qualityObj.GetComponent<RectTransform>();
+        qualityRect.SetParent(_animationCanvas.transform, false);
+        
+        // Player의 World Position을 Canvas의 Local Position으로 변환
+        Vector3 worldPos = player.transform.position;
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
+        
+        RectTransform canvasRect = _animationCanvas.GetComponent<RectTransform>();
+        Vector2 uiPos;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            canvasRect, 
+            screenPos, 
+            null, // Overlay Canvas는 null 사용
+            out uiPos
+        );
+        
+        qualityRect.anchoredPosition = uiPos + new Vector2(0f, 200f);
+        qualityRect.sizeDelta = new Vector2(QUALITY_IMAGE_SIZE, QUALITY_IMAGE_SIZE);
+
+        // Quality 텍스트 생성
+        bool positive = GameDevManager.Instance.CurrentGameDevType != EGameDevType.Debug;
+        TextMeshProUGUI qualityText = CreateQualityText(score, positive);
+        if (qualityText != null)
         {
-            RectTransform qualityRect = qualityObj.GetComponent<RectTransform>();
-            qualityRect.SetParent(_animationCanvas.transform, false);
+            RectTransform textRect = qualityText.GetComponent<RectTransform>();
+            textRect.SetParent(_animationCanvas.transform, false);
             
-            // Player의 World Position을 Canvas의 Local Position으로 변환
-            Vector3 worldPos = player.transform.position;
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPos);
-            
-            RectTransform canvasRect = _animationCanvas.GetComponent<RectTransform>();
-            Vector2 uiPos;
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                canvasRect, 
-                screenPos, 
-                null, // Overlay Canvas는 null 사용
-                out uiPos
-            );
-            
-            qualityRect.anchoredPosition = uiPos + new Vector2(0f, 200f);
-            qualityRect.sizeDelta = new Vector2(QUALITY_IMAGE_SIZE, QUALITY_IMAGE_SIZE);
-
-            // Quality 텍스트 생성 (이미지 바로 오른쪽)
-            bool positive = GameDevManager.Instance.CurrentGameDevType != EGameDevType.Debug;
-            TextMeshProUGUI qualityText = CreateQualityText(qualityCount, positive);
-            if (qualityText != null)
-            {
-                RectTransform textRect = qualityText.GetComponent<RectTransform>();
-                textRect.SetParent(_animationCanvas.transform, false);
-                
-                // 텍스트 위치를 이미지 오른쪽에 배치
-                Vector2 textOffset = new Vector2(QUALITY_IMAGE_SIZE / 2 + 10, 0);
-                textRect.anchoredPosition = uiPos + textOffset + new Vector2(0f, 200f);
-                textRect.pivot = new Vector2(0, 0.5f);
-                textRect.sizeDelta = new Vector2(100, 50);
-            }
-
-            GameDevManager.Instance.AddQualityScore(quality, qualityCount);
-
-            // 4초 동안 표시 후 삭제
-            yield return new WaitForSeconds(4f);
-            
-            if (qualityObj != null) 
-                Destroy(qualityObj);
-            if (qualityText != null) 
-                Destroy(qualityText.gameObject);
-            player.FinishWork();
+            Vector2 textOffset = new Vector2(QUALITY_IMAGE_SIZE / 2 + 10, 0);
+            textRect.anchoredPosition = uiPos + textOffset + new Vector2(0f, 200f);
+            textRect.pivot = new Vector2(0, 0.5f);
+            textRect.sizeDelta = new Vector2(100, 50);
         }
+
+        // 점수 추가
+        GameDevManager.Instance.AddQualityScore(quality, score);
+
+        // 4초 동안 표시 후 삭제
+        yield return new WaitForSeconds(4f);
+        
+        if (qualityObj != null) 
+            Destroy(qualityObj);
+        if (qualityText != null) 
+            Destroy(qualityText.gameObject);
+        
+        player.FinishWork();
     }
 
     #endregion

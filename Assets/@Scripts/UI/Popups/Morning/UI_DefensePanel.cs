@@ -63,9 +63,11 @@ public class UI_DefensePanel : UI_UGUI
     public void Init()
     {
         _waveCompleted = false;
-        
+
+        int evaluationScore = GameDevManager.Instance.CurrentEvaluationScore;
+
         // 디펜스 시작
-        DefenseManager.Instance.StartDefense();
+        DefenseManager.Instance.StartDefense(evaluationScore);
         
         // 초기 UI 갱신
         RefreshUI();

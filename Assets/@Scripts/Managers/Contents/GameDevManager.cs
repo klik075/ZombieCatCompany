@@ -346,6 +346,7 @@ public class GameDevManager : Singleton<GameDevManager>
             selectedGenre = _currentProject.selectedGenre,
             selectedContent = _currentProject.selectedContent,
 
+            EvaluationScore = _currentProject.EvaluationScore,
             funScore = _currentProject.funScore,
             graphicsScore = _currentProject.graphicsScore,
             nyangScore = _currentProject.nyangScore,
@@ -368,7 +369,26 @@ public class GameDevManager : Singleton<GameDevManager>
             return;
         }
 
-        _currentProject = saveData;
+        // UserData의 GameDevProjectData 참조를 사용
+        _currentProject = GameManager.Instance.UserData.MyGameData.NightData.GameDevProjectData;
+
+        // 핵심 수정: saveData의 값을 _currentProject에 복사
+        _currentProject.gameTitle = saveData.gameTitle;
+        _currentProject.gameDevType = saveData.gameDevType;
+        _currentProject.progress = saveData.progress;
+        _currentProject.selectedGenre = saveData.selectedGenre;
+        _currentProject.selectedContent = saveData.selectedContent;
+
+        // ⭐ 평가 점수 복사
+        _currentProject.EvaluationScore = saveData.EvaluationScore;
+
+        // 품질 점수 복사
+        _currentProject.funScore = saveData.funScore;
+        _currentProject.nyangScore = saveData.nyangScore;
+        _currentProject.graphicsScore = saveData.graphicsScore;
+        _currentProject.soundScore = saveData.soundScore;
+        _currentProject.bugScore = saveData.bugScore;
+
         EventManager.Instance.TriggerEvent(EEventType.GameDevStateChanged);
         Debug.Log($"GameDevData : gameDevType = {_currentProject.gameDevType}");
     }
@@ -441,13 +461,27 @@ public class GameDevManager : Singleton<GameDevManager>
     #region 프로젝트 관리
     public void InitNewProject()
     {
-        _currentProject = new GameDevProjectData();
+        // UserData의 GameDevProjectData 참조를 직접 사용
+        _currentProject = GameManager.Instance.UserData.MyGameData.NightData.GameDevProjectData;
+
+        // 초기화
+        _currentProject.gameDevType = EGameDevType.None;
+        _currentProject.progress = 0;
+        _currentProject.selectedGenre = EGenreType.ActionGame;
+        _currentProject.selectedContent = EContentType.Box;
+        _currentProject.EvaluationScore = 0;
+        _currentProject.funScore = 0;
+        _currentProject.nyangScore = 0;
+        _currentProject.graphicsScore = 0;
+        _currentProject.soundScore = 0;
+        _currentProject.bugScore = 0;
     }
     /// <summary>
     /// 새 프로젝트 시작
     /// </summary>
     public void StartNewProject()
     {
+        GameDevManager.Instance.InitNewProject();
         GameManager.Instance.GameState = EGameState.Dev;
         CurrentGameDevType = EGameDevType.Scenario;
         Progress = 0;
@@ -602,16 +636,64 @@ public class GameDevManager : Singleton<GameDevManager>
         if (CurrentGameDevType == EGameDevType.Debug)
         {
             result.mainQuality = EQualityType.Bug;
-            result.tries = GetIndividualTries(worker, EQualityType.Bug, true);
+            int programmingAbility = GetAbilityByQuality(worker, EQualityType.Bug);
+            result.tries = CalculateDebugScore(programmingAbility);
             return result;
         }
 
+        // 일반 모드: 역할별 작업
         EQualityType mainQuality = GetMainQualityByRole(worker);
-        var (quality, score) = RollOneScore(mainQuality, isIndividual : true);
 
-        result.mainQuality = quality;
-        result.tries = GetIndividualTries(worker, mainQuality);
+        // 확률에 따라 실제 획득할 품질 결정
+        EQualityType actualQuality = SelectQualityByProbability(mainQuality, isIndividual: true);
+
+        // 획득한 품질에 해당하는 능력치로 점수 계산
+        int abilityValue = GetAbilityByQuality(worker, actualQuality);
+        int score = CalculateIndividualScore(abilityValue, actualQuality);
+
+        result.mainQuality = actualQuality;
+        result.tries = score;
         return result;
+    }
+    /// <summary>
+    /// Debug 모드에서 버그 수정량 계산
+    /// </summary>
+    private int CalculateDebugScore(int programmingAbility)
+    {
+        // 프로그래밍 능력치 기반 버그 수정량
+        // 능력치 10 → 1~2점, 50 → 5~7점
+        int baseScore = Mathf.Max(1, programmingAbility / 10);
+        int randomRange = Mathf.Max(1, programmingAbility / 20);
+
+        int score = baseScore + UnityEngine.Random.Range(0, randomRange + 1);
+
+        return Mathf.Clamp(score, 1, 10); // 최소 1, 최대 10
+    }
+    /// <summary>
+    /// 개인 작업 점수 계산 (능력치 기반)
+    /// </summary>
+    private int CalculateIndividualScore(int abilityValue, EQualityType qualityType)
+    {
+        // Bug는 발생량 계산 (적을수록 좋음)
+        if (qualityType == EQualityType.Bug)
+        {
+            // 능력치가 낮을수록 Bug 많이 발생
+            // Programming 10 → 3~5점, 30 → 2~3점, 50 → 1~2점
+            int maxBugScore = Mathf.Max(2, 60 / Mathf.Max(abilityValue, 10));
+            int minBugScore = Mathf.Max(1, maxBugScore / 2);
+
+            int bugScore = UnityEngine.Random.Range(minBugScore, maxBugScore + 1);
+            return Mathf.Clamp(bugScore, 1, 10);
+        }
+
+        // 일반 품질은 능력치 비례 (많을수록 좋음)
+        // 능력치 10 → 1점, 30 → 2~3점, 50 → 3~5점
+        int baseScore = Mathf.Max(1, abilityValue / 15);
+        int randomRange = Mathf.Max(1, abilityValue / 25);
+
+        int score = baseScore + UnityEngine.Random.Range(0, randomRange + 1);
+
+        return Mathf.Clamp(score, 1, 10); // 최소 1, 최대 10
     }
     private EQualityType GetMainQualityByRole(MemberData worker)
     {
@@ -674,28 +756,32 @@ public class GameDevManager : Singleton<GameDevManager>
             return EQualityType.Fun;
         }
 
-        if (randomValue < 0.4f && isIndividual)
+        if (isIndividual)
         {
-            return EQualityType.Bug;
+            if (mainQuality == EQualityType.Bug)
+            {
+                if (randomValue < 0.8f)
+                {
+                    return EQualityType.Bug;
+                }
+            }
+            else
+            {
+                if (randomValue < 0.3f)
+                {
+                    return EQualityType.Bug;
+                }
+            }
         }
 
-        // Main: 70% (0.2 ~ 0.9)
-        if (randomValue < 0.9f)
+        if (randomValue < 0.8f)
         {
             return mainQuality;
         }
         
-        // 나머지 10%를 서브 품질들로 분배 (각각 5%)
+        // 나머지 10%를 각 서브에 할당
         var (sub1, sub2) = GetSubQualityTypes(mainQuality);
-        
-        // 첫 번째 서브: 5% (0.9 ~ 0.95)
-        if (randomValue < 0.95f)
-        {
-            return sub1;
-        }
-        
-        // 두 번째 서브: 5% (0.95 ~ 1.0)
-        return sub2;
+        return randomValue < 0.9f ? sub1 : sub2;
     }
     /// <summary>
     /// 품질 타입에 해당하는 능력치 반환
@@ -749,7 +835,7 @@ public class GameDevManager : Singleton<GameDevManager>
             case EQualityType.Sound:
                 return (EQualityType.Nyang, EQualityType.Graphics);
             case EQualityType.Bug:
-                return (EQualityType.Bug, EQualityType.Bug);
+                return (EQualityType.Fun, EQualityType.Nyang);
             default:
                 return (EQualityType.Graphics, EQualityType.Sound);
         }

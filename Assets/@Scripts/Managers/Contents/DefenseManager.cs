@@ -170,22 +170,6 @@ public class DefenseManager : Singleton<DefenseManager>
         EventManager.Instance.TriggerEvent(EEventType.DefenseStopped);
     }
 
-    public void StartNextWave()
-    {
-        _currentWave++;
-        _spawnedCatsCount = 0;
-        
-        int year = GameManager.Instance.Year;
-        _totalCatsToSpawn = CalculateWaveSpawnCount(year, _currentEvaluationScore);
-
-        Debug.Log($"Starting Wave {_currentWave} with {_totalCatsToSpawn} cats");
-
-        if (_spawnCoroutine != null)
-            StopCoroutine(_spawnCoroutine);
-        
-        _spawnCoroutine = StartCoroutine(CoSpawnCats());
-    }
-
     private void EnableAllMembersAttack()
     {
         List<Member> members = MemberManager.Instance.GetAllMembers();

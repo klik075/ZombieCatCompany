@@ -4,7 +4,7 @@
 public class GameBalanceConfig : ScriptableObject
 {
     [Header("경제 설정")]
-    [SerializeField] private int foodPricePerUnit = 50;
+    [SerializeField] private int foodPricePerUnit = 10;
     [SerializeField] private int developmentCost = 1000;
     [SerializeField] private float contractDepositRate = 2.0f;
     [SerializeField] private int gamePrice = 100;
@@ -14,7 +14,7 @@ public class GameBalanceConfig : ScriptableObject
     
     [Header("수익 공식")]
     [SerializeField] private int baseIncome = 1000;
-    [SerializeField] private int baseIncomePerYear = 200;
+    [SerializeField] private int baseIncomePerYear = 400;
     [SerializeField] private int earlyGameBonusYears = 5;
     [SerializeField] private int earlyGameBonusPerYear = 500;
     [Range(0f, 1f)]
@@ -28,7 +28,7 @@ public class GameBalanceConfig : ScriptableObject
     
     [Header("디펜스 밸런스")]
     [SerializeField] private int baseRewardPerCat = 100;  // 기본 보상
-    [SerializeField] private int rewardIncreasePerYear = 10;  // 년도당 증가
+    [SerializeField] private int rewardIncreasePerYear = 50;  // 년도당 증가
     [SerializeField] private float evaluationMobMultiplierMin = 0.8f;
     [SerializeField] private float evaluationMobMultiplierMax = 1.5f;
 

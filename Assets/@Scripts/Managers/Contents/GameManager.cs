@@ -242,9 +242,9 @@ public class GameManager : Singleton<GameManager>
     public EGameState GameState
     {
         get { return _userData.MyGameData.GameState; }
-        set 
-        { 
-            _userData.MyGameData.GameState = value; 
+        set
+        {
+            _userData.MyGameData.GameState = value;
             EventManager.Instance.TriggerEvent(Define.EEventType.GameStateChanged);
         }
     }
@@ -257,7 +257,10 @@ public class GameManager : Singleton<GameManager>
             GameState = value ? EGameState.Recruiting : EGameState.Night;
         }
     }
-    public const int FOOD_PRICE_PER_UNIT = 100; // 통조림 1개당 가격
+    public int FOOD_PRICE_PER_UNIT
+    {
+        get { return DataManager.Instance.GameBalanceConfig.FoodPricePerUnit; }
+    }
     private void Awake()
     {
         EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, PauseGame);
@@ -284,7 +287,6 @@ public class GameManager : Singleton<GameManager>
                 break;
             case EGameState.Morning:
                 YearEventManager.Instance.ResetNightSequenceFlag();
-                GameDevManager.Instance.InitNewProject();
                 SaveManager.Instance.SaveGameData();
                 SceneManager.Instance.LoadScene(EScene.MorningScene);
                 break;
