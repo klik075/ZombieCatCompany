@@ -44,7 +44,9 @@ public class GameBalanceConfig : ScriptableObject
     [SerializeField] private float damageGrowthRate = 1.05f;  // 공격력 성장률
 
     [Header("강탈 모드 - 식량 드롭")]
-    [SerializeField] private int foodDropPerMob = 2;  // 기본 2개
+    [SerializeField] private int baseFoodDropPerMob = 2;  // 기본 2개
+    [SerializeField] private float foodDropIncreasePerYear = 0.4f;  // 년당 +0.4개
+
     // Public Properties
     public int GamePrice => gamePrice;
     public int FoodPricePerUnit => foodPricePerUnit;
@@ -185,6 +187,17 @@ public class GameBalanceConfig : ScriptableObject
         int totalReward = rewardPerCat * killedCats;
         
         return totalReward;
+    }
+
+    /// <summary>
+    /// 연차별 몹당 식량 드롭 수 계산 (강탈 모드)
+    /// </summary>
+    /// <param name="year">현재 년도</param>
+    /// <returns>몹 1마리당 드롭하는 식량 수</returns>
+    public int CalculateFoodDropPerMob(int year)
+    {
+        float drop = baseFoodDropPerMob + (year * foodDropIncreasePerYear);
+        return Mathf.Max(1, Mathf.RoundToInt(drop));  // 최소 1개 보장
     }
 
     #region 디펜스 몹 스탯

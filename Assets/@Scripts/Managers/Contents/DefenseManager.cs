@@ -58,22 +58,14 @@ public class DefenseManager : Singleton<DefenseManager>
     [SerializeField] private float _spawnIntervalMin = 0.5f;
     [SerializeField] private float _spawnIntervalMax = 1f;
     [SerializeField] private bool _randomTargetSelection = true;
-    [SerializeField] private bool _randomizeCatStats = true;
-    [SerializeField] private int _minHealth = 10;
-    [SerializeField] private int _maxHealth = 15;
-    [SerializeField] private int _minDamage = 1;
-    [SerializeField] private int _maxDamage = 3;
     [SerializeField] private float _minAttackSpeed = 0.8f;
     [SerializeField] private float _maxAttackSpeed = 1.2f;
-
-    [Header("Reward Settings")]
-    [SerializeField] private int _rewardPerCat = 100; // 고양이당 보상
-    [SerializeField] private int _foodPerCat = 1; // 고양이당 강탈 식량
 
     private int _currentWave = 0;
     private int _totalCatsToSpawn = 10;
     private int _spawnedCatsCount = 0;
     private float _targetReassignInterval = 1f;
+    private int _currentEvaluationScore = 0; // 현재 평가 점수 저장
 
     private List<NormalCat> _spawnedCats = new List<NormalCat>();
     private HashSet<NormalCat> _waitingCats = new HashSet<NormalCat>();
@@ -99,6 +91,7 @@ public class DefenseManager : Singleton<DefenseManager>
         _currentWave = 0;
         _spawnedCatsCount = 0;
         _totalCatsToSpawn = 10;
+        _currentEvaluationScore = 0;
         _isDefenseActive = false;
         _spawnCoroutine = null;
         _reassignCoroutine = null;
@@ -114,7 +107,11 @@ public class DefenseManager : Singleton<DefenseManager>
     #endregion
 
     #region 디펜스 시작/종료
-    public void StartDefense()
+    /// <summary>
+    /// 디펜스 시작 (평가 점수 기반)
+    /// </summary>
+    /// <param name="evaluationScore">게임 개발 평가 점수 (0~40)</param>
+    public void StartDefense(int evaluationScore = 0)
     {
         if (_isDefenseActive)
         {
@@ -125,8 +122,13 @@ public class DefenseManager : Singleton<DefenseManager>
         _isDefenseActive = true;
         _currentWave = 1;
         _spawnedCatsCount = 0;
+        _currentEvaluationScore = evaluationScore;
 
-        Debug.Log($"Defense started! Wave {_currentWave}");
+        // GameBalanceConfig를 사용하여 몹 수 계산
+        int year = GameManager.Instance.Year;
+        _totalCatsToSpawn = CalculateWaveSpawnCount(year, evaluationScore);
+
+        Debug.Log($"Defense started! Wave {_currentWave}, Year {year}, Evaluation {evaluationScore}, Spawning {_totalCatsToSpawn} cats");
 
         EventManager.Instance.TriggerEvent(EEventType.DefenseStarted);
 
@@ -172,7 +174,9 @@ public class DefenseManager : Singleton<DefenseManager>
     {
         _currentWave++;
         _spawnedCatsCount = 0;
-        _totalCatsToSpawn = CalculateWaveSpawnCount(_currentWave);
+        
+        int year = GameManager.Instance.Year;
+        _totalCatsToSpawn = CalculateWaveSpawnCount(year, _currentEvaluationScore);
 
         Debug.Log($"Starting Wave {_currentWave} with {_totalCatsToSpawn} cats");
 
@@ -224,9 +228,6 @@ public class DefenseManager : Singleton<DefenseManager>
             {
                 SpawnCat(spawnInfo.SpawnPosition);
                 _spawnedCatsCount++;
-                
-                //// UI 갱신 이벤트
-                //EventManager.Instance.TriggerEvent(EEventType.DefenseProgressChanged);
             }
             else
             {
@@ -283,15 +284,16 @@ public class DefenseManager : Singleton<DefenseManager>
         cat.transform.position = MapManager.Instance.CellToWorld(spawnPosition);
         MapManager.Instance.RegisterCat(cat, spawnPosition);
 
-        // 능력치 랜덤화
-        if (_randomizeCatStats)
-        {
-            int health = Random.Range(_minHealth, _maxHealth + 1);
-            int damage = Random.Range(_minDamage, _maxDamage + 1);
-            float attackSpeed = Random.Range(_minAttackSpeed, _maxAttackSpeed);
-            cat.SetStats(health, damage, attackSpeed);
-            Debug.Log($"[DefenseManager] Cat spawned at {spawnPosition} - HP:{health} DMG:{damage} AtkSpd:{attackSpeed:F2}");
-        }
+        // GameBalanceConfig를 사용하여 능력치 설정
+        int year = GameManager.Instance.Year;
+        GameBalanceConfig config = DataManager.Instance.GameBalanceConfig;
+
+        int health = config.CalculateMobHealth(year);
+        int damage = config.CalculateMobDamage(year);
+        float attackSpeed = Random.Range(_minAttackSpeed, _maxAttackSpeed);
+
+        cat.SetStats(health, damage, attackSpeed);
+        Debug.Log($"[DefenseManager] Cat spawned at {spawnPosition} - HP:{health} DMG:{damage} AtkSpd:{attackSpeed:F2} (Year {year})");
 
         _spawnedCats.Add(cat);
         AssignTargetAndStartMovement(cat);
@@ -629,9 +631,16 @@ public class DefenseManager : Singleton<DefenseManager>
 
     #region 웨이브 관리
 
-    private int CalculateWaveSpawnCount(int wave)
+    /// <summary>
+    /// GameBalanceConfig를 사용하여 웨이브 몹 수 계산
+    /// </summary>
+    /// <param name="year">현재 년도</param>
+    /// <param name="evaluationScore">평가 점수 (0~40)</param>
+    /// <returns>소환할 몹 수</returns>
+    private int CalculateWaveSpawnCount(int year, int evaluationScore)
     {
-        return 10 + (wave - 1) * 5;
+        GameBalanceConfig config = DataManager.Instance.GameBalanceConfig;
+        return config.CalculateFinalMobCount(year, evaluationScore);
     }
 
     public bool IsWaveCompleted()
@@ -772,7 +781,7 @@ public class DefenseManager : Singleton<DefenseManager>
         {
             Debug.Log($"[DefenseManager] Wave {_currentWave} completed! All cats eliminated.");
             
-            // 보상 계산 (웨이브 물량 기반)
+            // 보상 계산 (GameBalanceConfig 사용)
             int defenseReward = CalculateDefenseReward();
             int defeatedFoods = CalculateDefeatedFoods();
 
@@ -804,33 +813,39 @@ public class DefenseManager : Singleton<DefenseManager>
             });
         }
     }
+
     /// <summary>
-    /// 방어 보상 계산 (웨이브 물량 * 고양이당 보상)
+    /// 방어 보상 계산 (GameBalanceConfig 사용)
     /// </summary>
     private int CalculateDefenseReward()
     {
-        // 웨이브 물량 * 고양이당 보상
-        int baseReward = _totalCatsToSpawn * _rewardPerCat;
+        int year = GameManager.Instance.Year;
+        GameBalanceConfig config = DataManager.Instance.GameBalanceConfig;
         
-        int totalReward = Mathf.RoundToInt(baseReward);
+        // GameBalanceConfig의 메서드 사용
+        int totalReward = config.CalculateDefenseReward(year, _totalCatsToSpawn);
 
-        Debug.Log($"[DefenseManager] Reward calculated: {totalReward}");
+        Debug.Log($"[DefenseManager] Reward calculated: {totalReward} (Year {year}, Cats {_totalCatsToSpawn})");
 
         return totalReward;
     }
 
     /// <summary>
-    /// 강탈한 식량 계산 (웨이브 물량 * 고양이당 식량)
+    /// 강탈한 식량 계산 (GameBalanceConfig 사용)
     /// </summary>
     private int CalculateDefeatedFoods()
     {
         if (GameManager.Instance.GameMode == EGameMode.Purchase)
             return 0;
 
-        // 웨이브 물량 * 고양이당 식량
-        int totalFoods = _totalCatsToSpawn * _foodPerCat;
+        int year = GameManager.Instance.Year;
+        GameBalanceConfig config = DataManager.Instance.GameBalanceConfig;
         
-        Debug.Log($"[DefenseManager] Foods calculated: {totalFoods}");
+        // 연차별 몹당 식량 계산
+        int foodPerMob = config.CalculateFoodDropPerMob(year);
+        int totalFoods = _totalCatsToSpawn * foodPerMob;
+        
+        Debug.Log($"[DefenseManager] Foods calculated: {totalFoods} (Year {year}, Cats {_totalCatsToSpawn} × {foodPerMob})");
         
         return totalFoods;
     }
