@@ -35,17 +35,26 @@ public class UI_MorningGame : UI_UGUI, IUI_Scene
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        GetButton((int)Buttons.DefenseStartButton).onClick.AddListener(OnClickedStartButton);
+        GetButton((int)Buttons.DefenseStartButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickedStartButton(); });
 
         EventManager.Instance.AddEvent(EEventType.UI_LeftPanelStateChanged, UpdateDefenseStartButton);
         EventManager.Instance.AddEvent(EEventType.UI_PopupClosed, UpdateDefenseStartButton);
         EventManager.Instance.AddEvent(EEventType.UI_PopupOpened, UpdateDefenseStartButton);
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        UpdateContent();
     }
     protected void OnDestroy()
     {
         EventManager.Instance.RemoveEvent(EEventType.UI_LeftPanelStateChanged, UpdateDefenseStartButton);
         EventManager.Instance.RemoveEvent(EEventType.UI_PopupClosed, UpdateDefenseStartButton);
         EventManager.Instance.RemoveEvent(EEventType.UI_PopupOpened, UpdateDefenseStartButton);
+    }
+    private void UpdateContent()
+    {
+        GetText((int)Texts.DefenseStartButtonText).text = "디펜스 시작";
     }
     public void OnClickedStartButton()
     {
@@ -62,6 +71,10 @@ public class UI_MorningGame : UI_UGUI, IUI_Scene
 
         GetButton((int)Buttons.DefenseStartButton).gameObject.SetActive(isActive);
     }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();
@@ -71,5 +84,6 @@ public class UI_MorningGame : UI_UGUI, IUI_Scene
         _bottomPanel.RefreshUI();
         _leftPanel.RefreshUI();
         _defensePanel.RefreshUI();
+        UpdateContent();
     }
 }

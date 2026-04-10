@@ -74,11 +74,11 @@ public abstract class UI_LeftPanelBase : UI_UGUI
     {
         UnityEngine.UI.Button memberButton = GetMemberButton();
         if (memberButton != null)
-            memberButton.onClick.AddListener(OnClickMemberButton);
+            memberButton.onClick.AddListener(() => { PlayButtonClickSound(); OnClickMemberButton(); });
 
         UnityEngine.UI.Button systemButton = GetSystemButton();
         if (systemButton != null)
-            systemButton.onClick.AddListener(OnClickSystemButton);
+            systemButton.onClick.AddListener(() => { PlayButtonClickSound(); OnClickSystemButton(); });
     }
 
     // 추상 메서드 - 파생 클래스에서 구현
@@ -159,7 +159,10 @@ public abstract class UI_LeftPanelBase : UI_UGUI
 
         EventManager.Instance.TriggerEvent(EEventType.UI_LeftPanelStateChanged);
     }
-
+    protected void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

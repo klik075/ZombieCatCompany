@@ -132,7 +132,7 @@ GameObject:
   - component: {fileID: 5672930428594110604}
   - component: {fileID: 7648067291530851173}
   m_Layer: 5
-  m_Name: LoadGameText
+  m_Name: LoadEndingText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 3373205982702734285}
   - component: {fileID: 1125282614885489172}
   m_Layer: 5
-  m_Name: LoadGameFrame
+  m_Name: LoadEndingFrame
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

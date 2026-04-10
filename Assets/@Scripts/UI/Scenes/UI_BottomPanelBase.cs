@@ -20,9 +20,9 @@ public abstract class UI_BottomPanelBase : UI_UGUI
             switch (state)
             {
                 case MenuButtonState.Menu:
-                    return "@메뉴"; // 나중에 LocalizationManager로 대체 가능
+                    return "메뉴"; // 나중에 LocalizationManager로 대체 가능
                 case MenuButtonState.Back:
-                    return "@뒤로";
+                    return "뒤로";
                 case MenuButtonState.Disabled:
                     return "";
                 default:
@@ -72,11 +72,11 @@ public abstract class UI_BottomPanelBase : UI_UGUI
     {
         Button saveButton = GetSaveButton();
         if (saveButton != null)
-            saveButton.onClick.AddListener(OnClickSaveButton);
+            saveButton.onClick.AddListener(() => { PlayButtonClickSound(); OnClickSaveButton(); });
 
         Button menuButton = GetMenuButton();
         if (menuButton != null)
-            menuButton.onClick.AddListener(OnClickMenuButton);
+            menuButton.onClick.AddListener(() => { PlayButtonClickSound(); OnClickMenuButton(); });
     }
 
     // LeftPanel 설정
@@ -194,7 +194,7 @@ public abstract class UI_BottomPanelBase : UI_UGUI
             saveButton.interactable = isEnabled;
 
         if (saveButtonText != null)
-            saveButtonText.text = isEnabled ? "@세이브" : "";
+            saveButtonText.text = isEnabled ? "세이브" : "";
     }
 
     protected void ApplyMenuButtonState(MenuButtonState state)
@@ -222,7 +222,11 @@ public abstract class UI_BottomPanelBase : UI_UGUI
     protected abstract Button GetMenuButton();
     protected abstract TMP_Text GetSaveButtonText();
     protected abstract TMP_Text GetMenuButtonText();
-
+    
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

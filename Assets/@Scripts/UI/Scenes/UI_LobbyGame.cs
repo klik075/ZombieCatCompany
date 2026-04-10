@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using static Define;
 
 public class UI_LobbyGame : UI_UGUI, IUI_Scene
 {
@@ -14,12 +15,14 @@ public class UI_LobbyGame : UI_UGUI, IUI_Scene
         NewButton,
         LoadButton,
         EndingRecordButton,
+        SettingButton
     }
     enum Texts
     {
         NewButtonText,
         LoadButtonText,
         EndingRecordButtonText,
+        SettingButtonText
     }
     enum Images
     {
@@ -36,9 +39,10 @@ public class UI_LobbyGame : UI_UGUI, IUI_Scene
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.NewButton).onClick.AddListener(OnClickNewGame);
-        GetButton((int)Buttons.LoadButton).onClick.AddListener(OnClickLoadGame);
-        GetButton((int)Buttons.EndingRecordButton).onClick.AddListener(OnClickEndingRecord);
+        GetButton((int)Buttons.NewButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickNewGame(); });
+        GetButton((int)Buttons.LoadButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickLoadGame(); });
+        GetButton((int)Buttons.EndingRecordButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickEndingRecord(); });
+        GetButton((int)Buttons.SettingButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickSetting(); });
 
         RefreshUI();
     }
@@ -69,7 +73,14 @@ public class UI_LobbyGame : UI_UGUI, IUI_Scene
     {
         UI_EndingRecordPopup endingPopup = UIManager.Instance.ShowPopupUI<UI_EndingRecordPopup>();
     }
-
+    private void OnClickSetting()
+    {
+        UI_SettingPopup settingPopup = UIManager.Instance.ShowPopupUI<UI_SettingPopup>();
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

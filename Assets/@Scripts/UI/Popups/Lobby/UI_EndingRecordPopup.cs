@@ -14,7 +14,7 @@ public class UI_EndingRecordPopup : UI_UGUI, IUI_Popup, IClickableUI
     }
     enum Texts
     {
-        LoadGameText,
+        LoadEndingText,
 
         //Content
         ModeButtonText1,
@@ -34,11 +34,21 @@ public class UI_EndingRecordPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.ModeButton1).onClick.AddListener(() => OnClickModeButton(EGameMode.Purchase));
-        GetButton((int)Buttons.ModeButton2).onClick.AddListener(() => OnClickModeButton(EGameMode.Extortion));
+        GetButton((int)Buttons.ModeButton1).onClick.AddListener(() => { PlayButtonClickSound(); OnClickModeButton(EGameMode.Purchase); });
+        GetButton((int)Buttons.ModeButton2).onClick.AddListener(() => { PlayButtonClickSound(); OnClickModeButton(EGameMode.Extortion); });
         GetButton((int)Buttons.BG).onClick.AddListener(() => UIManager.Instance.ClosePopupUI());
     }
-
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        UpateContent();
+    }
+    private void UpateContent()
+    {
+        GetText((int)Texts.LoadEndingText).text = "엔딩 기록";
+        GetText((int)Texts.ModeButtonText1).text = "구매 모드";
+        GetText((int)Texts.ModeButtonText2).text = "강탈 모드";
+    }
     private void OnClickModeButton(EGameMode mode)
     {
         UI_EndingRecordDetailsPopup popup = UIManager.Instance.ShowPopupUI<UI_EndingRecordDetailsPopup>();
@@ -54,7 +64,10 @@ public class UI_EndingRecordPopup : UI_UGUI, IUI_Popup, IClickableUI
                 break;
         }
     }
-
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

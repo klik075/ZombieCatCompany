@@ -53,7 +53,7 @@ public class UI_EventChoicePopup : UI_UGUI, IUI_Popup, IClickableUI
         _yesToggle = GetObject((int)GameObjects.YesToggle).GetComponent<Toggle>();
         _noToggle = GetObject((int)GameObjects.NoToggle).GetComponent<Toggle>();
 
-        GetButton((int)Buttons.ConfirmButton).onClick.AddListener(() => OnClickConfirmButton());
+        GetButton((int)Buttons.ConfirmButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickConfirmButton(); });
     }
 
     /// <summary>
@@ -170,7 +170,10 @@ public class UI_EventChoicePopup : UI_UGUI, IUI_Popup, IClickableUI
         Canvas.ForceUpdateCanvases();
         LayoutRebuilder.ForceRebuildLayoutImmediate(mainCanvas.GetComponent<RectTransform>());
     }
-
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

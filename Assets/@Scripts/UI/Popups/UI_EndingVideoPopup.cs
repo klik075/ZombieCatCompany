@@ -47,7 +47,7 @@ public class UI_EndingVideoPopup : UI_UGUI, IUI_Popup
         _videoPlayer.aspectRatio = VideoAspectRatio.FitInside;
 
         // Skip 버튼 리스너 (한 번만)
-        GetButton((int)Buttons.SkipButton).onClick.AddListener(OnSkipButtonClicked);
+        GetButton((int)Buttons.SkipButton).onClick.AddListener(() => { PlayButtonClickSound(); OnSkipButtonClicked(); });
     }
 
     protected override void OnEnable()
@@ -151,7 +151,10 @@ public class UI_EndingVideoPopup : UI_UGUI, IUI_Popup
         _onVideoFinished?.Invoke();
         //UIManager.Instance.ClosePopupUI();
     }
-
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     protected override void OnDisable()
     {
         base.OnDisable();

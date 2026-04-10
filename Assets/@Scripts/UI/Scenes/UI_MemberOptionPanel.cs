@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using static Define;
 
 public class UI_MemberOptionPanel : UI_UGUI
@@ -8,21 +8,21 @@ public class UI_MemberOptionPanel : UI_UGUI
     }
     enum Buttons
     {
-        //¹ã, ³· °ø¿ë 2Â÷ ÆĞ³Î
-        MemberListButton,//¸ñ·Ï
-        MemberEducationButton,//±³À°
+        //ë°¤, ë‚® ê³µìš© 2ì°¨ íŒ¨ë„
+        MemberListButton,//ëª©ë¡
+        MemberEducationButton,//êµìœ¡
 
-        //NightMenu 2Â÷ ÆĞ³Î
-        MemberHireButton,//°í¿ë
-        MemberFireButton,//ÇØ°í
+        //NightMenu 2ì°¨ íŒ¨ë„
+        MemberHireButton,//ê³ ìš©
+        MemberFireButton,//í•´ê³ 
     }
     enum Texts
     {
-        //¹ã, ³· °ø¿ë 2Â÷ ÆĞ³Î
+        //ë°¤, ë‚® ê³µìš© 2ì°¨ íŒ¨ë„
         MemberListButtonText,
         MemberEducationButtonText,
 
-        //NightMenu 2Â÷ ÆĞ³Î
+        //NightMenu 2ì°¨ íŒ¨ë„
         MemberHireButtonText,
         MemberFireButtonText,
     }
@@ -35,15 +35,30 @@ public class UI_MemberOptionPanel : UI_UGUI
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        //¹ã, ³· °ø¿ë
-        GetButton((int)Buttons.MemberListButton)?.onClick.AddListener(() => OpenPopup(Buttons.MemberListButton));
-        GetButton((int)Buttons.MemberEducationButton)?.onClick.AddListener(() => OpenPopup(Buttons.MemberEducationButton));
+        //ë°¤, ë‚® ê³µìš©
+        GetButton((int)Buttons.MemberListButton)?.onClick.AddListener(() => { PlayButtonClickSound(); OpenPopup(Buttons.MemberListButton); });
+        GetButton((int)Buttons.MemberEducationButton)?.onClick.AddListener(() => { PlayButtonClickSound(); OpenPopup(Buttons.MemberEducationButton); });
 
-        //¹ã
-        GetButton((int)Buttons.MemberHireButton)?.onClick.AddListener(() => OpenPopup(Buttons.MemberHireButton));
-        GetButton((int)Buttons.MemberFireButton)?.onClick.AddListener(() => OpenPopup(Buttons.MemberFireButton));
+        //ë°¤
+        GetButton((int)Buttons.MemberHireButton)?.onClick.AddListener(() => { PlayButtonClickSound(); OpenPopup(Buttons.MemberHireButton); });
+        GetButton((int)Buttons.MemberFireButton)?.onClick.AddListener(() => { PlayButtonClickSound(); OpenPopup(Buttons.MemberFireButton); });
 
         gameObject.SetActive(false);
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        UpdateContent();
+    }
+    private void UpdateContent()
+    {
+        GetText((int)Texts.MemberListButtonText).text = "ëª©ë¡";
+        GetText((int)Texts.MemberEducationButtonText).text = "êµìœ¡";
+
+        if (GetText((int)Texts.MemberHireButtonText) != null)
+            GetText((int)Texts.MemberHireButtonText).text = "ê³ ìš©";
+        if (GetText((int)Texts.MemberFireButtonText) != null)
+            GetText((int)Texts.MemberFireButtonText).text = "í•´ê³ ";
     }
     public void SetInfo(UI_LeftPanelBase leftPanel)
     {
@@ -58,12 +73,12 @@ public class UI_MemberOptionPanel : UI_UGUI
                 break;
             case Buttons.MemberEducationButton:
                 UI_MemberSelectionPopup memberSelectionPopup = UIManager.Instance.ShowPopupUI<UI_MemberSelectionPopup>();
-                memberSelectionPopup.SetInfo(EMemberSelectionType.Education); // ±³À° Å¸ÀÔÀ¸·Î ¼³Á¤
+                memberSelectionPopup.SetInfo(EMemberSelectionType.Education); // êµìœ¡ íƒ€ì…ìœ¼ë¡œ ì„¤ì •
                 break;
             case Buttons.MemberHireButton:
                 if (GameManager.Instance.GameState == EGameState.Recruiting)
                 {
-                    //ÀÌ¹Ì ¸ğÁı Áß ÆË¾÷
+                    //ì´ë¯¸ ëª¨ì§‘ ì¤‘ íŒì—…
                     UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
                     chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.AlreadyRecruiting).Contents);
                 }
@@ -96,10 +111,14 @@ public class UI_MemberOptionPanel : UI_UGUI
         if (_leftPanel != null)
             _leftPanel.IsActive = false;
     }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();
-
+        UpdateContent();
         //TODO : Localization
     }
 }

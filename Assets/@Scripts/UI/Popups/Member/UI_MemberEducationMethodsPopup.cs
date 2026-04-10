@@ -92,14 +92,14 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.NextButton).onClick.AddListener(NextPage);
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(PreviousPage);
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => { PlayButtonClickSound(); NextPage(); });
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => { PlayButtonClickSound(); PreviousPage(); });
 
         // 교육 방법 버튼들 클릭 이벤트 등록
         for (int i = 0; i < EDUCATION_METHODS_PER_PAGE; i++)
         {
             int index = i; // 클로저를 위한 지역 변수
-            GetButton((int)Buttons.EducationMethodButton1 + i).onClick.AddListener(() => OnClickEducationMethodButton(index));
+            GetButton((int)Buttons.EducationMethodButton1 + i).onClick.AddListener(() => { PlayButtonClickSound(); OnClickEducationMethodButton(index); });
         }
     }
 
@@ -141,7 +141,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
 
         // 제목 업데이트
         int totalPages = EducationManager.Instance.GetTotalPages(EDUCATION_METHODS_PER_PAGE); ;
-        GetText((int)Texts.MainTitleText).text = $"@교육 방법 선택 ({currentPageIndex + 1}/{Math.Max(1, totalPages)})";
+        GetText((int)Texts.MainTitleText).text = $"교육 방법 선택 ({currentPageIndex + 1}/{Math.Max(1, totalPages)})";
 
         // 멤버 이름 표시
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
@@ -160,7 +160,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         UpdateNavigationButtons();
         
         // 기본 설명 텍스트 설정
-        GetText((int)Texts.DescriptionText).text = "@어떤 교육을 하시겠습니까?";
+        GetText((int)Texts.DescriptionText).text = "어떤 교육을 하시겠습니까?";
     }
 
     private List<EducationData> GetCurrentPageEducations()
@@ -186,7 +186,7 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
         // 슬롯 활성화 및 데이터 설정
         methodButton.gameObject.SetActive(true);
         
-        methodText.text = $"@{educationData.Name}";
+        methodText.text = $"{educationData.Name}";
         costText.text = $"{educationData.Cost:N0}G";
         
         // 멤버 현재 능력치 정보 설정
@@ -346,7 +346,10 @@ public class UI_MemberEducationMethodsPopup : UI_UGUI, IUI_Popup
 
         Debug.Log($"[AddIcon] Ability {abilityIndex} ({(EAbilityType)abilityIndex}): +{increaseAmount} {(increaseAmount >= 5 ? "(++)" : "(+)")}");
     }
-
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

@@ -66,7 +66,7 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(OnOkayButtonClicked);
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnOkayButtonClicked(); });
     }
     protected override void OnEnable()
     {
@@ -94,10 +94,10 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
         MemberData memberData = selectedPlayer.CurrentMemberData;
 
         // 제목 설정
-        GetText((int)Texts.MainTitleText).text = "@교육 완료";
+        GetText((int)Texts.MainTitleText).text = "교육 완료";
         
         // 멤버 이름 설정
-        GetText((int)Texts.SubMiddleNameText).text = $"@{memberData.Name}";
+        GetText((int)Texts.SubMiddleNameText).text = $"{memberData.Name}";
 
         // 능력치 이름 설정
         GetText((int)Texts.AbilityNameText1).text = MemberData.AbilityToString(EAbilityType.Programming);
@@ -191,7 +191,11 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
         EventManager.Instance.TriggerEvent(EEventType.EducationCompleted);
         Debug.Log($"{memberData.Name}이(가) {educationData.Name} 교육을 받았습니다!");
     }
-    
+
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

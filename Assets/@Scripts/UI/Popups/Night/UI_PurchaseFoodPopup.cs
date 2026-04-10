@@ -52,8 +52,8 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.InputButton).onClick.AddListener(() => OnClickInputButton());
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnClickOkayButton());
+        GetButton((int)Buttons.InputButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickInputButton(); });
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickOkayButton(); });
     }
     
     protected override void OnEnable()
@@ -159,7 +159,10 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
             //구매 사운드
         }
     }
-
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

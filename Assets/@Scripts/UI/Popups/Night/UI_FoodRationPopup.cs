@@ -90,7 +90,7 @@ public class UI_FoodRationPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(OnOkayButtonClicked);
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnOkayButtonClicked(); });
     }
 
     protected override void OnEnable()
@@ -323,7 +323,10 @@ public class UI_FoodRationPopup : UI_UGUI, IUI_Popup, IClickableUI
 
         UIManager.Instance.ClosePopupUI();
     }
-
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

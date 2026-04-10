@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using static Define;
 
 public class UI_SystemOptionPanel : UI_UGUI
 {
@@ -27,10 +28,20 @@ public class UI_SystemOptionPanel : UI_UGUI
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        GetButton((int)Buttons.SystemSettingButton).onClick.AddListener(() => OpenPopup(Buttons.SystemSettingButton));
-        GetButton((int)Buttons.SystemHowToPlayButton).onClick.AddListener(() => OpenPopup(Buttons.SystemHowToPlayButton));
+        GetButton((int)Buttons.SystemSettingButton).onClick.AddListener(() => { PlayButtonClickSound(); OpenPopup(Buttons.SystemSettingButton); });
+        GetButton((int)Buttons.SystemHowToPlayButton).onClick.AddListener(() => { PlayButtonClickSound(); OpenPopup(Buttons.SystemHowToPlayButton); });
 
         gameObject.SetActive(false);
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        UpdateContent();
+    }
+    private void UpdateContent()
+    {
+        GetText((int)Texts.SystemSettingButtonText).text = "설정";
+        GetText((int)Texts.SystemHowToPlayButtonText).text = "플레이 방법";
     }
     public void SetInfo(UI_LeftPanelBase leftPanel)
     {
@@ -57,10 +68,14 @@ public class UI_SystemOptionPanel : UI_UGUI
         base.Start();
         
     }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();
-
+        UpdateContent();
         //TODO : Localization
     }
 }

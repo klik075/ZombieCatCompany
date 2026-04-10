@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using static Define;
 
 public class UI_GameRulesPopup : UI_UGUI, IUI_Popup
 {
@@ -38,8 +39,8 @@ public class UI_GameRulesPopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.NextButton).onClick.AddListener(OnClickNextButton);
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(OnClickPreviousButton);
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickNextButton(); });
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickPreviousButton(); });
     }
     protected override void OnEnable()
     {
@@ -88,6 +89,10 @@ public class UI_GameRulesPopup : UI_UGUI, IUI_Popup
         // 순환 구조: 첫 페이지에서 Prev를 누르면 마지막 페이지로
         _currentPageIndex = (_currentPageIndex - 1 + _totalPages) % _totalPages;
         UpdateContent();
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {

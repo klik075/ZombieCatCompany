@@ -47,6 +47,16 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
 
         EventManager.Instance.AddEvent(EEventType.DefenseStarted, OnDefenseStarted);
     }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        UpdateContent();
+    }
+    private void UpdateContent()
+    {
+        GetText((int)Texts.FenceHpNameText).text = "펜스 체력";
+        GetText((int)Texts.FenceDurabilityNameText).text = "펜스 내구도";
+    }
     protected override void OnDestroy()
     {
         base.OnDestroy();
@@ -100,6 +110,7 @@ public class UI_MorningBottomPanel : UI_BottomPanelBase
     public override void RefreshUI()
     {
         base.RefreshUI();
+        UpdateContent();
         //TODO: 낮 전용 UI 업데이트
         //TODO: Localization
     }

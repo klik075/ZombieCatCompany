@@ -104,25 +104,25 @@ public class MessageManager : Singleton<MessageManager>
     {
         _messageScripts[EMessageType.MoneyLow] = new MessageScript
         {
-            Contents = new string[] { "@자금이 부족하다냥" }
+            Contents = new string[] { "자금이 부족하다냥" }
         };
 
         _messageScripts[EMessageType.AlreadyRecruiting] = new MessageScript
         {
-            Contents = new string[] { "@이미 모집 중이다냥" }
+            Contents = new string[] { "이미 모집 중이다냥" }
         };
 
         _messageScripts[EMessageType.StartRecruiting] = new MessageScript
         {
-            Contents = new string[] { "@구인 사이트에 광고를 게재했다냥.\r\n곧 있으면 결과가 나오겠지냥." }
+            Contents = new string[] { "구인 사이트에 광고를 게재했다냥.\r\n곧 있으면 결과가 나오겠지냥." }
         };
         _messageScripts[EMessageType.CompleteRecruiting] = new MessageScript
         {
-            Contents = new string[] { "@모집했던 결과가 나왔다냥.\r\n고양이 ","마리가 지원했다냥.\r\n누구를 채용할까냥?" }
+            Contents = new string[] { "모집했던 결과가 나왔다냥.\r\n고양이 ","마리가 지원했다냥.\r\n누구를 채용할까냥?" }
         };
         _messageScripts[EMessageType.MembersFull] = new MessageScript
         {
-            Contents = new string[] { "@자리가 없다냥.\r\n누구를 해고할까냥?" }
+            Contents = new string[] { "자리가 없다냥.\r\n누구를 해고할까냥?" }
         };
         _messageScripts[EMessageType.MemberFired] = new MessageScript
         {

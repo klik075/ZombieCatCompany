@@ -61,9 +61,9 @@ public class UI_ModeSelectionPopup : UI_UGUI, IUI_Popup
         BindImages(typeof(Images));
 
         GetButton((int)Buttons.BG).onClick.AddListener(() => UIManager.Instance.ClosePopupUI());
-        GetButton((int)Buttons.NextButton).onClick.AddListener(OnClickNextButton);
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(OnClickPreviousButton);
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(OnClickOkayButton);
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickNextButton(); });
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickPreviousButton(); });
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickOkayButton(); });
     }
     private void OnClickNextButton()
     {
@@ -122,8 +122,12 @@ public class UI_ModeSelectionPopup : UI_UGUI, IUI_Popup
         GetText((int)Texts.MainTitleText).text = $"모드 선택 {_currentIndex + 1}/{_modeKeys.Count}";
         GetText((int)Texts.SubMiddleNameText).text = ModeData.GetModeName(modeData.GameMode);
         GetText((int)Texts.DescriptionText).text = modeData.Description;
+        GetText((int)Texts.RoleText).text = "사장";
+        GetText((int)Texts.FundsNameText).text = "자금";
         GetText((int)Texts.FundsText).text = modeData.Gold.ToString();
+        GetText((int)Texts.FoodNameText).text = "통조림";
         GetText((int)Texts.FoodText).text = modeData.Food.ToString();
+        GetText((int)Texts.OkayButtonText).text = "선택";
 
         // 버튼 활성화/비활성화 (선택사항)
         GetButton((int)Buttons.NextButton).interactable = _modeKeys.Count > 1;
@@ -148,6 +152,10 @@ public class UI_ModeSelectionPopup : UI_UGUI, IUI_Popup
 
         EndingManager.Instance.TriggerGameStart();
         //SceneManager.Instance.LoadScene(EScene.NightScene);
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {

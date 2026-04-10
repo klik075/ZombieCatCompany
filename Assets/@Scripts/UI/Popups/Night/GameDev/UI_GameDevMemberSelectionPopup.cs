@@ -66,9 +66,9 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindImages(typeof(Images));
 
         // 버튼 이벤트 등록
-        GetButton((int)Buttons.NextButton).onClick.AddListener(OnClickNextMember);
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(OnClickPreviousMember);
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(OnClickOkayButton);
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickNextMember(); });
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickPreviousMember(); });
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickOkayButton(); });
     }
     
     public void SetInfo()
@@ -112,7 +112,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
     {
         EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
         string stageText = GetGameDevStageText(currentDevType);
-        GetText((int)Texts.MainTitleText).text = $"@{stageText} 담당할 고양이";
+        GetText((int)Texts.MainTitleText).text = $"{stageText} 담당할 고양이";
     }
 
     private string GetGameDevStageText(EGameDevType devType)
@@ -142,7 +142,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
         
         // 상태 정보 업데이트
-        GetText((int)Texts.StateNameText).text = "@상태";
+        GetText((int)Texts.StateNameText).text = "상태";
         GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State, isDispatchMember);
         
         // 능력치 정보 업데이트
@@ -195,7 +195,7 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
     {
         bool isDispatchMember = member.IsDispatched;
         GetButton((int)Buttons.OkayButton).interactable = !isDispatchMember;
-        GetText((int)Texts.OkayButtonText).text = "@결정";
+        GetText((int)Texts.OkayButtonText).text = "결정";
     }
 
     private void OnClickNextMember()
@@ -243,7 +243,10 @@ public class UI_GameDevMemberSelectionPopup : UI_UGUI, IUI_Popup, IClickableUI
         UI_GameDevWorkPopup workPopup = UIManager.Instance.ShowPopupUI<UI_GameDevWorkPopup>();
         workPopup.StartOfWork();
     }
-    
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

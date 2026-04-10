@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections.Generic;
 using static Define;
 
@@ -53,7 +53,7 @@ public class UI_GameSelectionPopup : UI_UGUI, IUI_Popup
     private int _currentPage = 0;
     private readonly int _itemsPerPage = 5;
     
-    // ¸¶Áö¸· ¼±ÅÃµÈ Ç×¸ñ ÃßÀû¿ë º¯¼öµé
+    // ë§ˆì§€ë§‰ ì„ íƒëœ í•­ëª© ì¶”ì ìš© ë³€ìˆ˜ë“¤
     private int _lastSelectedSlotIndex = -1;
     private int _lastSelectedPage = -1;
 
@@ -65,15 +65,15 @@ public class UI_GameSelectionPopup : UI_UGUI, IUI_Popup
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        // ¹öÆ° ÀÌº¥Æ® µî·Ï
-        GetButton((int)Buttons.NextButton).onClick.AddListener(OnClickNextPage);
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(OnClickPreviousPage);
+        // ë²„íŠ¼ ì´ë²¤íŠ¸ ë“±ë¡
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickNextPage(); });
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickPreviousPage(); });
 
-        // Content ¹öÆ°µé ÀÌº¥Æ® µî·Ï
+        // Content ë²„íŠ¼ë“¤ ì´ë²¤íŠ¸ ë“±ë¡
         for (int i = 0; i < _itemsPerPage; i++)
         {
-            int slotIndex = i; // Å¬·ÎÀú º¯¼ö Ä¸Ã³ ¹æÁö
-            GetButton((int)Buttons.ContentButton1 + i).onClick.AddListener(() => OnClickContentButton(slotIndex));
+            int slotIndex = i; // í´ë¡œì € ë³€ìˆ˜ ìº¡ì²˜ ë°©ì§€
+            GetButton((int)Buttons.ContentButton1 + i).onClick.AddListener(() => { PlayButtonClickSound(); OnClickContentButton(slotIndex); });
         }
     }
 
@@ -114,9 +114,9 @@ public class UI_GameSelectionPopup : UI_UGUI, IUI_Popup
     {
         bool isGenreSelection = _proposalType == EProposalType.Genre;
         
-        GetText((int)Texts.MainTitleText).text = isGenreSelection ? "@Àå¸£ ¼±ÅÃ" : "@³»¿ë ¼±ÅÃ";
-        GetText((int)Texts.SubMiddleContentNameText).text = isGenreSelection ? "@Àå¸£" : "@³»¿ë";
-        GetText((int)Texts.SubMiddleCostNameText).text = "@ºñ¿ë";
+        GetText((int)Texts.MainTitleText).text = isGenreSelection ? "ì¥ë¥´ ì„ íƒ" : "ë‚´ìš© ì„ íƒ";
+        GetText((int)Texts.SubMiddleContentNameText).text = isGenreSelection ? "ì¥ë¥´" : "ë‚´ìš©";
+        GetText((int)Texts.SubMiddleCostNameText).text = "ë¹„ìš©";
     }
 
     private void UpdateContentItems()
@@ -181,8 +181,8 @@ public class UI_GameSelectionPopup : UI_UGUI, IUI_Popup
         SynergyData synergyData = GameDevManager.Instance.GetSynergyData(genreData.GenreType, contentData.ContentType);
 
         string combinationText = _proposalType == EProposalType.Genre 
-            ? $"{ContentData.ContentToString(contentData.ContentType)}(¿Í)°ú Á¶ÇÕ = "
-            : $"{GenreData.GenreToString(genreData.GenreType)}(¿Í)°ú Á¶ÇÕ = ";
+            ? $"{ContentData.ContentToString(contentData.ContentType)}(ì™€)ê³¼ ì¡°í•© = "
+            : $"{GenreData.GenreToString(genreData.GenreType)}(ì™€)ê³¼ ì¡°í•© = ";
 
         GetText((int)Texts.SynergyNameText).text = combinationText;
         GetText((int)Texts.SynergyText).text = SynergyData.SynergyTypeToString(synergyData.SynergyType);
@@ -212,7 +212,7 @@ public class UI_GameSelectionPopup : UI_UGUI, IUI_Popup
         if (_currentPage < GetTotalPageCount() - 1)
         {
             _currentPage++;
-            ResetSelection(); // ÆäÀÌÁö º¯°æ ½Ã ¼±ÅÃ »óÅÂ ÃÊ±âÈ­
+            ResetSelection(); // í˜ì´ì§€ ë³€ê²½ ì‹œ ì„ íƒ ìƒíƒœ ì´ˆê¸°í™”
             UpdateContent();
         }
     }
@@ -222,7 +222,7 @@ public class UI_GameSelectionPopup : UI_UGUI, IUI_Popup
         if (_currentPage > 0)
         {
             _currentPage--;
-            ResetSelection(); // ÆäÀÌÁö º¯°æ ½Ã ¼±ÅÃ »óÅÂ ÃÊ±âÈ­
+            ResetSelection(); // í˜ì´ì§€ ë³€ê²½ ì‹œ ì„ íƒ ìƒíƒœ ì´ˆê¸°í™”
             UpdateContent();
         }
     }
@@ -306,7 +306,10 @@ public class UI_GameSelectionPopup : UI_UGUI, IUI_Popup
         _lastSelectedSlotIndex = slotIndex;
         _lastSelectedPage = _currentPage;
     }
-    
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

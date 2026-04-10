@@ -65,9 +65,9 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         BindImages(typeof(Images));
 
         // 버튼 이벤트 등록
-        GetButton((int)Buttons.NextButton).onClick.AddListener(() => NextMemberInfoUpdate());
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => PreviousMemberInfoUpdate());
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnOkayButtonClicked());
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => { PlayButtonClickSound(); NextMemberInfoUpdate(); });
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => { PlayButtonClickSound(); PreviousMemberInfoUpdate(); });
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnOkayButtonClicked(); });
     }
 
     protected override void OnEnable()
@@ -123,20 +123,20 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         _currentIndex = index;
 
         // 타이틀 텍스트 (현재 멤버 / 전체 멤버 수)
-        GetText((int)Texts.MainTitleText).text = $"@신규 고용 {_currentIndex + 1}/{hireResult.MemberDatas.Count}";
+        GetText((int)Texts.MainTitleText).text = $"신규 고용 {_currentIndex + 1}/{hireResult.MemberDatas.Count}";
 
         // 이름 표시
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
         // 급여 표시
-        GetText((int)Texts.SubMiddleSalaryNameText).text = "@연봉";
+        GetText((int)Texts.SubMiddleSalaryNameText).text = "연봉";
         GetText((int)Texts.SubMiddleSalaryText).text = $"{memberData.SalaryToString(ESalaryType.Salary)}";
 
         // 역할 표시
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
 
         // 지불 금액 표시
-        GetText((int)Texts.PaymentNameText).text = "@계약금";
+        GetText((int)Texts.PaymentNameText).text = "계약금";
         GetText((int)Texts.PaymentText).text = $"{memberData.SalaryToString(ESalaryType.Deposit)}";
 
         // 능력치 이름 설정
@@ -168,7 +168,7 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         }
 
         // 확인 버튼 텍스트
-        GetText((int)Texts.OkayButtonText).text = "@고용";
+        GetText((int)Texts.OkayButtonText).text = "고용";
     }
     
     private void NextMemberInfoUpdate()
@@ -255,6 +255,10 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
             MemberManager.Instance.EndHire();
             UIManager.Instance.ClosePopupUI();
         }
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {

@@ -115,7 +115,7 @@ public class UI_ResultsReportPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(OnClickOkayButton);
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickOkayButton(); });
     }
 
     public void SetInfo(ResultReportData data, Action onConfirm = null)
@@ -163,7 +163,10 @@ public class UI_ResultsReportPopup : UI_UGUI, IUI_Popup, IClickableUI
         UIManager.Instance.ClosePopupUI();
         _onConfirm?.Invoke();
     }
-
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

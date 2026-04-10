@@ -45,9 +45,9 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        GetButton((int)Buttons.GenreButton).onClick.AddListener(() => OnClickSelectionButton(EProposalType.Genre));
-        GetButton((int)Buttons.ContentButton).onClick.AddListener(() => OnClickSelectionButton(EProposalType.Content));
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnClickOkayButton());
+        GetButton((int)Buttons.GenreButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickSelectionButton(EProposalType.Genre); });
+        GetButton((int)Buttons.ContentButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickSelectionButton(EProposalType.Content); });
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickOkayButton(); });
     }
     
     protected override void OnEnable()
@@ -73,16 +73,16 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         ContentData contentData = GameDevManager.Instance.CurrentContentData;
 
         // 메인 타이틀 설정
-        GetText((int)Texts.MainTitleText).text = "@게임 기획";
+        GetText((int)Texts.MainTitleText).text = "게임 기획";
 
         // 장르 정보 표시
         string genreText = GenreData.GenreToString(genreData.GenreType);
-        GetText((int)Texts.GenreNameText).text = "@장르";
+        GetText((int)Texts.GenreNameText).text = "장르";
         GetText((int)Texts.GenreText).text = genreText;
 
         // 콘텐츠 정보 표시
         string contentText = ContentData.ContentToString(contentData.ContentType);
-        GetText((int)Texts.ContentNameText).text = "@내용";
+        GetText((int)Texts.ContentNameText).text = "내용";
         GetText((int)Texts.ContentText).text = contentText;
 
         string synergyText = SynergyData.SynergyTypeToString(GameDevManager.Instance.CurrentSynergy);
@@ -91,11 +91,11 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
 
         // 총 개발 비용 계산 및 표시
         int totalCost = GameDevManager.Instance.GetTotalDevelopmentCost();
-        GetText((int)Texts.SubMiddleCostNameText).text = "@개발비";
+        GetText((int)Texts.SubMiddleCostNameText).text = "개발비";
         GetText((int)Texts.SubMiddleCostText).text = $"{totalCost:N0}G";
 
         // 확인 버튼 텍스트
-        GetText((int)Texts.OkayButtonText).text = "@결정";
+        GetText((int)Texts.OkayButtonText).text = "결정";
     }
 
     public void OnClickSelectionButton(EProposalType proposalType)
@@ -132,7 +132,10 @@ public class UI_ProposalPopup : UI_UGUI, IUI_Popup
         UIManager.Instance.ClosePopupUI();
         GameDevManager.Instance.StartNewProject();
     }
-    
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

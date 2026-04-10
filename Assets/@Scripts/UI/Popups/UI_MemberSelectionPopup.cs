@@ -71,9 +71,9 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.NextButton).onClick.AddListener(() => MemberManager.Instance.SelectNextMember());
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => MemberManager.Instance.SelectPreviousMember());
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnOkayButtonClicked());
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => { PlayButtonClickSound(); MemberManager.Instance.SelectNextMember(); });
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => { PlayButtonClickSound(); MemberManager.Instance.SelectPreviousMember(); });
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnOkayButtonClicked(); });
     }
     protected override void OnEnable()
     {
@@ -122,21 +122,21 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         // 제목 표시 (현재 선택된 멤버의 순서)
         int currentOrder = MemberManager.Instance.SelectedMemberIndex + 1;
         int totalMembers = MemberManager.Instance.MemberCount;
-        string mainTitlePrefix = _selectionType == EMemberSelectionType.Education ? "@구성원 선택" : "@파견 선택";
+        string mainTitlePrefix = _selectionType == EMemberSelectionType.Education ? "구성원 선택" : "파견 선택";
         GetText((int)Texts.MainTitleText).text = $"{mainTitlePrefix} {currentOrder}/{totalMembers}";
 
         // 이름 표시
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
         // 급여 표시
-        GetText((int)Texts.SubMiddleSalaryNameText).text = "@식비";
+        GetText((int)Texts.SubMiddleSalaryNameText).text = "식비";
         GetText((int)Texts.SubMiddleSalaryText).text = $"{memberData.SalaryToString(ESalaryType.Food)}";
 
         // 역할 표시
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
 
         // 상태 표시
-        GetText((int)Texts.StateNameText).text = "@상태";
+        GetText((int)Texts.StateNameText).text = "상태";
         GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State, isDispatchMember);
 
         // 능력치 이름 설정
@@ -166,7 +166,7 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
         }
 
         // 확인 버튼 텍스트
-        GetText((int)Texts.OkayButtonText).text = _selectionType == EMemberSelectionType.Education ? "@교육" : "@파견";
+        GetText((int)Texts.OkayButtonText).text = _selectionType == EMemberSelectionType.Education ? "교육" : "파견";
     }
     private void UpdateOkayButtonState()
     {
@@ -251,7 +251,10 @@ public class UI_MemberSelectionPopup : UI_UGUI, IUI_Popup
             }
         );
     }
-
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

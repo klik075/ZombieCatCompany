@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class SoundManager : Singleton<SoundManager>
@@ -7,7 +7,7 @@ public class SoundManager : Singleton<SoundManager>
     private Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
 
     private Transform _soundRoot;
-    public Transform SoundRoot { get { return Utils.GetRootTransform(ref _soundRoot, "@SoundRoot"); } }
+    public Transform SoundRoot { get { return Utils.GetRootTransform(ref _soundRoot, "@SoundRoot", this.transform); } }
 
     void Awake()
     {

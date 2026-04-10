@@ -41,9 +41,19 @@ public class UI_MorningLeftPanel : UI_LeftPanelBase
     // 낮 전용 버튼 이벤트 등록
     protected override void RegisterSpecificEvents()
     {
-        GetButton((int)Buttons.FenceButton).onClick.AddListener(OnClickFenceButton);
+        GetButton((int)Buttons.FenceButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickFenceButton(); });
     }
-
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        UpdateContent();
+    }
+    private void UpdateContent()
+    {
+        GetText((int)Texts.MemberButtonText).text = "구성원";
+        GetText((int)Texts.SystemButtonText).text = "시스템";
+        GetText((int)Texts.FenceButtonText).text = "펜스";
+    }
     // 낮 전용 버튼 처리
     private void OnClickFenceButton()
     {
@@ -54,6 +64,7 @@ public class UI_MorningLeftPanel : UI_LeftPanelBase
     public override void RefreshUI()
     {
         base.RefreshUI();
+        UpdateContent();
         //TODO: Morning 전용 Localization
     }
 }

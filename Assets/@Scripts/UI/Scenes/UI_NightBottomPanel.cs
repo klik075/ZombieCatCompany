@@ -115,6 +115,8 @@ public class UI_NightBottomPanel : UI_BottomPanelBase
         if (GetObject((int)GameObjects.GameDevBottomPanel1).activeSelf == false)
             return;
 
+        GetText((int)Texts.NewWorkNameText).text = "신작";
+
         EGameDevType currentDevType = GameDevManager.Instance.CurrentGameDevType;
         switch (currentDevType)
         {

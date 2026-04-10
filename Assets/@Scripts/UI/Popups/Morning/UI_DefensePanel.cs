@@ -30,7 +30,7 @@ public class UI_DefensePanel : UI_UGUI
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        GetButton((int)Buttons.SpeedButton).onClick.AddListener(OnClickSpeedButton);
+        GetButton((int)Buttons.SpeedButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickSpeedButton(); });
         _progressSlider = GetObject((int)GameObjects.Slider).GetComponent<Slider>();
         
         if (_progressSlider != null)
@@ -49,7 +49,6 @@ public class UI_DefensePanel : UI_UGUI
 
         EventManager.Instance.AddEvent(EEventType.DefenseProgressChanged, RefreshUI);
     }
-
     protected override void OnDisable()
     {
         base.OnDisable();
@@ -90,6 +89,10 @@ public class UI_DefensePanel : UI_UGUI
         }
     }
 
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

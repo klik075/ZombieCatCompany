@@ -58,9 +58,9 @@ public class UI_GameDevCompletionPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
-        
-        GetButton((int)Buttons.GameTitleChangeButton).onClick.AddListener(() => OpenInputFieldPopup());
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OpenMagazineReviewPopup());
+
+        GetButton((int)Buttons.GameTitleChangeButton).onClick.AddListener(() => { PlayButtonClickSound(); OpenInputFieldPopup(); });
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OpenMagazineReviewPopup(); });
     }
     protected override void OnEnable()
     {
@@ -121,6 +121,10 @@ public class UI_GameDevCompletionPopup : UI_UGUI, IUI_Popup, IClickableUI
 
         UI_MagazineReviewPopup ReviewPopup = UIManager.Instance.ShowPopupUI<UI_MagazineReviewPopup>();
         ReviewPopup.SetInfo();
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {

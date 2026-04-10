@@ -58,10 +58,10 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        GetButton((int)Buttons.EmployeeFrame1).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame1));
-        GetButton((int)Buttons.EmployeeFrame2).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame2));
-        GetButton((int)Buttons.EmployeeFrame3).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame3));
-        GetButton((int)Buttons.EmployeeFrame4).onClick.AddListener(() => OpenNextUI(Buttons.EmployeeFrame4));
+        GetButton((int)Buttons.EmployeeFrame1).onClick.AddListener(() => { PlayButtonClickSound(); OpenNextUI(Buttons.EmployeeFrame1); });
+        GetButton((int)Buttons.EmployeeFrame2).onClick.AddListener(() => { PlayButtonClickSound(); OpenNextUI(Buttons.EmployeeFrame2); });
+        GetButton((int)Buttons.EmployeeFrame3).onClick.AddListener(() => { PlayButtonClickSound(); OpenNextUI(Buttons.EmployeeFrame3); });
+        GetButton((int)Buttons.EmployeeFrame4).onClick.AddListener(() => { PlayButtonClickSound(); OpenNextUI(Buttons.EmployeeFrame4); });
     }
     protected override void OnEnable()
     {
@@ -144,8 +144,18 @@ public class UI_MemberListPopup : UI_UGUI, IUI_Popup
             }
         }
 
-        GetText((int)Texts.SubBottomSumMemberText).text = $"@{memberCount}마리";
-        GetText((int)Texts.SubBottomSumSalaryText).text = $"@{totalSalary}개";
+        GetText((int)Texts.MainTitleText).text = "구성원 목록";
+        GetText((int)Texts.SubMiddleNameText).text = "이름";
+        GetText((int)Texts.SubMiddleRoleText).text = "직업";
+        GetText((int)Texts.SubMiddleSalaryText).text = "식비";
+
+        GetText((int)Texts.SubBottomSumNameText).text = "합계";
+        GetText((int)Texts.SubBottomSumMemberText).text = $"{memberCount}마리";
+        GetText((int)Texts.SubBottomSumSalaryText).text = $"{totalSalary}개";
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {

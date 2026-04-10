@@ -80,9 +80,9 @@ public class UI_EndingRecordDetailsPopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.NextButton).onClick.AddListener(() => OnNextButtonClicked());
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => OnPreviousButtonClicked());
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => UIManager.Instance.ClosePopupUI());
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => { PlayButtonClickSound(); OnNextButtonClicked(); });
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => { PlayButtonClickSound(); OnPreviousButtonClicked(); });
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); UIManager.Instance.ClosePopupUI(); });
     }
 
     public void SetInfo(EGameMode mode)
@@ -215,6 +215,13 @@ public class UI_EndingRecordDetailsPopup : UI_UGUI, IUI_Popup
     {
         _currentIndex = (_currentIndex - 1 + _currentRecords.Length) % _currentRecords.Length;
         UpdateContent();
+    }
+    /// <summary>
+     /// 버튼 클릭 효과음 재생
+     /// </summary>
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {

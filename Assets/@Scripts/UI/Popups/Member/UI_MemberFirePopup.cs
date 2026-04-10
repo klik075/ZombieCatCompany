@@ -62,9 +62,9 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.NextButton).onClick.AddListener(() => MemberManager.Instance.SelectNextMember());
-        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => MemberManager.Instance.SelectPreviousMember());
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnClickOkayButton());
+        GetButton((int)Buttons.NextButton).onClick.AddListener(() => { PlayButtonClickSound(); MemberManager.Instance.SelectNextMember(); });
+        GetButton((int)Buttons.PreviousButton).onClick.AddListener(() => { PlayButtonClickSound(); MemberManager.Instance.SelectPreviousMember(); });
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickOkayButton(); });
     }
     protected override void OnEnable()
     {
@@ -101,14 +101,14 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         GetText((int)Texts.SubMiddleNameText).text = memberData.Name;
 
         // 급여 표시
-        GetText((int)Texts.SubMiddleSalaryNameText).text = "@식비";
+        GetText((int)Texts.SubMiddleSalaryNameText).text = "식비";
         GetText((int)Texts.SubMiddleSalaryText).text = memberData.SalaryToString(ESalaryType.Food);
 
         // 역할 표시
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
 
         // 상태 표시
-        GetText((int)Texts.StateNameText).text = "@상태";
+        GetText((int)Texts.StateNameText).text = "상태";
         GetText((int)Texts.StateText).text = MemberData.StateToString(memberData.State, isDispatchMember);
 
         // 능력치 이름 설정
@@ -137,11 +137,11 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         }
 
         // 확인 버튼 텍스트
-        GetText((int)Texts.OkayButtonText).text = "@해고";
+        GetText((int)Texts.OkayButtonText).text = "해고";
         
         int currentIndex = MemberManager.Instance.SelectedMemberIndex;
         int order = currentIndex + 1;
-        GetText((int)Texts.MainTitleText).text = $"@구성원 해고 {order}/{MemberManager.Instance.MemberCount}";
+        GetText((int)Texts.MainTitleText).text = $"구성원 해고 {order}/{MemberManager.Instance.MemberCount}";
         
         // 해고 버튼 활성화/비활성화 처리
         bool canFire = MemberManager.Instance.CanFireMember(currentIndex);
@@ -208,6 +208,10 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
     {
         UIManager.Instance.ClosePopupUI();
         EventManager.Instance.TriggerEvent(EEventType.MemberSwapped);
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {

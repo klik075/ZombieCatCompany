@@ -39,8 +39,8 @@ public class UI_InputFieldPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => OnOkayButtonClicked());
-        GetButton((int)Buttons.NoButton).onClick.AddListener(() => OnNoButtonClicked());
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnOkayButtonClicked(); });
+        GetButton((int)Buttons.NoButton).onClick.AddListener(() => { PlayButtonClickSound(); OnNoButtonClicked(); });
     }
 
     public void SetInfo(EInputFieldType type, Action<string> onConfirm)
@@ -49,7 +49,7 @@ public class UI_InputFieldPopup : UI_UGUI, IUI_Popup, IClickableUI
         _onConfirm = onConfirm;
 
         UpdateContent();
-        ClearInputField(); // ✅ 추가: InputField 초기화
+        ClearInputField(); // 추가: InputField 초기화
     }
 
     public void UpdateContent()
@@ -121,6 +121,10 @@ public class UI_InputFieldPopup : UI_UGUI, IUI_Popup, IClickableUI
         UIManager.Instance.ClosePopupUI();
     }
 
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

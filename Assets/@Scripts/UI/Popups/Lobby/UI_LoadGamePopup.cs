@@ -42,7 +42,7 @@ public class UI_LoadGamePopup : UI_UGUI, IUI_Popup
         BindImages(typeof(Images));
 
         GetButton((int)Buttons.BG).onClick.AddListener(() => UIManager.Instance.ClosePopupUI());
-        GetButton((int)Buttons.ContentFrame).onClick.AddListener(() => LoadGame());
+        GetButton((int)Buttons.ContentFrame).onClick.AddListener(() => { PlayButtonClickSound(); LoadGame(); });
 
         UpdateUI();
     }
@@ -108,6 +108,10 @@ public class UI_LoadGamePopup : UI_UGUI, IUI_Popup
     private void UpdateButton()
     {
         GetButton((int)Buttons.ContentFrame).interactable = _hasGameData;
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {

@@ -41,11 +41,25 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
     // 밤 전용 버튼 이벤트 등록
     protected override void RegisterSpecificEvents()
     {
-        GetButton((int)Buttons.GameDevButton).onClick.AddListener(OnClickGameDevButton);
-        GetButton((int)Buttons.DiaryButton).onClick.AddListener(OnClickDiaryButton);
-        GetButton((int)Buttons.DispatchResultButton).onClick.AddListener(OnClickDispatchResultButton);
+        GetButton((int)Buttons.GameDevButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickGameDevButton(); });
+        GetButton((int)Buttons.DiaryButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickDiaryButton(); });
+        GetButton((int)Buttons.DispatchResultButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickDispatchResultButton(); });
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        UpdateContent();
     }
 
+    private void UpdateContent()
+    {
+        GetText((int)Texts.MemberButtonText).text = "구성원";
+        GetText((int)Texts.SystemButtonText).text = "시스템";
+
+        GetText((int)Texts.GameDevButtonText).text = "게임 개발";
+        GetText((int)Texts.DiaryButtonText).text = "일기장";
+        GetText((int)Texts.DispatchResultButtonText).text = "파견 결과";
+    }
     // 밤 전용 버튼 처리
     private void OnClickGameDevButton()
     {
@@ -116,10 +130,10 @@ public class UI_NightLeftPanel : UI_LeftPanelBase
 
         IsActive = false;
     }
-
     public override void RefreshUI()
     {
         base.RefreshUI();
+        UpdateContent();
         //TODO: Night 전용 Localization
     }
 }

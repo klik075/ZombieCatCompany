@@ -54,17 +54,17 @@ public class UI_TopPanel : UI_UGUI
 
     private void UpdateSurvivalYearUI(int year)
     {
-        GetText((int)Texts.SurvivalYearText).text = $"@{year}년차";
+        GetText((int)Texts.SurvivalYearText).text = $"{year}년차";
     }
 
     private void UpdateGoldUI(int gold)
     {
-        GetText((int)Texts.GoldText).text = $"@보유 자금 : {gold:N0}G";
+        GetText((int)Texts.GoldText).text = $"보유 자금 : {gold:N0}G";
     }
 
     private void UpdateFoodUI(int food)
     {
-        GetText((int)Texts.FoodText).text = $"@보유 통조림 :{food}개";
+        GetText((int)Texts.FoodText).text = $"보유 통조림 :{food}개";
     }
 
     public override void RefreshUI()

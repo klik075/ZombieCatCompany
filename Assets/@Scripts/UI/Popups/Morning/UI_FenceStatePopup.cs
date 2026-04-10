@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using static Define;
 
 public class UI_FenceStatePopup : UI_UGUI, IUI_Popup
 {
@@ -58,8 +59,8 @@ public class UI_FenceStatePopup : UI_UGUI, IUI_Popup
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
 
-        GetButton((int)Buttons.RepairButton).onClick.AddListener(() => OnClickRepairButton());
-        GetButton((int)Buttons.EnhanceButton).onClick.AddListener(() => OnClickEnhanceButton());
+        GetButton((int)Buttons.RepairButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickRepairButton(); });
+        GetButton((int)Buttons.EnhanceButton).onClick.AddListener(() => { PlayButtonClickSound(); OnClickEnhanceButton(); });
     }
     protected override void Start()
     {
@@ -183,6 +184,10 @@ public class UI_FenceStatePopup : UI_UGUI, IUI_Popup
             {
                 UIManager.Instance.ShowPopupUI<UI_FenceStatePopup>();
             });
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {

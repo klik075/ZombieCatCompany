@@ -1,12 +1,13 @@
-using System;
+ï»¿using System;
 using System.Text;
 using UnityEngine;
+using static Define;
 
 public class UI_MessagePopup : UI_UGUI, IUI_Popup, IClickableUI
 {
     enum GameObjects
     {
-        //BG - »óÈ£ÀÛ¿ë x
+        //BG - ìƒí˜¸ìž‘ìš© x
         BG,
     }
     enum Buttons
@@ -40,8 +41,8 @@ public class UI_MessagePopup : UI_UGUI, IUI_Popup, IClickableUI
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        GetButton((int)Buttons.OkayButton).onClick.AddListener(OnOkayButtonClicked);
-        GetButton((int)Buttons.NoButton).onClick.AddListener(OnNoButtonClicked);
+        GetButton((int)Buttons.OkayButton).onClick.AddListener(() => { PlayButtonClickSound(); OnOkayButtonClicked(); });
+        GetButton((int)Buttons.NoButton).onClick.AddListener(() => { PlayButtonClickSound(); OnNoButtonClicked(); });
     }
 
     public void SetInfo(string[] scripts, string[] insertScripts = null, Action okAction = null, Action noAction = null)
@@ -69,10 +70,10 @@ public class UI_MessagePopup : UI_UGUI, IUI_Popup, IClickableUI
 
     private void UpdateContent()
     {
-        GetText((int)Texts.MainTitleText).text = "¸Þ½ÃÁö";
+        GetText((int)Texts.MainTitleText).text = "ë©”ì‹œì§€";
         GetText((int)Texts.ContentText).text = _content != null ? _content : "";
-        GetText((int)Texts.OkayButtonText).text = "³×";
-        GetText((int)Texts.NoButtonText).text = "¾Æ´Ï¿À";
+        GetText((int)Texts.OkayButtonText).text = "ë„¤";
+        GetText((int)Texts.NoButtonText).text = "ì•„ë‹ˆì˜¤";
     }
 
     private void OnOkayButtonClicked()
@@ -86,7 +87,10 @@ public class UI_MessagePopup : UI_UGUI, IUI_Popup, IClickableUI
         UIManager.Instance.ClosePopupUI();
         _onNoCallback?.Invoke();
     }
-
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
+    }
     public override void RefreshUI()
     {
         base.RefreshUI();

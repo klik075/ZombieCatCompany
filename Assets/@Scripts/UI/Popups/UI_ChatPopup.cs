@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -41,7 +41,7 @@ public class UI_ChatPopup : UI_UGUI, IUI_Popup, IClickableUI
         BindTexts(typeof(Texts));
         BindImages(typeof(Images));
     }
-    public void SetInfo(int employeeId, string[] scripts, string[] insertScripts = null, Action action = null)//Å¬¸¯ ½Ã »ç¿ëÇÒ ¸Þ¼­µå µî·ÏÇØ¾ß ÇÔ.
+    public void SetInfo(int employeeId, string[] scripts, string[] insertScripts = null, Action action = null)//í´ë¦­ ì‹œ ì‚¬ìš©í•  ë©”ì„œë“œ ë“±ë¡í•´ì•¼ í•¨.
     {
         DataManager.Instance.MemberDict.TryGetValue(employeeId, out MemberData memberData);
 
@@ -56,9 +56,9 @@ public class UI_ChatPopup : UI_UGUI, IUI_Popup, IClickableUI
         else
             clickButton.onClick.AddListener(() => ClosePopup());
 
+        GetText((int)Texts.MainTitleText).text = "ëŒ€í™”ì°½";
         GetText((int)Texts.RoleText).text = MemberData.RoleToString(memberData.Role);
         GetImage((int)Images.MemberImage).sprite = ResourceManager.Instance.Get<Sprite>(memberData.ZombieImagePath);
-
         GetText((int)Texts.ContentText).text = GetContentText(scripts, insertScripts);
     }
     public string GetContentText(string[] script, string[] insertScript)

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 using static Define;
 
@@ -6,7 +6,7 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
 {
     enum GameObjects
     {
-        //BG - »óÈ£ÀÛ¿ë x
+        //BG - ìƒí˜¸ì‘ìš© x
         BG,
     }
     enum Buttons
@@ -35,7 +35,20 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
         BindButtons(typeof(Buttons));
         BindTexts(typeof(Texts));
 
-        GetButton((int)Buttons.HireMethodButton1).onClick.AddListener(() => OnClickMethodButton(Buttons.HireMethodButton1));
+        GetButton((int)Buttons.HireMethodButton1).onClick.AddListener(() => { PlayButtonClickSound(); OnClickMethodButton(Buttons.HireMethodButton1); });
+    }
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        UpdateContent();
+    }
+    private void UpdateContent()
+    {
+        GetText((int)Texts.MainTitleText).text = "ì–´ë–»ê²Œ ì°¾ìœ¼ì‹œê² ìŠµë‹ˆê¹Œ?";
+        GetText((int)Texts.SubMiddleNameText).text = "ëª¨ì§‘ ë°©ë²•";
+        GetText((int)Texts.SubMiddleCostNameText).text = "ë¹„ìš©";
+        GetText((int)Texts.HireMethodNameText1).text = "ì¸í„°ë„·ìœ¼ë¡œ ëª¨ì§‘";
+        GetText((int)Texts.HireMethodCostText1).text = "500G";
     }
     private void OnClickMethodButton(Buttons button)
     {
@@ -43,16 +56,16 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
         switch (button)
         {
             case Buttons.HireMethodButton1:
-                if (GameManager.Instance.Gold < 500)// TODO : ¸ğÁı ºñ¿ëÀ¸·Î º¯°æÇÒ °Í. MemberManager¿¡¼­ ¼öÇàÇÒ °Í
+                if (GameManager.Instance.Gold < 500)// TODO : ëª¨ì§‘ ë¹„ìš©ìœ¼ë¡œ ë³€ê²½í•  ê²ƒ. MemberManagerì—ì„œ ìˆ˜í–‰í•  ê²ƒ
                 {
-                    //ÀÚ±İ ºÎÁ· ÆË¾÷
+                    //ìê¸ˆ ë¶€ì¡± íŒì—…
                     chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
                     chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.MoneyLow).Contents);
                     return;
                 }
                 else
                 {
-                    GameManager.Instance.Gold -= 500; // TODO : ¸ğÁı ºñ¿ëÀ¸·Î º¯°æÇÒ °Í. MemberManager¿¡¼­ ¼öÇàÇÒ °Í
+                    GameManager.Instance.Gold -= 500; // TODO : ëª¨ì§‘ ë¹„ìš©ìœ¼ë¡œ ë³€ê²½í•  ê²ƒ. MemberManagerì—ì„œ ìˆ˜í–‰í•  ê²ƒ
                     MemberManager.Instance.StartHire(EHireMethodType.Internet);
                 }
                 break;
@@ -60,13 +73,17 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
 
         UIManager.Instance.ClosePopupUI();
 
-        //¸ğÁı ½ÃÀÛ ÆË¾÷
+        //ëª¨ì§‘ ì‹œì‘ íŒì—…
         chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
         chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID, MessageManager.Instance.GetMessageScript(EMessageType.StartRecruiting).Contents);
+    }
+    private void PlayButtonClickSound()
+    {
+        SoundManager.Instance.Play2D(ESound.Effect, "Button");
     }
     public override void RefreshUI()
     {
         base.RefreshUI();
-
+        UpdateContent();
     }
 }
