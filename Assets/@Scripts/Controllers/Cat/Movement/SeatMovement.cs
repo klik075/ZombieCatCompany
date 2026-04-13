@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// ÁÂ¼®À¸·Î ÀÌµ¿ÇÏ´Â Àü·« (¸¶Áö¸· ¼¿ Á¡À¯ ¹«½Ã)
+/// ì¢Œì„ìœ¼ë¡œ ì´ë™í•˜ëŠ” ì „ëµ (êµì°© ìƒíƒœ ë°©ì§€ ê°œì„ )
 /// </summary>
 public class SeatMovement : IMovementStrategy
 {
@@ -11,15 +11,26 @@ public class SeatMovement : IMovementStrategy
     private List<Vector2Int> _path;
     private int _currentIndex = 0;
     private float _retryTimer = 0f;
-    private const float RETRY_INTERVAL = 0.5f;
-    private const float DEADLOCK_TIMEOUT = 3f; // ±³Âø »óÅÂ ÆÇ´Ü ½Ã°£
-    private float _stuckTimer = 0f; // ¸·Èù ½Ã°£ ÃøÁ¤
+    private float _currentRetryDelay = 0f;
+    private const float MIN_RETRY_DELAY = 0.3f;
+    private const float MAX_RETRY_DELAY = 1.0f;
+    private const float DEADLOCK_TIMEOUT = 3f;
+    private float _stuckTimer = 0f;
     private bool _pathCalculated = false;
-    private Vector2Int _lastPosition; // ÀÌÀü À§Ä¡ ÃßÀû
+    private Vector2Int _lastPosition;
+    
+    private float _initialDelay = 0f;
+    private float _initialDelayTimer = 0f;
+    private int _blockedCounter = 0;
+    private const int STEP_ASIDE_THRESHOLD = 5;
+    private const int MAX_BLOCKED_ATTEMPTS = 15;
+    
+    // ë¹„ì¼œì„œê¸° ì‹œë„ ì¿¨ë‹¤ìš´
+    private float _stepAsideCooldown = 0f;
+    private const float STEP_ASIDE_COOLDOWN_TIME = 1.0f;
     
     public bool IsComplete { get; private set; }
     
-    // ±âº» »ı¼ºÀÚ Ãß°¡
     public SeatMovement()
     {
     }
@@ -29,9 +40,6 @@ public class SeatMovement : IMovementStrategy
         Initialize(seatPosition, gridManager);
     }
     
-    /// <summary>
-    /// Àç»ç¿ëÀ» À§ÇÑ ÀçÃÊ±âÈ­
-    /// </summary>
     public SeatMovement Initialize(Vector2Int seatPosition, IGridManager gridManager)
     {
         _seatPosition = seatPosition;
@@ -43,12 +51,19 @@ public class SeatMovement : IMovementStrategy
         _pathCalculated = false;
         _lastPosition = new Vector2Int(int.MinValue, int.MinValue);
         IsComplete = false;
+        
+        // ì´ˆê¸° ê²½ë¡œ ê³„ì‚° ëœë¤ ë”œë ˆì´
+        _initialDelay = Random.Range(0.1f, 1.5f);
+        _initialDelayTimer = 0f;
+        _blockedCounter = 0;
+        _currentRetryDelay = GetRandomRetryDelay();
+        _stepAsideCooldown = 0f;
+        
         return this;
     }
     
     public void Execute(Cat cat)
     {
-        // ÀÌ¹Ì µµÂøÇßÀ¸¸é ¿Ï·á
         if (cat.CellPosition == _seatPosition)
         {
             IsComplete = true;
@@ -56,29 +71,52 @@ public class SeatMovement : IMovementStrategy
             return;
         }
         
-        // À§Ä¡ º¯È­ °¨Áö (¿òÁ÷ÀÌ°í ÀÖÀ¸¸é Å¸ÀÌ¸Ó ¸®¼Â)
+        // ì´ˆê¸° ë”œë ˆì´ ì²˜ë¦¬
+        if (!_pathCalculated && _initialDelayTimer < _initialDelay)
+        {
+            _initialDelayTimer += Time.deltaTime;
+            return;
+        }
+        
+        // ìœ„ì¹˜ ë³€í™” ê°ì§€
         if (cat.CellPosition != _lastPosition)
         {
             _lastPosition = cat.CellPosition;
             _stuckTimer = 0f;
+            _blockedCounter = 0; // ì›€ì§ì˜€ì„ ë•Œë§Œ ë¦¬ì…‹
         }
         else
         {
             _stuckTimer += Time.deltaTime;
         }
         
-        // Ã¹ ½ÇÇà ½Ã °æ·Î °è»ê
+        // ë¹„ì¼œì„œê¸° ì¿¨ë‹¤ìš´ ê°ì†Œ
+        if (_stepAsideCooldown > 0f)
+        {
+            _stepAsideCooldown -= Time.deltaTime;
+        }
+        
+        // ê²½ë¡œê°€ ì—†ìœ¼ë©´ ì¦‰ì‹œ ì¬ê³„ì‚°
         if (!_pathCalculated)
         {
             _path = _gridManager.FindPath(cat.CellPosition, _seatPosition);
             
             if (_path.Count == 0)
             {
-                Debug.LogWarning($"Failed to find path to seat {_seatPosition}");
+                Debug.LogWarning($"[SeatMovement] Failed to find path to seat {_seatPosition}");
+                // ê²½ë¡œë¥¼ ì°¾ì§€ ëª»í•´ë„ ê³„ì† ì‹œë„
+                _retryTimer += Time.deltaTime;
+                if (_retryTimer >= _currentRetryDelay)
+                {
+                    _retryTimer = 0f;
+                    _currentRetryDelay = GetRandomRetryDelay();
+                    Debug.Log($"[SeatMovement] Retrying to find path...");
+                }
                 return;
             }
 
             _pathCalculated = true;
+            _currentIndex = 0;
         }
         
         if (_currentIndex >= _path.Count)
@@ -91,85 +129,159 @@ public class SeatMovement : IMovementStrategy
         Vector2Int nextCell = _path[_currentIndex];
         bool isLastCell = (_currentIndex == _path.Count - 1);
         
+        // ì´ë™ ì‹œë„
         if (_gridManager.CanMoveTo(nextCell))
         {
             cat.MoveTo(nextCell);
             _currentIndex++;
+            _blockedCounter = 0;
+            _currentRetryDelay = GetRandomRetryDelay();
         }
         else if (isLastCell)
         {
-            // ¸¶Áö¸· ¼¿(ÁÂ¼®)ÀÌ¸é °­Á¦·Î Á¡À¯ ÇØÁ¦ ÈÄ ÀÌµ¿
             _gridManager.Release(nextCell);
             cat.MoveTo(nextCell);
             _currentIndex++;
         }
         else
         {
-            // ±³Âø »óÅÂ °¨Áö - 3ÃÊ ÀÌ»ó °°Àº À§Ä¡¿¡ ÀÖÀ¸¸é
-            if (_stuckTimer >= DEADLOCK_TIMEOUT)
-            {
-                Debug.Log($"Deadlock detected! Member will step aside.");
-                TryStepAside(cat);
-                _stuckTimer = 0f; // Å¸ÀÌ¸Ó ¸®¼Â
-                return;
-            }
+            HandleBlockedMovement(cat, nextCell);
+        }
+    }
+    
+    private void HandleBlockedMovement(Cat cat, Vector2Int nextCell)
+    {
+        _blockedCounter++;
+        
+        // ìµœëŒ€ ì‹œë„ íšŸìˆ˜ ì´ˆê³¼ ì‹œ ê°•ì œ í•´ê²°
+        if (_blockedCounter >= MAX_BLOCKED_ATTEMPTS)
+        {
+            Debug.LogWarning($"[SeatMovement] Max attempts reached ({MAX_BLOCKED_ATTEMPTS})! Emergency resolution.");
+            ForceResolveDeadlock(cat);
+            return;
+        }
+        
+        // êµì°©ìƒíƒœ ê°ì§€ ì‹œ ë¹„ì¼œì„œê¸° ì‹œë„ (ì¿¨ë‹¤ìš´ ì²´í¬)
+        if ((_stuckTimer >= DEADLOCK_TIMEOUT || _blockedCounter >= STEP_ASIDE_THRESHOLD) 
+            && _stepAsideCooldown <= 0f)
+        {
+            Debug.Log($"[SeatMovement] Deadlock suspected (Blocked: {_blockedCounter}, Stuck: {_stuckTimer:F1}s). Attempting to step aside.");
+            bool stepped = TryStepAside(cat);
             
-            // Áß°£ °æ·Î ¸·Èû - Àç°è»ê ½Ãµµ
-            _retryTimer += Time.deltaTime;
-            if (_retryTimer >= RETRY_INTERVAL)
+            if (stepped)
             {
-                _retryTimer = 0f;
-                _path = _gridManager.FindPath(cat.CellPosition, _seatPosition);
-                _currentIndex = 0;
-                
-                if (_path.Count == 0)
-                {
-                    Debug.LogWarning($"Failed to recalculate path to seat {_seatPosition}");
-                    _pathCalculated = false;
-                }
+                _stepAsideCooldown = STEP_ASIDE_COOLDOWN_TIME; // ì„±ê³µ ì‹œ ì¿¨ë‹¤ìš´
+                _stuckTimer = 0f;
+                return; // ì„±ê³µí–ˆìœ¼ë©´ ì´ë²ˆ í”„ë ˆì„ ì¢…ë£Œ
             }
+            else
+            {
+                // ì‹¤íŒ¨í•´ë„ ì¿¨ë‹¤ìš´ (ì—°ì† ì‹œë„ ë°©ì§€)
+                _stepAsideCooldown = STEP_ASIDE_COOLDOWN_TIME * 0.5f;
+                _stuckTimer = 0f;
+                // return í•˜ì§€ ì•Šê³  ì•„ë˜ ê²½ë¡œ ì¬íƒìƒ‰ ë¡œì§ìœ¼ë¡œ ì§„í–‰!
+            }
+        }
+        
+        // í•­ìƒ ê²½ë¡œ ì¬íƒìƒ‰ ì‹œë„ (ë¹„ì¼œì„œê¸° ì‹¤íŒ¨í•´ë„ ì‹¤í–‰ë¨)
+        _retryTimer += Time.deltaTime;
+        if (_retryTimer >= _currentRetryDelay)
+        {
+            _retryTimer = 0f;
+            _currentRetryDelay = GetRandomRetryDelay();
+            
+            Debug.Log($"[SeatMovement] Recalculating path (attempt {_blockedCounter})");
+            RecalculatePath(cat);
+        }
+    }
+    
+    private void RecalculatePath(Cat cat)
+    {
+        _path = _gridManager.FindPath(cat.CellPosition, _seatPosition);
+        _currentIndex = 0;
+        
+        if (_path.Count == 0)
+        {
+            Debug.LogWarning($"[SeatMovement] Failed to recalculate path");
+            _pathCalculated = false; // ë‹¤ìŒ í”„ë ˆì„ì— ë‹¤ì‹œ ì‹œë„
+        }
+        else
+        {
+            _pathCalculated = true;
         }
     }
     
     /// <summary>
-    /// ±³Âø »óÅÂ ÇØ°á: ¿·À¸·Î ºñÄÑ³ª±â
+    /// ë°˜í™˜ê°’ ì¶”ê°€: ì„±ê³µ ì—¬ë¶€
     /// </summary>
-    private void TryStepAside(Cat cat)
+    private bool TryStepAside(Cat cat)
     {
         Vector2Int current = cat.CellPosition;
+        Vector2Int toGoal = _seatPosition - current;
+        Vector2Int[] priorityDirections = GetPriorityDirections(toGoal);
         
-        // »óÇÏÁÂ¿ì Áß ºñ¾îÀÖ´Â °÷ Ã£±â
-        Vector2Int[] directions = new Vector2Int[]
-        {
-            new Vector2Int(0, 1),   // À§
-            new Vector2Int(0, -1),  // ¾Æ·¡
-            new Vector2Int(1, 0),   // ¿À¸¥ÂÊ
-            new Vector2Int(-1, 0)   // ¿ŞÂÊ
-        };
-        
-        foreach (var dir in directions)
+        foreach (var dir in priorityDirections)
         {
             Vector2Int sideCell = current + dir;
             
             if (_gridManager.CanMoveTo(sideCell))
             {
-                // ºñ¾îÀÖ´Â °÷À¸·Î Àá½Ã ÀÌµ¿ (¾çº¸)
-                Debug.Log($"Stepping aside to {sideCell}");
+                Debug.Log($"[SeatMovement] Stepping aside to {sideCell} to let others pass");
                 cat.MoveTo(sideCell);
                 
-                // °æ·Î Àç°è»ê ¿¹¾à
                 _pathCalculated = false;
-                _retryTimer = RETRY_INTERVAL; // Áï½Ã Àç°è»ê
-                return;
+                _retryTimer = 0f;
+                _currentRetryDelay = GetRandomRetryDelay();
+                _blockedCounter = Mathf.Max(0, _blockedCounter - 2);
+                
+                return true; // ì„±ê³µ
             }
         }
         
-        // ¿·À¸·Î ºñÄÑ³¯ °÷ÀÌ ¾øÀ¸¸é ÇöÀç À§Ä¡ Á¡À¯ ÇØÁ¦ (´Ù¸¥ Member°¡ Áö³ª°¥ ¼ö ÀÖ°Ô)
-        Debug.Log($"Cannot step aside, releasing position temporarily");
-        _gridManager.Release(current);
+        // ì‹¤íŒ¨ - ê²½ë¡œë§Œ ì¬íƒìƒ‰ ì˜ˆì•½
+        Debug.Log($"[SeatMovement] Cannot step aside, will recalculate path (counter: {_blockedCounter})");
+        _pathCalculated = false;
         
-        // Àá½Ã ÈÄ ´Ù½Ã Á¡À¯ ½Ãµµ
-        _retryTimer = RETRY_INTERVAL;
+        return false; // ì‹¤íŒ¨
+    }
+    
+    private void ForceResolveDeadlock(Cat cat)
+    {
+        Vector2Int current = cat.CellPosition;
+        
+        _gridManager.Release(current);
+        Debug.Log($"[SeatMovement] Released position {current} temporarily");
+        
+        _retryTimer = 0f;
+        _currentRetryDelay = Random.Range(1.0f, 2.0f);
+        _pathCalculated = false;
+        _blockedCounter = STEP_ASIDE_THRESHOLD;
+        _stepAsideCooldown = 0f; // ì¿¨ë‹¤ìš´ ë¦¬ì…‹
+    }
+    
+    private float GetRandomRetryDelay()
+    {
+        return Random.Range(MIN_RETRY_DELAY, MAX_RETRY_DELAY);
+    }
+    
+    private Vector2Int[] GetPriorityDirections(Vector2Int toGoal)
+    {
+        List<Vector2Int> directions = new List<Vector2Int>
+        {
+            new Vector2Int(0, 1),
+            new Vector2Int(0, -1),
+            new Vector2Int(1, 0),
+            new Vector2Int(-1, 0)
+        };
+        
+        directions.Sort((a, b) =>
+        {
+            int dotA = a.x * toGoal.x + a.y * toGoal.y;
+            int dotB = b.x * toGoal.x + b.y * toGoal.y;
+            return dotA.CompareTo(dotB);
+        });
+        
+        return directions.ToArray();
     }
     
     public void Reset()
@@ -179,14 +291,20 @@ public class SeatMovement : IMovementStrategy
         IsComplete = false;
         _stuckTimer = 0f;
         _retryTimer = 0f;
+        _blockedCounter = 0;
+        _initialDelayTimer = 0f;
+        _currentRetryDelay = GetRandomRetryDelay();
+        _stepAsideCooldown = 0f;
     }
     
-    /// <summary>
-    /// µğ¹ö±×¿ë °æ·Î Á¤º¸ ¹İÈ¯
-    /// </summary>
     public List<Vector2Int> GetDebugPath()
     {
         return _path ?? new List<Vector2Int>();
+    }
+    
+    public string GetDebugStatus()
+    {
+        return $"Blocked: {_blockedCounter}/{MAX_BLOCKED_ATTEMPTS}, Stuck: {_stuckTimer:F1}s, RetryDelay: {_currentRetryDelay:F1}s, Cooldown: {_stepAsideCooldown:F1}s";
     }
     
     public event System.Action OnArrived;
