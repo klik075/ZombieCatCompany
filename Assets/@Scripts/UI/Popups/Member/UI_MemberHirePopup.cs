@@ -225,6 +225,7 @@ public class UI_MemberHirePopup : UI_UGUI, IUI_Popup
         // 실제 멤버 고용
         if (MemberManager.Instance.HireMember(selectedHireMember))
         {
+            SoundManager.Instance.Play2D(ESound.Effect, "Coin");
             SoundManager.Instance.Play2D(ESound.Effect, "Bite");
             //고용 팝업
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();

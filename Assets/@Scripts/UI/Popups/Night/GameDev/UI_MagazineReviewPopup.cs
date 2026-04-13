@@ -81,6 +81,8 @@ public class UI_MagazineReviewPopup : UI_UGUI, IUI_Popup, IClickableUI
             int score = MagazineManager.Instance.GetEvaluationScore((EQualityType)i);
             yield return new WaitForSecondsRealtime(2f);
 
+            SoundManager.Instance.Play2D(ESound.Effect, "Evaluation");
+
             GetObject((int)GameObjects.EvaluationTextFrame1 + i).SetActive(true);
 
             string dialogue = "버그다냥!"; // 기본값

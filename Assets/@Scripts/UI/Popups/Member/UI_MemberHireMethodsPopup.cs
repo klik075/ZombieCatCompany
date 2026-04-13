@@ -65,6 +65,7 @@ public class UI_MemberHireMethodsPopup : UI_UGUI, IUI_Popup
                 }
                 else
                 {
+                    SoundManager.Instance.Play2D(ESound.Effect, "Coin");
                     GameManager.Instance.Gold -= 500; // TODO : 모집 비용으로 변경할 것. MemberManager에서 수행할 것
                     MemberManager.Instance.StartHire(EHireMethodType.Internet);
                 }
