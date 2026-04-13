@@ -12,6 +12,11 @@ public class MorningScene : BaseScene
         DataManager.Instance.LoadData();
 
         SaveManager.Instance.LoadMorningSceneData();
+
+        if (!SoundManager.Instance.IsCurrentBgm("Night_BGM"))
+        {
+            SoundManager.Instance.Play2D(ESound.Bgm, "Night_BGM");
+        }
     }
     void OnApplicationQuit()
     {

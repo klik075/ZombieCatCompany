@@ -21,12 +21,12 @@ MonoBehaviour:
   - type: 2
     yearValue: 0
     yearValueMax: 0
-    goldValue: 150000
+    goldValue: 25000
     foodValue: 0
     memberCount: 0
     requiredEvent: {fileID: 0}
   actionDatas:
-  - type: 1
+  - type: 6
     eventText: 
     rewards: []
     memberIndex: 0
@@ -38,3 +38,17 @@ MonoBehaviour:
     noNextEvent: {fileID: 11400000, guid: ce594c60eaa5719468761a9f03c3fae7, type: 2}
     executeImmediately: 1
     endingType: 0
+    soundClipName: Meow
+  - type: 1
+    eventText: 
+    rewards: []
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: "\uD68C\uC0AC \uADFC\uCC98\uC5D0\uC11C \uD608\uCCAD\uC744 \uD30C\uB294
+      \uC0C1\uC778\uC744 \uB9CC\uB0AC\uB2E4.\r\n25,000G\uC5D0 \uD310\uB2E4\uACE0
+      \uD558\uB294\uB370\r\n\uBE44\uC2F8\uC9C0\uB9CC \uD608\uCCAD\uC744 \uAD6C\uB9E4\uD560\uAE4C?"
+    yesNextEvent: {fileID: 11400000, guid: 2d40d90ab8b1b1f4e875a18e8bed273f, type: 2}
+    noNextEvent: {fileID: 11400000, guid: ce594c60eaa5719468761a9f03c3fae7, type: 2}
+    executeImmediately: 1
+    endingType: 0
+    soundClipName: 

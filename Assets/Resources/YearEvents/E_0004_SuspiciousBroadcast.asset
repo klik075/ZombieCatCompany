@@ -20,6 +20,20 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8a409053607c74e47b376e52edef70f2, type: 2}
   conditionDatas: []
   actionDatas:
+  - type: 6
+    eventText: "TV\uC5D0\uC11C \uD55C \uACFC\uD559\uC790\uAC00 \uC880\uBE44\uC758
+      \uC874\uC7AC\uB97C \uC8FC\uC7A5\uD558\uACE0 \uC788\uB2E4. \r\n\uB098\uC758
+      \uC874\uC7AC\uB97C \uC54C\uACE0 \uC788\uB294 \uAC74\uAC00?\r\n\uAD1C\uD788
+      \uBD88\uC548\uD574\uC84C\uB2E4."
+    rewards: []
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+    endingType: 0
+    soundClipName: Radio
   - type: 0
     eventText: "TV\uC5D0\uC11C \uD55C \uACFC\uD559\uC790\uAC00 \uC880\uBE44\uC758
       \uC874\uC7AC\uB97C \uC8FC\uC7A5\uD558\uACE0 \uC788\uB2E4. \r\n\uB098\uC758
@@ -33,3 +47,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 

@@ -35,7 +35,7 @@ MonoBehaviour:
   - type: 2
     yearValue: 0
     yearValueMax: 0
-    goldValue: 20000
+    goldValue: 10000
     foodValue: 0
     memberCount: 0
     requiredEvent: {fileID: 0}
@@ -52,3 +52,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 11400000, guid: e016d2b5c35257645b7b92563ce7c9e7, type: 2}
     executeImmediately: 1
     endingType: 0
+    soundClipName: 

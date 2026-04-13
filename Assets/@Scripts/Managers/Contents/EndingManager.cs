@@ -174,6 +174,7 @@ public class EndingManager : Singleton<EndingManager>
     }
     private System.Collections.IEnumerator CoPlayEndingVideo(EEndingType endingType)
     {
+        SoundManager.Instance.Stop(Define.ESound.Bgm);
         UIManager.Instance.CloseAllPopupUI();
 
         // 한 프레임 대기 (팝업들이 완전히 닫힐 때까지)

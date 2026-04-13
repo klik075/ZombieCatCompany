@@ -311,6 +311,11 @@ public class UI_FoodRationPopup : UI_UGUI, IUI_Popup, IClickableUI
             return;
         }
 
+        if (totalFood > 0)
+        {
+            SoundManager.Instance.Play2D(ESound.Effect, "Swallow");
+        }
+
         GameManager.Instance.Food -= totalFood;
 
         for (int i = 0; i < MemberManager.MAX_MEMBERS; i++)

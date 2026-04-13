@@ -50,6 +50,8 @@ public class PurchaseFlowController : IPurchaseFlow
     /// </summary>
     private void OnMerchantArrived()
     {
+        SoundManager.Instance.Play2D(ESound.Effect, "Meow");
+
         _currentState = FlowState.Greeting;
         ShowGreeting();
     }
@@ -61,7 +63,7 @@ public class PurchaseFlowController : IPurchaseFlow
     {
         UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
         chatPopup.SetInfo(
-            MemberManager.MAIN_CHARACTER_ID,
+            201,//Hardcoded
             MessageManager.Instance.GetMessageScript(EMessageType.MerchantHello).Contents,
             action: OnGreetingCompleted
         );
@@ -120,9 +122,11 @@ public class PurchaseFlowController : IPurchaseFlow
     /// </summary>
     private void ShowFarewell()
     {
+        SoundManager.Instance.Play2D(ESound.Effect, "Meow");
+
         UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
         chatPopup.SetInfo(
-            MemberManager.MAIN_CHARACTER_ID,
+            201,//Hardcoded
             MessageManager.Instance.GetMessageScript(EMessageType.MerchantBye).Contents,
             action: OnFarewellCompleted
         );

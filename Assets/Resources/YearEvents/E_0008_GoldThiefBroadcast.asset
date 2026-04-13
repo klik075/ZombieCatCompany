@@ -22,11 +22,25 @@ MonoBehaviour:
   - type: 2
     yearValue: 0
     yearValueMax: 0
-    goldValue: 100000
+    goldValue: 10000
     foodValue: 0
     memberCount: 0
     requiredEvent: {fileID: 0}
   actionDatas:
+  - type: 6
+    eventText: "TV\uC5D0 \uB3C8 \uB3C4\uB451\uC744 \uC870\uC2EC\uD558\uB77C\uB294
+      \uBC29\uC1A1\uC774 \uB098\uC654\uB2E4.\r\n\uD65C\uB3D9 \uBC94\uC704\uB294 \uD68C\uC0AC
+      \uADFC\uCC98\uB2E4..\r\n\uB3C8\uC774 \uB9CE\uC73C\uBA74 \uBAA9\uD45C\uAC00
+      \uB41C\uB2E4\uACE0 \uD55C\uB2E4."
+    rewards: []
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+    endingType: 0
+    soundClipName: Radio
   - type: 0
     eventText: "TV\uC5D0 \uB3C8 \uB3C4\uB451\uC744 \uC870\uC2EC\uD558\uB77C\uB294
       \uBC29\uC1A1\uC774 \uB098\uC654\uB2E4.\r\n\uD65C\uB3D9 \uBC94\uC704\uB294 \uD68C\uC0AC
@@ -40,3 +54,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 

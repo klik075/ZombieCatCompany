@@ -104,4 +104,18 @@ public class SoundManager : Singleton<SoundManager>
             return _audioSources[(int)type].volume;
         return 1f;
     }
+    public bool IsBgmPlaying()
+    {
+        AudioSource bgmSource = _audioSources[(int)Define.ESound.Bgm];
+        return bgmSource != null && bgmSource.isPlaying;
+    }
+    public bool IsCurrentBgm(string key)
+    {
+        AudioSource bgmSource = _audioSources[(int)Define.ESound.Bgm];
+        if (bgmSource != null && bgmSource.clip != null)
+        {
+            return bgmSource.clip.name == key;
+        }
+        return false;
+    }
 }

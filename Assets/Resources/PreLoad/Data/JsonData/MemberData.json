@@ -69,6 +69,20 @@
       "Graphics": 50,
       "Sound": 50,
       "Power": 10
+    },
+    {
+      "EmployeeID": 201,
+      "NormalImagePath": "ZCC_MC",
+      "ZombieImagePath": "ZCC_MC",
+      "Name": "상인",
+      "Role": 4,
+      "Salary": 25,
+      "State": 0,
+      "Programming": 10,
+      "Scenario": 10,
+      "Graphics": 10,
+      "Sound": 10,
+      "Power": 10
     }
   ]
 }

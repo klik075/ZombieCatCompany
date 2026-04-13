@@ -58,6 +58,8 @@ public class UI_MorningGame : UI_UGUI, IUI_Scene
     }
     public void OnClickedStartButton()
     {
+        SoundManager.Instance.Play2D(ESound.Bgm, "Morning_BGM");
+
         GetButton((int)Buttons.DefenseStartButton).gameObject.SetActive(false);
         _defensePanel.gameObject.SetActive(true);
         _defensePanel.Init();

@@ -156,7 +156,7 @@ public class UI_PurchaseFoodPopup : UI_UGUI, IUI_Popup
         }
         else
         {
-            //구매 사운드
+            SoundManager.Instance.Play2D(ESound.Effect, "Coin");
         }
     }
     private void PlayButtonClickSound()

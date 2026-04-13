@@ -143,6 +143,8 @@ public class UI_FenceStatePopup : UI_UGUI, IUI_Popup
             return;
         }
 
+        SoundManager.Instance.Play2D(ESound.Effect, "Repair");
+
         UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();
         chatPopup.SetInfo(
             MemberManager.MAIN_CHARACTER_ID,

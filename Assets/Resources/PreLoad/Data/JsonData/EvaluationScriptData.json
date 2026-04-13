@@ -22,15 +22,15 @@
     },
     {
       "EvaluationScore": 2,
-      "Dialogue": "이거 하느니 벽 긁는 게 더 재밌다냥"
+      "Dialogue": "벽 긁는 게 더 재밌다냥"
     },
     {
       "EvaluationScore": 3,
-      "Dialogue": "뭔가 만들다 말고 도망친 느낌이다냥"
+      "Dialogue": "만들다 말고 도망친 느낌이다냥"
     },
     {
       "EvaluationScore": 3,
-      "Dialogue": "아이디어는 보이는데… 구현은 어디 갔냥"
+      "Dialogue": "구현은 어디 갔냥?"
     },
     {
       "EvaluationScore": 3,
@@ -38,23 +38,23 @@
     },
     {
       "EvaluationScore": 4,
-      "Dialogue": "음… 게임이긴 한데 굳이 해야 되냥?"
+      "Dialogue": "음… 굳이 해야 되냥?"
     },
     {
       "EvaluationScore": 4,
-      "Dialogue": "조금만 더 만들면 살 수는 있겠다냥"
+      "Dialogue": "조금 개선하면 살 수는 있겠다냥"
     },
     {
       "EvaluationScore": 4,
-      "Dialogue": "버그랑 내가 같이 플레이하는 느낌이다냥"
+      "Dialogue": "버그 찾는 재미는 있다냥"
     },
     {
       "EvaluationScore": 5,
-      "Dialogue": "그냥… 시간 때우기용 사료 느낌이다냥"
+      "Dialogue": "시간 때우기용 사료 느낌이다냥"
     },
     {
       "EvaluationScore": 5,
-      "Dialogue": "나쁘진 않은데 또 하라면 도망간다냥"
+      "Dialogue": "또 하라면 도망간다냥"
     },
     {
       "EvaluationScore": 5,
@@ -82,19 +82,19 @@
     },
     {
       "EvaluationScore": 7,
-      "Dialogue": "드디어 회사가 일하기 시작했다냥"
+      "Dialogue": "회사가 일하기 시작했다냥"
     },
     {
       "EvaluationScore": 8,
-      "Dialogue": "이거 위험하다냥… 계속 누르게 된다냥"
+      "Dialogue": "위험.. 계속 누르게 된다냥"
     },
     {
       "EvaluationScore": 8,
-      "Dialogue": "돈 냄새 난다냥"
+      "Dialogue": "이거 돈 냄새 난다냥"
     },
     {
       "EvaluationScore": 8,
-      "Dialogue": "밤새 했다냥"
+      "Dialogue": "오늘 밤새 했다냥"
     },
     {
       "EvaluationScore": 9,
@@ -102,7 +102,7 @@
     },
     {
       "EvaluationScore": 9,
-      "Dialogue": "과금할 뻔했다냥"
+      "Dialogue": "휴.. 과금할 뻔했다냥"
     },
     {
       "EvaluationScore": 9,
@@ -114,11 +114,11 @@
     },
     {
       "EvaluationScore": 10,
-      "Dialogue": "시간 도둑이다냥"
+      "Dialogue": "완전 시간 도둑이다냥"
     },
     {
       "EvaluationScore": 10,
-      "Dialogue": "당신만을 기다려 왔다냥"
+      "Dialogue": "이런 게임을 기다려 왔다냥"
     }
   ]
 }

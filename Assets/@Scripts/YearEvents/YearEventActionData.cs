@@ -23,6 +23,8 @@ public class YearEventActionData
     public bool executeImmediately = false;  // 체인 실행 옵션
 
     public EEndingType endingType;  // for TriggerEnding (엔딩 타입)
+
+    public string soundClipName;    // for PlaySound (사운드 클립 이름)
 }
 
 public class YearEventAction
@@ -70,6 +72,11 @@ public class YearEventAction
 
             case YearActionType.TriggerEnding:
                 TriggerEnding();
+                isFinished = true;
+                break;
+
+            case YearActionType.PlaySound:
+                PlaySound();
                 isFinished = true;
                 break;
         }
@@ -263,6 +270,20 @@ public class YearEventAction
     {
         EndingManager.Instance.TriggerEnding(Data.endingType);
     }
+    /// <summary>
+    /// 사운드 재생
+    /// </summary>
+    private void PlaySound()
+    {
+        if (string.IsNullOrEmpty(Data.soundClipName))
+        {
+            Debug.LogWarning("[YearEventAction] Sound clip name is empty");
+            return;
+        }
+
+        SoundManager.Instance.Play2D(ESound.Effect, Data.soundClipName);
+        Debug.Log($"[YearEventAction] Playing sound: {Data.soundClipName}");
+    }
     public bool IsFinished()
     {
         return isFinished;
@@ -276,12 +297,13 @@ public class YearEventAction
 
 public enum YearActionType
 {
-    ShowEventPopup,// 이벤트 팝업 표시 (텍스트 + 보상)
-    ShowChoicePopup,// 선택지 팝업 표시 (Yes/No 선택)
-    GiveRewards,// 보상 지급 (골드, 음식, 멤버)
-    FireMember,// 멤버 해고
-    ChangeHungerState,// 배고픔 상태 변경 (양수: 배고픔 증가 / 음수: 배고픔 감소)
-    TriggerEnding// 엔딩 트리거 (게임 종료)
+    ShowEventPopup,     // 이벤트 팝업 표시 (텍스트 + 보상)
+    ShowChoicePopup,    // 선택지 팝업 표시 (Yes/No 선택)
+    GiveRewards,        // 보상 지급 (골드, 음식, 멤버)
+    FireMember,         // 멤버 해고
+    ChangeHungerState,  // 배고픔 상태 변경 (양수: 배고픔 증가 / 음수: 배고픔 감소)
+    TriggerEnding,      // 엔딩 트리거 (게임 종료)
+    PlaySound           // 사운드 재생
 }
 
 #if UNITY_EDITOR
@@ -367,6 +389,13 @@ public class YearEventActionDrawer : PropertyDrawer
                 position.height = EditorGUIUtility.singleLineHeight;
                 EditorGUI.PropertyField(position, endingTypeProp, new GUIContent("Ending Type"));
                 break;
+
+            case YearActionType.PlaySound:
+                // Sound Clip Name
+                var soundClipNameProp = property.FindPropertyRelative("soundClipName");
+                position.height = EditorGUIUtility.singleLineHeight;
+                EditorGUI.PropertyField(position, soundClipNameProp, new GUIContent("Sound Clip Name"));
+                break;
         }
 
         EditorGUI.EndProperty();
@@ -401,6 +430,7 @@ public class YearEventActionDrawer : PropertyDrawer
             case YearActionType.FireMember:
             case YearActionType.ChangeHungerState:
             case YearActionType.TriggerEnding:
+            case YearActionType.PlaySound:
                 height += EditorGUIUtility.singleLineHeight;
                 break;
         }

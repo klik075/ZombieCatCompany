@@ -36,6 +36,21 @@ MonoBehaviour:
     memberCount: 0
     requiredEvent: {fileID: 11400000, guid: 5a82eedb6e5fd324d9c708a24e309d79, type: 2}
   actionDatas:
+  - type: 6
+    eventText: "\uC800\uBC88\uC5D0 \uB9CC\uB0AC\uB358 \uC0C1\uC778\uC744 \uB2E4\uC2DC
+      \uB9CC\uB0AC\uB2E4.\r\n\uC774\uBC88\uC5D0\uB294 \uC74C\uC2DD\uC744 \uBB34\uB8CC\uB85C
+      \uB098\uB220\uC92C\uB2E4.\r\n\uBBF8\uC548\uD588\uB358 \uAC74\uAC00?"
+    rewards:
+    - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
+      amount: 50
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+    endingType: 0
+    soundClipName: Meow
   - type: 0
     eventText: "\uC800\uBC88\uC5D0 \uB9CC\uB0AC\uB358 \uC0C1\uC778\uC744 \uB2E4\uC2DC
       \uB9CC\uB0AC\uB2E4.\r\n\uC774\uBC88\uC5D0\uB294 \uC74C\uC2DD\uC744 \uBB34\uB8CC\uB85C
@@ -50,3 +65,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 

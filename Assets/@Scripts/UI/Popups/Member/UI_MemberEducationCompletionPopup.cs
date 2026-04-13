@@ -174,6 +174,8 @@ public class UI_MemberEducationCompletionPopup : UI_UGUI, IUI_Popup, IClickableU
             return;
         }
 
+        SoundManager.Instance.Play2D(ESound.Effect, "LevelUp");
+
         // 골드 차감
         GameManager.Instance.Gold -= educationData.Cost;
         GameBalanceConfig config = DataManager.Instance.GameBalanceConfig;

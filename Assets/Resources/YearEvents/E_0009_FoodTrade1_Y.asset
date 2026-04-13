@@ -18,16 +18,9 @@ MonoBehaviour:
   weight: 0
   nextEventDatas:
   - {fileID: 11400000, guid: 9b0378fe150b1604e93a2fc9f22c7306, type: 2}
-  conditionDatas:
-  - type: 2
-    yearValue: 0
-    yearValueMax: 0
-    goldValue: 10000
-    foodValue: 0
-    memberCount: 0
-    requiredEvent: {fileID: 0}
+  conditionDatas: []
   actionDatas:
-  - type: 0
+  - type: 6
     eventText: "\uC6B4 \uC88B\uAC8C \uC74C\uC2DD\uC744 \uD30C\uB294 \uC0C1\uC778\uC744
       \uB9CC\uB0AC\uACE0\r\n\uC81C\uC548\uC744 \uBC1B\uC544\uB4E4\uC600\uC9C0\uB9CC\r\n\uB354
       \uBE44\uC2F8\uAC8C \uC0B0 \uB290\uB08C\uC774 \uB4E0\uB2E4.."
@@ -43,3 +36,21 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: Coin
+  - type: 0
+    eventText: "\uC6B4 \uC88B\uAC8C \uC74C\uC2DD\uC744 \uD30C\uB294 \uC0C1\uC778\uC744
+      \uB9CC\uB0AC\uACE0\r\n\uC81C\uC548\uC744 \uBC1B\uC544\uB4E4\uC600\uC9C0\uB9CC\r\n\uB354
+      \uBE44\uC2F8\uAC8C \uC0B0 \uB290\uB08C\uC774 \uB4E0\uB2E4.."
+    rewards:
+    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
+      amount: -1000
+    - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
+      amount: 50
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+    endingType: 0
+    soundClipName: 

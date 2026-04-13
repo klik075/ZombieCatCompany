@@ -26,7 +26,7 @@ MonoBehaviour:
       \uC74C\uC2DD\uC774 \uC788\uC5C8\uB2E4\uACE0 \uD55C\uB2E4."
     rewards:
     - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
-      amount: 100
+      amount: 300
     memberIndex: 0
     hungerChange: 0
     choiceEventText: 
@@ -34,6 +34,7 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 
   - type: 0
     eventText: "\uBCF4\uBB3C \uC9C0\uB3C4\uC5D0 \uD45C\uAE30\uB41C \uC7A5\uC18C\uB85C
       \uAC14\uB2E4\uACE0 \uD55C\uB2E4.\r\n\uC790\uC138\uD788 \uC0B4\uD3B4\uBCF4\uB2C8
@@ -41,7 +42,7 @@ MonoBehaviour:
       \uC74C\uC2DD\uC774 \uC788\uC5C8\uB2E4\uACE0 \uD55C\uB2E4."
     rewards:
     - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
-      amount: 100
+      amount: 300
     memberIndex: 0
     hungerChange: 0
     choiceEventText: 
@@ -49,3 +50,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 

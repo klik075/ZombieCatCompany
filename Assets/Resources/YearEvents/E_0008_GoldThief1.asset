@@ -22,7 +22,7 @@ MonoBehaviour:
   - type: 2
     yearValue: 0
     yearValueMax: 0
-    goldValue: 100000
+    goldValue: 10000
     foodValue: 0
     memberCount: 0
     requiredEvent: {fileID: 0}
@@ -31,7 +31,7 @@ MonoBehaviour:
     eventText: 
     rewards:
     - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
-      amount: -20000
+      amount: -5000
     memberIndex: 0
     hungerChange: 0
     choiceEventText: 
@@ -39,13 +39,14 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 
   - type: 0
     eventText: "\uC77C\uC5B4\uB098 \uBCF4\uB2C8 \uB3C8\uC774 \uC870\uAE08 \uC0AC\uB77C\uC84C\uB2E4.\r\n\uB3C4\uB451\uC774
       \uB4E0 \uAC8C \uBD84\uBA85\uD558\uB2E4.\r\n\uC790\uAE08 \uAD00\uB9AC\uB97C
       \uB354 \uC2E0\uACBD \uC368\uC57C\uACA0\uB2E4."
     rewards:
     - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
-      amount: -20000
+      amount: -5000
     memberIndex: 0
     hungerChange: 0
     choiceEventText: 
@@ -53,3 +54,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 

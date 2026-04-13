@@ -15,7 +15,8 @@ public class PurchaseManager : Singleton<PurchaseManager>
     {
         if (GameManager.Instance.GameState != EGameState.FoodPurchase)
             return;
-        
+
+        SoundManager.Instance.Play2D(ESound.Effect, "Door");
         _merchant = SpawnMerchant();
         
         _currentFlow = new PurchaseFlowController(_merchant);
@@ -38,6 +39,7 @@ public class PurchaseManager : Singleton<PurchaseManager>
     /// </summary>
     private void OnPurchaseFlowCompleted()
     {
+        SoundManager.Instance.Play2D(ESound.Effect, "Door");
         // Merchant 제거
         ObjectManager.Instance.Despawn(_merchant);
         _merchant = null;

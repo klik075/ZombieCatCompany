@@ -98,6 +98,8 @@ public class Projectile : ObjectBase
     {
         if (_target != null && _target.IsAlive)
         {
+            SoundManager.Instance.Play2D(Define.ESound.Effect, "Can");
+
             _target.TakeDamage(_damage);
             Debug.Log($"[Projectile] Hit {_target.name} for {_damage} damage");
         }

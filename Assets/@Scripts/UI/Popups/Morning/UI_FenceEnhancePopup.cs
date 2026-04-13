@@ -187,6 +187,8 @@ public class UI_FenceEnhancePopup : UI_UGUI, IUI_Popup
 
          if (success)
         {
+            SoundManager.Instance.Play2D(ESound.Effect, "Success");
+
             chatPopup.SetInfo(
                 MemberManager.MAIN_CHARACTER_ID,
                 MessageManager.Instance.GetMessageScript(Define.EMessageType.EnhanceSuccess).Contents,
@@ -196,6 +198,8 @@ public class UI_FenceEnhancePopup : UI_UGUI, IUI_Popup
         }
         else
         {
+            SoundManager.Instance.Play2D(ESound.Effect, "Fail");
+
             chatPopup.SetInfo(MemberManager.MAIN_CHARACTER_ID,
                 MessageManager.Instance.GetMessageScript(Define.EMessageType.EnhanceFail).Contents,
                 null,

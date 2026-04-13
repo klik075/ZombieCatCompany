@@ -20,6 +20,8 @@ public class NightScene : BaseScene
 
         SaveManager.Instance.LoadNightSceneData();
 
+        SoundManager.Instance.Play2D(Define.ESound.Bgm, "Night_BGM");
+
         YearEventManager.Instance.StartNightSequence();
     }
     void OnApplicationQuit()

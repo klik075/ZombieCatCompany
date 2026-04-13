@@ -38,3 +38,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 11400000, guid: 1955ba87c43fac44cad67ad0af2a3df2, type: 2}
     executeImmediately: 1
     endingType: 0
+    soundClipName: 

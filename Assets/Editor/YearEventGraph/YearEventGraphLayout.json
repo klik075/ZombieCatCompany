@@ -135,7 +135,7 @@
         },
         {
             "eventName": "E_0004_SuspiciousBroadcast",
-            "x": 504.0,
+            "x": 501.0,
             "y": -275.0,
             "width": 250.0,
             "height": 164.0
@@ -488,7 +488,7 @@
             "x": 785.0,
             "y": 2450.0,
             "width": 250.0,
-            "height": 224.0
+            "height": 192.0
         },
         {
             "eventName": "E_0009_FoodTrade2",

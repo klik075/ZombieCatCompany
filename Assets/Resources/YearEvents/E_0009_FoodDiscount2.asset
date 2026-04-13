@@ -28,16 +28,19 @@ MonoBehaviour:
   - type: 2
     yearValue: 5000
     yearValueMax: 0
-    goldValue: 10000
+    goldValue: 4000
     foodValue: 0
     memberCount: 0
     requiredEvent: {fileID: 0}
   actionDatas:
-  - type: 2
-    eventText: 
+  - type: 6
+    eventText: "\uC800\uBC88\uC5D0 \uB9CC\uB0AC\uB358 \uC0C1\uC778\uC744 \uB2E4\uC2DC
+      \uB9CC\uB0AC\uB2E4.\r\n\uB3C8\uC774 \uB109\uB109\uD574\uC11C \uC74C\uC2DD\uC744
+      \uC2F8\uAC8C \uC0C0\uB2E4.\r\n\uC9C0\uAE08 \uD589\uB3D9\uC774 \uC5B4\uB5A4
+      \uACB0\uACFC\uB97C \uBD88\uB7EC\uC62C\uAE4C.."
     rewards:
     - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
-      amount: -5000
+      amount: -500
     - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
       amount: 100
     memberIndex: 0
@@ -47,6 +50,22 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: Coin
+  - type: 2
+    eventText: 
+    rewards:
+    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
+      amount: -500
+    - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
+      amount: 100
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+    endingType: 0
+    soundClipName: 
   - type: 0
     eventText: "\uC800\uBC88\uC5D0 \uB9CC\uB0AC\uB358 \uC0C1\uC778\uC744 \uB2E4\uC2DC
       \uB9CC\uB0AC\uB2E4.\r\n\uB3C8\uC774 \uB109\uB109\uD574\uC11C \uC74C\uC2DD\uC744
@@ -54,7 +73,7 @@ MonoBehaviour:
       \uACB0\uACFC\uB97C \uBD88\uB7EC\uC62C\uAE4C.."
     rewards:
     - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
-      amount: -5000
+      amount: -500
     - rewardData: {fileID: 11400000, guid: 4e65e32d47c7dc246a2225abf97ef197, type: 2}
       amount: 100
     memberIndex: 0
@@ -64,3 +83,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 

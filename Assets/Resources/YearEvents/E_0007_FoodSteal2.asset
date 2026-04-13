@@ -31,6 +31,7 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 
   - type: 0
     eventText: "\uC606 \uD68C\uC0AC\uC5D0\uC11C \uBAB0\uB798 \uC74C\uC2DD\uC744 \uD6D4\uCCD0
       \uC654\uB2E4.\r\n\uC544\uC2AC\uD588\uC9C0\uB9CC \uC131\uACF5\uC801\uC774\uC5C8\uB2E4.\r\n\uD558\uBA74
@@ -45,3 +46,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 

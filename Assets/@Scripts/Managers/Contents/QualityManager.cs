@@ -343,7 +343,10 @@ public class QualityManager : Singleton<QualityManager>
     private void OnQualityAnimationComplete(GameObject qualityObj, EQualityType quality)
     {
         if (qualityObj != null)
+        {
             Destroy(qualityObj);
+            SoundManager.Instance.Play2D(ESound.Effect, "Score1");
+        }
 
         _completedQualityCount++;
         _onQualityComplete?.Invoke(quality);
@@ -545,6 +548,7 @@ public class QualityManager : Singleton<QualityManager>
             textRect.sizeDelta = new Vector2(100, 50);
         }
 
+        SoundManager.Instance.Play2D(ESound.Effect, "Score2");
         // 점수 추가
         GameDevManager.Instance.AddQualityScore(quality, score);
 

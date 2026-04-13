@@ -56,6 +56,8 @@ public class MemberExitController
     /// </summary>
     private void OnMemberArrived(Member member)
     {
+        SoundManager.Instance.Play2D(Define.ESound.Effect, "Door");
+
         // Member Disable 처리
         member.gameObject.SetActive(false);
         _exitedCount++;

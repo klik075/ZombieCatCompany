@@ -20,7 +20,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ec1a044b11c97d542a204bceba1c0a45, type: 2}
   conditionDatas: []
   actionDatas:
-  - type: 0
+  - type: 6
     eventText: "TV\uC5D0 \uB610 \uADF8 \uACFC\uD559\uC790\uAC00 \uB098\uC654\uB2E4.\r\n\uD608\uCCAD
       \uC5F0\uAD6C\uC5D0 \uC131\uACF5\uD588\uB2E4\uACE0 \uD55C\uB2E4.\r\n\uD608\uCCAD\uC740
       100,000G\uC5D0 \uD310\uB2E4\uACE0 \uD55C\uB2E4.\r\n\uBB34\uB8CC\uB85C \uC81C\uACF5\uD574
@@ -33,3 +33,18 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: Radio
+  - type: 0
+    eventText: "TV\uC5D0 \uB610 \uADF8 \uACFC\uD559\uC790\uAC00 \uB098\uC654\uB2E4.\r\n\uD608\uCCAD
+      \uC5F0\uAD6C\uC5D0 \uC131\uACF5\uD588\uB2E4\uACE0 \uD55C\uB2E4.\r\n\uD608\uCCAD\uC740
+      20,000G\uC5D0 \uD310\uB2E4\uACE0 \uD55C\uB2E4.\r\n\uBB34\uB8CC\uB85C \uC81C\uACF5\uD574
+      \uC918\uB3C4 \uBAA8\uC790\uB784 \uD310\uC5D0.."
+    rewards: []
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+    endingType: 0
+    soundClipName: 

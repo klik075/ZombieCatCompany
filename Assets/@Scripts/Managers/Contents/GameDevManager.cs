@@ -88,8 +88,8 @@ public class GameDevManager : Singleton<GameDevManager>
     {
         get
         {
-            if (GameManager.Instance.GameState == EGameState.Night)
-                return "신규 개발 없음";
+            //if (GameManager.Instance.GameState == EGameState.Night)
+            //    return "신규 개발 없음";
 
             return _currentProject?.gameTitle ?? $"{GameManager.Instance.Year}번째 게임";
         }
@@ -469,6 +469,7 @@ public class GameDevManager : Singleton<GameDevManager>
         _currentProject.progress = 0;
         _currentProject.selectedGenre = EGenreType.ActionGame;
         _currentProject.selectedContent = EContentType.Box;
+        _currentProject.gameTitle = $"{GameManager.Instance.Year}번째 게임";
         _currentProject.EvaluationScore = 0;
         _currentProject.funScore = 0;
         _currentProject.nyangScore = 0;

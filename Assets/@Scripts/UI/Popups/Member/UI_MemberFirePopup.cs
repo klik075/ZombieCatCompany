@@ -185,6 +185,7 @@ public class UI_MemberFirePopup : UI_UGUI, IUI_Popup
         }
         else if(_eFireType == EFireType.Swap)
         {
+            SoundManager.Instance.Play2D(ESound.Effect, "Bite");
 
             //멤버 교체 팝업
             UI_ChatPopup chatPopup = UIManager.Instance.ShowPopupUI<UI_ChatPopup>();

@@ -19,13 +19,28 @@ MonoBehaviour:
   nextEventDatas: []
   conditionDatas: []
   actionDatas:
+  - type: 6
+    eventText: "\uC6D0\uD558\uB358 \uD608\uCCAD\uC744 \uAD6C\uD588\uACE0 \uBC14\uB85C
+      \uC8FC\uC785\uD588\uB2E4.\r\n\uC2EC\uC7A5\uC774 \uB6F0\uACE0 \uC788\uB2E4.\r\n\u2026\uC0B4\uC544\uC788\uB294
+      \uB290\uB08C\uC774\uB2E4."
+    rewards:
+    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
+      amount: -150000
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+    endingType: 3
+    soundClipName: Coin
   - type: 2
     eventText: "\uC6D0\uD558\uB358 \uD608\uCCAD\uC744 \uAD6C\uD588\uACE0 \uBC14\uB85C
       \uC8FC\uC785\uD588\uB2E4.\r\n\uC2EC\uC7A5\uC774 \uB6F0\uACE0 \uC788\uB2E4.\r\n\u2026\uC0B4\uC544\uC788\uB294
       \uB290\uB08C\uC774\uB2E4."
     rewards:
     - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
-      amount: -150000
+      amount: -25000
     memberIndex: 0
     hungerChange: 0
     choiceEventText: 
@@ -33,13 +48,14 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 
   - type: 0
     eventText: "\uC6D0\uD558\uB358 \uD608\uCCAD\uC744 \uAD6C\uD588\uACE0 \uBC14\uB85C
       \uC8FC\uC785\uD588\uB2E4.\r\n\uC2EC\uC7A5\uC774 \uB6F0\uACE0 \uC788\uB2E4.\r\n\u2026\uC0B4\uC544\uC788\uB294
       \uB290\uB08C\uC774\uB2E4."
     rewards:
     - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
-      amount: -150000
+      amount: -25000
     memberIndex: 0
     hungerChange: 0
     choiceEventText: 
@@ -47,6 +63,7 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 
   - type: 5
     eventText: "\uC6D0\uD558\uB358 \uD608\uCCAD\uC744 \uAD6C\uD588\uACE0 \uBC14\uB85C
       \uC8FC\uC785\uD588\uB2E4.\r\n\uC2EC\uC7A5\uC774 \uB6F0\uACE0 \uC788\uB2E4.\r\n\u2026\uC0B4\uC544\uC788\uB294
@@ -61,3 +78,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 3
+    soundClipName: 

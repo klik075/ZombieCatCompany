@@ -29,7 +29,7 @@ MonoBehaviour:
       \uB3C8\uC744 \uD6D4\uCCD0 \uC654\uB2E4."
     rewards:
     - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
-      amount: 20000
+      amount: 10000
     memberIndex: 0
     hungerChange: 0
     choiceEventText: 
@@ -37,7 +37,23 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: 
   - type: 0
+    eventText: "\uC5B4\uB5A4 \uACB0\uACFC\uB97C \uBD88\uB7EC\uC62C\uC9C0 \uB450\uB835\uC9C0\uB9CC\r\n\uBCF5\uC218\uB294
+      \uBCF5\uC218\uB85C \uAC1A\uAE30\uB85C \uD588\uB2E4.\r\n\uC606 \uD68C\uC0AC\uC5D0\uC11C
+      \uB3C8\uC744 \uD6D4\uCCD0 \uC654\uB2E4."
+    rewards:
+    - rewardData: {fileID: 11400000, guid: d412f8e0f2ea2fe4baaa8f71c5de00ff, type: 2}
+      amount: 10000
+    memberIndex: 0
+    hungerChange: 0
+    choiceEventText: 
+    yesNextEvent: {fileID: 0}
+    noNextEvent: {fileID: 0}
+    executeImmediately: 0
+    endingType: 0
+    soundClipName: 
+  - type: 6
     eventText: "\uC5B4\uB5A4 \uACB0\uACFC\uB97C \uBD88\uB7EC\uC62C\uC9C0 \uB450\uB835\uC9C0\uB9CC\r\n\uBCF5\uC218\uB294
       \uBCF5\uC218\uB85C \uAC1A\uAE30\uB85C \uD588\uB2E4.\r\n\uC606 \uD68C\uC0AC\uC5D0\uC11C
       \uB3C8\uC744 \uD6D4\uCCD0 \uC654\uB2E4."
@@ -51,3 +67,4 @@ MonoBehaviour:
     noNextEvent: {fileID: 0}
     executeImmediately: 0
     endingType: 0
+    soundClipName: Coin

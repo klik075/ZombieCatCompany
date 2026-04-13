@@ -103,7 +103,7 @@ public class UI_LoadGamePopup : UI_UGUI, IUI_Popup
         GetText((int)Texts.YearText).text = $"연차: {gameData.CompanyData.Year}년";
 
         // 자금
-        GetText((int)Texts.FundsText).text = $"자금: {gameData.CompanyData.Gold:N0}원";
+        GetText((int)Texts.FundsText).text = $"자금: {gameData.CompanyData.Gold:N0}G";
     }
     private void UpdateButton()
     {
