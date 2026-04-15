@@ -11,10 +11,40 @@ public class UI_UGUI : UI_Base
     protected Dictionary<Type, Object[]> _objects = new Dictionary<Type, Object[]>();
     protected Action onClosedCallback;
     protected bool isTransitioning;
+
+    [Header("Safe Area Settings")]
+    [SerializeField] protected bool applySafeArea = true; // Inspector에서 토글 가능
+    [SerializeField] protected string safeAreaPanelName = "SafeAreaPanel"; // 기본 이름
     protected override void Awake()
     {
         if (Object.FindAnyObjectByType<EventSystem>() == null)
             ResourceManager.Instance.Instantiate("EventSystem");
+
+        // Safe Area 자동 적용
+        if (applySafeArea)
+        {
+            ApplySafeAreaAutomatically();
+        }
+    }
+    protected virtual void ApplySafeAreaAutomatically()
+    {
+        // 1. 지정된 이름의 GameObject 찾기
+        GameObject safeAreaPanel = Utils.FindChildGameObject(gameObject, safeAreaPanelName, true);
+
+        if (safeAreaPanel != null)
+        {
+            // SafeAreaPanel 컴포넌트 추가/확인
+            SafeAreaPanel safeArea = Utils.GetOrAddComponent<SafeAreaPanel>(safeAreaPanel);
+#if UNITY_EDITOR
+            Debug.Log($"[UI_UGUI] Safe Area applied to {gameObject.name} > {safeAreaPanelName}");
+#endif
+        }
+        else
+        {
+#if UNITY_EDITOR
+            Debug.LogWarning($"[UI_UGUI] {gameObject.name}: '{safeAreaPanelName}' not found. Safe Area not applied.");
+#endif
+        }
     }
     protected override void OnEnable()
     {

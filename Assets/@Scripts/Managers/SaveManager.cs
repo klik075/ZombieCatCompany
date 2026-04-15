@@ -456,6 +456,14 @@ public class SaveManager : Singleton<SaveManager>
             File.Delete(UserDataPath);
             Debug.Log("SaveManager: User Data deleted.");
         }
+
+        // 2. 메모리 초기화
+        GameManager.Instance.MyGameData = null;
+        GameManager.Instance.UserData = null;
+
+        // 3. 새 UserData 생성 및 저장
+        GameManager.Instance.UserData = new UserData();
+        SaveUserData();
     }
 
     #endregion

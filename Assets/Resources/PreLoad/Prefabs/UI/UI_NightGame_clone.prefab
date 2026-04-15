@@ -1238,7 +1238,7 @@ GameObject:
   - component: {fileID: 1610049000257480460}
   - component: {fileID: 8267591014908173090}
   m_Layer: 5
-  m_Name: UI_NightGame
+  m_Name: UI_NightGame_clone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2147,9 +2147,9 @@ RectTransform:
   - {fileID: 3933862960926182772}
   m_Father: {fileID: 7877036914006694504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -1140}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 540, y: 0}
   m_SizeDelta: {x: 1080, y: 2280}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &3015971356503525987
@@ -4669,9 +4669,9 @@ RectTransform:
   - {fileID: 4505518635006154549}
   m_Father: {fileID: 7877036914006694504}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -510, y: -740}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 30, y: 400}
   m_SizeDelta: {x: 250, y: 500}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!222 &7547872069621330245
@@ -6649,10 +6649,10 @@ RectTransform:
   - {fileID: 2215361512092710218}
   m_Father: {fileID: 2054202485684714979}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1080, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 540, y: 0}
+  m_SizeDelta: {x: 1080, y: 2280}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6130948697775894902
 CanvasRenderer:

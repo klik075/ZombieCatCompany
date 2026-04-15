@@ -75,7 +75,7 @@ public class UI_LobbyGame : UI_UGUI, IUI_Scene
     }
     private void OnClickSetting()
     {
-        UI_SettingPopup settingPopup = UIManager.Instance.ShowPopupUI<UI_SettingPopup>();
+        UI_LobbySettingPopup settingPopup = UIManager.Instance.ShowPopupUI<UI_LobbySettingPopup>();
     }
     private void PlayButtonClickSound()
     {
